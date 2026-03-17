@@ -4,7 +4,8 @@ import SwiftUI
 // Central theme configuration that can be swapped per-app.
 // Each app can define its own palette while keeping all components consistent.
 
-public final class DSTheme: ObservableObject, @unchecked Sendable {
+@MainActor
+public final class DSTheme: ObservableObject {
     @Published public var light: DSColorPalette
     @Published public var dark: DSColorPalette
 
@@ -24,7 +25,8 @@ public final class DSTheme: ObservableObject, @unchecked Sendable {
 
 // MARK: - Environment Key
 
-private struct DSThemeKey: EnvironmentKey {
+private struct DSThemeKey: @preconcurrency EnvironmentKey {
+    @MainActor
     static let defaultValue = DSTheme()
 }
 
