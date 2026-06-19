@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var segmentTab = "Overview"
+    @State private var segmentLayout = 0
 
     var body: some View {
         NavigationStack {
@@ -47,6 +49,24 @@ struct ComponentCatalog: View {
                             }
 
                             DSButton("Loading...", isLoading: true) { }
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(
+                                selection: $segmentTab,
+                                titles: ["Overview", "Activity", "Settings"]
+                            )
+                            DSSegmentedControl(
+                                selection: $segmentLayout,
+                                items: [
+                                    DSSegmentItem("List", value: 0, icon: "list.bullet"),
+                                    DSSegmentItem("Grid", value: 1, icon: "square.grid.2x2"),
+                                    DSSegmentItem("Map", value: 2, icon: "map")
+                                ]
+                            )
                         }
                     }
 
