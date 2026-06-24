@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var billingPlan = "Monthly"
+    @State private var contentView = "List"
 
     var body: some View {
         NavigationStack {
@@ -47,6 +49,26 @@ struct ComponentCatalog: View {
                             }
 
                             DSButton("Loading...", isLoading: true) { }
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(["Monthly", "Yearly"], selection: $billingPlan)
+
+                            DSSegmentedControl(
+                                ["List", "Grid", "Map"],
+                                selection: $contentView,
+                                title: { $0 },
+                                icon: { item in
+                                    switch item {
+                                    case "List": return "list.bullet"
+                                    case "Grid": return "square.grid.2x2"
+                                    default:     return "map"
+                                    }
+                                }
+                            )
                         }
                     }
 
