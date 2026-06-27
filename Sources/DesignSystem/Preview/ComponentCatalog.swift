@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var dateRange = "Week"
+    @State private var layoutMode = "grid"
 
     var body: some View {
         NavigationStack {
@@ -47,6 +49,26 @@ struct ComponentCatalog: View {
                             }
 
                             DSButton("Loading...", isLoading: true) { }
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(["Day", "Week", "Month"], selection: $dateRange)
+
+                            DSSegmentedControl(
+                                ["list", "grid", "map"],
+                                selection: $layoutMode,
+                                title: { $0.capitalized },
+                                icon: { value in
+                                    switch value {
+                                    case "list": return "list.bullet"
+                                    case "grid": return "square.grid.2x2"
+                                    default:     return "map"
+                                    }
+                                }
+                            )
                         }
                     }
 
