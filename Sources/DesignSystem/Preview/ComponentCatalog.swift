@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var viewMode = "Grid"
+    @State private var feedTab = 0
 
     var body: some View {
         NavigationStack {
@@ -47,6 +49,22 @@ struct ComponentCatalog: View {
                             }
 
                             DSButton("Loading...", isLoading: true) { }
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(["Grid", "List", "Map"], selection: $viewMode)
+
+                            DSSegmentedControl(
+                                segments: [
+                                    DSSegment("List", value: 0, icon: "list.bullet"),
+                                    DSSegment("Photos", value: 1, icon: "photo"),
+                                    DSSegment("Map", value: 2, icon: "map")
+                                ],
+                                selection: $feedTab
+                            )
                         }
                     }
 
