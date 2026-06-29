@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var notificationsOn = true
+    @State private var darkModeOn = false
 
     var body: some View {
         NavigationStack {
@@ -88,6 +90,22 @@ struct ComponentCatalog: View {
                                 isSecure: true
                             )
                             DSSearchBar(text: $searchValue)
+                        }
+                    }
+
+                    // MARK: - Toggles
+                    section("Toggles") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSToggle("Push Notifications", isOn: $notificationsOn)
+                            DSToggle("Dark Mode", isOn: $darkModeOn, onColor: DSColors.defaultPalette.secondary)
+                            DSToggle("Sync (disabled)", isOn: $notificationsOn)
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.lg) {
+                                DSToggle(isOn: $notificationsOn, size: .small)
+                                DSToggle(isOn: $darkModeOn)
+                                DSToggle(isOn: $notificationsOn, onColor: DSColors.defaultPalette.success)
+                            }
                         }
                     }
 
