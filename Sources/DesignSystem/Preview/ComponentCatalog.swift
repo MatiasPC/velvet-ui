@@ -8,6 +8,7 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var codeValue = "12"
 
     var body: some View {
         NavigationStack {
@@ -88,6 +89,15 @@ struct ComponentCatalog: View {
                                 isSecure: true
                             )
                             DSSearchBar(text: $searchValue)
+                        }
+                    }
+
+                    // MARK: - Code Field
+                    section("Code Field (OTP)") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSCodeField(length: 6, code: $codeValue)
+                            DSCodeField(length: 4, code: .constant("1234"), state: .error)
+                            DSCodeField(length: 4, code: .constant("5678"), state: .success)
                         }
                     }
 
