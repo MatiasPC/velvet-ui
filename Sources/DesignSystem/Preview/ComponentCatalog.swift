@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var segment = "Overview"
+    @State private var viewMode = "list"
 
     var body: some View {
         NavigationStack {
@@ -98,6 +100,28 @@ struct ComponentCatalog: View {
                             DSLinearProgress(progress: progress)
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(
+                                ["Overview", "Activity", "Settings"],
+                                selection: $segment
+                            )
+                            DSSegmentedControl(
+                                selection: $viewMode,
+                                items: ["list", "grid", "map"],
+                                systemImage: { item in
+                                    switch item {
+                                    case "list": return "list.bullet"
+                                    case "grid": return "square.grid.2x2"
+                                    default:     return "map"
+                                    }
+                                },
+                                title: { $0.capitalized }
+                            )
                         }
                     }
 
