@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var segmentPeriod = "Week"
+    @State private var segmentView = "List"
 
     var body: some View {
         NavigationStack {
@@ -88,6 +90,28 @@ struct ComponentCatalog: View {
                                 isSecure: true
                             )
                             DSSearchBar(text: $searchValue)
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(
+                                ["Day", "Week", "Month"],
+                                selection: $segmentPeriod
+                            )
+                            DSSegmentedControl(
+                                ["List", "Grid", "Map"],
+                                selection: $segmentView,
+                                title: { $0 },
+                                icon: { item in
+                                    switch item {
+                                    case "List": return "list.bullet"
+                                    case "Grid": return "square.grid.2x2"
+                                    default:     return "map"
+                                    }
+                                }
+                            )
                         }
                     }
 
