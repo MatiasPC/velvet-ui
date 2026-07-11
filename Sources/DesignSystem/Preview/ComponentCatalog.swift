@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var segmentPeriod = "Week"
+    @State private var segmentView = "List"
 
     var body: some View {
         NavigationStack {
@@ -68,6 +70,21 @@ struct ComponentCatalog: View {
                                     .ds(.callout, color: DSColors.defaultPalette.textSecondary)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(
+                                ["Day", "Week", "Month"],
+                                selection: $segmentPeriod
+                            )
+                            DSSegmentedControl(
+                                ["List", "Grid"],
+                                selection: $segmentView,
+                                icon: { $0 == "List" ? "list.bullet" : "square.grid.2x2" }
+                            )
                         }
                     }
 
