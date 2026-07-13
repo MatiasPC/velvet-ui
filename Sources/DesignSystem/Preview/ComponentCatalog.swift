@@ -8,6 +8,7 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var rating: Double = 4
 
     var body: some View {
         NavigationStack {
@@ -108,6 +109,17 @@ struct ComponentCatalog: View {
                             DSBadge("Active", color: DSColors.defaultPalette.success, variant: .soft)
                             DSBadge("Beta", variant: .outline)
                             DSCountBadge(count: 5)
+                        }
+                    }
+
+                    // MARK: - Rating
+                    section("Rating") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSRating(rating: $rating)
+                            DSRating(rating: $rating, step: 0.5)
+                            DSRating(value: 3.5, size: 20)
+                            DSRating(value: 4.0, symbol: "heart.fill", emptySymbol: "heart",
+                                     size: 20, tint: DSColors.defaultPalette.primary)
                         }
                     }
 
