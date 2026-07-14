@@ -8,6 +8,9 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var timeRange = "Week"
+    @State private var layoutMode = "List"
+    @State private var focusMode = "Focus"
 
     var body: some View {
         NavigationStack {
@@ -98,6 +101,32 @@ struct ComponentCatalog: View {
                             DSLinearProgress(progress: progress)
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(["Day", "Week", "Month"], selection: $timeRange)
+
+                            DSSegmentedControl(
+                                ["List", "Grid", "Map"],
+                                selection: $layoutMode,
+                                icon: { item in
+                                    switch item {
+                                    case "List": return "list.bullet"
+                                    case "Grid": return "square.grid.2x2"
+                                    default:     return "map"
+                                    }
+                                },
+                                title: { $0 }
+                            )
+
+                            DSSegmentedControl(
+                                ["Focus", "Relax"],
+                                selection: $focusMode,
+                                tint: DSColors.defaultPalette.primary
+                            )
                         }
                     }
 
