@@ -8,6 +8,8 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var viewMode = "List"
+    @State private var timeRange = "Week"
 
     var body: some View {
         NavigationStack {
@@ -47,6 +49,28 @@ struct ComponentCatalog: View {
                             }
 
                             DSButton("Loading...", isLoading: true) { }
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSegmentedControl(
+                                ["List", "Grid", "Map"],
+                                selection: $viewMode,
+                                title: { $0 },
+                                icon: { value in
+                                    switch value {
+                                    case "List": return "list.bullet"
+                                    case "Grid": return "square.grid.2x2"
+                                    default:     return "map"
+                                    }
+                                }
+                            )
+                            DSSegmentedControl(
+                                ["Day", "Week", "Month", "Year"],
+                                selection: $timeRange
+                            )
                         }
                     }
 
