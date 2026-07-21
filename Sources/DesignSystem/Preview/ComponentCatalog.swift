@@ -8,6 +8,7 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var page: Int = 1
 
     var body: some View {
         NavigationStack {
@@ -99,6 +100,19 @@ struct ComponentCatalog: View {
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
                         }
+                    }
+
+                    // MARK: - Page Control
+                    section("Page Control") {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSPageControl(currentPage: $page, numberOfPages: 4)
+                            DSPageControl(
+                                currentPage: $page,
+                                numberOfPages: 4,
+                                activeColor: DSColors.defaultPalette.secondary
+                            )
+                        }
+                        .frame(maxWidth: .infinity)
                     }
 
                     // MARK: - Badges
