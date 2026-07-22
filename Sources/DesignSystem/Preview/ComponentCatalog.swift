@@ -8,6 +8,13 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var segmentSelection = "Day"
+    @State private var tabSelection = "Overview"
+    @State private var notificationsOn = true
+    @State private var darkModeOn = false
+    @State private var rating: Double = 4
+    @State private var page: Int = 1
+    @State private var codeValue = "12"
 
     var body: some View {
         NavigationStack {
@@ -99,6 +106,70 @@ struct ComponentCatalog: View {
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
                         }
+                    }
+
+                    // MARK: - Toggles
+                    section("Toggles") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSToggle("Push Notifications", isOn: $notificationsOn)
+                            DSToggle("Dark Mode", isOn: $darkModeOn, onColor: DSColors.defaultPalette.secondary)
+                            DSToggle("Sync (disabled)", isOn: $notificationsOn)
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.lg) {
+                                DSToggle(isOn: $notificationsOn, size: .small)
+                                DSToggle(isOn: $darkModeOn)
+                                DSToggle(isOn: $notificationsOn, onColor: DSColors.defaultPalette.success)
+                            }
+                        }
+                    }
+
+                    // MARK: - Segmented Control
+                    section("Segmented Control") {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSSegmentedControl(
+                                selection: $segmentSelection,
+                                options: ["Day", "Week", "Month"]
+                            )
+                            DSSegmentedControl(
+                                selection: $tabSelection,
+                                options: ["Overview", "Details", "Reviews"],
+                                style: .underline
+                            )
+                        }
+                    }
+
+                    // MARK: - Code Field
+                    section("Code Field (OTP)") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSCodeField(length: 6, code: $codeValue)
+                            DSCodeField(length: 4, code: .constant("1234"), state: .error)
+                            DSCodeField(length: 4, code: .constant("5678"), state: .success)
+                        }
+                    }
+
+                    // MARK: - Rating
+                    section("Rating") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSRating(rating: $rating)
+                            DSRating(rating: $rating, step: 0.5)
+                            DSRating(value: 3.5, size: 20)
+                            DSRating(value: 4.0, symbol: "heart.fill", emptySymbol: "heart",
+                                     size: 20, tint: DSColors.defaultPalette.primary)
+                        }
+                    }
+
+                    // MARK: - Page Control
+                    section("Page Control") {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSPageControl(currentPage: $page, numberOfPages: 4)
+                            DSPageControl(
+                                currentPage: $page,
+                                numberOfPages: 4,
+                                activeColor: DSColors.defaultPalette.secondary
+                            )
+                        }
+                        .frame(maxWidth: .infinity)
                     }
 
                     // MARK: - Badges
