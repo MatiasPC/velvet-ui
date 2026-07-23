@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var chipInterests: Set<String> = ["Design", "Coffee"]
+    @State private var chipCategory: String? = "All"
 
     var body: some View {
         NavigationStack {
@@ -135,6 +137,26 @@ struct ComponentCatalog: View {
                                 selection: $tabSelection,
                                 options: ["Overview", "Details", "Reviews"],
                                 style: .underline
+                            )
+                        }
+                    }
+
+                    // MARK: - Chips
+                    section("Chips") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                selection: $chipInterests,
+                                options: ["Design", "Coffee", "Travel", "Music", "Photography", "Cooking", "Reading"]
+                            )
+                            DSChipGroup(
+                                selection: $chipCategory,
+                                items: [
+                                    .init("All", value: "All", icon: "square.grid.2x2"),
+                                    .init("Nearby", value: "Nearby", icon: "location"),
+                                    .init("Trending", value: "Trending", icon: "flame"),
+                                    .init("Top Rated", value: "Top", icon: "star")
+                                ],
+                                accent: DSColors.defaultPalette.secondary
                             )
                         }
                     }
