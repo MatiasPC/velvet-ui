@@ -15,6 +15,9 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var liked = false
+    @State private var savedItem = true
+    @State private var starred = false
 
     var body: some View {
         NavigationStack {
@@ -156,6 +159,25 @@ struct ComponentCatalog: View {
                             DSRating(value: 3.5, size: 20)
                             DSRating(value: 4.0, symbol: "heart.fill", emptySymbol: "heart",
                                      size: 20, tint: DSColors.defaultPalette.primary)
+                        }
+                    }
+
+                    // MARK: - Favorite Button
+                    section("Favorite Button") {
+                        HStack(spacing: DSSpacing.xl) {
+                            DSFavoriteButton(isOn: $liked)
+                            DSFavoriteButton(
+                                isOn: $starred,
+                                symbol: "star",
+                                filledSymbol: "star.fill",
+                                tint: DSColors.defaultPalette.warning
+                            )
+                            DSFavoriteButton(
+                                isOn: $savedItem,
+                                symbol: "bookmark",
+                                filledSymbol: "bookmark.fill",
+                                tint: DSColors.defaultPalette.secondary
+                            )
                         }
                     }
 
