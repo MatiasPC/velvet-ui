@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var cardFlipped = false
 
     var body: some View {
         NavigationStack {
@@ -75,6 +76,27 @@ struct ComponentCatalog: View {
                                     .ds(.callout, color: DSColors.defaultPalette.textSecondary)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+
+                    // MARK: - Flip Card
+                    section("Flip Card") {
+                        HStack(spacing: DSSpacing.lg) {
+                            DSFlipCard {
+                                flipFace(title: "STEPS", value: "8,420",
+                                         tint: DSColors.defaultPalette.primary)
+                            } back: {
+                                flipFace(title: "GOAL", value: "84%",
+                                         tint: DSColors.defaultPalette.tertiary)
+                            }
+
+                            DSFlipCard(isFlipped: $cardFlipped, axis: .vertical) {
+                                flipFace(title: "TAP", value: "Q",
+                                         tint: DSColors.defaultPalette.secondary)
+                            } back: {
+                                flipFace(title: "ANSWER", value: "A",
+                                         tint: DSColors.defaultPalette.success)
+                            }
                         }
                     }
 
@@ -215,6 +237,16 @@ struct ComponentCatalog: View {
             }
             .background(DSColors.defaultPalette.backgroundPrimary)
             .navigationTitle("Design System")
+        }
+    }
+
+    private func flipFace(title: String, value: String, tint: Color) -> some View {
+        DSCard(style: .elevated) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                Text(title).ds(.overline, color: tint)
+                Text(value).ds(.title1)
+            }
+            .frame(width: 110, alignment: .leading)
         }
     }
 
