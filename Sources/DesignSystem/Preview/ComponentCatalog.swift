@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var interests: Set<String> = ["Design", "Music"]
+    @State private var diet: Set<String> = ["Vegan"]
 
     var body: some View {
         NavigationStack {
@@ -135,6 +137,26 @@ struct ComponentCatalog: View {
                                 selection: $tabSelection,
                                 options: ["Overview", "Details", "Reviews"],
                                 style: .underline
+                            )
+                        }
+                    }
+
+                    // MARK: - Chips
+                    section("Filter Chips") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                selection: $interests,
+                                options: ["Design", "Music", "Travel", "Food", "Fitness", "Reading"]
+                            )
+                            DSChipGroup(
+                                selection: $diet,
+                                items: [
+                                    DSChipItem("Vegan", value: "Vegan", icon: "leaf"),
+                                    DSChipItem("Halal", value: "Halal", icon: "checkmark.seal"),
+                                    DSChipItem("Gluten-Free", value: "Gluten-Free", icon: "allergens")
+                                ],
+                                style: .solid,
+                                accent: DSColors.defaultPalette.secondary
                             )
                         }
                     }
