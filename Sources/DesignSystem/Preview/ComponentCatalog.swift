@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var chipInterests: Set<String> = ["Design", "SwiftUI"]
+    @State private var chipPriority = "Medium"
 
     var body: some View {
         NavigationStack {
@@ -170,6 +172,26 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Chips
+                    section("Chips") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                ["Design", "SwiftUI", "Animation", "Haptics",
+                                 "Layout", "Motion", "Prototyping"],
+                                selection: $chipInterests
+                            )
+                            DSChipGroup(
+                                [
+                                    DSChipItem("Low", value: "Low", icon: "arrow.down"),
+                                    DSChipItem("Medium", value: "Medium", icon: "equal"),
+                                    DSChipItem("High", value: "High", icon: "arrow.up")
+                                ],
+                                selection: $chipPriority,
+                                accent: DSColors.defaultPalette.secondary
+                            )
+                        }
                     }
 
                     // MARK: - Badges
