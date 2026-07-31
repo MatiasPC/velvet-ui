@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var volume: Double = 0.6
+    @State private var quantity: Double = 3
 
     var body: some View {
         NavigationStack {
@@ -121,6 +123,20 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $darkModeOn)
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.defaultPalette.success)
                             }
+                        }
+                    }
+
+                    // MARK: - Sliders
+                    section("Sliders") {
+                        VStack(spacing: DSSpacing.xl) {
+                            DSSlider(value: $volume)
+                            DSSlider(value: $volume, tint: DSColors.defaultPalette.warning)
+                            DSSlider(
+                                value: $quantity,
+                                in: 0...10,
+                                step: 1,
+                                tint: DSColors.defaultPalette.secondary
+                            )
                         }
                     }
 
