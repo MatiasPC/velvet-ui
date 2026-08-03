@@ -12,6 +12,8 @@ struct ComponentCatalog: View {
     @State private var tabSelection = "Overview"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
+    @State private var agreedToTerms = false
+    @State private var taskDone = true
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
@@ -120,6 +122,27 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, size: .small)
                                 DSToggle(isOn: $darkModeOn)
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.defaultPalette.success)
+                            }
+                        }
+                    }
+
+                    // MARK: - Checkboxes
+                    section("Checkboxes") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSCheckbox("I agree to the Terms & Conditions", isOn: $agreedToTerms)
+                            DSCheckbox(
+                                "Walk the dog",
+                                isOn: $taskDone,
+                                shape: .circle,
+                                onColor: DSColors.defaultPalette.success
+                            )
+                            DSCheckbox("Locked option", isOn: $taskDone)
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.xl) {
+                                DSCheckbox(isOn: $agreedToTerms, size: .small)
+                                DSCheckbox(isOn: $taskDone)
+                                DSCheckbox(isOn: $agreedToTerms, shape: .circle)
                             }
                         }
                     }
