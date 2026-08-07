@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var slideConfirmed = false
 
     var body: some View {
         NavigationStack {
@@ -170,6 +171,24 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Slide To Confirm
+                    section("Slide To Confirm") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSSlideToConfirm(
+                                "Slide to Pay",
+                                confirmedTitle: "Payment Sent",
+                                icon: "creditcard",
+                                isConfirmed: $slideConfirmed
+                            )
+                            DSSlideToConfirm(
+                                "Slide to Delete",
+                                confirmedTitle: "Deleted",
+                                icon: "trash",
+                                accent: DSColors.defaultPalette.error
+                            ) { }
+                        }
                     }
 
                     // MARK: - Badges
