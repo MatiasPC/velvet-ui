@@ -172,6 +172,34 @@ struct ComponentCatalog: View {
                         .frame(maxWidth: .infinity)
                     }
 
+                    // MARK: - Marquee
+                    section("Marquee") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSMarquee(
+                                "Breaking: Velvet UI now ships a seamless, tappable marquee for tickers and long labels — tap to pause.",
+                                style: .callout,
+                                color: DSColors.defaultPalette.textSecondary
+                            )
+
+                            HStack(spacing: DSSpacing.sm) {
+                                Image(systemName: "music.note")
+                                    .foregroundStyle(DSColors.defaultPalette.primary)
+                                DSMarquee(
+                                    "Midnight City · M83 · Hurry Up, We're Dreaming",
+                                    style: .footnote
+                                )
+                            }
+
+                            DSMarquee(
+                                "This one drifts the other way, a touch quicker — great for contrast.",
+                                style: .callout,
+                                color: DSColors.defaultPalette.secondary,
+                                velocity: 60,
+                                direction: .trailing
+                            )
+                        }
+                    }
+
                     // MARK: - Badges
                     section("Badges & Tags") {
                         HStack(spacing: DSSpacing.xs) {
