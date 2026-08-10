@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var selectedChips: Set<String> = ["Design", "Product"]
 
     var body: some View {
         NavigationStack {
@@ -136,6 +137,21 @@ struct ComponentCatalog: View {
                                 options: ["Overview", "Details", "Reviews"],
                                 style: .underline
                             )
+                        }
+                    }
+
+                    // MARK: - Chips
+                    section("Chips") {
+                        DSFlowLayout {
+                            ForEach(["Design", "Engineering", "Product", "Marketing", "Sales", "Support"], id: \.self) { filter in
+                                DSChip(
+                                    filter,
+                                    isSelected: Binding(
+                                        get: { selectedChips.contains(filter) },
+                                        set: { $0 ? selectedChips.insert(filter) : selectedChips.remove(filter) }
+                                    )
+                                )
+                            }
                         }
                     }
 
