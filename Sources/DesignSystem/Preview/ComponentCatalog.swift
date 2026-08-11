@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var odometerValue = 1240
 
     var body: some View {
         NavigationStack {
@@ -168,6 +169,31 @@ struct ComponentCatalog: View {
                                 numberOfPages: 4,
                                 activeColor: DSColors.defaultPalette.secondary
                             )
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Odometer
+                    section("Odometer") {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSOdometer(
+                                value: odometerValue,
+                                textStyle: .displayMedium,
+                                color: DSColors.defaultPalette.primary,
+                                grouping: true
+                            )
+                            DSOdometer(
+                                value: odometerValue / 10,
+                                textStyle: .title1,
+                                color: DSColors.defaultPalette.success,
+                                prefix: "$"
+                            )
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("-125", variant: .outline, size: .small) {
+                                    odometerValue = max(0, odometerValue - 125)
+                                }
+                                DSButton("+125", size: .small) { odometerValue += 125 }
+                            }
                         }
                         .frame(maxWidth: .infinity)
                     }
