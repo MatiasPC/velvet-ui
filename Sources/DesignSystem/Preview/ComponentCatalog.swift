@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var amenities: Set<String> = ["Wi-Fi", "Kitchen"]
+    @State private var sortCategory: String? = "Popular"
 
     var body: some View {
         NavigationStack {
@@ -170,6 +172,28 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Chip Group
+                    section("Chip Group") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                selection: $amenities,
+                                items: [
+                                    DSChipItem("Wi-Fi", value: "Wi-Fi", icon: "wifi"),
+                                    DSChipItem("Kitchen", value: "Kitchen", icon: "fork.knife"),
+                                    DSChipItem("Parking", value: "Parking", icon: "car"),
+                                    DSChipItem("Pool", value: "Pool", icon: "figure.pool.swim"),
+                                    DSChipItem("Pets OK", value: "Pets OK", icon: "pawprint")
+                                ]
+                            )
+                            DSChipGroup(
+                                selection: $sortCategory,
+                                options: ["Popular", "Newest", "Price", "Rating"],
+                                style: .outline,
+                                accent: DSColors.defaultPalette.secondary
+                            )
+                        }
                     }
 
                     // MARK: - Badges
