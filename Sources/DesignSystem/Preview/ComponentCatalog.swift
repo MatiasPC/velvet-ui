@@ -15,6 +15,9 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var acceptTerms = true
+    @State private var subscribe = false
+    @State private var taskDone = false
 
     var body: some View {
         NavigationStack {
@@ -120,6 +123,26 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, size: .small)
                                 DSToggle(isOn: $darkModeOn)
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.defaultPalette.success)
+                            }
+                        }
+                    }
+
+                    // MARK: - Checkboxes
+                    section("Checkboxes") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSCheckbox("Accept terms & conditions", isOn: $acceptTerms)
+                            DSCheckbox("Subscribe to newsletter", isOn: $subscribe,
+                                       tint: DSColors.defaultPalette.secondary)
+                            DSCheckbox("Sync (disabled)", isOn: $subscribe)
+                                .disabled(true)
+                            DSCheckbox("Mark complete", isOn: $taskDone, shape: .circle,
+                                       tint: DSColors.defaultPalette.success)
+
+                            HStack(spacing: DSSpacing.lg) {
+                                DSCheckbox(isOn: $acceptTerms, size: .small)
+                                DSCheckbox(isOn: $subscribe)
+                                DSCheckbox(isOn: $acceptTerms, shape: .circle,
+                                           tint: DSColors.defaultPalette.tertiary)
                             }
                         }
                     }
