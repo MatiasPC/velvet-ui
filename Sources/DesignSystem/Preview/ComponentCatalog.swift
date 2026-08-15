@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var interests: Set<String> = ["Design", "Coffee"]
+    @State private var category: String? = "All"
 
     var body: some View {
         NavigationStack {
@@ -170,6 +172,22 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Chips
+                    section("Chips & Filters") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                ["Design", "Coffee", "Travel", "Music", "Reading", "Fitness"],
+                                selection: $interests
+                            )
+                            DSChipGroup(
+                                ["All", "Photos", "Videos", "Docs"],
+                                selection: $category,
+                                accent: DSColors.defaultPalette.secondary
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
                     // MARK: - Badges
