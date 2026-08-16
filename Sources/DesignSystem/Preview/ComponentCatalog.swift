@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var volume: Double = 0.6
+    @State private var priceLimit: Double = 40
 
     var body: some View {
         NavigationStack {
@@ -135,6 +137,27 @@ struct ComponentCatalog: View {
                                 selection: $tabSelection,
                                 options: ["Overview", "Details", "Reviews"],
                                 style: .underline
+                            )
+                        }
+                    }
+
+                    // MARK: - Slider
+                    section("Slider") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            HStack(spacing: DSSpacing.md) {
+                                Image(systemName: "speaker.fill")
+                                    .foregroundStyle(DSColors.defaultPalette.textSecondary)
+                                DSSlider(value: $volume)
+                                Image(systemName: "speaker.wave.3.fill")
+                                    .foregroundStyle(DSColors.defaultPalette.textSecondary)
+                            }
+                            Text("Max price — $\(Int(priceLimit))")
+                                .ds(.footnote, color: DSColors.defaultPalette.textSecondary)
+                            DSSlider(
+                                value: $priceLimit,
+                                in: 0...100,
+                                step: 5,
+                                accent: DSColors.defaultPalette.tertiary
                             )
                         }
                     }
