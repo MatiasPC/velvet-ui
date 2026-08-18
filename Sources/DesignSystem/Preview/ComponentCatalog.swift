@@ -12,6 +12,9 @@ struct ComponentCatalog: View {
     @State private var tabSelection = "Overview"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
+    @State private var acceptTerms = false
+    @State private var newsletter = true
+    @State private var specialOffers = false
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
@@ -120,6 +123,26 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, size: .small)
                                 DSToggle(isOn: $darkModeOn)
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.defaultPalette.success)
+                            }
+                        }
+                    }
+
+                    // MARK: - Checkboxes
+                    section("Checkboxes") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSCheckbox("Accept terms & conditions", isChecked: $acceptTerms)
+                            DSCheckbox("Subscribe to the newsletter", isChecked: $newsletter,
+                                       tint: DSColors.defaultPalette.secondary)
+                            DSCheckbox("Send me special offers", isChecked: $specialOffers,
+                                       shape: .circle, tint: DSColors.defaultPalette.success)
+                            DSCheckbox("Disabled option", isChecked: $acceptTerms)
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.lg) {
+                                DSCheckbox(isChecked: $newsletter, size: 20)
+                                DSCheckbox(isChecked: $specialOffers, shape: .circle)
+                                DSCheckbox(isChecked: $acceptTerms, size: 32,
+                                           tint: DSColors.defaultPalette.tertiary)
                             }
                         }
                     }
