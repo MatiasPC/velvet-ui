@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var stepperQty = 2
+    @State private var stepperTemp = 20
 
     var body: some View {
         NavigationStack {
@@ -145,6 +147,23 @@ struct ComponentCatalog: View {
                             DSCodeField(length: 6, code: $codeValue)
                             DSCodeField(length: 4, code: .constant("1234"), state: .error)
                             DSCodeField(length: 4, code: .constant("5678"), state: .success)
+                        }
+                    }
+
+                    // MARK: - Stepper
+                    section("Stepper") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            HStack {
+                                Text("Quantity").ds(.body)
+                                Spacer(minLength: DSSpacing.md)
+                                DSStepper(value: $stepperQty, in: 1...20)
+                            }
+                            HStack {
+                                Text("Temperature").ds(.body)
+                                Spacer(minLength: DSSpacing.md)
+                                DSStepper(value: $stepperTemp, in: 16...30,
+                                          tint: DSColors.defaultPalette.secondary) { "\($0)°" }
+                            }
                         }
                     }
 
