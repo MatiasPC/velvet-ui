@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var volume: Double = 0.6
+    @State private var rooms: Double = 2
 
     var body: some View {
         NavigationStack {
@@ -136,6 +138,15 @@ struct ComponentCatalog: View {
                                 options: ["Overview", "Details", "Reviews"],
                                 style: .underline
                             )
+                        }
+                    }
+
+                    // MARK: - Slider
+                    section("Slider") {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSSlider(value: $volume)
+                            DSSlider(value: $rooms, in: 0...5, step: 1,
+                                     tint: DSColors.defaultPalette.secondary)
                         }
                     }
 
