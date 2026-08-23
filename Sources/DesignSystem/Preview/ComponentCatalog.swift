@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var sliderValue: Double = 0.6
+    @State private var quantity: Double = 3
 
     var body: some View {
         NavigationStack {
@@ -170,6 +172,23 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Slider
+                    section("Slider") {
+                        VStack(spacing: DSSpacing.xl) {
+                            DSSlider(value: $sliderValue)
+                            DSSlider(
+                                value: $sliderValue,
+                                tint: DSColors.defaultPalette.secondary
+                            )
+                            DSSlider(
+                                value: $quantity,
+                                in: 0...10,
+                                step: 1,
+                                showsValue: true
+                            )
+                        }
                     }
 
                     // MARK: - Badges
