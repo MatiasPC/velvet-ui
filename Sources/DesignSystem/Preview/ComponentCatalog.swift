@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var statValue: Double = 1250
 
     var body: some View {
         NavigationStack {
@@ -105,6 +106,35 @@ struct ComponentCatalog: View {
                             DSLinearProgress(progress: progress)
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
+                        }
+                    }
+
+                    // MARK: - Animated Numbers
+                    section("Animated Numbers") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSAnimatedNumber(statValue)
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("−100", variant: .outline, size: .small) {
+                                    statValue = max(0, statValue - 100)
+                                }
+                                DSButton("+100", variant: .primary, size: .small) {
+                                    statValue += 100
+                                }
+                            }
+                            HStack(spacing: DSSpacing.xl) {
+                                DSAnimatedNumber(
+                                    statValue / 100,
+                                    style: .currency("USD"),
+                                    textStyle: .title1,
+                                    color: DSColors.defaultPalette.primary
+                                )
+                                DSAnimatedNumber(
+                                    statValue / 2000,
+                                    style: .percent,
+                                    textStyle: .title1,
+                                    color: DSColors.defaultPalette.success
+                                )
+                            }
                         }
                     }
 
