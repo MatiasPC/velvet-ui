@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var celebrate = 0
 
     var body: some View {
         NavigationStack {
@@ -172,6 +173,21 @@ struct ComponentCatalog: View {
                         .frame(maxWidth: .infinity)
                     }
 
+                    // MARK: - Confetti
+                    section("Confetti") {
+                        DSCard(style: .outlined) {
+                            VStack(spacing: DSSpacing.md) {
+                                Text("🎉").font(.system(size: 44))
+                                Text("Celebrate a win")
+                                    .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                                DSButton("Fire Confetti", icon: "party.popper") {
+                                    celebrate += 1
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
+
                     // MARK: - Badges
                     section("Badges & Tags") {
                         HStack(spacing: DSSpacing.xs) {
@@ -214,6 +230,7 @@ struct ComponentCatalog: View {
                 .padding(.vertical, DSSpacing.lg)
             }
             .background(DSColors.defaultPalette.backgroundPrimary)
+            .dsConfetti(trigger: celebrate, intensity: .festive)
             .navigationTitle("Design System")
         }
     }
