@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var faqExpanded = true
 
     var body: some View {
         NavigationStack {
@@ -170,6 +171,24 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+
+                    // MARK: - Disclosure
+                    section("Disclosure") {
+                        VStack(spacing: DSSpacing.md) {
+                            DSDisclosure("What is Velvet UI?", icon: "sparkles", isExpanded: $faqExpanded) {
+                                Text("A polished SwiftUI design system with tokens, springs, and haptics baked into every component.")
+                                    .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                            }
+                            DSDisclosure("Shipping & Returns", icon: "shippingbox") {
+                                Text("Free returns within 30 days. Orders ship in 1–2 business days.")
+                                    .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                            }
+                            DSDisclosure("Advanced options", style: .plain) {
+                                Text("Plain style nests cleanly inside an existing card or list.")
+                                    .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                            }
+                        }
                     }
 
                     // MARK: - Badges
