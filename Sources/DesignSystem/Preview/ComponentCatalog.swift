@@ -15,6 +15,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var radioPlan = "pro"
 
     var body: some View {
         NavigationStack {
@@ -157,6 +158,18 @@ struct ComponentCatalog: View {
                             DSRating(value: 4.0, symbol: "heart.fill", emptySymbol: "heart",
                                      size: 20, tint: DSColors.defaultPalette.primary)
                         }
+                    }
+
+                    // MARK: - Radio Group
+                    section("Radio Group") {
+                        DSRadioGroup(
+                            selection: $radioPlan,
+                            options: [
+                                DSRadioOption("free", title: "Free", subtitle: "For getting started"),
+                                DSRadioOption("pro", title: "Pro", subtitle: "$9/mo — everything you need"),
+                                DSRadioOption("team", title: "Team", subtitle: "$29/mo — collaborate together")
+                            ]
+                        )
                     }
 
                     // MARK: - Page Control
