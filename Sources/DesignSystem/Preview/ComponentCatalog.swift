@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var chipFilters: Set<String> = ["Nearby"]
+    @State private var chipOutlined = false
 
     var body: some View {
         NavigationStack {
@@ -139,6 +141,27 @@ struct ComponentCatalog: View {
                         }
                     }
 
+                    // MARK: - Chips
+                    section("Chips") {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.xs) {
+                                ForEach(["Nearby", "Open Now", "Top Rated"], id: \.self) { option in
+                                    DSChip(option, isSelected: chipBinding(option))
+                                }
+                            }
+                            HStack(spacing: DSSpacing.xs) {
+                                DSChip("Featured", icon: "flame", isSelected: chipBinding("Featured"),
+                                       style: .filled)
+                                DSChip(
+                                    "Outlined",
+                                    isSelected: $chipOutlined,
+                                    style: .outlined,
+                                    tint: DSColors.defaultPalette.tertiary
+                                )
+                            }
+                        }
+                    }
+
                     // MARK: - Code Field
                     section("Code Field (OTP)") {
                         VStack(alignment: .leading, spacing: DSSpacing.lg) {
@@ -216,6 +239,15 @@ struct ComponentCatalog: View {
             .background(DSColors.defaultPalette.backgroundPrimary)
             .navigationTitle("Design System")
         }
+    }
+
+    private func chipBinding(_ option: String) -> Binding<Bool> {
+        Binding(
+            get: { chipFilters.contains(option) },
+            set: { isOn in
+                if isOn { chipFilters.insert(option) } else { chipFilters.remove(option) }
+            }
+        )
     }
 
     @ViewBuilder
