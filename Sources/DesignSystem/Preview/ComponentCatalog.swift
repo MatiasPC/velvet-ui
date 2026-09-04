@@ -15,6 +15,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var interests: Set<String> = ["Design", "Coffee"]
+    @State private var filter: String? = "All"
 
     var body: some View {
         NavigationStack {
@@ -137,6 +139,23 @@ struct ComponentCatalog: View {
                                 style: .underline
                             )
                         }
+                    }
+
+                    // MARK: - Chip Group
+                    section("Chip Group") {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                selection: $interests,
+                                options: ["Design", "Code", "Music", "Travel",
+                                          "Coffee", "Photography", "Fitness"]
+                            )
+                            DSChipGroup(
+                                selection: $filter,
+                                options: ["All", "Active", "Archived", "Shared"],
+                                tint: DSColors.defaultPalette.secondary
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
                     // MARK: - Code Field
