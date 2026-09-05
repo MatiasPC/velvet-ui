@@ -1,55 +1,71 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 // MARK: - Design System Colors
-// Inspired by Airbnb's warmth and Opal's calm sophistication.
-// Semantic naming ensures consistency across any app type.
-// Uses programmatic colors — no asset catalog needed. Works everywhere.
+// Neutrals and status colors live here (`DSColorPalette`). The accent lives in
+// the active `DSGradientTheme` — components read it through `@DSThemed`.
+// The static accessors below are adaptive (light/dark) convenience colors for
+// code that has no environment (models, previews, quick prototypes). They do
+// NOT follow an injected custom palette; use `@DSThemed` inside views for that.
 
 public struct DSColors {
 
-    // MARK: - Semantic Accessors (use defaultPalette)
-    // These are convenience accessors. For themed apps, use DSTheme's palette instead.
+    // MARK: - Semantic Accessors (adaptive light/dark, default palettes)
 
-    public static var primary: Color { defaultPalette.primary }
-    public static var primaryVariant: Color { defaultPalette.primaryVariant }
-    public static var secondary: Color { defaultPalette.secondary }
-    public static var secondaryVariant: Color { defaultPalette.secondaryVariant }
-    public static var tertiary: Color { defaultPalette.tertiary }
+    public static var primary: Color { dynamic(\.primary) }
+    public static var primaryVariant: Color { dynamic(\.primaryVariant) }
+    public static var secondary: Color { dynamic(\.secondary) }
+    public static var secondaryVariant: Color { dynamic(\.secondaryVariant) }
+    public static var tertiary: Color { dynamic(\.tertiary) }
 
-    public static var success: Color { defaultPalette.success }
-    public static var warning: Color { defaultPalette.warning }
-    public static var error: Color { defaultPalette.error }
-    public static var info: Color { defaultPalette.info }
+    public static var success: Color { dynamic(\.success) }
+    public static var warning: Color { dynamic(\.warning) }
+    public static var error: Color { dynamic(\.error) }
+    public static var info: Color { dynamic(\.info) }
 
-    public static var backgroundPrimary: Color { defaultPalette.backgroundPrimary }
-    public static var backgroundSecondary: Color { defaultPalette.backgroundSecondary }
-    public static var backgroundElevated: Color { defaultPalette.backgroundElevated }
+    public static var backgroundPrimary: Color { dynamic(\.backgroundPrimary) }
+    public static var backgroundSecondary: Color { dynamic(\.backgroundSecondary) }
+    public static var backgroundElevated: Color { dynamic(\.backgroundElevated) }
 
-    public static var textPrimary: Color { defaultPalette.textPrimary }
-    public static var textSecondary: Color { defaultPalette.textSecondary }
-    public static var textTertiary: Color { defaultPalette.textTertiary }
-    public static var textOnPrimary: Color { defaultPalette.textOnPrimary }
+    public static var textPrimary: Color { dynamic(\.textPrimary) }
+    public static var textSecondary: Color { dynamic(\.textSecondary) }
+    public static var textTertiary: Color { dynamic(\.textTertiary) }
+    public static var textOnPrimary: Color { dynamic(\.textOnPrimary) }
 
-    public static var border: Color { defaultPalette.border }
-    public static var borderFocused: Color { defaultPalette.borderFocused }
-    public static var divider: Color { defaultPalette.divider }
+    public static var border: Color { dynamic(\.border) }
+    public static var borderFocused: Color { dynamic(\.borderFocused) }
+    public static var divider: Color { dynamic(\.divider) }
 
     // MARK: - Overlay
 
     public static let overlay = Color.black.opacity(0.4)
     public static let overlayLight = Color.black.opacity(0.15)
+
+    private static func dynamic(_ keyPath: KeyPath<DSColorPalette, Color>) -> Color {
+        Color.dsDynamic(
+            light: defaultPalette[keyPath: keyPath],
+            dark: defaultDarkPalette[keyPath: keyPath]
+        )
+    }
 }
 
 // MARK: - Default Palettes
 
 public extension DSColors {
-    /// Beautiful defaults out of the box — warm, professional, Airbnb-inspired
+    /// Velvet defaults. `primary` matches the Sunset accent so raw-token usage
+    /// lines up with the default gradient theme. `textOnPrimary` is white: it is
+    /// the text color on *secondary, status and destructive* fills. On the
+    /// accent itself use the theme's `onAccent`.
     static let defaultPalette = DSColorPalette(
-        primary:             Color(hex: "FF385C"),   // Warm coral
-        primaryVariant:      Color(hex: "E0294D"),
-        secondary:           Color(hex: "5B5FEF"),   // Calm indigo
-        secondaryVariant:    Color(hex: "4A4ED4"),
-        tertiary:            Color(hex: "00BFA6"),   // Fresh teal
+        primary:             Color(hex: "FF7E5F"),   // Sunset accent
+        primaryVariant:      Color(hex: "C2361A"),   // Sunset ink
+        secondary:           Color(hex: "7F5AF0"),   // Aurora accent
+        secondaryVariant:    Color(hex: "6D47E6"),   // Aurora ink
+        tertiary:            Color(hex: "16F2B3"),   // Lagoon accent
         success:             Color(hex: "22C55E"),
         warning:             Color(hex: "F59E0B"),
         error:               Color(hex: "EF4444"),
@@ -62,16 +78,16 @@ public extension DSColors {
         textTertiary:        Color(hex: "9CA3AF"),
         textOnPrimary:       Color(hex: "FFFFFF"),
         border:              Color(hex: "E5E7EB"),
-        borderFocused:       Color(hex: "FF385C"),
+        borderFocused:       Color(hex: "C2361A"),
         divider:             Color(hex: "F3F4F6")
     )
 
     static let defaultDarkPalette = DSColorPalette(
-        primary:             Color(hex: "FF6B81"),
-        primaryVariant:      Color(hex: "FF385C"),
-        secondary:           Color(hex: "818CF8"),
-        secondaryVariant:    Color(hex: "5B5FEF"),
-        tertiary:            Color(hex: "34D399"),
+        primary:             Color(hex: "FF7E5F"),
+        primaryVariant:      Color(hex: "FFA98F"),   // Sunset inkDark
+        secondary:           Color(hex: "7F5AF0"),
+        secondaryVariant:    Color(hex: "B9A3FF"),   // Aurora inkDark
+        tertiary:            Color(hex: "16F2B3"),
         success:             Color(hex: "34D399"),
         warning:             Color(hex: "FBBF24"),
         error:               Color(hex: "F87171"),
@@ -84,7 +100,7 @@ public extension DSColors {
         textTertiary:        Color(hex: "6B7280"),
         textOnPrimary:       Color(hex: "FFFFFF"),
         border:              Color(hex: "374151"),
-        borderFocused:       Color(hex: "FF6B81"),
+        borderFocused:       Color(hex: "FFA98F"),
         divider:             Color(hex: "1F2937")
     )
 }
@@ -166,5 +182,22 @@ public extension Color {
             blue: Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+
+    /// A color that resolves to `light` or `dark` with the system appearance,
+    /// without needing a SwiftUI environment. Works on iOS and macOS.
+    static func dsDynamic(light: Color, dark: Color) -> Color {
+        #if canImport(UIKit)
+        return Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark ? UIColor(dark) : UIColor(light)
+        })
+        #elseif canImport(AppKit)
+        return Color(nsColor: NSColor(name: nil) { appearance in
+            let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+            return isDark ? NSColor(dark) : NSColor(light)
+        })
+        #else
+        return light
+        #endif
     }
 }

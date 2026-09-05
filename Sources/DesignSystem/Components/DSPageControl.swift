@@ -9,19 +9,21 @@ import SwiftUI
 public struct DSPageControl: View {
     @Binding private var currentPage: Int
     private let numberOfPages: Int
-    private let activeColor: Color
-    private let inactiveColor: Color
+    private let activeColor: Color?
+    private let inactiveColor: Color?
     private let dotSize: CGFloat
     private let activeWidth: CGFloat
     private let spacing: CGFloat
     private let allowsTap: Bool
 
+    @DSThemed private var theme
+
     /// Create a page control.
     /// - Parameters:
     ///   - currentPage: Binding to the currently selected page index.
     ///   - numberOfPages: Total number of pages.
-    ///   - activeColor: Fill for the selected page indicator.
-    ///   - inactiveColor: Fill for the unselected page dots.
+    ///   - activeColor: Fill for the selected page indicator. Defaults to the theme accent.
+    ///   - inactiveColor: Fill for the unselected page dots. Defaults to the palette border.
     ///   - dotSize: Diameter of an unselected dot (also the control height).
     ///   - activeWidth: Width the selected indicator expands to.
     ///   - spacing: Gap between indicators.
@@ -29,8 +31,8 @@ public struct DSPageControl: View {
     public init(
         currentPage: Binding<Int>,
         numberOfPages: Int,
-        activeColor: Color = DSColors.defaultPalette.primary,
-        inactiveColor: Color = DSColors.defaultPalette.border,
+        activeColor: Color? = nil,
+        inactiveColor: Color? = nil,
         dotSize: CGFloat = DSSpacing.xs,
         activeWidth: CGFloat = DSSpacing.xl,
         spacing: CGFloat = DSSpacing.xs,
@@ -50,7 +52,7 @@ public struct DSPageControl: View {
         HStack(spacing: spacing) {
             ForEach(0..<numberOfPages, id: \.self) { index in
                 Capsule(style: .continuous)
-                    .fill(index == currentPage ? activeColor : inactiveColor)
+                    .fill(index == currentPage ? (activeColor ?? theme.accent) : (inactiveColor ?? theme.palette.border))
                     .frame(
                         width: index == currentPage ? activeWidth : dotSize,
                         height: dotSize
@@ -78,18 +80,18 @@ private struct DSPageControlPreviewHost: View {
     var body: some View {
         VStack(spacing: DSSpacing.xxl) {
             Text("Page \(page + 1) of \(total)")
-                .ds(.title3, color: DSColors.defaultPalette.textSecondary)
+                .ds(.title3, color: DSColors.textSecondary)
 
             DSPageControl(currentPage: $page, numberOfPages: total)
 
             DSPageControl(
                 currentPage: $page,
                 numberOfPages: total,
-                activeColor: DSColors.defaultPalette.secondary
+                activeColor: DSColors.secondary
             )
 
             Text("Tap a dot or use the buttons")
-                .ds(.footnote, color: DSColors.defaultPalette.textTertiary)
+                .ds(.footnote, color: DSColors.textTertiary)
 
             HStack(spacing: DSSpacing.md) {
                 DSButton("Back", variant: .outline, size: .small) {
@@ -102,7 +104,7 @@ private struct DSPageControlPreviewHost: View {
         }
         .padding(DSSpacing.xxl)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(DSColors.defaultPalette.backgroundPrimary)
+        .background(DSColors.backgroundPrimary)
     }
 }
 

@@ -1,21 +1,22 @@
 import SwiftUI
 
 // MARK: - Design System Animation
-// Smooth, purposeful motion that feels natural.
-// Inspired by Apple's spring physics and Opal's fluid transitions.
+// Fast, soft curves for micro-interactions (~200ms) and view transitions
+// (~320ms); springs for anything the user touches. Springs are the Velvet
+// signature and their values are frozen — tune the curves, not the springs.
 
 public enum DSAnimation {
 
     // MARK: - Standard Curves
 
-    /// Quick micro-interaction (0.2s) — toggles, highlights, color changes
-    public static let micro: Animation = .easeOut(duration: 0.2)
-    /// Default interaction (0.3s) — button feedback, state changes
-    public static let fast: Animation = .easeInOut(duration: 0.3)
-    /// Standard transition (0.4s) — card reveals, layout changes
-    public static let normal: Animation = .easeInOut(duration: 0.4)
-    /// Deliberate motion (0.6s) — modal presentations, large layout shifts
-    public static let slow: Animation = .easeInOut(duration: 0.6)
+    /// 0.20s "standard" curve — toggles, highlights, color changes
+    public static let micro: Animation = .timingCurve(0.25, 0.10, 0.25, 1.0, duration: 0.20)
+    /// 0.24s decelerate — state changes, button feedback
+    public static let fast: Animation = .timingCurve(0.20, 0.00, 0.00, 1.0, duration: 0.24)
+    /// 0.32s decelerate — view transitions, card reveals, layout changes
+    public static let normal: Animation = .timingCurve(0.20, 0.00, 0.00, 1.0, duration: 0.32)
+    /// 0.48s — large layout shifts. Prefer `springGentle` for sheets.
+    public static let slow: Animation = .timingCurve(0.30, 0.00, 0.10, 1.0, duration: 0.48)
 
     // MARK: - Spring Animations (Premium Feel)
 
@@ -65,6 +66,19 @@ public enum DSAnimation {
     }
 }
 
+// MARK: - Press State
+
+/// The one press feel for the whole catalog. Every pressable component reads
+/// from here so a change lands everywhere at once.
+public enum DSPress {
+    /// Scale for buttons, cards, cells while pressed.
+    public static let scale: CGFloat = 0.96
+    /// Scale for icon-only targets (small hit areas need a bigger dip).
+    public static let iconScale: CGFloat = 0.88
+    /// Animation driving the press in/out.
+    public static let animation: Animation = DSAnimation.springSnappy
+}
+
 // MARK: - Transition Presets
 
 public extension AnyTransition {
@@ -100,7 +114,7 @@ public extension AnyTransition {
 
 // MARK: - Animated Value Helper
 
-/// Smoothly animates a numeric value over time (great for counters, progress)
+@available(*, deprecated, message: "Unused since v0.2. Will be removed in v0.3.")
 public struct DSAnimatedValue<V: VectorArithmetic>: Animatable {
     public var animatableData: V
 
@@ -109,14 +123,37 @@ public struct DSAnimatedValue<V: VectorArithmetic>: Animatable {
     }
 }
 
+// MARK: - Stagger Entrance
+
+public struct DSStaggerInModifier: ViewModifier {
+    let index: Int
+    let base: Double
+
+    @State private var isVisible = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    public func body(content: Content) -> some View {
+        content
+            .opacity(isVisible ? 1 : 0)
+            .offset(y: isVisible ? 0 : DSSpacing.xs)
+            .onAppear {
+                if reduceMotion {
+                    isVisible = true
+                } else {
+                    withAnimation(DSAnimation.stagger(index: index, base: base)) {
+                        isVisible = true
+                    }
+                }
+            }
+    }
+}
+
 // MARK: - View Extensions
 
 public extension View {
-    /// Apply entrance animation with stagger delay
+    /// Fade + rise entrance, delayed by `index * base` seconds. Use inside `ForEach`.
     func dsStaggerIn(index: Int, base: Double = 0.05) -> some View {
-        self
-            .opacity(1)
-            .animation(DSAnimation.stagger(index: index, base: base), value: true)
+        modifier(DSStaggerInModifier(index: index, base: base))
     }
 
     /// Smooth state-change animation

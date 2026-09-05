@@ -47,16 +47,18 @@ public struct DSToggle: View {
     let label: String?
     @Binding var isOn: Bool
     let size: DSToggleSize
-    let onColor: Color
+    let onColor: Color?
     let haptic: DSHapticStyle
 
     @Environment(\.isEnabled) private var isEnabled
+    @DSThemed private var theme
 
+    /// - Parameter onColor: Track fill while on. Defaults to the theme accent.
     public init(
         _ label: String? = nil,
         isOn: Binding<Bool>,
         size: DSToggleSize = .medium,
-        onColor: Color = DSColors.defaultPalette.primary,
+        onColor: Color? = nil,
         haptic: DSHapticStyle = .rigid
     ) {
         self.label = label
@@ -88,10 +90,10 @@ public struct DSToggle: View {
     private var switchTrack: some View {
         ZStack {
             Capsule()
-                .fill(isOn ? onColor : DSColors.defaultPalette.border)
+                .fill(isOn ? (onColor ?? theme.accent) : theme.palette.border)
 
             Circle()
-                .fill(DSColors.defaultPalette.textOnPrimary)
+                .fill(theme.palette.textOnPrimary)
                 .frame(width: size.knobSize, height: size.knobSize)
                 .dsShadow(.sm)
                 .offset(x: isOn ? size.travel : -size.travel)
@@ -112,13 +114,13 @@ public struct DSToggle: View {
 #Preview("Light") {
     TogglePreview()
         .padding(DSSpacing.xl)
-        .background(DSColors.defaultPalette.backgroundPrimary)
+        .background(DSColors.backgroundPrimary)
 }
 
 #Preview("Dark") {
     TogglePreview()
         .padding(DSSpacing.xl)
-        .background(DSColors.defaultPalette.backgroundPrimary)
+        .background(DSColors.backgroundPrimary)
         .preferredColorScheme(.dark)
 }
 
@@ -131,7 +133,7 @@ private struct TogglePreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DSSpacing.lg) {
             DSToggle("Wi-Fi", isOn: $wifi)
-            DSToggle("Bluetooth", isOn: $bluetooth, onColor: DSColors.defaultPalette.secondary)
+            DSToggle("Bluetooth", isOn: $bluetooth, onColor: DSColors.secondary)
             DSToggle("Airplane Mode", isOn: $airplane)
                 .disabled(true)
 
@@ -140,7 +142,7 @@ private struct TogglePreview: View {
             HStack(spacing: DSSpacing.xl) {
                 DSToggle(isOn: $compact, size: .small)
                 DSToggle(isOn: $wifi)
-                DSToggle(isOn: $bluetooth, onColor: DSColors.defaultPalette.success)
+                DSToggle(isOn: $bluetooth, onColor: DSColors.success)
             }
         }
     }

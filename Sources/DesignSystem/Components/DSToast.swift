@@ -18,8 +18,7 @@ public enum DSToastType {
         }
     }
 
-    var color: Color {
-        let palette = DSColors.defaultPalette
+    func color(in palette: DSColorPalette) -> Color {
         switch self {
         case .success: return palette.success
         case .error:   return palette.error
@@ -42,6 +41,8 @@ public struct DSToast: View {
     let message: String
     let type: DSToastType
 
+    @DSThemed private var theme
+
     public init(_ message: String, type: DSToastType = .info) {
         self.message = message
         self.type = type
@@ -50,7 +51,7 @@ public struct DSToast: View {
     public var body: some View {
         HStack(spacing: DSSpacing.sm) {
             Image(systemName: type.icon)
-                .foregroundStyle(type.color)
+                .foregroundStyle(type.color(in: theme.palette))
                 .font(.system(size: 18, weight: .semibold))
 
             Text(message)
@@ -76,6 +77,8 @@ public struct DSEmptyState: View {
     let actionTitle: String?
     let action: (() -> Void)?
 
+    @DSThemed private var theme
+
     public init(
         icon: String,
         title: String,
@@ -94,14 +97,14 @@ public struct DSEmptyState: View {
         VStack(spacing: DSSpacing.lg) {
             Image(systemName: icon)
                 .font(.system(size: 48, weight: .light))
-                .foregroundStyle(DSColors.defaultPalette.textTertiary)
+                .foregroundStyle(theme.palette.textTertiary)
 
             VStack(spacing: DSSpacing.xs) {
                 Text(title)
                     .ds(.title2)
 
                 Text(message)
-                    .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                    .ds(.callout, color: theme.palette.textSecondary)
                     .multilineTextAlignment(.center)
             }
 

@@ -5,28 +5,37 @@ import SwiftUI
 
 // MARK: - Screen Container
 
-/// Standard screen container with consistent padding and background
+/// Standard screen container with consistent padding and background.
+/// Pass `backdrop: true` to draw the themed gradient (`DSBackdrop`) instead of
+/// a flat color — that is what turns `dsSurface` cards into glass.
 public struct DSScreen<Content: View>: View {
-    let backgroundColor: Color
+    let backgroundColor: Color?
+    let backdrop: Bool
     let content: () -> Content
 
+    @DSThemed private var theme
+
     public init(
-        backgroundColor: Color = DSColors.defaultPalette.backgroundPrimary,
+        backgroundColor: Color? = nil,
+        backdrop: Bool = false,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.backgroundColor = backgroundColor
+        self.backdrop = backdrop
         self.content = content
     }
 
     public var body: some View {
-        ZStack {
-            backgroundColor.ignoresSafeArea()
+        let scroll = ScrollView {
+            content()
+                .padding(.top, DSSpacing.screenTop)
+                .padding(.bottom, DSSpacing.screenBottom)
+        }
 
-            ScrollView {
-                content()
-                    .padding(.top, DSSpacing.screenTop)
-                    .padding(.bottom, DSSpacing.screenBottom)
-            }
+        if backdrop {
+            scroll.dsBackdrop()
+        } else {
+            scroll.background((backgroundColor ?? theme.palette.backgroundPrimary).ignoresSafeArea())
         }
     }
 }

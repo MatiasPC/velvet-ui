@@ -40,16 +40,18 @@ public struct DSSegmentedControl<Value: Hashable>: View {
     @Binding private var selection: Value
     private let segments: [DSSegment<Value>]
     private let style: DSSegmentedControlStyle
-    private let accent: Color
+    private let accent: Color?
     private let haptic: DSHapticStyle
 
     @Namespace private var namespace
+    @DSThemed private var theme
 
+    /// - Parameter accent: Underline fill / selected label color (underline style). Defaults to the theme accent.
     public init(
         selection: Binding<Value>,
         segments: [DSSegment<Value>],
         style: DSSegmentedControlStyle = .pill,
-        accent: Color = DSColors.defaultPalette.primary,
+        accent: Color? = nil,
         haptic: DSHapticStyle = .selection
     ) {
         self._selection = selection
@@ -107,14 +109,14 @@ public struct DSSegmentedControl<Value: Hashable>: View {
             switch style {
             case .pill:
                 Capsule(style: .continuous)
-                    .fill(DSColors.defaultPalette.backgroundElevated)
+                    .fill(theme.palette.backgroundElevated)
                     .matchedGeometryEffect(id: "indicator", in: namespace)
                     .dsShadow(.sm)
             case .underline:
                 VStack(spacing: 0) {
                     Spacer(minLength: 0)
                     Capsule(style: .continuous)
-                        .fill(accent)
+                        .fill(accent ?? theme.accent)
                         .frame(height: 2)
                         .matchedGeometryEffect(id: "indicator", in: namespace)
                 }
@@ -129,12 +131,12 @@ public struct DSSegmentedControl<Value: Hashable>: View {
         switch style {
         case .pill:
             Capsule(style: .continuous)
-                .fill(DSColors.defaultPalette.backgroundSecondary)
+                .fill(theme.palette.backgroundSecondary)
         case .underline:
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
                 Rectangle()
-                    .fill(DSColors.defaultPalette.divider)
+                    .fill(theme.palette.divider)
                     .frame(height: 1)
             }
         }
@@ -143,12 +145,11 @@ public struct DSSegmentedControl<Value: Hashable>: View {
     // MARK: - Colors
 
     private func labelColor(isSelected: Bool) -> Color {
-        let palette = DSColors.defaultPalette
         switch style {
         case .pill:
-            return isSelected ? palette.textPrimary : palette.textSecondary
+            return isSelected ? theme.palette.textPrimary : theme.palette.textSecondary
         case .underline:
-            return isSelected ? accent : palette.textSecondary
+            return isSelected ? (accent ?? theme.ink) : theme.palette.textSecondary
         }
     }
 }
@@ -161,7 +162,7 @@ public extension DSSegmentedControl where Value == String {
         selection: Binding<String>,
         options: [String],
         style: DSSegmentedControlStyle = .pill,
-        accent: Color = DSColors.defaultPalette.primary,
+        accent: Color? = nil,
         haptic: DSHapticStyle = .selection
     ) {
         self.init(
@@ -202,7 +203,7 @@ public extension DSSegmentedControl where Value == String {
                         DSSegment("List", value: "list", icon: "list.bullet"),
                         DSSegment("Map", value: "map", icon: "map")
                     ],
-                    accent: DSColors.defaultPalette.secondary
+                    accent: DSColors.secondary
                 )
             }
             .padding(DSSpacing.xl)
@@ -210,5 +211,5 @@ public extension DSSegmentedControl where Value == String {
     }
 
     return PreviewWrapper()
-        .background(DSColors.defaultPalette.backgroundPrimary)
+        .background(DSColors.backgroundPrimary)
 }

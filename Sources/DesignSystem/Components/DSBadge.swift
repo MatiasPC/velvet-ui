@@ -11,12 +11,15 @@ public enum DSBadgeVariant {
 
 public struct DSBadge: View {
     let text: String
-    let color: Color
+    let color: Color?
     let variant: DSBadgeVariant
 
+    @DSThemed private var theme
+
+    /// - Parameter color: Fill (filled) / tint (soft, outline). Defaults to the theme accent.
     public init(
         _ text: String,
-        color: Color = DSColors.defaultPalette.primary,
+        color: Color? = nil,
         variant: DSBadgeVariant = .soft
     ) {
         self.text = text
@@ -34,22 +37,27 @@ public struct DSBadge: View {
             .clipShape(Capsule())
             .overlay(
                 Capsule()
-                    .stroke(variant == .outline ? color : .clear, lineWidth: 1)
+                    .stroke(variant == .outline ? strokeColor : .clear, lineWidth: 1)
             )
+    }
+
+    private var strokeColor: Color {
+        color ?? theme.ink
     }
 
     private var foregroundColor: Color {
         switch variant {
-        case .filled: return DSColors.defaultPalette.textOnPrimary
-        case .soft:   return color
-        case .outline: return color
+        case .filled: return color == nil ? theme.onAccent : theme.palette.textOnPrimary
+        case .soft:   return color ?? theme.ink
+        case .outline: return color ?? theme.ink
         }
     }
 
     private var backgroundColor: Color {
+        let resolved = color ?? theme.accent
         switch variant {
-        case .filled: return color
-        case .soft:   return color.opacity(0.12)
+        case .filled: return resolved
+        case .soft:   return resolved.opacity(0.12)
         case .outline: return .clear
         }
     }
@@ -59,9 +67,12 @@ public struct DSBadge: View {
 
 public struct DSCountBadge: View {
     let count: Int
-    let color: Color
+    let color: Color?
 
-    public init(count: Int, color: Color = DSColors.defaultPalette.error) {
+    @DSThemed private var theme
+
+    /// - Parameter color: Fill color. Defaults to the palette's error color.
+    public init(count: Int, color: Color? = nil) {
         self.count = count
         self.color = color
     }
@@ -69,11 +80,11 @@ public struct DSCountBadge: View {
     public var body: some View {
         if count > 0 {
             Text(count > 99 ? "99+" : "\(count)")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundStyle(.white)
-                .padding(.horizontal, count > 9 ? 6 : 4)
-                .frame(minWidth: 20, minHeight: 20)
-                .background(color)
+                .font(DSTextStyle.badge.font)
+                .foregroundStyle(theme.palette.textOnPrimary)
+                .padding(.horizontal, DSSpacing.xxs)
+                .frame(minWidth: DSSpacing.lg, minHeight: DSSpacing.lg)
+                .background(color ?? theme.palette.error)
                 .clipShape(Capsule())
         }
     }
@@ -86,6 +97,8 @@ public struct DSAvatar: View {
     let imageURL: URL?
     let size: CGFloat
 
+    @DSThemed private var theme
+
     public init(name: String, imageURL: URL? = nil, size: CGFloat = 40) {
         self.name = name
         self.imageURL = imageURL
@@ -93,13 +106,35 @@ public struct DSAvatar: View {
     }
 
     public var body: some View {
+        Group {
+            if let imageURL {
+                AsyncImage(url: imageURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: size, height: size)
+                            .clipShape(Circle())
+                    default:
+                        initialsView
+                    }
+                }
+            } else {
+                initialsView
+            }
+        }
+        .frame(width: size, height: size)
+    }
+
+    private var initialsView: some View {
         ZStack {
             Circle()
-                .fill(DSColors.defaultPalette.primary.opacity(0.15))
+                .fill(theme.accent.opacity(0.15))
 
             Text(initials)
                 .font(.system(size: size * 0.4, weight: .semibold, design: .rounded))
-                .foregroundStyle(DSColors.defaultPalette.primary)
+                .foregroundStyle(theme.ink)
         }
         .frame(width: size, height: size)
     }

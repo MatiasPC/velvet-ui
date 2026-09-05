@@ -20,6 +20,7 @@ public struct DSTextField: View {
     let isSecure: Bool
 
     @FocusState private var isFocused: Bool
+    @DSThemed private var theme
 
     public init(
         label: String = "",
@@ -42,7 +43,7 @@ public struct DSTextField: View {
             // Label
             if !label.isEmpty {
                 Text(label)
-                    .ds(.footnote, color: DSColors.defaultPalette.textSecondary)
+                    .ds(.footnote, color: theme.palette.textSecondary)
             }
 
             // Input
@@ -68,7 +69,7 @@ public struct DSTextField: View {
             }
             .padding(.horizontal, DSSpacing.md)
             .frame(height: 48)
-            .background(DSColors.defaultPalette.backgroundSecondary)
+            .background(theme.palette.backgroundSecondary)
             .clipShape(RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous)
@@ -79,7 +80,7 @@ public struct DSTextField: View {
             // Error message
             if case .error(let message) = state {
                 Text(message)
-                    .ds(.caption1, color: DSColors.defaultPalette.error)
+                    .ds(.caption1, color: theme.palette.error)
                     .transition(.dsSlideUp)
             }
         }
@@ -94,11 +95,11 @@ public struct DSTextField: View {
         switch state {
         case .success:
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(DSColors.defaultPalette.success)
+                .foregroundStyle(theme.palette.success)
                 .transition(.dsScale)
         case .error:
             Image(systemName: "exclamationmark.circle.fill")
-                .foregroundStyle(DSColors.defaultPalette.error)
+                .foregroundStyle(theme.palette.error)
                 .transition(.dsScale)
         default:
             EmptyView()
@@ -106,15 +107,15 @@ public struct DSTextField: View {
     }
 
     private var borderColor: Color {
-        if case .error = state { return DSColors.defaultPalette.error }
-        if case .success = state { return DSColors.defaultPalette.success }
-        if isFocused { return DSColors.defaultPalette.borderFocused }
+        if case .error = state { return theme.palette.error }
+        if case .success = state { return theme.palette.success }
+        if isFocused { return theme.ink }
         return .clear
     }
 
     private var iconColor: Color {
-        if isFocused { return DSColors.defaultPalette.primary }
-        return DSColors.defaultPalette.textTertiary
+        if isFocused { return theme.ink }
+        return theme.palette.textTertiary
     }
 
     private var isError: Bool {
@@ -135,6 +136,7 @@ public struct DSSearchBar: View {
     @Binding var text: String
 
     @FocusState private var isFocused: Bool
+    @DSThemed private var theme
 
     public init(placeholder: String = "Search", text: Binding<String>) {
         self.placeholder = placeholder
@@ -144,7 +146,7 @@ public struct DSSearchBar: View {
     public var body: some View {
         HStack(spacing: DSSpacing.sm) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(DSColors.defaultPalette.textTertiary)
+                .foregroundStyle(theme.palette.textTertiary)
                 .font(.system(size: 16, weight: .medium))
 
             TextField(placeholder, text: $text)
@@ -157,13 +159,13 @@ public struct DSSearchBar: View {
                     dsHaptic(.light)
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(DSColors.defaultPalette.textTertiary)
+                        .foregroundStyle(theme.palette.textTertiary)
                 }
             }
         }
         .padding(.horizontal, DSSpacing.md)
         .frame(height: 44)
-        .background(DSColors.defaultPalette.backgroundSecondary)
+        .background(theme.palette.backgroundSecondary)
         .clipShape(Capsule())
         .animation(DSAnimation.fast, value: text.isEmpty)
     }

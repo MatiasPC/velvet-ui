@@ -24,6 +24,7 @@ public struct DSCodeField: View {
     @FocusState private var isFocused: Bool
     @State private var previousCount: Int = 0
     @State private var shakeTrigger: CGFloat = 0
+    @DSThemed private var theme
 
     public init(
         length: Int = 6,
@@ -137,32 +138,29 @@ public struct DSCodeField: View {
     }
 
     private var boxFill: Color {
-        let palette = DSColors.defaultPalette
         switch state {
-        case .error:   return palette.error.opacity(0.08)
-        case .success: return palette.success.opacity(0.08)
-        case .normal:  return palette.backgroundSecondary
+        case .error:   return theme.palette.error.opacity(0.08)
+        case .success: return theme.palette.success.opacity(0.08)
+        case .normal:  return theme.palette.backgroundSecondary
         }
     }
 
     private func borderColor(isActive: Bool, isFilled: Bool) -> Color {
-        let palette = DSColors.defaultPalette
         switch state {
-        case .error:   return palette.error
-        case .success: return palette.success
+        case .error:   return theme.palette.error
+        case .success: return theme.palette.success
         case .normal:
-            if isActive { return palette.borderFocused }
-            if isFilled { return palette.primary.opacity(0.4) }
-            return palette.border
+            if isActive { return theme.ink }
+            if isFilled { return theme.ink.opacity(0.4) }
+            return theme.palette.border
         }
     }
 
     private var digitColor: Color {
-        let palette = DSColors.defaultPalette
         switch state {
-        case .error:   return palette.error
-        case .success: return palette.success
-        case .normal:  return palette.textPrimary
+        case .error:   return theme.palette.error
+        case .success: return theme.palette.success
+        case .normal:  return theme.palette.textPrimary
         }
     }
 }
@@ -171,10 +169,11 @@ public struct DSCodeField: View {
 
 private struct DSCodeFieldCaret: View {
     @State private var isOn = true
+    @DSThemed private var theme
 
     var body: some View {
         Capsule()
-            .fill(DSColors.defaultPalette.primary)
+            .fill(theme.ink)
             .frame(width: 2, height: 24)
             .opacity(isOn ? 1 : 0)
             .onAppear {
@@ -216,23 +215,23 @@ private struct DSCodeFieldPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DSSpacing.xl) {
             VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                Text("Verification code").ds(.footnote, color: DSColors.defaultPalette.textSecondary)
+                Text("Verification code").ds(.footnote, color: DSColors.textSecondary)
                 DSCodeField(length: 6, code: $normalCode)
             }
 
             VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                Text("Invalid code").ds(.footnote, color: DSColors.defaultPalette.textSecondary)
+                Text("Invalid code").ds(.footnote, color: DSColors.textSecondary)
                 DSCodeField(length: 4, code: $errorCode, state: .error)
             }
 
             VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                Text("Verified").ds(.footnote, color: DSColors.defaultPalette.textSecondary)
+                Text("Verified").ds(.footnote, color: DSColors.textSecondary)
                 DSCodeField(length: 4, code: $successCode, state: .success)
             }
         }
         .padding(DSSpacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(DSColors.defaultPalette.backgroundPrimary)
+        .background(DSColors.backgroundPrimary)
     }
 }
 
