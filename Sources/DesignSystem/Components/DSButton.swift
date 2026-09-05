@@ -51,9 +51,9 @@ public enum DSButtonSize {
 
     var cornerRadius: CGFloat {
         switch self {
-        case .small: return DSRadius.sm
-        case .medium: return DSRadius.md
-        case .large: return DSRadius.md
+        case .small: return DSRadius.chip
+        case .medium: return DSRadius.control
+        case .large: return DSRadius.control
         }
     }
 }
@@ -70,6 +70,7 @@ public struct DSButton: View {
     let action: () -> Void
 
     @State private var isPressed = false
+    @DSThemed private var theme
 
     public enum IconPosition {
         case leading, trailing
@@ -132,9 +133,9 @@ public struct DSButton: View {
                 RoundedRectangle(cornerRadius: size.cornerRadius, style: .continuous)
                     .stroke(borderColor, lineWidth: variant == .outline ? 1.5 : 0)
             )
-            .scaleEffect(isPressed ? 0.96 : 1.0)
+            .scaleEffect(isPressed ? DSPress.scale : 1.0)
             .opacity(isLoading ? 0.8 : 1.0)
-            .animation(DSAnimation.springSnappy, value: isPressed)
+            .animation(DSPress.animation, value: isPressed)
         }
         .buttonStyle(.plain)
         .disabled(isLoading)
@@ -148,31 +149,28 @@ public struct DSButton: View {
     // MARK: - Computed Colors
 
     private var backgroundColor: Color {
-        let palette = DSColors.defaultPalette
         switch variant {
-        case .primary:     return palette.primary
-        case .secondary:   return palette.secondary
+        case .primary:     return theme.accent
+        case .secondary:   return theme.palette.secondary
         case .outline:     return .clear
         case .ghost:       return .clear
-        case .destructive: return palette.error
+        case .destructive: return theme.palette.error
         }
     }
 
     private var foregroundColor: Color {
-        let palette = DSColors.defaultPalette
         switch variant {
-        case .primary:     return palette.textOnPrimary
-        case .secondary:   return palette.textOnPrimary
-        case .outline:     return palette.primary
-        case .ghost:       return palette.primary
-        case .destructive: return palette.textOnPrimary
+        case .primary:     return theme.onAccent
+        case .secondary:   return theme.palette.textOnPrimary
+        case .outline:     return theme.ink
+        case .ghost:       return theme.ink
+        case .destructive: return theme.palette.textOnPrimary
         }
     }
 
     private var borderColor: Color {
-        let palette = DSColors.defaultPalette
         switch variant {
-        case .outline: return palette.primary
+        case .outline: return theme.ink
         default:       return .clear
         }
     }
@@ -183,16 +181,18 @@ public struct DSButton: View {
 public struct DSIconButton: View {
     let icon: String
     let size: CGFloat
-    let color: Color
+    let color: Color?
     let haptic: DSHapticStyle
     let action: () -> Void
 
     @State private var isPressed = false
+    @DSThemed private var theme
 
+    /// - Parameter color: Icon tint. Defaults to the theme's primary text color.
     public init(
         icon: String,
         size: CGFloat = 44,
-        color: Color = DSColors.defaultPalette.textPrimary,
+        color: Color? = nil,
         haptic: DSHapticStyle = .light,
         action: @escaping () -> Void
     ) {
@@ -210,11 +210,11 @@ public struct DSIconButton: View {
         } label: {
             Image(systemName: icon)
                 .font(.system(size: size * 0.4, weight: .medium))
-                .foregroundStyle(color)
+                .foregroundStyle(color ?? theme.palette.textPrimary)
                 .frame(width: size, height: size)
                 .contentShape(Rectangle())
-                .scaleEffect(isPressed ? 0.88 : 1.0)
-                .animation(DSAnimation.springSnappy, value: isPressed)
+                .scaleEffect(isPressed ? DSPress.iconScale : 1.0)
+                .animation(DSPress.animation, value: isPressed)
         }
         .buttonStyle(.plain)
         .simultaneousGesture(

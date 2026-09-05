@@ -10,6 +10,8 @@ public struct DSListCell<Leading: View, Trailing: View>: View {
     let trailing: () -> Trailing
     let action: (() -> Void)?
 
+    @DSThemed private var theme
+
     public init(
         title: String,
         subtitle: String? = nil,
@@ -34,7 +36,7 @@ public struct DSListCell<Leading: View, Trailing: View>: View {
 
                 if let subtitle {
                     Text(subtitle)
-                        .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                        .ds(.callout, color: theme.palette.textSecondary)
                 }
             }
 
@@ -45,7 +47,7 @@ public struct DSListCell<Leading: View, Trailing: View>: View {
             if action != nil {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(DSColors.defaultPalette.textTertiary)
+                    .foregroundStyle(theme.palette.textTertiary)
             }
         }
         .padding(.horizontal, DSSpacing.screenHorizontal)
@@ -73,6 +75,8 @@ public struct DSSectionHeader: View {
     let action: String?
     let onAction: (() -> Void)?
 
+    @DSThemed private var theme
+
     public init(_ title: String, action: String? = nil, onAction: (() -> Void)? = nil) {
         self.title = title
         self.action = action
@@ -82,7 +86,7 @@ public struct DSSectionHeader: View {
     public var body: some View {
         HStack {
             Text(title)
-                .ds(.overline, color: DSColors.defaultPalette.textSecondary)
+                .ds(.overline, color: theme.palette.textSecondary)
 
             Spacer()
 
@@ -92,7 +96,7 @@ public struct DSSectionHeader: View {
                     onAction()
                 } label: {
                     Text(action)
-                        .ds(.buttonSmall, color: DSColors.defaultPalette.primary)
+                        .ds(.buttonSmall, color: theme.ink)
                 }
             }
         }
@@ -107,13 +111,15 @@ public struct DSSectionHeader: View {
 public struct DSDivider: View {
     let inset: CGFloat
 
+    @DSThemed private var theme
+
     public init(inset: CGFloat = 0) {
         self.inset = inset
     }
 
     public var body: some View {
         Rectangle()
-            .fill(DSColors.defaultPalette.divider)
+            .fill(theme.palette.divider)
             .frame(height: 1)
             .padding(.leading, inset)
     }

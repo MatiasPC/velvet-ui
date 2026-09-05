@@ -9,17 +9,21 @@ public struct DSCircularProgress: View {
     let progress: Double
     let lineWidth: CGFloat
     let size: CGFloat
-    let primaryColor: Color
-    let trackColor: Color
+    let primaryColor: Color?
+    let trackColor: Color?
 
     @State private var animatedProgress: Double = 0
+    @DSThemed private var theme
 
+    /// - Parameters:
+    ///   - primaryColor: Progress ring color. Defaults to the theme accent.
+    ///   - trackColor: Track color. Defaults to the palette border.
     public init(
         progress: Double,
         lineWidth: CGFloat = 6,
         size: CGFloat = 80,
-        primaryColor: Color = DSColors.defaultPalette.primary,
-        trackColor: Color = DSColors.defaultPalette.border
+        primaryColor: Color? = nil,
+        trackColor: Color? = nil
     ) {
         self.progress = min(max(progress, 0), 1)
         self.lineWidth = lineWidth
@@ -32,13 +36,13 @@ public struct DSCircularProgress: View {
         ZStack {
             // Track
             Circle()
-                .stroke(trackColor, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                .stroke(trackColor ?? theme.palette.border, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
 
             // Progress
             Circle()
                 .trim(from: 0, to: animatedProgress)
                 .stroke(
-                    primaryColor,
+                    primaryColor ?? theme.accent,
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
@@ -62,16 +66,20 @@ public struct DSCircularProgress: View {
 public struct DSLinearProgress: View {
     let progress: Double
     let height: CGFloat
-    let primaryColor: Color
-    let trackColor: Color
+    let primaryColor: Color?
+    let trackColor: Color?
 
     @State private var animatedProgress: Double = 0
+    @DSThemed private var theme
 
+    /// - Parameters:
+    ///   - primaryColor: Fill color. Defaults to the theme accent.
+    ///   - trackColor: Track color. Defaults to the palette border.
     public init(
         progress: Double,
         height: CGFloat = 6,
-        primaryColor: Color = DSColors.defaultPalette.primary,
-        trackColor: Color = DSColors.defaultPalette.border
+        primaryColor: Color? = nil,
+        trackColor: Color? = nil
     ) {
         self.progress = min(max(progress, 0), 1)
         self.height = height
@@ -84,12 +92,12 @@ public struct DSLinearProgress: View {
             ZStack(alignment: .leading) {
                 // Track
                 Capsule()
-                    .fill(trackColor)
+                    .fill(trackColor ?? theme.palette.border)
                     .frame(height: height)
 
                 // Fill
                 Capsule()
-                    .fill(primaryColor)
+                    .fill(primaryColor ?? theme.accent)
                     .frame(width: geometry.size.width * animatedProgress, height: height)
             }
         }
@@ -112,31 +120,36 @@ public struct DSLinearProgress: View {
 public struct DSGradientProgress: View {
     let progress: Double
     let height: CGFloat
-    let gradient: LinearGradient
-    let trackColor: Color
+    let colors: [Color]?
+    let trackColor: Color?
 
     @State private var animatedProgress: Double = 0
+    @DSThemed private var theme
 
+    /// - Parameters:
+    ///   - colors: Gradient stops. Defaults to the theme gradient's stops.
+    ///   - trackColor: Track color. Defaults to the palette border.
     public init(
         progress: Double,
         height: CGFloat = 8,
-        colors: [Color] = [
-            DSColors.defaultPalette.primary,
-            DSColors.defaultPalette.secondary
-        ],
-        trackColor: Color = DSColors.defaultPalette.border
+        colors: [Color]? = nil,
+        trackColor: Color? = nil
     ) {
         self.progress = min(max(progress, 0), 1)
         self.height = height
-        self.gradient = LinearGradient(colors: colors, startPoint: .leading, endPoint: .trailing)
+        self.colors = colors
         self.trackColor = trackColor
+    }
+
+    private var gradient: LinearGradient {
+        LinearGradient(colors: colors ?? theme.gradient.stops, startPoint: .leading, endPoint: .trailing)
     }
 
     public var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 Capsule()
-                    .fill(trackColor)
+                    .fill(trackColor ?? theme.palette.border)
                     .frame(height: height)
 
                 Capsule()
@@ -163,14 +176,19 @@ public struct DSGradientProgress: View {
 public struct DSStepProgress: View {
     let currentStep: Int
     let totalSteps: Int
-    let activeColor: Color
-    let inactiveColor: Color
+    let activeColor: Color?
+    let inactiveColor: Color?
 
+    @DSThemed private var theme
+
+    /// - Parameters:
+    ///   - activeColor: Fill for completed steps. Defaults to the theme accent.
+    ///   - inactiveColor: Fill for remaining steps. Defaults to the palette border.
     public init(
         currentStep: Int,
         totalSteps: Int,
-        activeColor: Color = DSColors.defaultPalette.primary,
-        inactiveColor: Color = DSColors.defaultPalette.border
+        activeColor: Color? = nil,
+        inactiveColor: Color? = nil
     ) {
         self.currentStep = currentStep
         self.totalSteps = totalSteps
@@ -182,7 +200,7 @@ public struct DSStepProgress: View {
         HStack(spacing: DSSpacing.xs) {
             ForEach(0..<totalSteps, id: \.self) { index in
                 Capsule()
-                    .fill(index < currentStep ? activeColor : inactiveColor)
+                    .fill(index < currentStep ? (activeColor ?? theme.accent) : (inactiveColor ?? theme.palette.border))
                     .frame(height: 4)
                     .animation(DSAnimation.stagger(index: index), value: currentStep)
             }

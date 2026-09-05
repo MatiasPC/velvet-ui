@@ -18,8 +18,8 @@ public struct DSRating: View {
     private let emptySymbol: String
     private let size: CGFloat
     private let spacing: CGFloat
-    private let tint: Color
-    private let emptyColor: Color
+    private let tint: Color?
+    private let emptyColor: Color?
     private let isEditable: Bool
     private let haptics: Bool
 
@@ -27,6 +27,7 @@ public struct DSRating: View {
 
     /// Live value while a drag is in progress (nil when idle).
     @State private var dragValue: Double? = nil
+    @DSThemed private var theme
 
     // MARK: - Interactive Initializer
 
@@ -51,8 +52,8 @@ public struct DSRating: View {
         emptySymbol: String = "star",
         size: CGFloat = 28,
         spacing: CGFloat = DSSpacing.xs,
-        tint: Color = DSColors.defaultPalette.warning,
-        emptyColor: Color = DSColors.defaultPalette.border,
+        tint: Color? = nil,
+        emptyColor: Color? = nil,
         haptics: Bool = true
     ) {
         self._rating = rating
@@ -87,8 +88,8 @@ public struct DSRating: View {
         emptySymbol: String = "star",
         size: CGFloat = 20,
         spacing: CGFloat = DSSpacing.xxs,
-        tint: Color = DSColors.defaultPalette.warning,
-        emptyColor: Color = DSColors.defaultPalette.border
+        tint: Color? = nil,
+        emptyColor: Color? = nil
     ) {
         self._rating = .constant(value)
         self.count = max(1, count)
@@ -137,10 +138,10 @@ public struct DSRating: View {
 
         ZStack(alignment: .leading) {
             Image(systemName: emptySymbol)
-                .foregroundStyle(emptyColor)
+                .foregroundStyle(emptyColor ?? theme.palette.border)
 
             Image(systemName: symbol)
-                .foregroundStyle(tint)
+                .foregroundStyle(tint ?? theme.palette.warning)
                 .mask(alignment: .leading) {
                     Rectangle()
                         .frame(width: size * CGFloat(fill))
@@ -226,29 +227,29 @@ public struct DSRating: View {
         var body: some View {
             VStack(spacing: DSSpacing.xl) {
                 VStack(spacing: DSSpacing.sm) {
-                    Text("Tap or drag").ds(.overline, color: DSColors.defaultPalette.textSecondary)
+                    Text("Tap or drag").ds(.overline, color: DSColors.textSecondary)
                     DSRating(rating: $rating)
                     Text("\(rating, specifier: "%.0f") / 5")
-                        .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                        .ds(.callout, color: DSColors.textSecondary)
                 }
 
                 VStack(spacing: DSSpacing.sm) {
-                    Text("Half steps").ds(.overline, color: DSColors.defaultPalette.textSecondary)
+                    Text("Half steps").ds(.overline, color: DSColors.textSecondary)
                     DSRating(rating: $halfRating, step: 0.5)
                     Text("\(halfRating, specifier: "%.1f") / 5")
-                        .ds(.callout, color: DSColors.defaultPalette.textSecondary)
+                        .ds(.callout, color: DSColors.textSecondary)
                 }
 
                 VStack(spacing: DSSpacing.sm) {
-                    Text("Read-only display").ds(.overline, color: DSColors.defaultPalette.textSecondary)
+                    Text("Read-only display").ds(.overline, color: DSColors.textSecondary)
                     DSRating(value: 3.5)
                     DSRating(value: 4.0, symbol: "heart.fill", emptySymbol: "heart",
-                             tint: DSColors.defaultPalette.primary)
+                             tint: DSColors.primary)
                 }
             }
             .padding(DSSpacing.xxl)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(DSColors.defaultPalette.backgroundPrimary)
+            .background(DSColors.backgroundPrimary)
         }
     }
 
