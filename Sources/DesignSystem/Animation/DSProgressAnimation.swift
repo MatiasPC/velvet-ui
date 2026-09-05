@@ -228,8 +228,12 @@ public struct DSAnimatedNumber: View {
 
 // MARK: - Shimmer Loading Effect
 
+/// Sweeping highlight for skeleton loading. Width-independent: the gradient is
+/// positioned in unit space, so it works on any size without a GeometryReader.
 public struct DSShimmer: ViewModifier {
     @State private var phase: CGFloat = 0
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public func body(content: Content) -> some View {
         content
@@ -237,18 +241,19 @@ public struct DSShimmer: ViewModifier {
                 LinearGradient(
                     colors: [
                         .clear,
-                        .white.opacity(0.4),
+                        Color.white.opacity(colorScheme == .dark ? 0.18 : 0.45),
                         .clear
                     ],
-                    startPoint: .leading,
-                    endPoint: .trailing
+                    startPoint: UnitPoint(x: phase - 1, y: 0.5),
+                    endPoint: UnitPoint(x: phase, y: 0.5)
                 )
-                .offset(x: phase)
                 .mask(content)
+                .allowsHitTesting(false)
             )
             .onAppear {
+                guard !reduceMotion else { return }
                 withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: false)) {
-                    phase = 200
+                    phase = 2
                 }
             }
     }
