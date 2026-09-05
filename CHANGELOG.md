@@ -4,6 +4,23 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
+- `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7.
+- `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
+- `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
+- View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying wiggle), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
+- `ComponentCatalog` — Motion section demoing all five modifiers.
+- Tests: 7 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, and jiggle phase decay.
+
+### Changed
+- **BREAKING:** Package now targets **iOS 18 / macOS 15** (was iOS 17 / macOS 14). Apps must update their deployment targets.
+- `swift-tools-version` raised from 5.9 to 6.0; language mode explicitly pinned to Swift 5 via `swiftSettings` (the tools version does not imply Swift 6 here).
+- `.dsPulse()` now respects Reduce Motion. It previously looped regardless of the setting; the guard was added on the way to deprecating it. Its curve is unchanged.
+
+### Deprecated
+- `.dsPulse()` — use `.dsBreathe(_:)` instead.
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).

@@ -215,7 +215,25 @@ DSAnimatedNumber(value:, format: "%.0f", style: .displayLarge)
 
 All animate with `DSAnimation.progress` on appear and on change; the number uses `.counting` + `numericText` content transition.
 
-Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Motion), `.dsPulse()` (attention).
+Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Motion), `.dsPulse()` (deprecated — use `.dsBreathe(_:)` instead).
+
+---
+
+## Motion primitives  ✅
+
+`Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts.
+
+```swift
+func dsBreathe(_ intensity: DSBreatheIntensity = .medium) -> some View
+func dsJiggle<T: Equatable>(trigger: T) -> some View
+func dsPopIn(delay: Double = 0) -> some View
+func dsEdgeSweep(radius: CGFloat = DSRadius.card, isActive: Bool = true) -> some View
+func dsHueDrift(isActive: Bool = true) -> some View
+
+DSMotion.loop(_ base: Animation, autoreverses: Bool = true, unless reduceMotion: Bool) -> Animation?
+```
+
+Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a static gradient without leaving the theme. All five settle to a resting state under Reduce Motion instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
 
 ---
 

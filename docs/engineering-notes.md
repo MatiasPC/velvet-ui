@@ -22,7 +22,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 
 | Topic | What to know |
 |---|---|
-| `swift build` only builds macOS | The package targets iOS 17 + macOS 14. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme DesignSystem -destination 'generic/platform=iOS Simulator'`. |
+| `swift build` only builds macOS | The package targets iOS 18 + macOS 15. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme DesignSystem -destination 'generic/platform=iOS Simulator'`. |
 | Haptics are a no-op on macOS | `DSHapticEngine` is guarded with `#if canImport(UIKit)`. Fine, just don't expect feedback in macOS previews. |
 | `@DSThemed` is `@MainActor` | It works in any `View` / `ViewModifier` body. It cannot live in an enum or a non-view struct; pass `theme.palette` into helpers instead (see `DSToastType.color(in:)`). |
 | Material over a saturated gradient | `.ultraThinMaterial` lets too much color through and secondary text loses contrast. Cards use `.thinMaterial` (`.glass`); reserve `.glassThin` for small floating elements. |
@@ -33,11 +33,15 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | `Color` equality | `Color` is `Equatable`, so `DSGradientTheme` is `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
 | Contrast is tested | `DesignSystemTests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
 | `~/Documents/DesignSystem` is a second clone | The global CLAUDE.md and the `design-system` skill point to `~/Documents/DesignSystem`. It's a clone of this repo that lags behind; pull it after merging, or repoint those references to `~/Documents/velvet-ui`. |
+| Reduce Motion is a resting state, not a skip | `DSMotion.loop` returns `nil` when Reduce Motion is on, so `withAnimation(nil)` applies changes instantly and every ambient effect settles at its resting state. Never wrap an effect in a bare `guard !reduceMotion else { return }` that leaves it mid-transition. |
+| `swift-tools-version: 6.0` does not mean Swift 6 | The tools version is pinned to 6.0 for iOS 18 / macOS 15 symbol access, but language mode is explicitly `.v5` via `swiftSettings`. Raising it to Swift 6 language mode is a separate migration. |
+| `dsEdgeSweep` animates a Double that builds an AngularGradient | The view body re-evaluates per frame while the sweep runs. Keep it on small, leaf-ish surfaces; on a large subtree, put the sweep on a thin overlay shape rather than on the container itself. |
 
 ## Known issues / backlog
 
 Tracked here until they become issues or PRs.
 
+- **Seven legacy remote branches** (`add/ds-checkbox`, `add/ds-chip`, `add/ds-chipgroup`, `add/ds-confetti`, `add/ds-flipcard`, `add/ds-odometer`, `add/ds-slider`) predate the v0.2 merge and would revert the token layer if merged as-is. Each needs a rebase onto main before it can land. `DSConfetti` overlaps with the planned wave-2 particle work.
 - **Glass restyle pending** on DSButton (secondary/outline as glass/wash, glow on primary), DSTextField/DSSearchBar (wash + focus glow), DSCodeField (wash boxes), DSBadge `.outline`, DSToggle track, DSSegmentedControl track, DSToast (edge + radius 16), progress tracks. Colors are already theme-driven; only surfaces remain. Do it component by component after the manual walkthrough.
 - **Literals still in components**: control heights (48 text field, 44 search bar), icon sizes (12/14/16/18). Introduce `DSControlSize` / `DSIconSize` tokens when the third consumer appears, not before.
 - **`DSAnimatedValue`** deprecated, remove in 0.3.

@@ -163,11 +163,34 @@ Rule: numbers are always Rounded; titles are never Rounded. Max three styles per
 | `springBouncy` | 0.5 / 0.5 | Celebrations, rating pop |
 | `interactive` | 0.3 / 0.7, blend 0.05 | Gesture-driven |
 | `progress` / `counting` | easeInOut 0.8 / easeOut 1.0 | Progress fills / number count-up |
+| `ambient` | easeInOut 1.8s | Base curve for ambient loops (breathe, drift, sweep) |
 | `stagger(index:base:)` | springSmooth + index × 0.05s | List entrances |
 
 `DSPress`: `scale` 0.96, `iconScale` 0.88, `animation` = springSnappy. Every pressable component uses these.
 
-Transitions: `.dsSlideUp`, `.dsScale`, `.dsFade`, `.dsPush`. Modifiers: `.dsAnimate(_:value:)`, `.dsStaggerIn(index:)` (fade + 8pt rise, respects Reduce Motion), `.dsShimmer()`, `.dsPulse()`.
+Transitions: `.dsSlideUp`, `.dsScale`, `.dsFade`, `.dsPush`. Modifiers: `.dsAnimate(_:value:)`, `.dsStaggerIn(index:)` (fade + 8pt rise, respects Reduce Motion), `.dsShimmer()`, `.dsPulse()` (deprecated — use `.dsBreathe()`).
+
+### Motion primitives
+
+These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnimation`, composing constant motion effects for decorative and attention-holding purposes.
+
+| Modifier | What it does | Reduce Motion |
+|---|---|---|
+| `.dsBreathe(_ intensity:)` | Slow swell in scale and dip in opacity at `breatheDuration` | Rests at scale 1 |
+| `.dsJiggle(trigger:)` | One decaying wiggle (two full swings that shrink to rest) on trigger change | Not applied at all |
+| `.dsPopIn(delay:)` | Entrance with springBouncy overshoot and fade | Fades only, no scale |
+| `.dsEdgeSweep(radius:isActive:)` | Specular highlight travelling the surface edge | Highlight stays static |
+| `.dsHueDrift(isActive:)` | Slow, bounded hue rotation over the gradient (decorative) | Stays at 0° |
+
+`DSMotion.loop(_:autoreverses:unless:)` wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on. Passing nil to `.animation(_:value:)` applies the change instantly, so every ambient effect settles at its resting state instead of being skipped.
+
+| Constant | Value | Purpose |
+|---|---|---|
+| `breatheDuration` | 2.4s | Breathing swell. Slow enough to read as alive, not as a spinner. |
+| `sweepDuration` | 2.0s | One full trip of the edge sweep. |
+| `driftDuration` | 8.0s | Hue drift. Deliberately slow: notice it only on a second look. |
+| `driftDegrees` | 12 | Maximum hue rotation. Small to keep the gradient recognisable. |
+| `jiggleDegrees` | 7 | Peak rotation of one jiggle swing. |
 
 ## Haptics
 
