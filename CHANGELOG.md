@@ -10,7 +10,11 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
 - `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
 - View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying wiggle), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
-- `ComponentCatalog` — Motion section demoing all five modifiers.
+- `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
+- `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
+- `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
+- `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 7 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, and jiggle phase decay.
 
 ### Changed

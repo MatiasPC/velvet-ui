@@ -219,9 +219,57 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 
 ---
 
+## DSSlideToConfirm  ✅
+
+`Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions.
+
+```swift
+DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel: String = "Confirmed", accent: Color? = nil, onConfirm: @escaping () -> Void)
+```
+
+A glass pill track with a knob filled by `accent ?? theme.accent`. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter. Threshold is 0.75 of available travel: crossing it fires a `.rigid` haptic once per drag. Releasing above the threshold fires `.success` and calls `onConfirm()`; releasing below snaps the knob back with `springBouncy` and a `.light` haptic. Inert once confirmed. Under Reduce Motion the knob and trail still move, but the per-letter label stagger collapses to one fade. VoiceOver gets an `.accessibilityAction` so confirming never requires a drag.
+
+---
+
+## DSThinkingIndicator  ✅
+
+`Components/DSThinkingIndicator.swift`. Ambient indicator for AI and background processing states.
+
+```swift
+DSThinkingIndicator(phrases: [String] = ["Thinking", "Weighing options", "Almost there"], symbol: String = "sparkles", interval: TimeInterval = 2.6, tint: Color? = nil)
+```
+
+A symbol carries layered `.breathe.byLayer` and `.variableColor.iterative` effects; phrases cycle on a `TimelineView(.periodic)` schedule and assemble letter by letter with `DSAnimation.stagger(index:)`. No haptics — it is a status indicator, not an interaction. Under Reduce Motion the symbol effects turn off and letters stop staggering, but phrases keep cycling as a cross-fade because the phrase is information rather than decoration. Layout reserves width for the widest phrase so nothing reflows.
+
+---
+
+## DSTypewriterText  ✅
+
+`Components/DSTypewriterText.swift`. Character-by-character typing animation with caret and phrase cycling.
+
+```swift
+DSTypewriterText(_ phrases: [String], style: DSTextStyle = .title1, typingSpeed: TimeInterval = 0.06, erasingSpeed: TimeInterval = 0.03, holdDuration: TimeInterval = 1.4, loops: Bool = true, caretColor: Color? = nil)
+```
+
+Types a phrase out character by character, holds it, erases it, then moves to the next. Works on any `[String]`; steps by `Character` so emoji and accents are never split. Driven by a cancellable `Task`, not a `Timer` — cancelled on disappear and restarted when `phrases` or Reduce Motion changes. `loops: false` stops on the last phrase fully typed. A blinking caret in `caretColor ?? theme.accent` runs throughout. Under Reduce Motion there is no typing or erasing and the caret is static (not hidden), but phrases still cycle in full. VoiceOver always announces the whole phrase, never the half-typed fragment. Layout reserves width for the widest phrase — keep phrases short enough to fit on one line.
+
+---
+
+## DSStepper  ✅
+
+`Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.
+
+```swift
+DSStepper(value: Binding<Int>, in range: ClosedRange<Int> = 0...99, step: Int = 1, accent: Color? = nil)
+```
+
+Tapping either glyph steps the bound value, clamped into `range`. The number rolls with `.numericText`. Each successful step fires `.selection` haptic; at a bound the value does not move, the whole track fires one `.dsJiggle` refusal wiggle plus a `.warning` haptic. The buttons deliberately stay hit-testable at a bound (never `.disabled`) so refusal can actually be felt — they just dim. Stepping clamps into `range`, so a `step` that does not evenly divide the range lands on the bound instead of overshooting; a non-positive `step` is treated as `1`. Exposes `.accessibilityAdjustableAction` so VoiceOver gets native increment/decrement.
+
+---
+
 ## Motion primitives  ✅
 
-`Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts.
+`Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
 
 ```swift
 func dsBreathe(_ intensity: DSBreatheIntensity = .medium) -> some View
