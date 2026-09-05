@@ -35,11 +35,13 @@ public final class DSTheme: ObservableObject {
     }
 
     /// Everything a component needs to paint itself, resolved for a color scheme.
-    public func resolved(for colorScheme: ColorScheme) -> DSResolvedTheme {
+    /// - Parameter onBackdrop: whether the view sits on a `DSBackdrop` (see `dsBackdrop()`).
+    public func resolved(for colorScheme: ColorScheme, onBackdrop: Bool = false) -> DSResolvedTheme {
         DSResolvedTheme(
             palette: palette(for: colorScheme),
             gradient: gradient,
-            colorScheme: colorScheme
+            colorScheme: colorScheme,
+            onBackdrop: onBackdrop
         )
     }
 }
@@ -51,11 +53,19 @@ public struct DSResolvedTheme {
     public let palette: DSColorPalette
     public let gradient: DSGradientTheme
     public let colorScheme: ColorScheme
+    /// True when the view sits on a `DSBackdrop` — washes make sense; otherwise solid fills do.
+    public let onBackdrop: Bool
 
-    public init(palette: DSColorPalette, gradient: DSGradientTheme, colorScheme: ColorScheme) {
+    public init(
+        palette: DSColorPalette,
+        gradient: DSGradientTheme,
+        colorScheme: ColorScheme,
+        onBackdrop: Bool = false
+    ) {
         self.palette = palette
         self.gradient = gradient
         self.colorScheme = colorScheme
+        self.onBackdrop = onBackdrop
     }
 
     public var isDark: Bool { colorScheme == .dark }
@@ -70,6 +80,9 @@ public struct DSResolvedTheme {
     public var washSurface: Color { DSWash.surface(for: colorScheme) }
     /// Specular 1pt edge highlight for glass surfaces.
     public var washEdge: LinearGradient { DSWash.edge(for: colorScheme) }
+    /// Flat fill for a surface nested inside another: the wash when on a backdrop,
+    /// `backgroundSecondary` otherwise (so it stays visible on a plain screen).
+    public var subtleFill: Color { onBackdrop ? washSurface : palette.backgroundSecondary }
 }
 
 // MARK: - @DSThemed
@@ -86,11 +99,12 @@ public struct DSResolvedTheme {
 public struct DSThemed: DynamicProperty {
     @Environment(\.dsTheme) private var theme
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dsOnBackdrop) private var onBackdrop
 
     public init() {}
 
     public var wrappedValue: DSResolvedTheme {
-        theme.resolved(for: colorScheme)
+        theme.resolved(for: colorScheme, onBackdrop: onBackdrop)
     }
 }
 

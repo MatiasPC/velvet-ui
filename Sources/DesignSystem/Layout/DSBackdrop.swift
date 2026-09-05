@@ -35,3 +35,29 @@ public struct DSBackdrop: View {
         .accessibilityHidden(true)
     }
 }
+
+// MARK: - Environment: on backdrop
+
+private struct DSOnBackdropKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+public extension EnvironmentValues {
+    /// True inside a view tree that sits on a `DSBackdrop`. Components read it
+    /// (through `@DSThemed` → `theme.onBackdrop`) to pick translucent washes
+    /// over solid fills.
+    var dsOnBackdrop: Bool {
+        get { self[DSOnBackdropKey.self] }
+        set { self[DSOnBackdropKey.self] = newValue }
+    }
+}
+
+public extension View {
+    /// Put the themed gradient behind this view and mark the subtree as
+    /// "on backdrop". This is what turns `dsSurface` cards into glass.
+    func dsBackdrop() -> some View {
+        self
+            .background(DSBackdrop())
+            .environment(\.dsOnBackdrop, true)
+    }
+}

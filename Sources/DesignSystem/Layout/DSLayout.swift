@@ -26,18 +26,16 @@ public struct DSScreen<Content: View>: View {
     }
 
     public var body: some View {
-        ZStack {
-            if backdrop {
-                DSBackdrop()
-            } else {
-                (backgroundColor ?? theme.palette.backgroundPrimary).ignoresSafeArea()
-            }
+        let scroll = ScrollView {
+            content()
+                .padding(.top, DSSpacing.screenTop)
+                .padding(.bottom, DSSpacing.screenBottom)
+        }
 
-            ScrollView {
-                content()
-                    .padding(.top, DSSpacing.screenTop)
-                    .padding(.bottom, DSSpacing.screenBottom)
-            }
+        if backdrop {
+            scroll.dsBackdrop()
+        } else {
+            scroll.background((backgroundColor ?? theme.palette.backgroundPrimary).ignoresSafeArea())
         }
     }
 }
