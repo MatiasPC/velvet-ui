@@ -1,6 +1,6 @@
 # Velvet UI × Arc — Inventario y propuesta de tokens v0.2
 
-> Estado: **propuesta, esperando aprobación**. No se tocó código.
+> Estado: **aprobada el 2026-09-05** con todas las recomendaciones (A–H). Implementación en la rama `feat/v0.2-arc-foundations`; ver `CHANGELOG.md` 0.2.0.
 > Alcance: solo capa visual / tokens. APIs públicas y estructura de componentes intactas.
 
 ---
