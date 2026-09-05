@@ -1,19 +1,20 @@
 import SwiftUI
 
 // MARK: - Design System Typography
-// A carefully crafted type scale that creates clear hierarchy.
-// Inspired by Airbnb's clean readability and Opal's elegant typography.
+// Clean sans with tight tracking for titles (SF Pro), rounded for numbers and
+// buttons (SF Pro Rounded) — that mix is the Velvet voice. Display styles use
+// monospaced digits so counters and timers don't jitter.
 
 public enum DSTextStyle: CaseIterable, Sendable {
-    /// 34pt Bold — Hero headlines, onboarding screens
+    /// 34pt Bold, −0.8 tracking — Hero headlines, onboarding screens
     case hero
-    /// 28pt Bold — Screen titles
+    /// 28pt Bold, −0.6 — Screen titles
     case largeTitle
-    /// 22pt Semibold — Section headers
+    /// 22pt Semibold, −0.4 — Section headers
     case title1
-    /// 20pt Semibold — Card titles, prominent labels
+    /// 20pt Semibold, −0.3 — Card titles, prominent labels
     case title2
-    /// 17pt Semibold — Subsection headers
+    /// 17pt Semibold, −0.2 — Subsection headers
     case title3
     /// 17pt Regular — Primary body text
     case body
@@ -25,23 +26,27 @@ public enum DSTextStyle: CaseIterable, Sendable {
     case caption1
     /// 11pt Regular — Legal text, fine print
     case caption2
-    /// 15pt Semibold — Button labels
+    /// 15pt Semibold Rounded — Button labels
     case button
-    /// 13pt Semibold — Small button labels, tags
+    /// 13pt Semibold Rounded — Small button labels, tags
     case buttonSmall
-    /// 11pt Bold, uppercase, tracked — Section overlines
+    /// 11pt Bold, uppercase, +1.2 tracking — Section overlines
     case overline
-    /// 60pt Bold — Large display numbers (timers, stats)
+    /// 60pt Bold Rounded, monospaced digits — Large display numbers (timers, stats)
     case displayLarge
-    /// 40pt Bold — Medium display numbers
+    /// 40pt Bold Rounded, monospaced digits — Medium display numbers
     case displayMedium
+    /// 17pt Semibold Rounded, monospaced digits — Inline numbers: prices, counters, timers
+    case numeric
+    /// 11pt Bold Rounded — Count badges, tiny numerals
+    case badge
 
     public var font: Font {
         switch self {
-        case .hero:          return .system(size: 34, weight: .bold, design: .rounded)
-        case .largeTitle:    return .system(size: 28, weight: .bold, design: .rounded)
-        case .title1:        return .system(size: 22, weight: .semibold, design: .rounded)
-        case .title2:        return .system(size: 20, weight: .semibold, design: .rounded)
+        case .hero:          return .system(size: 34, weight: .bold, design: .default)
+        case .largeTitle:    return .system(size: 28, weight: .bold, design: .default)
+        case .title1:        return .system(size: 22, weight: .semibold, design: .default)
+        case .title2:        return .system(size: 20, weight: .semibold, design: .default)
         case .title3:        return .system(size: 17, weight: .semibold, design: .default)
         case .body:          return .system(size: 17, weight: .regular, design: .default)
         case .callout:       return .system(size: 15, weight: .regular, design: .default)
@@ -51,8 +56,10 @@ public enum DSTextStyle: CaseIterable, Sendable {
         case .button:        return .system(size: 15, weight: .semibold, design: .rounded)
         case .buttonSmall:   return .system(size: 13, weight: .semibold, design: .rounded)
         case .overline:      return .system(size: 11, weight: .bold, design: .default)
-        case .displayLarge:  return .system(size: 60, weight: .bold, design: .rounded)
-        case .displayMedium: return .system(size: 40, weight: .bold, design: .rounded)
+        case .displayLarge:  return .system(size: 60, weight: .bold, design: .rounded).monospacedDigit()
+        case .displayMedium: return .system(size: 40, weight: .bold, design: .rounded).monospacedDigit()
+        case .numeric:       return .system(size: 17, weight: .semibold, design: .rounded).monospacedDigit()
+        case .badge:         return .system(size: 11, weight: .bold, design: .rounded)
         }
     }
 
@@ -73,16 +80,22 @@ public enum DSTextStyle: CaseIterable, Sendable {
         case .overline:      return 0
         case .displayLarge:  return 0
         case .displayMedium: return 0
+        case .numeric:       return 0
+        case .badge:         return 0
         }
     }
 
     public var kerning: CGFloat {
         switch self {
-        case .overline: return 1.5
-        case .hero:     return -0.5
-        case .displayLarge: return -1.0
-        case .displayMedium: return -0.5
-        default:        return 0
+        case .hero:          return -0.8
+        case .largeTitle:    return -0.6
+        case .title1:        return -0.4
+        case .title2:        return -0.3
+        case .title3:        return -0.2
+        case .overline:      return 1.2
+        case .displayLarge:  return -1.2
+        case .displayMedium: return -0.6
+        default:             return 0
         }
     }
 }
@@ -93,12 +106,14 @@ public struct DSTextStyleModifier: ViewModifier {
     let style: DSTextStyle
     let color: Color?
 
+    @DSThemed private var theme
+
     public func body(content: Content) -> some View {
         content
             .font(style.font)
             .lineSpacing(style.lineSpacing)
             .kerning(style.kerning)
-            .foregroundStyle(color ?? DSColors.textPrimary)
+            .foregroundStyle(color ?? theme.palette.textPrimary)
             .textCase(style == .overline ? .uppercase : nil)
     }
 }
