@@ -22,6 +22,8 @@ struct ComponentCatalog: View {
     @State private var codeValue = "12"
     @State private var jiggleTrigger = 0
     @State private var sweepOn = true
+    @State private var quantity = 2
+    @State private var bulk = 25
 
     var body: some View {
         NavigationStack {
@@ -347,6 +349,58 @@ struct ComponentCatalog: View {
                                 .frame(width: 180, height: DSSpacing.md)
                                 .dsShimmer()
                             DSBadge("Breathing", variant: .filled).dsBreathe()
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Typewriter
+                section("Typewriter") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSTypewriterText(
+                                ["Glass over gradient.", "No borders. Ever.", "Springs, not ramps."],
+                                style: .title2
+                            )
+                            DSTypewriterText(["Types once, then stops."], style: .body, loops: false)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Slide to Confirm
+                section("Slide to Confirm") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSSlideToConfirm("Slide to delete account") { }
+                        DSSlideToConfirm(
+                            "Slide to cancel ride",
+                            icon: "xmark",
+                            confirmedLabel: "Cancelled"
+                        ) { }
+                    }
+                }
+
+                // MARK: - Thinking Indicator
+                section("Thinking Indicator") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSThinkingIndicator()
+                            DSThinkingIndicator(
+                                phrases: ["Reading your notes", "Cross-checking sources", "Drafting a reply"],
+                                symbol: "brain",
+                                interval: 2.0
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Stepper
+                section("Stepper") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSStepper(value: $quantity)
+                            DSStepper(value: $bulk, in: 0...100, step: 5)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
