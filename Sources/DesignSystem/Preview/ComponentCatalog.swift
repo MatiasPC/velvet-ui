@@ -20,6 +20,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var jiggleTrigger = 0
+    @State private var sweepOn = true
 
     var body: some View {
         NavigationStack {
@@ -344,9 +346,70 @@ struct ComponentCatalog: View {
                                 .fill(DSColors.backgroundSecondary)
                                 .frame(width: 180, height: DSSpacing.md)
                                 .dsShimmer()
-                            DSBadge("Pulsing", variant: .filled).dsPulse()
+                            DSBadge("Breathing", variant: .filled).dsBreathe()
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Motion
+                section("Motion") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("dsBreathe").ds(.footnote, color: DSColors.textSecondary)
+                                HStack(spacing: DSSpacing.xl) {
+                                    breatheDot("subtle", .subtle)
+                                    breatheDot("medium", .medium)
+                                    breatheDot("strong", .strong)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("dsJiggle — fires once per trigger")
+                                    .ds(.footnote, color: DSColors.textSecondary)
+                                HStack(spacing: DSSpacing.md) {
+                                    Image(systemName: "bell.fill")
+                                        .font(.title2)
+                                        .foregroundStyle(theme.gradient.accent)
+                                        .dsJiggle(trigger: jiggleTrigger)
+                                    Spacer()
+                                    DSButton("Shake", size: .small) { jiggleTrigger += 1 }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Text("dsEdgeSweep — light travelling the edge")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            DSToggle("Sweeping", isOn: $sweepOn)
+                        }
+                        .padding(DSSpacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .dsSurface(.glass, radius: DSRadius.card)
+                        .dsEdgeSweep(radius: DSRadius.card, isActive: sweepOn)
+
+                        DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("dsPopIn / dsHueDrift")
+                                    .ds(.footnote, color: DSColors.textSecondary)
+                                HStack(spacing: DSSpacing.sm) {
+                                    ForEach(0..<4, id: \.self) { index in
+                                        RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                                            .fill(theme.gradient.horizontalGradient)
+                                            .frame(height: DSSpacing.xxl)
+                                            .dsHueDrift()
+                                            .dsPopIn(delay: Double(index) * 0.08)
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
                 }
             }
@@ -362,6 +425,16 @@ struct ComponentCatalog: View {
         VStack(alignment: .leading, spacing: DSSpacing.md) {
             Text(title).ds(.overline, color: DSColors.textSecondary)
             content()
+        }
+    }
+
+    private func breatheDot(_ label: String, _ intensity: DSBreatheIntensity) -> some View {
+        VStack(spacing: DSSpacing.xs) {
+            Circle()
+                .fill(theme.gradient.accent)
+                .frame(width: DSSpacing.xxl, height: DSSpacing.xxl)
+                .dsBreathe(intensity)
+            Text(label).ds(.caption1, color: DSColors.textTertiary)
         }
     }
 
