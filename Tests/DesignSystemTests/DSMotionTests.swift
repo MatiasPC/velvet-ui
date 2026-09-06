@@ -63,18 +63,28 @@ final class DSMotionTests: XCTestCase {
         XCTAssertGreaterThan(DSMotion.sweepDuration, 1.0)
     }
 
-    // MARK: - Jiggle Phases
+    // MARK: - Jiggle Envelope
 
-    /// The wiggle has to come back to zero, and each swing must be smaller than
-    /// the last, or it reads as a loop instead of a nudge.
-    func testJigglePhasesDecayToRest() {
-        let phases = DSJigglePhase.allCases
-        XCTAssertEqual(phases.first?.degrees, 0)
-        XCTAssertEqual(phases.last?.degrees, 0)
+    /// The shake has to peak at `jiggleDegrees`, alternate sign, shrink every
+    /// swing and end at rest — otherwise it reads as a loop instead of a nudge.
+    func testJiggleEnvelopeDecaysToRest() {
+        let swings = DSMotion.jiggleSwings
+        XCTAssertGreaterThanOrEqual(swings.count, 3)
+        XCTAssertEqual(swings.first, DSMotion.jiggleDegrees)
+        XCTAssertEqual(swings.last, 0)
 
-        let peaks = phases.map { abs($0.degrees) }
-        XCTAssertEqual(peaks.max(), DSMotion.jiggleDegrees)
-        XCTAssertGreaterThan(abs(DSJigglePhase.out.degrees), abs(DSJigglePhase.outSmall.degrees))
-        XCTAssertGreaterThan(abs(DSJigglePhase.back.degrees), abs(DSJigglePhase.backSmall.degrees))
+        let magnitudes = swings.map(abs)
+        XCTAssertEqual(magnitudes.max(), DSMotion.jiggleDegrees)
+        for (earlier, later) in zip(magnitudes, magnitudes.dropFirst()) {
+            XCTAssertGreaterThan(earlier, later, "each swing must be smaller than the one before")
+        }
+        for (a, b) in zip(swings, swings.dropFirst()) where a != 0 && b != 0 {
+            XCTAssertLessThan(a * b, 0, "consecutive swings must alternate sign")
+        }
+    }
+
+    func testJiggleDurationIsQuick() {
+        XCTAssertGreaterThan(DSMotion.jiggleDuration, 0.2)
+        XCTAssertLessThan(DSMotion.jiggleDuration, 0.8)
     }
 }

@@ -177,7 +177,7 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 | Modifier | What it does | Reduce Motion |
 |---|---|---|
 | `.dsBreathe(_ intensity:)` | Slow swell in scale and dip in opacity at `breatheDuration` | Rests at scale 1 |
-| `.dsJiggle(trigger:)` | One decaying wiggle (two full swings that shrink to rest) on trigger change | Not applied at all |
+| `.dsJiggle(trigger:)` | One decaying shake on trigger change — a continuous keyframe track through `jiggleSwings`, ending at rest | Not applied at all |
 | `.dsPopIn(delay:)` | Entrance with springBouncy overshoot and fade | Fades only, no scale |
 | `.dsEdgeSweep(radius:isActive:)` | Specular highlight travelling the surface edge | Highlight stays static |
 | `.dsHueDrift(isActive:)` | Slow, bounded hue rotation over the gradient (decorative) | Stays at 0° |
@@ -190,7 +190,9 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 | `sweepDuration` | 2.0s | One full trip of the edge sweep. |
 | `driftDuration` | 8.0s | Hue drift. Deliberately slow: notice it only on a second look. |
 | `driftDegrees` | 12 | Maximum hue rotation. Small to keep the gradient recognisable. |
-| `jiggleDegrees` | 7 | Peak rotation of one jiggle swing. |
+| `jiggleDegrees` | 7 | Peak rotation of the first jiggle swing; later swings shrink from here. |
+| `jiggleDuration` | 0.45s | Total length of one jiggle — a quick "no" shake. |
+| `jiggleSwings` | `[7, -4.34, 2.66, -1.26, 0]` | The decay envelope in degrees; Cubic keyframes interpolate between the points. |
 
 ## Haptics
 
