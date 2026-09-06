@@ -95,7 +95,10 @@ public struct DSSlideToConfirm: View {
         ZStack(alignment: .leading) {
             theme.gradient.horizontalGradient
                 .mask(alignment: .leading) {
-                    Rectangle().frame(width: trailWidth)
+                    // Rounded by the knob's own radius so the trail's leading
+                    // edge curves with the knob instead of cutting square behind it.
+                    RoundedRectangle(cornerRadius: Metrics.knobDiameter / 2, style: .continuous)
+                        .frame(width: trailWidth)
                 }
 
             labelArea
