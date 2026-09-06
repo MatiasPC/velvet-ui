@@ -20,6 +20,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var volume: Double = 0.7
+    @State private var quality: Double = 3
 
     var body: some View {
         NavigationStack {
@@ -248,6 +250,17 @@ struct ComponentCatalog: View {
                                      size: 20, tint: DSColors.primary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Slider
+                section("Slider") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSSlider(value: $volume)
+                            DSSlider(value: $volume, tint: DSColors.secondary)
+                            DSSlider(value: $quality, in: 0...5, step: 1, showsTicks: true)
+                        }
                     }
                 }
 
