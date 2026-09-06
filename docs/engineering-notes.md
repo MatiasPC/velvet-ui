@@ -38,6 +38,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | `swift-tools-version: 6.0` does not mean Swift 6 | The tools version is pinned to 6.0 for iOS 18 / macOS 15 symbol access, but language mode is explicitly `.v5` via `swiftSettings`. Raising it to Swift 6 language mode is a separate migration. |
 | Animated text must reserve its layout | Any component whose text changes length mid-animation (`DSTypewriterText`, `DSThinkingIndicator`, `DSStepper`) stacks every candidate string invisibly in a `ZStack` and sizes to that. Picking the longest by `count` is not enough — `WWW` is wider than `iiiiii` — and under-reserving makes the surrounding layout jitter on every character. |
 | `dsEdgeSweep` animates a Double that builds an AngularGradient | The view body re-evaluates per frame while the sweep runs. Keep it on small, leaf-ish surfaces; on a large subtree, put the sweep on a thin overlay shape rather than on the container itself. |
+| A knob that fills a `dsSurface` track must be an overlay, not a child | `dsSurface` ends in `.clipShape`, so anything inside it (including a `.dsShadow`) is cropped to the pill. `DSSlideToConfirm` draws its knob in an `.overlay(alignment: .leading)` applied *after* `.dsSurface`: the circle is exactly `trackHeight` tall, nests into the pill's rounded ends, and its shadow renders outside the clip. Travel and the trail width then measure from a flush leading edge (no inset term). |
 
 ## Known issues / backlog
 

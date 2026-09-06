@@ -16,10 +16,10 @@ private enum Metrics {
     /// Track height. No token for "56pt" exists, so it's expressed as
     /// DSSpacing.huge (48) + DSSpacing.xs (8) — a comfortable one-hand target.
     static let trackHeight: CGFloat = DSSpacing.huge + DSSpacing.xs
-    /// Gap kept between the knob and the track edge, on every side.
-    static let knobInset: CGFloat = DSSpacing.xxs
-    /// Knob diameter: the track height minus its inset on both top and bottom.
-    static let knobDiameter: CGFloat = trackHeight - (knobInset * 2)
+    /// Knob diameter: a circle exactly as tall as the track. It nests into the
+    /// pill's rounded ends (equal radii), so no track surface shows above or
+    /// below it, and it sits flush against the leading and trailing edges.
+    static let knobDiameter: CGFloat = trackHeight
     /// Breathing room so the label never sits flush against the track edge.
     static let labelHorizontalPadding: CGFloat = DSSpacing.lg
     /// Vertical lift applied to a letter as it fades — a subtle "flying away" cue.
@@ -104,9 +104,6 @@ public struct DSSlideToConfirm: View {
             labelArea
                 .padding(.horizontal, Metrics.labelHorizontalPadding)
                 .frame(maxWidth: .infinity)
-
-            knob(fill: resolvedAccent)
-                .offset(x: Metrics.knobInset + dragOffset)
         }
         .frame(height: Metrics.trackHeight)
         .frame(maxWidth: .infinity)
@@ -120,6 +117,12 @@ public struct DSSlideToConfirm: View {
             }
         }
         .dsSurface(.glassThin, radius: DSRadius.chip)
+        .overlay(alignment: .leading) {
+            // Sits on top of the pill clip so the knob spans the full track
+            // height and its shadow isn't cropped by the surface's rounded edge.
+            knob(fill: resolvedAccent)
+                .offset(x: dragOffset)
+        }
         .contentShape(Rectangle())
         .gesture(dragGesture, including: isConfirmed ? .none : .all)
         .accessibilityElement(children: .ignore)
@@ -222,9 +225,10 @@ public struct DSSlideToConfirm: View {
 
     // MARK: Derived Geometry
 
-    /// Maximum horizontal distance the knob can travel from its leading inset.
+    /// Maximum horizontal distance the knob can travel: from flush-leading to
+    /// flush-trailing.
     private var maxOffset: CGFloat {
-        max(trackWidth - Metrics.knobDiameter - Metrics.knobInset * 2, 0)
+        max(trackWidth - Metrics.knobDiameter, 0)
     }
 
     /// Drag progress in `0...1`.
@@ -234,12 +238,13 @@ public struct DSSlideToConfirm: View {
 
     /// Width of the revealed gradient trail. While dragging it stops at the knob's
     /// centre — the opaque knob covers the straight edge and caps the trail with
-    /// its own circle. Once confirmed it fills the whole track (the knob rests one
-    /// `knobInset` from the end, so stopping at the knob would leave a glass sliver).
+    /// its own circle. Once confirmed it fills the whole track: the knob rests
+    /// flush against the trailing end, so stopping at its centre would leave the
+    /// trailing half of the track unfilled.
     private var trailWidth: CGFloat {
         guard trackWidth > 0 else { return 0 }
         if isConfirmed { return trackWidth }
-        return min(trackWidth, Metrics.knobInset + dragOffset + Metrics.knobDiameter / 2)
+        return min(trackWidth, dragOffset + Metrics.knobDiameter / 2)
     }
 
     /// Opacity for the letter at `index`: letters closer to the knob's start

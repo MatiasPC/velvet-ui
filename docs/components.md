@@ -227,7 +227,7 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel: String = "Confirmed", accent: Color? = nil, onConfirm: @escaping () -> Void)
 ```
 
-A glass pill track with a knob filled by `accent ?? theme.accent`. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter. Threshold is 0.75 of available travel: crossing it fires a `.rigid` haptic once per drag. Releasing above the threshold fires `.success` and calls `onConfirm()`; releasing below snaps the knob back with `springBouncy` and a `.light` haptic. Inert once confirmed. Under Reduce Motion the knob and trail still move, but the per-letter label stagger collapses to one fade. VoiceOver gets an `.accessibilityAction` so confirming never requires a drag.
+A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter. Threshold is 0.75 of available travel: crossing it fires a `.rigid` haptic once per drag. Releasing above the threshold fires `.success` and calls `onConfirm()`; releasing below snaps the knob back with `springBouncy` and a `.light` haptic. Inert once confirmed. Under Reduce Motion the knob and trail still move, but the per-letter label stagger collapses to one fade. VoiceOver gets an `.accessibilityAction` so confirming never requires a drag.
 
 ---
 

@@ -27,7 +27,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `.dsPulse()` — use `.dsBreathe(_:)` instead.
 
 ### Fixed
-- `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail was measured to the knob's trailing edge, and the knob rests one inset short of the end, so a thin band of glass stayed uncoloured.
+- `DSSlideToConfirm` knob is now a circle as tall as the track (was inset 4pt top and bottom), so no glass shows above or below it and it travels flush edge-to-edge. It's layered over the track's pill clip so its shadow isn't cropped.
+- `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
 - `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.
 
 ## [0.2.0] — 2026-09-05
