@@ -167,7 +167,7 @@ DSToggle(_ label: String? = nil, isOn: Binding<Bool>,
          haptic: DSHapticStyle = .rigid)
 ```
 
-Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic). Accessibility value On/Off.
+Knob diameter equals the track height — the circle nests into the capsule ends, so no track color shows above or below it; horizontal travel is `(trackWidth − trackHeight) / 2`. Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic). Accessibility value On/Off.
 
 ---
 

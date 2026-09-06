@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Changed
+- **DSToggle** — the knob now fills the full track height (was inset 2pt), nesting into the capsule ends so no track color shows above or below the circle. Horizontal travel adjusted to `(trackWidth − trackHeight) / 2`; track dimensions and public API unchanged.
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).

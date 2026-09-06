@@ -25,21 +25,15 @@ public enum DSToggleSize {
         }
     }
 
-    /// Gap between the knob and the track edge
-    var inset: CGFloat {
-        switch self {
-        case .small:  return 2
-        case .medium: return 2
-        }
-    }
-
+    /// The knob fills the full track height and nests into the capsule ends, so
+    /// no track color shows above or below it.
     var knobSize: CGFloat {
-        trackHeight - inset * 2
+        trackHeight
     }
 
     /// Horizontal travel of the knob center between off and on
     var travel: CGFloat {
-        (trackWidth - knobSize) / 2 - inset
+        (trackWidth - knobSize) / 2
     }
 }
 
