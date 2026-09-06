@@ -95,10 +95,10 @@ public struct DSSlideToConfirm: View {
         ZStack(alignment: .leading) {
             theme.gradient.horizontalGradient
                 .mask(alignment: .leading) {
-                    // Rounded by the knob's own radius so the trail's leading
-                    // edge curves with the knob instead of cutting square behind it.
-                    RoundedRectangle(cornerRadius: Metrics.knobDiameter / 2, style: .continuous)
-                        .frame(width: trailWidth)
+                    // Ends at the knob's centre: the opaque knob caps the trail,
+                    // so its leading edge reads as the knob's own circle rather
+                    // than a shape trying (and failing) to match it.
+                    Rectangle().frame(width: trailWidth)
                 }
 
             labelArea
@@ -232,14 +232,14 @@ public struct DSSlideToConfirm: View {
         maxOffset > 0 ? Double(dragOffset / maxOffset) : 0
     }
 
-    /// Width of the revealed gradient trail. While dragging it follows the knob's
-    /// trailing edge; once confirmed it fills the whole track — the knob rests one
-    /// `knobInset` from the end, so the knob-edge formula would leave that sliver
-    /// of glass showing instead of colour.
+    /// Width of the revealed gradient trail. While dragging it stops at the knob's
+    /// centre — the opaque knob covers the straight edge and caps the trail with
+    /// its own circle. Once confirmed it fills the whole track (the knob rests one
+    /// `knobInset` from the end, so stopping at the knob would leave a glass sliver).
     private var trailWidth: CGFloat {
         guard trackWidth > 0 else { return 0 }
         if isConfirmed { return trackWidth }
-        return min(trackWidth, Metrics.knobInset + dragOffset + Metrics.knobDiameter)
+        return min(trackWidth, Metrics.knobInset + dragOffset + Metrics.knobDiameter / 2)
     }
 
     /// Opacity for the letter at `index`: letters closer to the knob's start
