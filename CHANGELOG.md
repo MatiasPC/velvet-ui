@@ -26,6 +26,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ### Deprecated
 - `.dsPulse()` — use `.dsBreathe(_:)` instead.
 
+### Fixed
+- `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail was measured to the knob's trailing edge, and the knob rests one inset short of the end, so a thin band of glass stayed uncoloured.
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
