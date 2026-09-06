@@ -32,7 +32,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | Reduce Transparency / Reduce Motion | `dsSurface` falls back to `.solid`; `dsStaggerIn` and `dsShimmer` skip their animation. Keep honoring both in new components. |
 | `Color` equality | `Color` is `Equatable`, so `DSGradientTheme` is `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
 | Contrast is tested | `DesignSystemTests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
-| `~/Documents/DesignSystem` is a second clone | The global CLAUDE.md and the `design-system` skill point to `~/Documents/DesignSystem`. It's a clone of this repo that lags behind; pull it after merging, or repoint those references to `~/Documents/velvet-ui`. |
+| One checkout only: `~/Documents/velvet-ui` | The stale `~/Documents/DesignSystem` clone was removed on 2026-09-06. Global CLAUDE.md and the `design-system` skill now point here. Apps add the package as `relativePath = ../velvet-ui`; the SwiftPM product stays named `DesignSystem`. Apps created before that date still reference `../DesignSystem` and must be repointed to `../velvet-ui` when next opened (MindBite, Tic-tac-toe, AquaSync, Tetris-Silver, Tetris-game, PowderRush, snake). |
 
 ## Known issues / backlog
 
