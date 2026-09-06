@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSSlider` — custom-drawn value slider with a themed accent fill and a white knob that pops and emits an accent `.glow` while dragging. Continuous or stepped (`step:`), optional tick marks (`showsTicks:`), `.soft`/`.selection`/`.light` haptics, `DSAnimation.interactive` tracking, full accessibility (adjustable action), light/dark via the theme. Respects Reduce Motion.
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).

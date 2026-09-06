@@ -201,6 +201,23 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSSlider  ✅ 🧪 (colors)
+
+`Components/DSSlider.swift`. Custom-drawn value slider — accent fill under a white knob that pops and glows while dragging.
+
+```swift
+DSSlider(value: Binding<Double>, in range: ClosedRange<Double> = 0...1,
+         step: Double? = nil,            // nil = continuous; positive = snap + tick
+         knobSize: CGFloat = 28,
+         tint: Color? = nil, trackColor: Color? = nil,
+         showsTicks: Bool = false,       // tick marks at each step (needs a step)
+         haptics: Bool = true)
+```
+
+Track is a `theme.palette.border` capsule (height `DSSpacing.xs`); the active fill and the knob glow use `tint` (default `theme.accent`). Touching the knob fires `.soft`, scales it 1.12× and swaps its `.sm` shadow for `.glow(tint)`; a stepped slider fires `.selection` on each new step and `.light` on release. The value follows the drag with `DSAnimation.interactive`, the pop with `DSPress.animation`; both are disabled under Reduce Motion. Ticks (opt-in, ≤ 40) are drawn above the fill in `palette.textTertiary`. Full accessibility: adjustable action stepping by `step` (or 1/10 of the range), value read as a percentage for `0...1` else the number. `step ≤ 0` is treated as continuous.
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.
