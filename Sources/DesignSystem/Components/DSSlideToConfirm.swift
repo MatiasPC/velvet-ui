@@ -229,9 +229,14 @@ public struct DSSlideToConfirm: View {
         maxOffset > 0 ? Double(dragOffset / maxOffset) : 0
     }
 
-    /// Width of the revealed gradient trail — up to the knob's trailing edge.
+    /// Width of the revealed gradient trail. While dragging it follows the knob's
+    /// trailing edge; once confirmed it fills the whole track — the knob rests one
+    /// `knobInset` from the end, so the knob-edge formula would leave that sliver
+    /// of glass showing instead of colour.
     private var trailWidth: CGFloat {
-        min(trackWidth, Metrics.knobInset + dragOffset + Metrics.knobDiameter)
+        guard trackWidth > 0 else { return 0 }
+        if isConfirmed { return trackWidth }
+        return min(trackWidth, Metrics.knobInset + dragOffset + Metrics.knobDiameter)
     }
 
     /// Opacity for the letter at `index`: letters closer to the knob's start
