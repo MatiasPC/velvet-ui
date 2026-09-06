@@ -29,8 +29,20 @@ public enum DSMotion {
     /// Maximum hue rotation of `dsHueDrift`. Small on purpose — the gradient theme
     /// must stay recognisable, so the drift shifts within the family, never out of it.
     public static let driftDegrees: Double = 12
-    /// Peak rotation of one `dsJiggle` swing.
+    /// Peak rotation of the first `dsJiggle` swing; later swings shrink from here.
     public static let jiggleDegrees: Double = 7
+    /// 0.45s — total length of one `dsJiggle`. A quick "no" shake, not a wobble.
+    public static let jiggleDuration: Double = 0.45
+    /// The `dsJiggle` envelope in degrees: a kick to `jiggleDegrees`, then
+    /// counter-swings at ~0.6× each, alternating sign, ending at rest. Cubic
+    /// keyframes interpolate between these so it reads as one continuous shake.
+    public static let jiggleSwings: [Double] = [
+        jiggleDegrees,
+        -jiggleDegrees * 0.62,
+        jiggleDegrees * 0.38,
+        -jiggleDegrees * 0.18,
+        0
+    ]
 
     // MARK: - Reduce Motion
 
@@ -98,35 +110,32 @@ public struct DSBreatheModifier: ViewModifier {
 
 // MARK: - Jiggle
 
-/// One decaying attention wiggle: two full swings that shrink into rest.
-/// Phase-driven rather than `repeatForever` — it ends, which is the point.
-enum DSJigglePhase: CaseIterable {
-    case rest, out, back, outSmall, backSmall, settle
-
-    var degrees: Double {
-        switch self {
-        case .rest, .settle: return 0
-        case .out:           return DSMotion.jiggleDegrees
-        case .back:          return -DSMotion.jiggleDegrees
-        case .outSmall:      return DSMotion.jiggleDegrees * 0.45
-        case .backSmall:     return -DSMotion.jiggleDegrees * 0.45
-        }
-    }
-}
-
 public struct DSJiggleModifier<T: Equatable>: ViewModifier {
     let trigger: T
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    /// A decaying rotational impulse fired on every `trigger` change: a kick out
+    /// to `jiggleDegrees`, then counter-swings at roughly 0.6× each, alternating
+    /// sign, easing back to zero over `jiggleDuration`.
+    ///
+    /// One continuous `keyframeAnimator` track, not stepped `phaseAnimator`
+    /// phases: with phases each swing runs its own spring and *settles* before
+    /// the next starts, which reads as five separate twitches. Cubic keyframes
+    /// carry velocity across the whole track, so the swings flow into one shake.
+    /// The `DSAnimation` springs are frozen and none is damped low enough to
+    /// ring, hence the hand-shaped envelope here.
     public func body(content: Content) -> some View {
         if reduceMotion {
             content
         } else {
-            content.phaseAnimator(DSJigglePhase.allCases, trigger: trigger) { view, phase in
-                view.rotationEffect(.degrees(phase.degrees))
-            } animation: { _ in
-                DSAnimation.springSnappy
+            content.keyframeAnimator(initialValue: 0.0, trigger: trigger) { view, angle in
+                view.rotationEffect(.degrees(angle))
+            } keyframes: { _ in
+                let step = DSMotion.jiggleDuration / Double(DSMotion.jiggleSwings.count)
+                for swing in DSMotion.jiggleSwings {
+                    CubicKeyframe(swing, duration: step)
+                }
             }
         }
     }
