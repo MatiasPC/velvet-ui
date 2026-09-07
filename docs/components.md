@@ -186,6 +186,21 @@ Drag-to-rate with `.selection` tick per star and `.light` on release; active sta
 
 ---
 
+## DSSlider  ✅ 🧪
+
+`Components/DSSlider.swift`.
+
+```swift
+DSSlider(value: Binding<Double>, in range: ClosedRange<Double> = 0...1,
+         step: Double? = nil,                 // nil = continuous · e.g. 1 or 0.1 = detents
+         size: DSSliderSize = .medium,        // .small 4/20 · .medium 6/28 (track/knob)
+         tint: Color? = nil, haptics: Bool = true)
+```
+
+The one continuous-input control (Rating is discrete, Toggle boolean). Draws its own track: active fill is the gradient theme's `horizontalGradient` by default, or a flat `tint`; unfilled track is `palette.border`; the knob is `palette.textOnPrimary` on `.sm` shadow and scales 1.15× while dragging (`springSnappy`). Tap or drag to set. Haptics: `.soft` on grab, `.selection` per crossed detent when `step` is set (else `.rigid` at either end), `.light` on release. Stepped values snap with `springSnappy`; continuous tracks the finger 1:1. Full accessibility (adjustable action, value as percent). Honors `.disabled`.
+
+---
+
 ## DSPageControl  ✅ 🧪 (colors)
 
 `Components/DSPageControl.swift`.
