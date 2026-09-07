@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSSlider` — tactile continuous/stepped slider. Draws its own track (gradient-theme fill or a flat `tint`), knob springs up 1.15× while dragging, detents tick a `.selection` haptic (`.rigid` at the ends when continuous, `.light` on release). `DSSliderSize` (`.small`, `.medium`). Tap-or-drag, full accessibility (adjustable action), honors `.disabled`. Fills the continuous-input gap (Rating is discrete, Toggle boolean).
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
