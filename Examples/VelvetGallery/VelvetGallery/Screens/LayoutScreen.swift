@@ -30,6 +30,8 @@ struct LayoutScreen: View {
                 DSHorizontalScroll(spacing: DSSpacing.sm) {
                     ForEach(0..<8, id: \.self) { tile("#\($0)", width: 120) }
                 }
+                Text("DSGrid and DSHorizontalScroll add their own screen-edge padding, so these two sit inset from the flush stacks above.")
+                    .ds(.footnote, color: DSColors.textTertiary)
             }
 
             LabeledExample("DSScreen") {

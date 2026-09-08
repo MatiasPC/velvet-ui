@@ -1,4 +1,5 @@
 import SwiftUI
+import DesignSystem
 
 enum Appearance: String, CaseIterable, Identifiable {
     case system, light, dark

@@ -6,7 +6,7 @@ struct CardsScreen: View {
         GalleryScreen(title: "Cards", caption: "Glass containers") {
             LabeledExample("Styles") {
                 VStack(spacing: DSSpacing.md) {
-                    DSCard(style: .flat) { cardBody("Flat", "Wash on the backdrop, no shadow") }
+                    DSCard(style: .flat) { cardBody("Flat", "Subtle fill, no shadow") }
                     DSCard(style: .elevated) { cardBody("Elevated", "Glass, edge highlight, soft shadow") }
                     DSCard(style: .outlined) { cardBody("Outlined", "Denser glass, no shadow") }
                 }
