@@ -20,6 +20,8 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var quantity = 2
+    @State private var guests = 2
 
     var body: some View {
         NavigationStack {
@@ -248,6 +250,18 @@ struct ComponentCatalog: View {
                                      size: 20, tint: DSColors.primary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Stepper
+                section("Stepper") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.md) {
+                            DSStepper("Quantity", value: $quantity, in: 0...10)
+                            DSStepper("Guests", value: $guests, in: 1...8)
+                            DSStepper(value: $quantity, in: 0...10)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
                     }
                 }
 
