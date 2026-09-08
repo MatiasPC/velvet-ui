@@ -54,9 +54,8 @@ All paths relative to repo root `/Users/mati/Documents/velvet-ui/`.
 | File | Responsibility | Created in |
 |------|----------------|-----------|
 | `Examples/VelvetGallery/project.yml` | XcodeGen spec: one app target, local package dep on `../..` | Task 1 |
-| `Examples/VelvetGallery/VelvetGallery.xcodeproj/` | Generated project (committed, `xcuserdata` ignored) | Task 1 |
+| `Examples/VelvetGallery/VelvetGallery.xcodeproj/` | Generated locally, **not committed** — repo `.gitignore` already excludes `*.xcodeproj/`. Regenerate with `xcodegen generate`. | Task 1 (generate only) |
 | `Examples/VelvetGallery/README.md` | How to open / regenerate | Task 20 |
-| `.gitignore` (repo root) | + gallery `xcuserdata` paths | Task 1 |
 | `Examples/VelvetGallery/VelvetGallery/VelvetGalleryApp.swift` | `@main`, injects neutral theme, appearance binding, `preferredColorScheme` | Task 1 → Task 2 |
 | `.../VelvetGallery/Support/Appearance.swift` | `Appearance` enum + `galleryAppearance` environment key + `AppearanceMenu` view | Task 2 |
 | `.../VelvetGallery/Theme/NeutralTheme.swift` | `DSGradientTheme.neutral` | Task 2 |
@@ -77,11 +76,12 @@ All paths relative to repo root `/Users/mati/Documents/velvet-ui/`.
 **Files:**
 - Create: `Examples/VelvetGallery/project.yml`
 - Create: `Examples/VelvetGallery/VelvetGallery/VelvetGalleryApp.swift`
-- Generate: `Examples/VelvetGallery/VelvetGallery.xcodeproj/` (via `xcodegen`)
-- Modify: `.gitignore` (repo root)
+- Generate (local only, not committed): `Examples/VelvetGallery/VelvetGallery.xcodeproj/` (via `xcodegen`)
 
 **Interfaces:**
 - Produces: an app target `VelvetGallery`, scheme `VelvetGallery`, that launches to a screen reading "VelvetGallery". `VelvetGalleryApp` is `@main`.
+
+**Note (controller ruling):** the repo `.gitignore` already excludes `*.xcodeproj/`; the generated project is intentionally NOT committed. `project.yml` is the committed source of truth. Do not `git add -f` the `.xcodeproj`.
 
 - [ ] **Step 1: Write `Examples/VelvetGallery/project.yml`**
 
@@ -152,13 +152,7 @@ struct VelvetGalleryApp: App {
 Run: `cd Examples/VelvetGallery && xcodegen generate && cd ../..`
 Expected: `Created project at .../VelvetGallery.xcodeproj`.
 
-- [ ] **Step 4: Append to `.gitignore`** (repo root) — add these lines at the end:
-
-```
-# VelvetGallery example app (generated project — keep pbxproj + shared schemes, drop user state)
-Examples/VelvetGallery/VelvetGallery.xcodeproj/xcuserdata/
-Examples/VelvetGallery/VelvetGallery.xcodeproj/project.xcworkspace/xcuserdata/
-```
+- [ ] **Step 4: Confirm the project is ignored** — run `git status --porcelain Examples/VelvetGallery/` and verify `VelvetGallery.xcodeproj/` does **not** appear (the repo's existing `*.xcodeproj/` rule covers it). No `.gitignore` edit needed.
 
 - [ ] **Step 5: Build**
 
@@ -173,8 +167,9 @@ Expected: `/tmp/velvetgallery-01-scaffold.png` shows a nav bar "Velvet UI" and c
 - [ ] **Step 7: Commit**
 
 ```bash
-git add Examples/VelvetGallery/project.yml Examples/VelvetGallery/VelvetGallery.xcodeproj Examples/VelvetGallery/VelvetGallery/VelvetGalleryApp.swift .gitignore
-git commit -m "add: VelvetGallery scaffold — XcodeGen project, empty runnable app"
+git add Examples/VelvetGallery/project.yml Examples/VelvetGallery/VelvetGallery/VelvetGalleryApp.swift
+git status   # confirm no .xcodeproj staged
+git commit -m "add: VelvetGallery scaffold — XcodeGen project spec, empty runnable app"
 ```
 
 ---
@@ -897,17 +892,19 @@ demos and video capture. Not part of `swift build` / `swift test`.
 
 ## Run
 
-Open `VelvetGallery.xcodeproj` in Xcode, pick an iPhone simulator, Run.
-Or: `xcodebuild build -scheme VelvetGallery -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`.
-
-## Regenerate the project
-
-The `.xcodeproj` is generated from `project.yml` with [XcodeGen](https://github.com/yonwoo9/XcodeGen)
-and committed. After changing the file list or target settings:
+The `.xcodeproj` is **not** in git (the repo ignores `*.xcodeproj/`). Generate it first:
 
 ```bash
 cd Examples/VelvetGallery && xcodegen generate
 ```
+
+Then open `VelvetGallery.xcodeproj` in Xcode, pick an iPhone simulator, Run.
+Or: `xcodebuild build -scheme VelvetGallery -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`.
+
+## Regenerate the project
+
+`project.yml` is the source of truth ([XcodeGen](https://github.com/yonwoo9/XcodeGen)).
+Re-run `xcodegen generate` after changing the file list or target settings.
 
 ## Design
 
@@ -990,9 +987,10 @@ Replaces nothing — the internal `ComponentCatalog` `#Preview` stays.
   one labelled colourful example each.
 - Appearance (System/Light/Dark) switchable from the toolbar, persisted.
 - `NavigationStack` + grouped `List` → 16 screens.
-- XcodeGen project (`project.yml` + committed `.xcodeproj`), package consumed as
-  a local SPM dependency at `../..`. `Package.swift` untouched;
-  `swift build` / `swift test` unaffected.
+- XcodeGen project (`project.yml` committed; `.xcodeproj` generated locally, not
+  committed — repo already ignores `*.xcodeproj/`). Package consumed as a local
+  SPM dependency at `../..`. `Package.swift` untouched; `swift build` /
+  `swift test` unaffected.
 
 ## Verification
 
@@ -1022,8 +1020,7 @@ EOF
 | Semantic status colours kept | Tasks 6, 7, 12, 14 (error/success/warning/info) |
 | Decorative defaults overridden + one labelled colourful example | Tasks 10 (rating), 16 (gradient progress), 12 (badge), 18 (gradients reference) |
 | Appearance menu, `@AppStorage`, no gradient switcher | Task 2 (`Appearance`, `AppearanceMenu`, `VelvetGalleryApp`) |
-| Project under `Examples/VelvetGallery/`, XcodeGen, committed `.xcodeproj`, local dep `../..` | Task 1 |
-| `.gitignore` xcuserdata | Task 1 |
+| Project under `Examples/VelvetGallery/`, XcodeGen, local dep `../..` (`.xcodeproj` NOT committed — controller ruling, repo already ignores `*.xcodeproj/`) | Task 1 |
 | iOS 17, iPhone+iPad, bundle id | Task 1 (`project.yml`) |
 | `Package.swift` untouched, `swift build`/`test` pass | Global Constraints + Task 20 Step 5 |
 | 16 screens per the spec table | Tasks 4–19 (Buttons, Cards, TextField, CodeField, Toggle, Segmented, Rating, PageControl, Badges&Avatars, Lists, Toast, EmptyState, Progress&Loading, Layout, Theme incl. Surfaces, Typography) |
