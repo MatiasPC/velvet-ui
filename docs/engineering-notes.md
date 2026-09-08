@@ -18,6 +18,12 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 
 **No borders.** Separation = material density + `DSWash.edge` + shadow. The `.outline` / `.outlined` variants stay in the API and will render as wash (pending restyle). `dsCornerRadius(_:strokeColor:)` is deprecated.
 
+**A capsule as wide as it is tall is a circle — so the morph is a mask, not a resize.** `DSSlideToConfirm(finish: .morphAndVanish)` collapses its pill into a circle by masking with a `Capsule()` inset from both ends until only `trackHeight` remains. The pill already carries `DSRadius.chip`, so no shape interpolation, no `matchedGeometryEffect` and no second view tree are needed. Masking rather than resizing also keeps the measured `trackWidth` stable through the whole collapse and stops the content underneath reflowing — which matters because at that point the control is one solid gradient and any reflow would show as glyphs jumping. The collapse can travel to the *centre* for the same reason: at 100% the trail fills edge to edge and the knob is filled with the same accent, so the knob is indistinguishable from the fill and never appears to walk backwards.
+
+**Particle simulation is analytic, because a `Canvas` draw closure must be pure.** `DSParticleField` stores each mote's birth state in a fixed ring buffer and *computes* its position at any instant (`v = v₀·e^(-kt)`, so displacement is `(v₀/k)·(1 - e^(-kt))`) instead of accumulating it frame by frame. Mutating state from inside `Canvas { }` is illegal; the only writes happen in an `onChange(of: timeline.date)` beside it. The buffer is also why nothing enters or leaves the view tree while the finger is down — there is no layout work mid-drag, which is exactly when a hitch would be most visible.
+
+**`Canvas` cannot animate a colour, so blend it by hand.** A `Color` passed into a draw closure snaps. `DSParticleField` conforms to `Animatable` over a `tintMix: Double`, resolves both endpoint colours against the environment with `Color.resolve(in:)` and interpolates the components itself. That is what lets one animated step sweep every live mote at once rather than recolouring them individually.
+
 ## Gotchas
 
 | Topic | What to know |

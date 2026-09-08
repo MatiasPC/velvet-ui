@@ -221,13 +221,25 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 
 ## DSSlideToConfirm  ✅
 
-`Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions.
+`Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions, including payments.
 
 ```swift
-DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel: String = "Confirmed", accent: Color? = nil, onConfirm: @escaping () -> Void)
+DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel: String = "Confirmed", accent: Color? = nil, finish: DSSlideFinish = .settle, onConfirm: @escaping () async throws -> Void)
+
+enum DSSlideFinish { case settle, morphAndVanish }
 ```
 
-A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter. Threshold is 0.75 of available travel: crossing it fires a `.rigid` haptic once per drag. Releasing above the threshold fires `.success` and calls `onConfirm()`; releasing below snaps the knob back with `springBouncy` and a `.light` haptic. Inert once confirmed. Under Reduce Motion the knob and trail still move, but the per-letter label stagger collapses to one fade. VoiceOver gets an `.accessibilityAction` so confirming never requires a drag.
+A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter. Tracking is pure 1:1 — no rubber-banding, no magnetic snap: physics tricks under a payment gesture read as the control second-guessing the user.
+
+Threshold is 0.75 of available travel. The drag itself carries a detent texture — 8 `.soft` ticks across the full travel with intensity ramped 0.2 → 0.6 — and crossing the threshold fires `.rigid` once per drag. Releasing below it snaps the knob back with `springBouncy` and a `.light` haptic.
+
+`onConfirm` is `async throws`, so one closure carries both a payment's latency and its outcome. The control spins while awaiting it, with a 500ms floor so a fast closure never flashes the spinner for a single frame; the floor is applied *after* the closure returns, so a slow charge is never padded. Success fires `.success`. A thrown error is a refusal: `.error` fires, the control re-opens and the knob returns to the start for a retry. The control never words its own failure — saying *why* is the parent's job. Existing synchronous call sites still compile unchanged, because `() -> Void` is a subtype of `() async throws -> Void`.
+
+A cloud of small motes is emitted around the knob — around the finger — from the first touch until the outcome lands, brightening with drag speed. **Their tint is the status channel:** neutral (`palette.textTertiary`) throughout, sweeping to `palette.success` on success and staying neutral on refusal. They keep being emitted through the spinner on purpose: a mote lives under a second, so a cloud that stopped at the end of the drag would already be dead by the time there was anything to turn green.
+
+`finish` decides what happens once the action resolves. `.settle` (default, the original behaviour) rests in place showing the check and `confirmedLabel` — right for a destructive confirmation, where the screen does not change so the control has to be the record that something happened. `.morphAndVanish` collapses the pill into a circle, resolves there, then dissolves while the motes disperse outward. It leaves its 56pt slot behind rather than collapsing it, so the parent's layout does not jump on the exact frame of the payoff; the parent cross-fades its own success state in place, or wraps the control in an `if` to collapse it. There is no reset API — re-mount with `.id(attempt)` to run it again.
+
+Under Reduce Motion the knob and trail still move, but the per-letter label stagger collapses to one fade. Reduce Motion or Reduce Transparency suppresses the motes entirely. VoiceOver gets an `.accessibilityAction` so confirming never requires a drag.
 
 ---
 
