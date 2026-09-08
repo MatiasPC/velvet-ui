@@ -20,16 +20,16 @@
 - **Neutral colours:** components driven by `theme.accent` / `theme.ink` render graphite automatically once `DSGradientTheme.neutral` is injected. Semantic status colours (`DSColors.error/.success/.warning/.info`) are kept where they carry meaning. Where a component's *default* colour is decorative, not status (`DSRating` amber tint, `DSGradientProgress` gradient stops), pass a neutral explicitly for the primary example and show the colourful variant only as one clearly-labelled secondary row.
 - **Deployment target:** iOS 17.0. Devices: iPhone + iPad (`TARGETED_DEVICE_FAMILY = 1,2`).
 - **Bundle id:** `com.matiasperaltacharro.VelvetGallery`. Product/scheme name: `VelvetGallery`.
-- **Build command** (used verbatim in every task's verification):
+- **Build command** (used verbatim in every task's verification) — `OS=18.0` is pinned because this machine (Xcode 26) has no iPhone 16 Pro runtime for iOS 26, only iOS 18.0 (controller ruling, Task 1):
   ```bash
   xcodebuild build \
     -project Examples/VelvetGallery/VelvetGallery.xcodeproj \
     -scheme VelvetGallery \
-    -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+    -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.0' \
     -derivedDataPath /tmp/velvetgallery-dd 2>&1 | tail -25
   ```
-  Expected: ends with `** BUILD SUCCEEDED **`, no warnings originating from files under `Examples/VelvetGallery/`.
-- **Run + screenshot** (used where a task says "screenshot"):
+  Expected: ends with `** BUILD SUCCEEDED **`, no warnings originating from files under `Examples/VelvetGallery/` (a lone `appintentsmetadataprocessor: Metadata extraction skipped` line is benign toolchain noise, not a code warning).
+- **Run + screenshot** (used where a task says "screenshot") — targets whatever is `booted` (the iOS 18.0 iPhone 16 Pro), so it is unaffected by the OS pin above:
   ```bash
   xcrun simctl boot "iPhone 16 Pro" 2>/dev/null; sleep 3
   xcrun simctl install booted /tmp/velvetgallery-dd/Build/Products/Debug-iphonesimulator/VelvetGallery.app
