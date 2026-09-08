@@ -186,6 +186,20 @@ Drag-to-rate with `.selection` tick per star and `.light` on release; active sta
 
 ---
 
+## DSStepper  ✅ 🧪
+
+`Components/DSStepper.swift`. Compact −/＋ integer counter for quantities, guest counts, portions.
+
+```swift
+DSStepper(_ label: String? = nil, value: Binding<Int>,
+          in range: ClosedRange<Int> = 0...99,
+          step: Int = 1, haptics: Bool = true)
+```
+
+The value rolls with `.contentTransition(.numericText(value:))` inside a `springSnappy` transaction (skipped under Reduce Motion). Each step fires `.selection`; pushing against a bound fires `.rigid` and dims that button (0.35) without changing the value. `−`/`＋` glyphs use `theme.ink` on a `.glassThin` pill (`DSRadius.chip`); press uses `DSPress.iconScale`. `.disabled` dims the control to 0.5. Accessibility: single adjustable element (increment/decrement by `step`), value reads the number.
+
+---
+
 ## DSPageControl  ✅ 🧪 (colors)
 
 `Components/DSPageControl.swift`.

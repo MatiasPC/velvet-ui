@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSStepper(_ label:value:in:step:haptics:)` — compact −/＋ integer counter. Value rolls with the iOS 17 numeric content transition, `.selection` tick per step, a `.rigid` nudge at the bounds (value unchanged), glass pill surface, full adjustable accessibility. Catalog section + light/dark previews.
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
