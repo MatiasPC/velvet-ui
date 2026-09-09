@@ -268,7 +268,25 @@ public struct DSSlideToConfirm: View {
             Text(confirmedLabel)
                 .ds(.button, color: theme.palette.textSecondary)
                 .transition(.opacity)
-        } else if reduceMotion {
+        } else {
+            instructionLabel
+                // The per-letter dissolve below is paced by the *drag*: each
+                // letter waits its turn (`DSAnimation.stagger`, up to `count *
+                // 0.05s`) and `letterOpacity` only reaches 0 for a drag taken
+                // slowly to the very end. A quick flick past the 75% threshold
+                // commits with letters still lit, and the stagger outlasts the
+                // ~350ms it takes the pill to mask down to a circle — so the
+                // text shows through the morph. Gate it on `phase`, the way
+                // `showsKnobGlyph` and `resolution` already are: the moment the
+                // choreography starts, the label clears on a fast fade.
+                .opacity(showsInstructionLabel ? 1 : 0)
+                .animation(DSAnimation.fast, value: showsInstructionLabel)
+        }
+    }
+
+    @ViewBuilder
+    private var instructionLabel: some View {
+        if reduceMotion {
             // Reduce Motion: the drag itself still moves the knob and trail —
             // that's the interaction, not decoration — but the per-letter
             // stagger collapses into a single fade of the whole label.
@@ -502,6 +520,14 @@ public struct DSSlideToConfirm: View {
     private var collapseInset: CGFloat {
         guard isCollapsed, trackWidth > Metrics.trackHeight else { return 0 }
         return (trackWidth - Metrics.trackHeight) / 2
+    }
+
+    /// The instruction label lives in the pre-commit phases only. Its per-letter
+    /// dissolve is paced by the drag and only converges on an unhurried one, so
+    /// without this gate a fast commit leaves lit text over the collapsing pill.
+    /// Mirrors `showsKnobGlyph`.
+    private var showsInstructionLabel: Bool {
+        phase == .idle || phase == .dragging
     }
 
     /// The knob keeps its chevron until the outcome owns the centre.
