@@ -33,6 +33,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `.dsPulse()` — use `.dsBreathe(_:)` instead.
 
 ### Fixed
+- `DSSlideToConfirm` knob renders as a true circle at rest again. The `Capsule()` mask that drives the `.morphAndVanish` collapse is sized to the track, so its straight edges sat exactly on the idle knob's top and bottom and its antialiased edge shaved ~1pt off each (the knob measured 168×166 instead of 168×168 at @3×). The mask is now held clear of the knob by `Metrics.collapseMaskOutset` until the collapse begins; the outset rides the same spring back to 0, so the morph still lands on a capsule exactly `trackHeight` square.
 - `DSSlideToConfirm` knob is now a circle as tall as the track (was inset 4pt top and bottom), so no glass shows above or below it and it travels flush edge-to-edge. It's layered over the track's pill clip so its shadow isn't cropped.
 - `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
 - `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.

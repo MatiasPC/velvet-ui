@@ -41,6 +41,12 @@ private enum Metrics {
     /// pill's rounded ends (equal radii), so no track surface shows above or
     /// below it, and it sits flush against the leading and trailing edges.
     static let knobDiameter: CGFloat = trackHeight
+    /// Slack held between the collapse mask and the knob until the morph starts.
+    /// The idle knob is exactly `knobDiameter` tall, so a capsule sized to the
+    /// track clips its top and bottom edges — it stops reading as a true circle.
+    /// Comfortably clears the knob's `DSShadow.sm` too. Rides the collapse spring
+    /// down to 0, so the collapsed circle is still exactly `knobDiameter` across.
+    static let collapseMaskOutset: CGFloat = DSSpacing.xl
     /// Breathing room so the label never sits flush against the track edge.
     static let labelHorizontalPadding: CGFloat = DSSpacing.lg
     /// Vertical lift applied to a letter as it fades — a subtle "flying away" cue.
@@ -227,8 +233,17 @@ public struct DSSlideToConfirm: View {
         // and any reflow would be visible as the glyphs jumping. A capsule
         // inset from both sides until only `trackHeight` remains *is* a circle,
         // since the pill already carries the capsule radius.
+        //
+        // `maskOutset` holds that capsule clear of the knob until the collapse
+        // actually begins: at rest the knob is exactly `trackHeight` tall, and a
+        // capsule sized to the track would shave its top and bottom edges so it
+        // no longer reads as a true circle. The outset closes to 0 on the same
+        // spring as `collapseInset`, so the morph still lands on a capsule
+        // exactly `trackHeight` square.
         .mask {
-            Capsule().padding(.horizontal, collapseInset)
+            Capsule()
+                .padding(.vertical, -maskOutset)
+                .padding(.horizontal, collapseInset - maskOutset)
         }
         .overlay {
             resolution
@@ -520,6 +535,13 @@ public struct DSSlideToConfirm: View {
     private var collapseInset: CGFloat {
         guard isCollapsed, trackWidth > Metrics.trackHeight else { return 0 }
         return (trackWidth - Metrics.trackHeight) / 2
+    }
+
+    /// Slack between the collapse mask and the knob before the morph starts;
+    /// see `Metrics.collapseMaskOutset`. Falls to 0 with `collapseInset`, so the
+    /// two animate together and the collapsed circle stays `trackHeight` square.
+    private var maskOutset: CGFloat {
+        isCollapsed ? 0 : Metrics.collapseMaskOutset
     }
 
     /// The instruction label lives in the pre-commit phases only. Its per-letter
