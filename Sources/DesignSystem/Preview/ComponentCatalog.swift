@@ -20,6 +20,7 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var shakeTrigger = 0
 
     var body: some View {
         NavigationStack {
@@ -233,6 +234,25 @@ struct ComponentCatalog: View {
                             DSCodeField(length: 6, code: $codeValue)
                             DSCodeField(length: 4, code: .constant("1234"), state: .error)
                             DSCodeField(length: 4, code: .constant("5678"), state: .success)
+                        }
+                    }
+                }
+
+                // MARK: - Shake
+                section("Shake (invalid input)") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.md) {
+                            DSTextField(
+                                placeholder: "Tap the button to reject",
+                                icon: "lock",
+                                text: .constant(""),
+                                state: .error("Invalid")
+                            )
+                            .dsShake(shakeTrigger)
+
+                            DSButton("Reject", variant: .secondary, isFullWidth: true) {
+                                shakeTrigger += 1
+                            }
                         }
                     }
                 }
