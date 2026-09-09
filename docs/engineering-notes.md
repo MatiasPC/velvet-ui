@@ -70,10 +70,17 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
   decorative defaults (e.g. `DSRating` amber tint, `DSGradientProgress` stops)
   are shown neutral with one labelled colourful example each.
 - **Not in `swift build`.** It lives outside `Sources/`; `Package.swift` is
-  untouched. The project is XcodeGen-generated from `project.yml`; the
-  `.xcodeproj` is not committed (repo ignores `*.xcodeproj/`) — run
-  `xcodegen generate` after cloning or after changing its file list.
+  untouched. `project.yml` is the source of truth (XcodeGen), but the generated
+  `VelvetGallery.xcodeproj` **is committed** so the app opens and runs with no
+  commands — `.gitignore` keeps the blanket `*.xcodeproj/` rule and negates just
+  this one path. Re-run `xcodegen generate` and commit the result only after
+  changing the file list or target settings. `xcuserdata/` stays ignored.
 - **Consumes the package** as a local SPM dependency at `../..`.
+- **Covers every component**, motion included: `MotionScreen` (the five
+  `DSMotion` primitives), `SlideToConfirmScreen` (with the async slide-to-pay
+  and a "next charge fails" toggle), `StepperScreen`, `ThinkingIndicatorScreen`,
+  `TypewriterTextScreen`. The Simulator shows the animation; haptics need a
+  device (Signing & Capabilities → set your Team, then run on the phone).
 - Spec: `docs/superpowers/specs/2026-09-08-velvet-gallery-app-design.md`.
 
 ## Roadmap

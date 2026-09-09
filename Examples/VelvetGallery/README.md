@@ -5,33 +5,44 @@ demos and video capture. Not part of `swift build` / `swift test`.
 
 ## Run
 
-The `.xcodeproj` is **not** in git (the repo ignores `*.xcodeproj/`). Generate it first:
+Open `VelvetGallery.xcodeproj`, pick an iPhone simulator, press Run. The project
+is committed, so there are no commands to run first.
 
 ```bash
-cd Examples/VelvetGallery && xcodegen generate
+open Examples/VelvetGallery/VelvetGallery.xcodeproj
 ```
 
-Then open `VelvetGallery.xcodeproj` in Xcode, pick an iPhone simulator, and Run.
-Or from the repo root:
+Headless build:
 
 ```bash
 xcodebuild build -project Examples/VelvetGallery/VelvetGallery.xcodeproj \
   -scheme VelvetGallery \
-  -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.0'
 ```
 
-(Pin `,OS=<version>` on the destination if your Xcode has no matching default runtime.)
+### Haptics
+
+The Simulator has no Taptic Engine. To feel the haptics — `DSSlideToConfirm`
+(soft detent texture, rigid tick at the 75 % threshold, success / error on the
+outcome) and `DSStepper` (tick per step, warning + jiggle at a bound) — run on a
+device: select the **VelvetGallery** target → Signing & Capabilities → set your
+Team, then pick the phone as the run destination.
 
 ## Regenerate the project
 
 `project.yml` is the source of truth ([XcodeGen](https://github.com/yonwoo9/XcodeGen)).
-Re-run `xcodegen generate` after changing the file list or target settings.
+After changing the file list or target settings, re-run `xcodegen generate` and
+**commit** the updated `.xcodeproj` (`.gitignore` negates it out of the blanket
+`*.xcodeproj/` rule; `xcuserdata/` stays ignored).
 
 ## Layout
 
 - `VelvetGalleryApp.swift` — entry point; injects the neutral theme and the appearance binding.
-- `ComponentListView.swift` — grouped `List`, one row per component, six sections.
-- `Screens/` — one screen per component (16), each built on `GalleryScreen`.
+- `ComponentListView.swift` — grouped `List`, one row per component.
+- `Screens/` — one screen per component, each built on `GalleryScreen`. Includes
+  the motion set: `MotionScreen` (the five `DSMotion` primitives),
+  `SlideToConfirmScreen` (async slide-to-pay + "next charge fails" toggle),
+  `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`.
 - `Support/` — `GalleryScreen` + `LabeledExample` chrome, `Appearance` toggle.
 - `Theme/NeutralTheme.swift` — `DSGradientTheme.neutral`.
 

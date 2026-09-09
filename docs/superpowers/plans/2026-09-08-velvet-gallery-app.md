@@ -83,6 +83,8 @@ All paths relative to repo root `/Users/mati/Documents/velvet-ui/`.
 
 **Note (controller ruling):** the repo `.gitignore` already excludes `*.xcodeproj/`; the generated project is intentionally NOT committed. `project.yml` is the committed source of truth. Do not `git add -f` the `.xcodeproj`.
 
+> **Reversed 2026-09-09:** the `.xcodeproj` *is* now committed so the app opens and runs with no commands. `.gitignore` keeps `*.xcodeproj/` and negates just `Examples/VelvetGallery/VelvetGallery.xcodeproj/`; `project.yml` stays the source of truth (regenerate + commit on structure changes). Matches the spec's "generated, COMMITTED (zero-friction open)".
+
 - [ ] **Step 1: Write `Examples/VelvetGallery/project.yml`**
 
 ```yaml

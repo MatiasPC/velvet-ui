@@ -1,6 +1,9 @@
 .build/
 .swiftpm/
 *.xcodeproj/
+# The showcase app's project is committed so it opens and runs with no commands.
+# project.yml stays the source of truth — regenerate with `xcodegen generate`.
+!Examples/VelvetGallery/VelvetGallery.xcodeproj/
 xcuserdata/
 DerivedData/
 .superpowers/
