@@ -1,0 +1,34 @@
+name: MotionReview
+options:
+  bundleIdPrefix: com.matiasperalta.velvetui
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+
+packages:
+  DesignSystem:
+    path: ../..
+
+targets:
+  MotionReview:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: Sources
+    dependencies:
+      - package: DesignSystem
+        product: DesignSystem
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.matiasperalta.velvetui.MotionReview
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Motion Review
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        # Device builds (for haptics): open in Xcode and set your signing team.
+        CODE_SIGN_STYLE: Automatic

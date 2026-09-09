@@ -6,6 +6,36 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ### Added
 - `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, six categories, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`.
+- `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
+- `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).
+- `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
+- `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
+- View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
+- `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
+- `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
+- `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
+- `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
+- `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
+- Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
+
+### Changed
+- `DSSlideToConfirm.onConfirm` is now `async throws`, so one closure carries a payment's latency and its outcome. The control spins while awaiting it (500ms floor, applied after the closure returns) and treats a thrown error as a refusal: `.error` haptic, then it re-opens for a retry. **Not source-breaking** — `() -> Void` is a subtype of `() async throws -> Void`, so existing call sites compile unchanged.
+- `DSSlideToConfirm` gains a `finish:` parameter, placed after `accent:` so no existing parameter changes label or position.
+- `DSSlideToConfirm` emits a cloud of motes around the finger for the whole gesture; their tint is the status channel, sweeping to `palette.success` on success and staying neutral on refusal. Suppressed under Reduce Motion or Reduce Transparency.
+- `DSSlideToConfirm` drag haptics went from a single threshold tap to a detent texture: 8 `.soft` ticks across the travel with intensity ramped 0.2 → 0.6, plus the existing `.rigid` at the threshold.
+- **BREAKING:** Package now targets **iOS 18 / macOS 15** (was iOS 17 / macOS 14). Apps must update their deployment targets.
+- `.dsJiggle(trigger:)` motion reworked from a stepped `phaseAnimator` (five spring-settled phases, read as robotic) to one continuous `keyframeAnimator` track over `jiggleSwings` / `jiggleDuration`. Same API, same peak, smoother decay.
+- `swift-tools-version` raised from 5.9 to 6.0; language mode explicitly pinned to Swift 5 via `swiftSettings` (the tools version does not imply Swift 6 here).
+- `.dsPulse()` now respects Reduce Motion. It previously looped regardless of the setting; the guard was added on the way to deprecating it. Its curve is unchanged.
+
+### Deprecated
+- `.dsPulse()` — use `.dsBreathe(_:)` instead.
+
+### Fixed
+- `DSSlideToConfirm` knob is now a circle as tall as the track (was inset 4pt top and bottom), so no glass shows above or below it and it travels flush edge-to-edge. It's layered over the track's pill clip so its shadow isn't cropped.
+- `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
+- `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.
 
 ## [0.2.0] — 2026-09-05
 

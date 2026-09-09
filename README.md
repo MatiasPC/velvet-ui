@@ -1,6 +1,6 @@
 # Velvet UI
 
-SwiftUI design system for iOS 17+ and macOS 14+. Frosted glass over a selectable gradient theme, spring motion, haptics on every primary action, no borders. One `import DesignSystem`.
+SwiftUI design system for iOS 18+ and macOS 15+. Frosted glass over a selectable gradient theme, spring motion, haptics on every primary action, no borders. One `import DesignSystem`.
 
 | | |
 |---|---|
