@@ -1,6 +1,9 @@
 import SwiftUI
 import DesignSystem
 
+/// Stand-in for a declined charge.
+private struct ChargeRefused: Error {}
+
 struct ReviewScreen: View {
     @Binding var theme: DSTheme
     @Binding var scheme: ColorScheme
@@ -22,6 +25,7 @@ struct ReviewScreen: View {
                 Group {
                     sectionTitle("Components")
                     slideToConfirmRow
+                    slideToPayRow
                     thinkingRow
                     typewriterRow
                     stepperRow
@@ -164,6 +168,8 @@ struct ReviewScreen: View {
     @State private var quantity = 3
     @State private var bulk = 25
     @State private var atBound = 99
+    @State private var payAttempt = 0
+    @State private var refuseNextCharge = false
 
     private var slideToConfirmRow: some View {
         row("DSSlideToConfirm — drag past 75% to confirm") {
@@ -175,6 +181,31 @@ struct ReviewScreen: View {
                     confirmedLabel: "Cancelled",
                     accent: DSColors.error
                 ) {}
+            }
+        }
+    }
+
+    /// The payment path, both outcomes. Flip the toggle before dragging to see
+    /// the charge refused: the motes stay neutral, the circle re-opens, and the
+    /// control is immediately draggable again.
+    private var slideToPayRow: some View {
+        row("DSSlideToConfirm(finish: .morphAndVanish) — async charge, green motes on success") {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                DSToggle("Next charge fails", isOn: $refuseNextCharge)
+
+                DSSlideToConfirm(
+                    "Slide to pay $42.00",
+                    confirmedLabel: "Paid",
+                    finish: .morphAndVanish
+                ) {
+                    try await Task.sleep(for: .milliseconds(1200))
+                    if refuseNextCharge { throw ChargeRefused() }
+                }
+                .id(payAttempt)
+
+                DSButton("Reset", variant: .ghost, size: .small) {
+                    payAttempt += 1
+                }
             }
         }
     }

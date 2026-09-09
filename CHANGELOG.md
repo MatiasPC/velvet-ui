@@ -11,6 +11,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
 - View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
 - `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
+- `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
@@ -18,6 +19,10 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
 ### Changed
+- `DSSlideToConfirm.onConfirm` is now `async throws`, so one closure carries a payment's latency and its outcome. The control spins while awaiting it (500ms floor, applied after the closure returns) and treats a thrown error as a refusal: `.error` haptic, then it re-opens for a retry. **Not source-breaking** — `() -> Void` is a subtype of `() async throws -> Void`, so existing call sites compile unchanged.
+- `DSSlideToConfirm` gains a `finish:` parameter, placed after `accent:` so no existing parameter changes label or position.
+- `DSSlideToConfirm` emits a cloud of motes around the finger for the whole gesture; their tint is the status channel, sweeping to `palette.success` on success and staying neutral on refusal. Suppressed under Reduce Motion or Reduce Transparency.
+- `DSSlideToConfirm` drag haptics went from a single threshold tap to a detent texture: 8 `.soft` ticks across the travel with intensity ramped 0.2 → 0.6, plus the existing `.rigid` at the threshold.
 - **BREAKING:** Package now targets **iOS 18 / macOS 15** (was iOS 17 / macOS 14). Apps must update their deployment targets.
 - `.dsJiggle(trigger:)` motion reworked from a stepped `phaseAnimator` (five spring-settled phases, read as robotic) to one continuous `keyframeAnimator` track over `jiggleSwings` / `jiggleDuration`. Same API, same peak, smoother decay.
 - `swift-tools-version` raised from 5.9 to 6.0; language mode explicitly pinned to Swift 5 via `swiftSettings` (the tools version does not imply Swift 6 here).

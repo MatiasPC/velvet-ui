@@ -29,9 +29,13 @@ The Simulator has no Taptic Engine. To feel the haptics:
 2. Select the **MotionReview** target → Signing & Capabilities → set your Team.
 3. Plug in the phone, pick it as the run destination, Cmd+R.
 
-The haptic-firing surfaces are **DSSlideToConfirm** (rigid at the 75 % threshold,
-success on confirm, light on snap-back) and **DSStepper** (selection tick per
+The haptic-firing surfaces are **DSSlideToConfirm** (a `.soft` detent texture
+across the travel, rigid at the 75 % threshold, success on confirm, error when a
+charge is refused, light on snap-back) and **DSStepper** (selection tick per
 step, warning + jiggle when it refuses at a bound).
+
+The **slide-to-pay** row is the one to feel: flip *Next charge fails* before
+dragging to compare the two outcomes.
 
 ## Notes
 

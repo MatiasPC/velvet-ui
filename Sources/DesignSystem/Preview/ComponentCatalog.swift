@@ -6,6 +6,9 @@ import SwiftUI
 // theme with the dots, toggle the backdrop off to see the solid fallback, and
 // flip the preview between light and dark.
 
+/// Stand-in for a declined charge, so the catalog can show the refusal path.
+private struct CatalogRefusal: Error {}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -24,6 +27,8 @@ struct ComponentCatalog: View {
     @State private var sweepOn = true
     @State private var quantity = 2
     @State private var bulk = 25
+    @State private var paidAttempt = 0
+    @State private var refusedAttempt = 0
 
     var body: some View {
         NavigationStack {
@@ -377,6 +382,32 @@ struct ComponentCatalog: View {
                             icon: "xmark",
                             confirmedLabel: "Cancelled"
                         ) { }
+
+                        // .morphAndVanish leaves an empty slot behind, so both
+                        // payment rows are re-mounted with .id — the documented
+                        // way to run the choreography again.
+                        DSSlideToConfirm(
+                            "Slide to pay $42.00",
+                            confirmedLabel: "Paid",
+                            finish: .morphAndVanish
+                        ) {
+                            try? await Task.sleep(for: .milliseconds(1200))
+                        }
+                        .id(paidAttempt)
+
+                        DSSlideToConfirm(
+                            "Slide to pay — refused",
+                            finish: .morphAndVanish
+                        ) {
+                            try await Task.sleep(for: .milliseconds(900))
+                            throw CatalogRefusal()
+                        }
+                        .id(refusedAttempt)
+
+                        DSButton("Reset payments", variant: .ghost, size: .small) {
+                            paidAttempt += 1
+                            refusedAttempt += 1
+                        }
                     }
                 }
 
