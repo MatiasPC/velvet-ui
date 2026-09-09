@@ -167,7 +167,9 @@ Rule: numbers are always Rounded; titles are never Rounded. Max three styles per
 
 `DSPress`: `scale` 0.96, `iconScale` 0.88, `animation` = springSnappy. Every pressable component uses these.
 
-Transitions: `.dsSlideUp`, `.dsScale`, `.dsFade`, `.dsPush`. Modifiers: `.dsAnimate(_:value:)`, `.dsStaggerIn(index:)` (fade + 8pt rise, respects Reduce Motion), `.dsShimmer()`, `.dsPulse()`.
+`DSShake` (`Animation/DSShake.swift`): `amount` 8pt travel, `oscillations` 4 half-cycles, `animation` = `normal`. The "invalid input" nudge — a damped-sine `GeometryEffect` (layout never moves) that runs one shake each time a trigger changes.
+
+Transitions: `.dsSlideUp`, `.dsScale`, `.dsFade`, `.dsPush`. Modifiers: `.dsAnimate(_:value:)`, `.dsStaggerIn(index:)` (fade + 8pt rise, respects Reduce Motion), `.dsShimmer()`, `.dsPulse()`, `.dsShake(_ trigger:haptic:)` (shake on any `Equatable` change; `.error` haptic by default; Reduce Motion → haptic only, no motion).
 
 ## Haptics
 

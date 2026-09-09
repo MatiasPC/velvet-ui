@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSShake` motion modifier (`Animation/DSShake.swift`): `.dsShake(_ trigger:haptic:)` shakes any view horizontally once each time an `Equatable` trigger changes — the standard invalid-input / rejected-action nudge. Damped-sine `GeometryEffect` (layout never moves), fires an `.error` haptic by default (`nil` to silence), and honors Reduce Motion (haptic only, no motion). Public `DSShake` tokens (`amount`, `oscillations`, `animation`) and `DSShakeEffect`. Generalizes the private shake proven in `DSCodeField`. Catalog section added.
+
 ## [0.2.0] — 2026-09-05
 
 The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
