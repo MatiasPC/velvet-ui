@@ -4,3 +4,6 @@
 xcuserdata/
 DerivedData/
 .superpowers/
+Sources/.DS_Store
+.DS_Store
+.claude/worktrees/

@@ -215,7 +215,85 @@ DSAnimatedNumber(value:, format: "%.0f", style: .displayLarge)
 
 All animate with `DSAnimation.progress` on appear and on change; the number uses `.counting` + `numericText` content transition.
 
-Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Motion), `.dsPulse()` (attention).
+Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Motion), `.dsPulse()` (deprecated — use `.dsBreathe(_:)` instead).
+
+---
+
+## DSSlideToConfirm  ✅
+
+`Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions, including payments.
+
+```swift
+DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel: String = "Confirmed", accent: Color? = nil, finish: DSSlideFinish = .settle, onConfirm: @escaping () async throws -> Void)
+
+enum DSSlideFinish { case settle, morphAndVanish }
+```
+
+A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter. Tracking is pure 1:1 — no rubber-banding, no magnetic snap: physics tricks under a payment gesture read as the control second-guessing the user.
+
+Threshold is 0.75 of available travel. The drag itself carries a detent texture — 8 `.soft` ticks across the full travel with intensity ramped 0.2 → 0.6 — and crossing the threshold fires `.rigid` once per drag. Releasing below it snaps the knob back with `springBouncy` and a `.light` haptic.
+
+`onConfirm` is `async throws`, so one closure carries both a payment's latency and its outcome. The control spins while awaiting it, with a 500ms floor so a fast closure never flashes the spinner for a single frame; the floor is applied *after* the closure returns, so a slow charge is never padded. Success fires `.success`. A thrown error is a refusal: `.error` fires, the control re-opens and the knob returns to the start for a retry. The control never words its own failure — saying *why* is the parent's job. Existing synchronous call sites still compile unchanged, because `() -> Void` is a subtype of `() async throws -> Void`.
+
+A cloud of small motes is emitted around the knob — around the finger — from the first touch until the outcome lands, brightening with drag speed. **Their tint is the status channel:** neutral (`palette.textTertiary`) throughout, sweeping to `palette.success` on success and staying neutral on refusal. They keep being emitted through the spinner on purpose: a mote lives under a second, so a cloud that stopped at the end of the drag would already be dead by the time there was anything to turn green.
+
+`finish` decides what happens once the action resolves. `.settle` (default, the original behaviour) rests in place showing the check and `confirmedLabel` — right for a destructive confirmation, where the screen does not change so the control has to be the record that something happened. `.morphAndVanish` collapses the pill into a circle, resolves there, then dissolves while the motes disperse outward. It leaves its 56pt slot behind rather than collapsing it, so the parent's layout does not jump on the exact frame of the payoff; the parent cross-fades its own success state in place, or wraps the control in an `if` to collapse it. There is no reset API — re-mount with `.id(attempt)` to run it again.
+
+Under Reduce Motion the knob and trail still move, but the per-letter label stagger collapses to one fade. Reduce Motion or Reduce Transparency suppresses the motes entirely. VoiceOver gets an `.accessibilityAction` so confirming never requires a drag.
+
+---
+
+## DSThinkingIndicator  ✅
+
+`Components/DSThinkingIndicator.swift`. Ambient indicator for AI and background processing states.
+
+```swift
+DSThinkingIndicator(phrases: [String] = ["Thinking", "Weighing options", "Almost there"], symbol: String = "sparkles", interval: TimeInterval = 2.6, tint: Color? = nil)
+```
+
+A symbol carries layered `.breathe.byLayer` and `.variableColor.iterative` effects; phrases cycle on a `TimelineView(.periodic)` schedule and assemble letter by letter with `DSAnimation.stagger(index:)`. No haptics — it is a status indicator, not an interaction. Under Reduce Motion the symbol effects turn off and letters stop staggering, but phrases keep cycling as a cross-fade because the phrase is information rather than decoration. Layout reserves width for the widest phrase so nothing reflows.
+
+---
+
+## DSTypewriterText  ✅
+
+`Components/DSTypewriterText.swift`. Character-by-character typing animation with caret and phrase cycling.
+
+```swift
+DSTypewriterText(_ phrases: [String], style: DSTextStyle = .title1, typingSpeed: TimeInterval = 0.06, erasingSpeed: TimeInterval = 0.03, holdDuration: TimeInterval = 1.4, loops: Bool = true, caretColor: Color? = nil)
+```
+
+Types a phrase out character by character, holds it, erases it, then moves to the next. Works on any `[String]`; steps by `Character` so emoji and accents are never split. Driven by a cancellable `Task`, not a `Timer` — cancelled on disappear and restarted when `phrases` or Reduce Motion changes. `loops: false` stops on the last phrase fully typed. A blinking caret in `caretColor ?? theme.accent` runs throughout. Under Reduce Motion there is no typing or erasing and the caret is static (not hidden), but phrases still cycle in full. VoiceOver always announces the whole phrase, never the half-typed fragment. Layout reserves width for the widest phrase — keep phrases short enough to fit on one line.
+
+---
+
+## DSStepper  ✅
+
+`Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.
+
+```swift
+DSStepper(value: Binding<Int>, in range: ClosedRange<Int> = 0...99, step: Int = 1, accent: Color? = nil)
+```
+
+Tapping either glyph steps the bound value, clamped into `range`. The number rolls with `.numericText`. Each successful step fires `.selection` haptic; at a bound the value does not move, the whole track fires one `.dsJiggle` refusal wiggle plus a `.warning` haptic. The buttons deliberately stay hit-testable at a bound (never `.disabled`) so refusal can actually be felt — they just dim. Stepping clamps into `range`, so a `step` that does not evenly divide the range lands on the bound instead of overshooting; a non-positive `step` is treated as `1`. Exposes `.accessibilityAdjustableAction` so VoiceOver gets native increment/decrement.
+
+---
+
+## Motion primitives  ✅
+
+`Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
+
+```swift
+func dsBreathe(_ intensity: DSBreatheIntensity = .medium) -> some View
+func dsJiggle<T: Equatable>(trigger: T) -> some View
+func dsPopIn(delay: Double = 0) -> some View
+func dsEdgeSweep(radius: CGFloat = DSRadius.card, isActive: Bool = true) -> some View
+func dsHueDrift(isActive: Bool = true) -> some View
+
+DSMotion.loop(_ base: Animation, autoreverses: Bool = true, unless reduceMotion: Bool) -> Animation?
+```
+
+Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a static gradient without leaving the theme. All five settle to a resting state under Reduce Motion instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
 
 ---
 

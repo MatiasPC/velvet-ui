@@ -288,12 +288,14 @@ public extension View {
 
 public struct DSPulse: ViewModifier {
     @State private var isPulsing = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public func body(content: Content) -> some View {
         content
             .scaleEffect(isPulsing ? 1.05 : 1.0)
             .opacity(isPulsing ? 0.8 : 1.0)
             .onAppear {
+                guard !reduceMotion else { return }
                 withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) {
                     isPulsing = true
                 }
@@ -303,6 +305,7 @@ public struct DSPulse: ViewModifier {
 
 public extension View {
     /// Add a gentle pulse animation (for loading states, attention)
+    @available(*, deprecated, message: "Use dsBreathe(_:) — same effect on tokenised durations, with three intensities.")
     func dsPulse() -> some View {
         modifier(DSPulse())
     }

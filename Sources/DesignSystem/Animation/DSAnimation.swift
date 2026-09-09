@@ -58,6 +58,10 @@ public enum DSAnimation {
 
     /// Progress bar / loading animation
     public static let progress: Animation = .easeInOut(duration: 0.8)
+    /// 1.8s soft ease — the base curve for ambient loops (breathing, drifting,
+    /// shimmering). Springs read wrong when nothing was touched; this is what
+    /// every looping effect in `DSMotion` starts from.
+    public static let ambient: Animation = .easeInOut(duration: 1.8)
     /// Count-up / number animation
     public static let counting: Animation = .easeOut(duration: 1.0)
     /// Stagger delay base for list items

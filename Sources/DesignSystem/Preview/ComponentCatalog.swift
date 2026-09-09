@@ -6,6 +6,9 @@ import SwiftUI
 // theme with the dots, toggle the backdrop off to see the solid fallback, and
 // flip the preview between light and dark.
 
+/// Stand-in for a declined charge, so the catalog can show the refusal path.
+private struct CatalogRefusal: Error {}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -20,6 +23,12 @@ struct ComponentCatalog: View {
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
+    @State private var jiggleTrigger = 0
+    @State private var sweepOn = true
+    @State private var quantity = 2
+    @State private var bulk = 25
+    @State private var paidAttempt = 0
+    @State private var refusedAttempt = 0
 
     var body: some View {
         NavigationStack {
@@ -344,9 +353,148 @@ struct ComponentCatalog: View {
                                 .fill(DSColors.backgroundSecondary)
                                 .frame(width: 180, height: DSSpacing.md)
                                 .dsShimmer()
-                            DSBadge("Pulsing", variant: .filled).dsPulse()
+                            DSBadge("Breathing", variant: .filled).dsBreathe()
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Typewriter
+                section("Typewriter") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSTypewriterText(
+                                ["Glass over gradient.", "No borders. Ever.", "Springs, not ramps."],
+                                style: .title2
+                            )
+                            DSTypewriterText(["Types once, then stops."], style: .body, loops: false)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Slide to Confirm
+                section("Slide to Confirm") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSSlideToConfirm("Slide to delete account") { }
+                        DSSlideToConfirm(
+                            "Slide to cancel ride",
+                            icon: "xmark",
+                            confirmedLabel: "Cancelled"
+                        ) { }
+
+                        // .morphAndVanish leaves an empty slot behind, so both
+                        // payment rows are re-mounted with .id — the documented
+                        // way to run the choreography again.
+                        DSSlideToConfirm(
+                            "Slide to pay $42.00",
+                            confirmedLabel: "Paid",
+                            finish: .morphAndVanish
+                        ) {
+                            try? await Task.sleep(for: .milliseconds(1200))
+                        }
+                        .id(paidAttempt)
+
+                        DSSlideToConfirm(
+                            "Slide to pay — refused",
+                            finish: .morphAndVanish
+                        ) {
+                            try await Task.sleep(for: .milliseconds(900))
+                            throw CatalogRefusal()
+                        }
+                        .id(refusedAttempt)
+
+                        DSButton("Reset payments", variant: .ghost, size: .small) {
+                            paidAttempt += 1
+                            refusedAttempt += 1
+                        }
+                    }
+                }
+
+                // MARK: - Thinking Indicator
+                section("Thinking Indicator") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSThinkingIndicator()
+                            DSThinkingIndicator(
+                                phrases: ["Reading your notes", "Cross-checking sources", "Drafting a reply"],
+                                symbol: "brain",
+                                interval: 2.0
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Stepper
+                section("Stepper") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSStepper(value: $quantity)
+                            DSStepper(value: $bulk, in: 0...100, step: 5)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Motion
+                section("Motion") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("dsBreathe").ds(.footnote, color: DSColors.textSecondary)
+                                HStack(spacing: DSSpacing.xl) {
+                                    breatheDot("subtle", .subtle)
+                                    breatheDot("medium", .medium)
+                                    breatheDot("strong", .strong)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("dsJiggle — fires once per trigger")
+                                    .ds(.footnote, color: DSColors.textSecondary)
+                                HStack(spacing: DSSpacing.md) {
+                                    Image(systemName: "bell.fill")
+                                        .font(.title2)
+                                        .foregroundStyle(theme.gradient.accent)
+                                        .dsJiggle(trigger: jiggleTrigger)
+                                    Spacer()
+                                    DSButton("Shake", size: .small) { jiggleTrigger += 1 }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Text("dsEdgeSweep — light travelling the edge")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            DSToggle("Sweeping", isOn: $sweepOn)
+                        }
+                        .padding(DSSpacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .dsSurface(.glass, radius: DSRadius.card)
+                        .dsEdgeSweep(radius: DSRadius.card, isActive: sweepOn)
+
+                        DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("dsPopIn / dsHueDrift")
+                                    .ds(.footnote, color: DSColors.textSecondary)
+                                HStack(spacing: DSSpacing.sm) {
+                                    ForEach(0..<4, id: \.self) { index in
+                                        RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                                            .fill(theme.gradient.horizontalGradient)
+                                            .frame(height: DSSpacing.xxl)
+                                            .dsHueDrift()
+                                            .dsPopIn(delay: Double(index) * 0.08)
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
                 }
             }
@@ -362,6 +510,16 @@ struct ComponentCatalog: View {
         VStack(alignment: .leading, spacing: DSSpacing.md) {
             Text(title).ds(.overline, color: DSColors.textSecondary)
             content()
+        }
+    }
+
+    private func breatheDot(_ label: String, _ intensity: DSBreatheIntensity) -> some View {
+        VStack(spacing: DSSpacing.xs) {
+            Circle()
+                .fill(theme.gradient.accent)
+                .frame(width: DSSpacing.xxl, height: DSSpacing.xxl)
+                .dsBreathe(intensity)
+            Text(label).ds(.caption1, color: DSColors.textTertiary)
         }
     }
 
