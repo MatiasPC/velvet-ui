@@ -36,6 +36,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSSlideToConfirm` knob is now a circle as tall as the track (was inset 4pt top and bottom), so no glass shows above or below it and it travels flush edge-to-edge. It's layered over the track's pill clip so its shadow isn't cropped.
 - `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
 - `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.
+- `DSSlideToConfirm` clears its instruction label the instant the confirmation commits. The letter-by-letter dissolve is paced by the drag (stagger up to `count × 0.05s`) and only reaches zero on an unhurried drag; a quick flick past the threshold used to leave lit text over the pill as it masked down to a circle. The label is now `phase`-gated like the knob glyph.
 
 ## [0.2.0] — 2026-09-05
 
