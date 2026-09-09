@@ -45,12 +45,30 @@ Tracked here until they become issues or PRs.
 - **No snapshot tests.** Visual regressions are caught by the manual walkthrough only. Consider swift-snapshot-testing once the showcase app exists.
 - **`DSTheme` default instance** (`DSThemeKey.defaultValue`) is a separate object from any theme an app creates. Always inject with `.dsTheme()` at the root or you'll be theming the default and wondering why nothing changes.
 
+## VelvetGallery example app
+
+`Examples/VelvetGallery/` is a runnable iOS app for demoing components one per
+screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
+
+- **Neutral by design.** The design system is gradient-first; the gallery is not.
+  It injects a gallery-local `DSGradientTheme.neutral` (graphite accent via
+  `Color.dsDynamic`) and never calls `.dsBackdrop()`, so components are shown on
+  a plain `DSColors.backgroundPrimary`. Semantic status colours are kept;
+  decorative defaults (e.g. `DSRating` amber tint, `DSGradientProgress` stops)
+  are shown neutral with one labelled colourful example each.
+- **Not in `swift build`.** It lives outside `Sources/`; `Package.swift` is
+  untouched. The project is XcodeGen-generated from `project.yml`; the
+  `.xcodeproj` is not committed (repo ignores `*.xcodeproj/`) — run
+  `xcodegen generate` after cloning or after changing its file list.
+- **Consumes the package** as a local SPM dependency at `../..`.
+- Spec: `docs/superpowers/specs/2026-09-08-velvet-gallery-app-design.md`.
+
 ## Roadmap
 
 1. ✅ v0.2 foundations: tokens, theme plumbing, DSCard as the glass reference.
 2. Manual walkthrough of every component and variant in the catalog (owner: Mati).
 3. Apply the glass restyle to the remaining components, one PR each, with before/after previews.
-4. **Velvet UI Showcase** app: separate target in this repo, lists components by category, every variant live, theme picker, light/dark. Does not modify the package.
+4. ✅ **Velvet UI Showcase** app — see "VelvetGallery example app" above (`Examples/VelvetGallery/`, neutral theme, one screen per component). Does not modify the package.
 5. New components on top of the base: carousels, sheets, animated transitions.
 
 ## How to add a component (checklist)
