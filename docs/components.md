@@ -297,6 +297,33 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## DSScrollReveal  ✅
+
+`Animation/DSScrollReveal.swift`. A scroll-driven reveal for items in a `ScrollView`: rows sit full-size and opaque at the centre of the viewport and ease down in scale, opacity and a touch of blur toward the leading and trailing edges. Built on iOS 17 `scrollTransition` / `VisualEffect`, so the interpolation runs off the main thread and stays smooth under a fast flick. The position-driven companion to `dsStaggerIn` (which fires once on appear).
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View
+
+enum DSScrollRevealIntensity { case subtle, medium, strong }  // edge scale 0.94 / 0.88 / 0.80
+```
+
+Apply it to the items inside a scroll container (rows, cards, carousel cells), **not** to the container itself — the same shape as `dsStaggerIn`:
+
+```swift
+ScrollView {
+    LazyVStack(spacing: DSSpacing.md) {
+        ForEach(items) { item in
+            DSCard { ItemView(item) }
+                .dsScrollReveal()
+        }
+    }
+}
+```
+
+Works on either axis (the scroll direction is inferred). Decorative only — no haptics, no color, no layout of its own. Under Reduce Motion the scale and blur drop out and only the opacity fade remains (opacity is not motion — the call `dsPopIn` makes).
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.

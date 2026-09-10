@@ -497,6 +497,24 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(spacing: DSSpacing.md) {
+                        Text("Scroll the catalog — these cards fade and shrink toward the edges.")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ForEach(0..<3, id: \.self) { index in
+                            DSCard {
+                                HStack {
+                                    Text("Reveal row \(index + 1)").ds(.body)
+                                    Spacer()
+                                    Text([".subtle", ".medium", ".strong"][index])
+                                        .ds(.caption1, color: DSColors.textTertiary)
+                                }
+                            }
+                            .dsScrollReveal([.subtle, .medium, .strong][index])
+                        }
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
