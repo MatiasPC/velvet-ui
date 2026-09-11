@@ -297,6 +297,18 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## DSScrollReveal  ✅
+
+`Animation/DSScrollReveal.swift`. A scroll-position-driven reveal for items inside a `ScrollView`: they fade and travel into place as they enter the viewport, and give it back as they leave. Built on iOS 17's `scrollTransition` + `VisualEffect`, so it is *linked to the scroll offset* rather than played once on appear — that is the distinction from `.dsStaggerIn` / `.dsPopIn`. Scrolling back re-reveals, and a half-scrolled row rests at a half-resolved state instead of snapping. Technique from Apple's WWDC23 "Beyond scroll views".
+
+```swift
+func dsScrollReveal(_ style: DSScrollRevealStyle = .rise) -> some View
+```
+
+`DSScrollRevealStyle`: `.rise` (fade + lift, default — list cells), `.zoom` (fade + settle from slightly small — cards, tiles), `.lift` (fade + rise + zoom — a hero card or feature row). The travel distance is `DSSpacing.lg`; the edge scale is 0.92. Apply it to the items inside the scroll view; it is inert outside one, so it is harmless to leave on a view that later moves out of a scroll context. Under Reduce Motion nothing travels or scales — a scroll-linked slide is motion, so the view stays fully visible at rest.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
