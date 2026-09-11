@@ -11,6 +11,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
 - `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
 - View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
+- `.dsScrollReveal(_:)` — scroll-position-driven reveal for items inside a `ScrollView`; they fade and travel into place as they enter the viewport and give it back as they leave. Built on `scrollTransition`, so it is linked to the scroll offset (re-reveals on scroll back) rather than a one-shot on appear. `DSScrollRevealStyle`: `.rise` (default), `.zoom`, `.lift`. Settles to fully visible under Reduce Motion. `ComponentCatalog` gains a Scroll Reveal section.
 - `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
 - `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
