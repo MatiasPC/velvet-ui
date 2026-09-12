@@ -437,6 +437,31 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Disclosure
+                section("Disclosure") {
+                    DSCard {
+                        VStack(spacing: 0) {
+                            DSDisclosure("Shipping & returns", icon: "shippingbox", initiallyExpanded: true) {
+                                Text("Free shipping over $50. Returns within 30 days.")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                            }
+                            DSDivider()
+                            DSDisclosure("Size guide", icon: "ruler") {
+                                Text("Runs true to size. Size up for a relaxed fit.")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                            }
+                            DSDivider()
+                            DSDisclosure("Advanced", subtitle: "Rarely needed") {
+                                HStack {
+                                    Text("Experimental behaviour").ds(.callout, color: DSColors.textSecondary)
+                                    Spacer()
+                                    DSBadge("Beta", variant: .outline)
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // MARK: - Motion
                 section("Motion") {
                     VStack(spacing: DSSpacing.md) {
