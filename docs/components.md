@@ -279,6 +279,18 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSDisclosure  🧪
+
+`Components/DSDisclosure.swift`. Expand/collapse section with a tappable header over springy content — a styled replacement for the stock, chrome-heavy `DisclosureGroup`.
+
+```swift
+DSDisclosure(_ title: String, subtitle: String? = nil, icon: String? = nil, initiallyExpanded: Bool = false, showsDivider: Bool = true) { content }
+```
+
+Tapping the header toggles open/closed on `DSAnimation.springSmooth`: the chevron rotates 90° and the content grows while fading in, clipped by the container so nothing spills mid-reveal. A `.light` haptic fires on every toggle. Manages its own expanded state (seeded by `initiallyExpanded`) — no binding to wire up. Optional `icon` is an SF Symbol tinted `theme.ink`; `showsDivider` draws a hairline between header and content when open. Under Reduce Motion the toggle is instant (the fade stays, nothing travels). Draws **no surface of its own** — place it inside a `DSCard` (or on a `dsSurface`) so it inherits the glass; stack several in one card, separated by `DSDivider`, for an accordion-style list. VoiceOver reads the title with an expand/collapse hint and an Expanded/Collapsed value.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
