@@ -9,6 +9,14 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// A poster for the `DSCarousel` demo section.
+private struct CatalogCarouselItem: Identifiable {
+    let id: Int
+    let title: String
+    let subtitle: String
+    let symbol: String
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -29,6 +37,13 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+
+    private let carouselItems: [CatalogCarouselItem] = [
+        .init(id: 0, title: "Golden hour", subtitle: "Sunset walk · 2.4 km", symbol: "sun.max.fill"),
+        .init(id: 1, title: "Deep focus", subtitle: "45 min · no distractions", symbol: "moon.stars.fill"),
+        .init(id: 2, title: "Morning brew", subtitle: "Pour-over · 3 cups", symbol: "cup.and.saucer.fill"),
+        .init(id: 3, title: "Trail run", subtitle: "6.1 km · 312 kcal", symbol: "figure.run")
+    ]
 
     var body: some View {
         NavigationStack {
@@ -156,6 +171,32 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo")
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    DSCarousel(carouselItems) { item in
+                        ZStack(alignment: .bottomLeading) {
+                            RoundedRectangle(cornerRadius: DSRadius.card, style: .continuous)
+                                .fill(theme.gradient.linearGradient)
+
+                            Image(systemName: item.symbol)
+                                .font(.title)
+                                .foregroundStyle(theme.gradient.onAccent.opacity(0.9))
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                                .padding(DSSpacing.md)
+
+                            VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                                Text(item.title).ds(.title3, color: theme.gradient.onAccent)
+                                Text(item.subtitle)
+                                    .ds(.footnote, color: theme.gradient.onAccent.opacity(0.85))
+                            }
+                            .padding(DSSpacing.md)
+                        }
+                        .frame(height: 170)
+                        .dsWashEdge(radius: DSRadius.card)
+                        .dsShadow(.md)
+                    }
                 }
 
                 // MARK: - Text Fields
