@@ -65,6 +65,25 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. A horizontally paging, snapping carousel that focuses the centre card and lets the neighbours peek — the App Store "featured" feel on Velvet glass. The motion-rich counterpart to `DSHorizontalScroll` (which is a plain, non-snapping row).
+
+```swift
+DSCarousel(_ data: Data,                       // RandomAccessCollection of Identifiable
+           spacing: CGFloat = DSSpacing.md,
+           peek: CGFloat = DSSpacing.xl,        // neighbour peek per side; 0 = full-width pager
+           minScale: CGFloat = 0.86,            // scale of a card at the edge (centre stays 1)
+           minOpacity: Double = 0.55,           // opacity of a card at the edge (centre stays 1)
+           haptics: Bool = true) { item in card(item) }
+```
+
+Built on the iOS 17 scroll stack: `scrollTargetLayout()` + `scrollTargetBehavior(.viewAligned)` for the snap, `containerRelativeFrame(.horizontal)` for the page width, `contentMargins(.horizontal, peek, for: .scrollContent)` for the peek, and a `scrollTransition(.interactive)` that shrinks and dims each card as it leaves centre — `.interactive` so the focus tracks the drag 1:1 instead of catching up after the snap. A `.selection` haptic ticks each time a new card takes the centre (via `scrollPosition(id:)`), never on the initial layout. Cards are sized to the page width automatically; give each card its own height — the carousel takes its height from the content, it never forces a frame. Under Reduce Motion the shrink/dim collapse to a resting state (cards stay at full size) while the snap and paging remain. Indicators are hidden.
+
+Notes: the item id (from `Identifiable`) is what the snap and haptic track. A caller who needs to observe or drive the centred item is a second use case that can add a binding later; `centeredID` is internal for now.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.

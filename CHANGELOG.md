@@ -16,7 +16,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
-- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
+- `DSCarousel`: horizontally paging, snapping carousel (`RandomAccessCollection` of `Identifiable`) that focuses the centre card and peeks the neighbours — the App Store "featured" feel on Velvet glass. Built on the iOS 17 scroll stack (`scrollTargetLayout`, `scrollTargetBehavior(.viewAligned)`, `containerRelativeFrame`, `contentMargins`, `scrollTransition(.interactive)`); `.selection` haptic per centred card; `spacing` / `peek` / `minScale` / `minOpacity` / `haptics` knobs. Height driven by the card content; Reduce Motion collapses the shrink/dim to a resting state while keeping the snap.
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
 ### Changed
