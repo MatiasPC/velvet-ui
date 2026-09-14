@@ -20,6 +20,8 @@ struct ComponentCatalog: View {
     @State private var tabSelection = "Overview"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
+    @State private var acceptTerms = true
+    @State private var subscribe = false
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
@@ -215,6 +217,25 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.success)
                             }
                         }
+                    }
+                }
+
+                // MARK: - Checkboxes
+                section("Checkboxes") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSCheckbox("Accept terms & conditions", isOn: $acceptTerms)
+                            DSCheckbox("Subscribe to the newsletter", isOn: $subscribe, onColor: DSColors.success)
+                            DSCheckbox("Unavailable option", isOn: $subscribe)
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.lg) {
+                                DSCheckbox(isOn: $acceptTerms)
+                                DSCheckbox(isOn: $subscribe)
+                                DSCheckbox("Small", isOn: $acceptTerms, size: .small)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
