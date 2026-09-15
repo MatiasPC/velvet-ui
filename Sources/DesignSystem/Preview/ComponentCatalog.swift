@@ -9,6 +9,20 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// Sample pages for the carousel section.
+private struct CatalogFeature: Identifiable {
+    let id = UUID()
+    let title: String
+    let subtitle: String
+    let symbol: String
+
+    static let all: [CatalogFeature] = [
+        .init(title: "Glass surfaces", subtitle: "Frosted material over a live gradient", symbol: "square.on.square"),
+        .init(title: "One theme knob", subtitle: "Swap the gradient, re-tint the app", symbol: "paintpalette"),
+        .init(title: "Motion on the beat", subtitle: "Springs for touch, eased for ambience", symbol: "waveform.path")
+    ]
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -29,6 +43,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var carouselSelection: CatalogFeature.ID? = CatalogFeature.all.first?.id
 
     var body: some View {
         NavigationStack {
@@ -156,6 +171,39 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo")
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCarousel(CatalogFeature.all, selection: $carouselSelection) { feature in
+                            VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                                RoundedRectangle(cornerRadius: DSRadius.surface, style: .continuous)
+                                    .fill(theme.gradient.linearGradient)
+                                    .frame(height: 120)
+                                    .overlay {
+                                        Image(systemName: feature.symbol)
+                                            .dsTextStyle(.hero, color: theme.gradient.onAccent)
+                                    }
+                                    .dsWashEdge(radius: DSRadius.surface)
+
+                                Text(feature.title).ds(.title3)
+                                Text(feature.subtitle)
+                                    .ds(.callout, color: DSColors.textSecondary)
+                                    .lineLimit(2)
+                            }
+                            .padding(DSSpacing.md)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .dsSurface(.glass, radius: DSRadius.card)
+                            .dsShadow(.md)
+                        }
+
+                        DSPageControl(
+                            currentPage: carouselPage,
+                            numberOfPages: CatalogFeature.all.count
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
                 }
 
                 // MARK: - Text Fields
@@ -504,6 +552,16 @@ struct ComponentCatalog: View {
     }
 
     // MARK: - Helpers
+
+    /// Bridges the carousel's id-based selection to the `DSPageControl`'s index,
+    /// so a swipe moves the dots and a dot tap pages the carousel.
+    private var carouselPage: Binding<Int> {
+        Binding {
+            CatalogFeature.all.firstIndex { $0.id == carouselSelection } ?? 0
+        } set: { newIndex in
+            carouselSelection = CatalogFeature.all[newIndex].id
+        }
+    }
 
     @ViewBuilder
     private func section(_ title: String, @ViewBuilder content: () -> some View) -> some View {

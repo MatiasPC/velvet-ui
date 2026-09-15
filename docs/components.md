@@ -65,6 +65,26 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Snapping, one-card-at-a-time carousel with peeking neighbours. Generic over `Item: Identifiable`.
+
+```swift
+DSCarousel(_ items: [Item],
+           spacing: CGFloat = DSSpacing.md,      // 16
+           peek: CGFloat = DSSpacing.xl,         // 24 — how much of each neighbour shows; 0 = full-width pages
+           selection: Binding<Item.ID?>? = nil,
+           @ViewBuilder content: (Item) -> Content)
+```
+
+Built on the iOS 17 scroll stack: `.scrollTargetBehavior(.viewAligned)` snaps each card to centre, `.contentMargins(_:_:for: .scrollContent)` creates the peek, `.scrollTransition` drives the depth, and `.scrollPosition(id:)` is the single source of truth for which card is centred. The centred card is full size; neighbours ease to 90 % scale and 55 % opacity across the edge (smoothly, from `phase.value`). Each new card that snaps to centre fires a `.selection` haptic.
+
+`selection` is optional and two-way: a swipe writes the centred id out, and writing a new id in scrolls the carousel there with `springSmooth`. Bind a `DSPageControl` to the same value (map id ↔ index) to keep the two in sync — the carousel drives the dots, and tapping a dot pages the carousel. Cards size themselves; give the content a fixed height so every page is uniform (as with a `DSImageCard` shelf).
+
+This is the paging counterpart to `DSHorizontalScroll` (a free-scrolling shelf): reach for `DSCarousel` when the row is a set of *pages* — featured content, onboarding, a gallery. Under Reduce Motion the swipe still scrolls but the scale/opacity depth is held flat (nothing grows or shrinks under the finger). Cross-platform — the scroll modifiers are iOS 17 / macOS 14, so no `#if os` guard is needed. Source/inspiration: Apple's "Beyond scroll views" (WWDC23) peeking-carousel recipe.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.
