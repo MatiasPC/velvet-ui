@@ -279,6 +279,24 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSLikeButton  ✅
+
+`Components/DSLikeButton.swift`. Tap-to-favourite button — a symbol that swaps outline → fill, pops, and throws a one-shot ring of sparks. Works for like / favourite / bookmark / thumbs-up via the symbol pair.
+
+```swift
+DSLikeButton(isLiked: Binding<Bool>,
+             filledSymbol: String = "heart.fill",
+             outlineSymbol: String = "heart",
+             size: CGFloat = 28,
+             likedColor: Color? = nil,          // fill + spark colour, defaults to theme.accent
+             haptic: DSHapticStyle = .light,
+             accessibilityLabel: String = "Like")
+```
+
+Motion, all on native APIs: the glyph swaps with `.contentTransition(.symbolEffect(.replace))`, pops with `.symbolEffect(.bounce)`, and — only on a *like* — fires a `keyframeAnimator` spark ring (8 motes, ~0.55s, `sin(π·progress)` fade). The ring holds a resting value and stops between taps: **no `TimelineView`**, so a feed of these costs nothing while idle. Liked fill is `theme.accent` (override with `likedColor`); at rest the glyph is `palette.textSecondary`. Haptic fires on every tap (`.soft` on unlike). Reduce Motion drops the pop and the sparks but keeps the swap so the state change is never hidden. Exposes the `.isSelected` trait and a Liked / Not liked accessibility value.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.

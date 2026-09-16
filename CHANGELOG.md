@@ -16,6 +16,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSLikeButton`: tap-to-favourite button — SF Symbol swaps outline → fill (`.contentTransition(.symbolEffect(.replace))`), pops (`.symbolEffect(.bounce)`) and throws a one-shot `keyframeAnimator` spark ring on like. No `TimelineView`, so it's list-safe. Works for like/favourite/bookmark via the symbol pair; liked fill defaults to the theme accent, haptic on every tap, Reduce Motion keeps the swap and drops the sparks.
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 

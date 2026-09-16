@@ -29,6 +29,9 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var liked = false
+    @State private var favourited = true
+    @State private var saved = false
 
     var body: some View {
         NavigationStack {
@@ -255,6 +258,32 @@ struct ComponentCatalog: View {
                             DSRating(value: 3.5, size: 20)
                             DSRating(value: 4.0, symbol: "heart.fill", emptySymbol: "heart",
                                      size: 20, tint: DSColors.primary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Like Button
+                section("Like Button") {
+                    DSCard {
+                        HStack(spacing: DSSpacing.xl) {
+                            DSLikeButton(isLiked: $liked)
+                            DSLikeButton(
+                                isLiked: $favourited,
+                                filledSymbol: "star.fill",
+                                outlineSymbol: "star",
+                                likedColor: DSColors.warning,
+                                accessibilityLabel: "Favourite"
+                            )
+                            DSLikeButton(
+                                isLiked: $saved,
+                                filledSymbol: "bookmark.fill",
+                                outlineSymbol: "bookmark",
+                                likedColor: DSColors.secondary,
+                                haptic: .medium,
+                                accessibilityLabel: "Save"
+                            )
+                            Spacer()
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
