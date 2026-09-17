@@ -20,6 +20,8 @@ struct ComponentCatalog: View {
     @State private var tabSelection = "Overview"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
+    @State private var termsChecked = false
+    @State private var checklist = [true, false, false]
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
@@ -215,6 +217,30 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.success)
                             }
                         }
+                    }
+                }
+
+                // MARK: - Checkbox
+                section("Checkbox") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            ForEach(checklist.indices, id: \.self) { index in
+                                DSCheckbox(
+                                    ["Design the tokens", "Build the components", "Write the docs"][index],
+                                    isOn: $checklist[index]
+                                )
+                            }
+                            DSCheckbox("Accept terms & conditions", isOn: $termsChecked, onColor: DSColors.secondary)
+                            DSCheckbox("Disabled option", isOn: .constant(true))
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.lg) {
+                                DSCheckbox(isOn: $termsChecked, size: .small)
+                                DSCheckbox(isOn: $notificationsOn)
+                                DSCheckbox(isOn: $darkModeOn, onColor: DSColors.success)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
