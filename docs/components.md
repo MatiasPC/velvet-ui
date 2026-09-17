@@ -171,6 +171,22 @@ Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic).
 
 ---
 
+## DSCheckbox  ✅
+
+`Components/DSCheckbox.swift`. Multi-select boolean — a checklist row, a term to accept, one of several options. Distinct from `DSToggle` (a single on/off setting).
+
+```swift
+DSCheckbox(_ label: String? = nil, isOn: Binding<Bool>,
+           size: DSCheckboxSize = .medium,    // .small 20 · .medium 24
+           onColor: Color? = nil,             // checked box fill, defaults to theme.accent
+           checkColor: Color? = nil,          // checkmark, defaults to theme.onAccent
+           haptic: DSHapticStyle = .light)
+```
+
+Box leading, optional label trailing; the whole row is the hit target. Off: `theme.subtleFill` wash + `dsWashEdge` (no border). On: `onColor` crossfades in and `DSCheckmarkShape` strokes on via animatable `trim` (`springBouncy`). Press → `DSPress.scale`; respects `.disabled` (0.5 opacity, no haptic) and Reduce Motion (settles instantly). Accessibility value Checked/Not checked, `.isButton` trait. `DSCheckmarkShape` is `public` for reuse.
+
+---
+
 ## DSRating  ✅ 🧪 (colors)
 
 `Components/DSRating.swift`.
