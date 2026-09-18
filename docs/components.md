@@ -279,6 +279,22 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSSuccessCheck  ✅
+
+`Components/DSSuccessCheck.swift`. Animated checkmark seal — the pure-SwiftUI stand-in for a "Lottie success tick". Mount it when something completes (payment, save, submitted form) and it plays once.
+
+```swift
+DSSuccessCheck(size: CGFloat = DSSpacing.massive,   // 64
+               tint: Color? = nil,                  // ring fill, default palette.success
+               checkColor: Color? = nil,            // stroke, default palette.textOnPrimary
+               haptic: DSHapticStyle? = .success,   // fired as the seal stamps in; nil to silence
+               animated: Bool = true)               // false → static final state (no play, no haptic)
+```
+
+Two beats: the filled ring pops from 0.4 to full with `DSAnimation.springBouncy`, then the checkmark draws on via a trimmed `Shape` stroke with `DSAnimation.normal` after a short delay. A `.success` haptic fires as the seal lands. No borders — the ring is a filled `Circle` lifted by `.dsShadow(.md)`; the mark is drawing content, not a surface edge. Colors follow the accent-role rules: the ring is a status fill (`palette.success`), so the mark on top is `palette.textOnPrimary`. Under Reduce Motion it settles at the resting state instead of skipping, and still fires the haptic. Replay by re-mounting with `.id` (same pattern as `DSSlideToConfirm`).
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
