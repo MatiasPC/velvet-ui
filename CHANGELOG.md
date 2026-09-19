@@ -5,6 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
+- `DSCheckbox`: selection control for lists, forms and consent rows — an empty wash-filled box (no outline) whose accent layer pops in with `springBouncy` while the checkmark draws on via `trim` a beat later; `.rigid` haptic on toggle, `.glow(accent)` while checked, settles instantly under Reduce Motion. `DSCheckboxSize` (`.small` 20 · `.medium` 24 · `.large` 28) and a `public DSCheckmarkShape` for the reusable draw-on tick. Catalog gains a Checkboxes section.
 - `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`. Replaces the throwaway `Examples/MotionReview/` harness.
 - `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
 - `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).
