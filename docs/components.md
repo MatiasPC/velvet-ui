@@ -171,6 +171,21 @@ Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic).
 
 ---
 
+## DSCheckbox  ✅
+
+`Components/DSCheckbox.swift`. The selection control `DSToggle` is not: a checkbox answers "is this one picked?" in lists, forms, and consent rows, where the switch answers "on or off?" for a setting.
+
+```swift
+DSCheckbox(_ label: String? = nil, isOn: Binding<Bool>,
+           size: DSCheckboxSize = .medium,   // .small 20 · .medium 24 · .large 28
+           onColor: Color? = nil,            // defaults to theme.accent
+           haptic: DSHapticStyle = .rigid)
+```
+
+The empty box is a `theme.subtleFill` wash with the specular `dsWashEdge` — never an outline. On check, the accent layer springs up from 0.55 with `springBouncy` (a pop) while the checkmark — one continuous stroke (`DSCheckmarkShape`) — draws on via `trim` a beat later with `springSmooth`; the tick is `theme.onAccent`. A `.glow(accent)` shadow fades in while checked, the same "emits light" treatment as a toggle on. `onColor` overrides the fill; the whole row (box + label) is the hit target and fires `haptic` on toggle. Respects `.disabled` (0.5 opacity, no haptic). Under Reduce Motion the box, checkmark, and glow settle instantly so the state is never in doubt. Accessibility value Checked/Unchecked, with the `.isSelected` trait while on. `DSCheckmarkShape` is `public`, so the draw-on tick is reusable on its own.
+
+---
+
 ## DSRating  ✅ 🧪 (colors)
 
 `Components/DSRating.swift`.
