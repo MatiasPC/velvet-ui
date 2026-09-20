@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var chipFilters: Set<String> = ["SwiftUI", "Motion"]
 
     var body: some View {
         NavigationStack {
@@ -232,6 +233,22 @@ struct ComponentCatalog: View {
                                 style: .underline
                             )
                         }
+                    }
+                }
+
+                // MARK: - Chip Group
+                section("Filter Chips") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSChipGroup(
+                                ["SwiftUI", "UIKit", "Motion", "Haptics",
+                                 "Accessibility", "Design Systems", "Layout"],
+                                selection: $chipFilters
+                            )
+                            Text("\(chipFilters.count) selected")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
