@@ -156,6 +156,34 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ---
 
+## DSChipGroup / DSFlowLayout  ✅
+
+`Components/DSChipGroup.swift`. Multi-select filter chips that wrap onto as many rows as they need. The interactive counterpart to `DSBadge` (static label); use `DSSegmentedControl` for single-choice.
+
+```swift
+// Generic over any Hashable model:
+DSChipGroup(_ items: [Item], selection: Binding<Set<Item>>,
+            spacing: CGFloat = DSSpacing.xs, runSpacing: CGFloat = DSSpacing.xs,
+            haptics: Bool = true,
+            icon: @escaping (Item) -> String? = { _ in nil },
+            label: @escaping (Item) -> String)
+
+// String convenience (label is the value itself):
+DSChipGroup(_ items: [String], selection: Binding<Set<String>>,
+            spacing:, runSpacing:, haptics:)
+```
+
+| State | Fill | Text | Definition |
+|---|---|---|---|
+| off | `theme.subtleFill` + `washEdge` | `palette.textPrimary` | glass over the backdrop |
+| on | `theme.accent` + `.glow` | `theme.onAccent` | lit like a toggle "on" |
+
+Motion: fill/glow spring on `springSnappy` (selection changes); press → `DSPress.scale`. Haptic: `.selection` on every toggle (set `haptics: false` to mute). Wrapping is a real `Layout`, so long labels and mixed sizes pack top-to-bottom, left-to-right — no clipping or horizontal scroll.
+
+**DSFlowLayout** (`public`): the wrapping layout on its own — `DSFlowLayout(spacing: .xs, runSpacing: .xs) { … }`. Reusable for tag clouds, token fields, anything that should wrap. Breaks a run when the next subview would overflow the proposed width; each run is as tall as its tallest subview.
+
+---
+
 ## DSToggle  🧪 (colors) ⏳ (wash track + glow)
 
 `Components/DSToggle.swift`.
