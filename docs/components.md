@@ -201,6 +201,23 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSTabBar  ✅
+
+`Components/DSTabBar.swift`. Floating glass bottom tab bar — the branded alternative to the stock `TabView` bar, which can't be re-skinned to the glass surface language.
+
+```swift
+DSTabItem(tag: Tag, title: String, icon: String)   // Tag: Hashable; icon is the BASE SF Symbol name
+
+DSTabBar(selection: Binding<Tag>, items: [DSTabItem<Tag>],
+         accent: Color? = nil, haptic: DSHapticStyle = .selection)
+```
+
+Owns no state — bind it to whatever drives your content (a `TabView` selection, a router enum, an index). The selected tab gets an accent capsule that springs between tabs with `springSnappy` (one shared `matchedGeometryEffect` indicator), its glyph swaps to the `.fill` symbol variant and gives a single `.bounce`, and its icon/label crossfade to `theme.onAccent` while the rest stay `palette.textSecondary`. Switching tabs fires `haptic` (`.selection`); re-tapping the current tab is a no-op. Surface is `.glassThin` (pill) + `.dsShadow(.lg)`. Defaults: `accent` → `theme.accent`.
+
+Reduce Motion: the indicator jumps instead of sliding and the symbol `.bounce` is suppressed (the trigger is pinned off). Reduce Transparency: `dsSurface` falls back to the solid fill. Accessibility: each tab is a button labelled by its `title`, with the `.isSelected` trait on the active one.
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.

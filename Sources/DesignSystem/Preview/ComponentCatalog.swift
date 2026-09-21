@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var navTab = 0
 
     var body: some View {
         NavigationStack {
@@ -273,6 +274,16 @@ struct ComponentCatalog: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
+                }
+
+                // MARK: - Tab Bar
+                section("Tab Bar") {
+                    DSTabBar(selection: $navTab, items: [
+                        DSTabItem(tag: 0, title: "Home", icon: "house"),
+                        DSTabItem(tag: 1, title: "Search", icon: "magnifyingglass"),
+                        DSTabItem(tag: 2, title: "Alerts", icon: "bell"),
+                        DSTabItem(tag: 3, title: "Profile", icon: "person"),
+                    ])
                 }
 
                 // MARK: - Badges
