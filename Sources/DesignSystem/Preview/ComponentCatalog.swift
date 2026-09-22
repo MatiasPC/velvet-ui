@@ -22,6 +22,7 @@ struct ComponentCatalog: View {
     @State private var darkModeOn = false
     @State private var rating: Double = 4
     @State private var page: Int = 1
+    @State private var carouselPage = 0
     @State private var codeValue = "12"
     @State private var jiggleTrigger = 0
     @State private var sweepOn = true
@@ -272,6 +273,32 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        DSCarousel(
+                            ["Featured", "Popular", "New this week", "Nearby"],
+                            selection: $carouselPage
+                        ) { title in
+                            DSCard(style: .elevated) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                    RoundedRectangle(cornerRadius: DSRadius.surface, style: .continuous)
+                                        .fill(theme.gradient.horizontalGradient)
+                                        .frame(height: DSSpacing.massive)
+                                        .dsHueDrift()
+                                    Text(title).ds(.title3)
+                                    Text("Swipe — neighbours peek and dim")
+                                        .ds(.callout, color: DSColors.textSecondary)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        DSButton("Next", variant: .ghost, size: .small) {
+                            carouselPage = (carouselPage + 1) % 4
+                        }
                     }
                 }
 
