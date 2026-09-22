@@ -201,6 +201,23 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Centre-snapping horizontal carousel with peeking neighbours and a focus falloff, over any `RandomAccessCollection`.
+
+```swift
+DSCarousel(_ data: Data, selection: Binding<Int>? = nil,
+           peek: CGFloat = DSSpacing.xl, spacing: CGFloat = DSSpacing.md,
+           showsIndicator: Bool = true,
+           content: (Data.Element) -> Content)
+```
+
+Built on the iOS 17 scroll stack: `scrollTargetBehavior(.viewAligned)` + `scrollTargetLayout()` snap each card to centre, `containerRelativeFrame(.horizontal)` sizes it to `containerWidth − 2·peek`, `contentMargins` opens the peek gutter (a neighbour shows `peek − spacing`), `scrollTransition` shrinks (`0.90`) and dims (`0.55`) off-centre cards, and `scrollPosition(id:)` binds the centred page. No timers, no gesture math, no `GeometryReader` — the rail sizes to the tallest card's intrinsic height, so give cards their own height.
+
+`selection` is an optional two-way `Binding<Int>` in page indices: the carousel writes the landed page as the user swipes and glides (`springSmooth`) to a page the app sets from outside (a "Next" button, a deep link). A `.selection` haptic ticks on every page the finger lands on; a programmatic move stays silent so the caller owns that feedback. The built-in indicator is a display-only `DSPageControl` (`allowsTap: false`) — paging is a swipe. `peek: 0` gives a full-bleed pager (next card fully off-screen). Under Reduce Motion the scale/opacity falloff is held flat; snapping stays (it's the interaction, not decoration).
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.
