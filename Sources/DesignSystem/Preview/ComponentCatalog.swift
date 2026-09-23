@@ -275,6 +275,24 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Carousel
+                section("Carousel") {
+                    DSCarousel(
+                        ["Glass over gradient", "Springs, not ramps", "Haptics on the beat"],
+                        id: \.self
+                    ) { title in
+                        DSCard(style: .elevated) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("Featured").ds(.overline, color: DSColors.textSecondary)
+                                Text(title).ds(.title2)
+                                Text("Snaps to centre; off-centre cards scale and fade.")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
+                        }
+                    }
+                }
+
                 // MARK: - Badges
                 section("Badges & Tags") {
                     DSCard {
