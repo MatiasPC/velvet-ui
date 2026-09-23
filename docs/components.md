@@ -201,6 +201,27 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Snapping, paged carousel for featured content — the motion-rich sibling of `DSHorizontalScroll` (which is a plain, non-snapping row).
+
+```swift
+DSCarousel(_ data: Data, id: KeyPath<Element, ID>,
+           spacing: CGFloat = DSSpacing.md,
+           restScale: CGFloat = 0.86, restOpacity: Double = 0.5,
+           showsPageControl: Bool = true, accent: Color? = nil,
+           onIndexChange: ((Int) -> Void)? = nil,
+           content: (Element) -> Content)
+
+// Convenience where Element: Identifiable
+DSCarousel(_ data: Data, spacing:…, restScale:…, restOpacity:…,
+           showsPageControl:…, accent:…, onIndexChange:…, content:)
+```
+
+Each card spans the carousel width and snaps to centre (`scrollTargetBehavior(.viewAligned)`); as a card slides off-centre an interactive `scrollTransition` scales it toward `restScale` and fades it toward `restOpacity`, so the incoming card reads as coming forward (App-Store "featured" feel). The centred item is tracked with `scrollPosition(id:)`: every page change ticks a `.selection` haptic and calls `onIndexChange`. When `showsPageControl` is on (and there is more than one card) a synced `DSPageControl` is drawn beneath — it moves with the deck and, when tapped, scrolls the deck to that page (`springSmooth`) without a double haptic. Pure iOS 17 scroll APIs, so both platforms build. Under Reduce Motion the scale/fade turn off (cards stay full size and opaque) while the snap and paging keep working. The card content — its surface, radius, height — is the caller's; wrap it in a `DSCard` or `DSImageCard`. Cards are laid out at the carousel's own width, so inset the carousel (padding / frame) to control how wide each page is.
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.
