@@ -219,6 +219,22 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 
 ---
 
+## DSActivityRings  ✅ 🧪 (colors)
+
+`Components/DSActivityRings.swift`. Concentric progress rings — the Apple Fitness "close your rings" pattern on Velvet tokens. One ring is `DSCircularProgress`; the value here is the *set*.
+
+```swift
+DSRing(progress: Double, color: Color? = nil, label: String? = nil)   // color nil → theme.accent
+
+DSActivityRings(_ rings: [DSRing],
+                size: CGFloat = 160, lineWidth: CGFloat = 14, spacing: CGFloat = DSSpacing.xxs,
+                spring: Animation = DSAnimation.springSmooth) { center }   // center optional
+```
+
+Rings draw outermost first, each inset one lane (`lineWidth + spacing`) from the one outside it. Geometry is the proven `DSCircularProgress` recipe (`Circle().trim(…)`, round cap, rotated −90° to start at twelve o'clock), so there is no arc trigonometry. Each ring fills with `spring` on appear (from empty) and on change; the track is `palette.border`, matching the rest of the progress family. A ring flashes a `.glow` of its own colour and fires one `.success` haptic the instant it *transitions* to closed (progress ≥ 1) — never on first appearance, where a closed ring is a fact, not an achievement. The optional trailing closure nests content inside the innermost ring (a summary number, an icon). A no-centre convenience init exists (`Center == EmptyView`). Under Reduce Motion rings settle at their value instantly instead of sweeping. The whole set is one VoiceOver element labelled with each ring's name and percentage. Reusable well beyond fitness: budgets vs. limits, storage by category, completion across several goals.
+
+---
+
 ## DSSlideToConfirm  ✅
 
 `Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions, including payments.

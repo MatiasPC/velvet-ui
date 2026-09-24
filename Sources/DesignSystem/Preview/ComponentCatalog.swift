@@ -16,6 +16,11 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var rings: [DSRing] = [
+        DSRing(progress: 0.82, color: DSColors.error,   label: "Move"),
+        DSRing(progress: 0.60, color: DSColors.success, label: "Exercise"),
+        DSRing(progress: 0.45, color: DSColors.info,    label: "Stand")
+    ]
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
     @State private var notificationsOn = true
@@ -195,6 +200,35 @@ struct ComponentCatalog: View {
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
                             DSAnimatedNumber(value: 1248, style: .displayMedium)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+
+                // MARK: - Activity Rings
+                section("Activity Rings") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSActivityRings(rings) {
+                                VStack(spacing: DSSpacing.xxxs) {
+                                    Text("62%").ds(.title3)
+                                    Text("today").ds(.caption1, color: DSColors.textSecondary)
+                                }
+                            }
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Close rings", size: .small) {
+                                    withAnimation(DSAnimation.springSmooth) {
+                                        rings = rings.map { DSRing(progress: 1, color: $0.color, label: $0.label) }
+                                    }
+                                }
+                                DSButton("Reset", variant: .ghost, size: .small) {
+                                    rings = [
+                                        DSRing(progress: 0.82, color: DSColors.error,   label: "Move"),
+                                        DSRing(progress: 0.60, color: DSColors.success, label: "Exercise"),
+                                        DSRing(progress: 0.45, color: DSColors.info,    label: "Stand")
+                                    ]
+                                }
+                            }
                         }
                         .frame(maxWidth: .infinity)
                     }
