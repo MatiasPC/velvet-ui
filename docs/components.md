@@ -297,6 +297,20 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## Scroll reveal  ✅
+
+`Animation/DSScrollReveal.swift`. Scroll-driven reveal: cells dim, shrink and slide as they approach the leading/trailing edge of their scroll container, settling to rest in the middle. The scroll-position sibling of the timer/trigger/appearance-driven `DSMotion` primitives, built on iOS 17's `.scrollTransition`.
+
+```swift
+func dsScrollReveal(_ style: DSScrollRevealStyle = .settle, axis: Axis = .vertical) -> some View
+
+enum DSScrollRevealStyle { case fade, scale, rise, settle }
+```
+
+Attach it to each item in a `ScrollView` / `LazyVStack` / `LazyHStack` / `DSHorizontalScroll`. `.fade` is opacity only, `.scale` adds a shrink toward the edge, `.rise` adds a slide along the scroll axis, and `.settle` (the default) combines all three — the signature "cards settling onto glass" reveal. Pass `axis: .horizontal` inside a horizontal scroll so the slide follows the row. The motion is driven entirely by scroll offset via `ScrollTransitionPhase.value` (−1 leading / 0 rest / +1 trailing), so it is frame-perfect, exactly reversible on scroll-back, and needs no `@State` or `withAnimation`. Inert outside a scroll container (every cell stays at identity), so it is always safe to add. No haptics — it is a `VisualEffect`, not a gesture, like `dsBreathe`/`dsHueDrift`. Under Reduce Motion all four styles collapse to the fade alone (opacity is information, not travel).
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
