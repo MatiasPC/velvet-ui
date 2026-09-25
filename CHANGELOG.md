@@ -11,6 +11,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
 - `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
 - View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
+- `DSScrollReveal` — scroll-driven reveal built on iOS 17 `.scrollTransition`: cells dim, shrink and slide as they near a scroll edge and settle to rest in the middle. `.dsScrollReveal(_ style: DSScrollRevealStyle = .settle, axis: Axis = .vertical)` with `DSScrollRevealStyle` (`.fade`, `.scale`, `.rise`, `.settle`). Driven entirely by scroll offset (no `@State`/`withAnimation`), reversible on scroll-back, inert outside a scroll container. Reduce Motion collapses all styles to the fade. `ComponentCatalog` gains a "Scroll Reveal" section.
 - `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
 - `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.

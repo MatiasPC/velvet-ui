@@ -497,6 +497,24 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(spacing: DSSpacing.md) {
+                        Text("Scroll the page — each card dims, shrinks and rises as it nears a scroll edge.")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ForEach(1...3, id: \.self) { index in
+                            DSCard {
+                                VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                                    Text("Reveal \(index)").ds(.title3)
+                                    Text("dsScrollReveal(.settle)")
+                                        .ds(.callout, color: DSColors.textSecondary)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .dsScrollReveal()
+                        }
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
