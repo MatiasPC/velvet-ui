@@ -201,6 +201,25 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Snapping, peeking horizontal carousel — the paged container `DSPageControl` sits under. Hosts any view (`DSImageCard`, `DSCard`, a chart).
+
+```swift
+DSCarousel(_ data: Data,                       // RandomAccessCollection, Element: Identifiable
+           spacing: CGFloat = DSSpacing.md,     // gap between cards
+           peek: CGFloat = DSSpacing.xl,        // how far neighbours peek in (0 = full-bleed paging)
+           selection: Binding<Data.Element.ID?>? = nil,
+           haptic: DSHapticStyle = .selection,
+           content: (Data.Element) -> Content)
+```
+
+Built on the iOS 17+ scroll APIs: `.scrollTargetBehavior(.viewAligned)` snaps each card to centre, `.containerRelativeFrame(.horizontal)` sizes a card to the viewport minus the `peek` gutter, `.safeAreaPadding(.horizontal, peek)` lets the first/last card centre, and `.scrollTransition(.interactive)` scales the off-centre cards down to `0.88` and dims them to `0.55` as they leave centre. `.scrollClipDisabled()` keeps the focused card's shadow from being cropped. No borders: separation is the peek gutter and the scale/opacity falloff.
+
+`selection` is a two-way binding to the centred item's id — read it to follow swipes, set it (inside `withAnimation`) to scroll programmatically, e.g. from a tapped `DSPageControl`. Snapping to a new card fires `haptic` (`.selection` by default); the initial settle on appear is suppressed so nothing buzzes on load. Under Reduce Motion the scale/opacity transition collapses to plain paged snapping (cards still snap, they just don't shrink or fade). Cross-platform — no `#if os` needed.
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.

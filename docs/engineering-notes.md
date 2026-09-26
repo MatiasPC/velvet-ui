@@ -46,6 +46,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | `dsEdgeSweep` animates a Double that builds an AngularGradient | The view body re-evaluates per frame while the sweep runs. Keep it on small, leaf-ish surfaces; on a large subtree, put the sweep on a thin overlay shape rather than on the container itself. |
 | A knob that fills a `dsSurface` track must be an overlay, not a child | `dsSurface` ends in `.clipShape`, so anything inside it (including a `.dsShadow`) is cropped to the pill. `DSSlideToConfirm` draws its knob in an `.overlay(alignment: .leading)` applied *after* `.dsSurface`: the circle is exactly `trackHeight` tall, nests into the pill's rounded ends, and its shadow renders outside the clip. Travel and the trail width then measure from a flush leading edge (no inset term). |
 | A drag-paced dissolve still needs a phase gate | `DSSlideToConfirm`'s label fades letter by letter as a function of `progress`, with `DSAnimation.stagger` delays up to `count × 0.05s` and a `letterOpacity` curve that only reaches 0 when the drag is taken slowly to the end. On a fast flick past the 0.75 threshold the commit fires with letters still lit and the stagger outlasts the ~350ms collapse to a circle. Fix: gate the label on `phase` (`showsInstructionLabel` — `.idle`/`.dragging` only) exactly like `showsKnobGlyph` and `resolution`, so it clears on `DSAnimation.fast` the instant the choreography starts. Any progress-driven reveal that a commit can interrupt needs the same gate. |
+| Peek carousel = item width + safe-area padding, not a `GeometryReader` | `DSCarousel` sizes each card with `.containerRelativeFrame(.horizontal) { length, _ in length - peek*2 }` and pads the scroll view with `.safeAreaPadding(.horizontal, peek)`. The card then exactly fills the padded viewport, so `.viewAligned` snaps it centred while its neighbours sit in the `peek`-wide padding and peek by `peek - spacing`. Don't reach for a `GeometryReader` + manual offsets — that fights the native snapping and loses the `.scrollTransition` falloff. `.scrollClipDisabled()` is needed so the centred card's shadow isn't cropped at the scroll-view bounds. Skip the first `nil →` id `onChange` or the carousel buzzes on appear. |
 
 ## Known issues / backlog
 
@@ -90,7 +91,7 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
 2. Manual walkthrough of every component and variant in the catalog (owner: Mati).
 3. Apply the glass restyle to the remaining components, one PR each, with before/after previews.
 4. ✅ **Velvet UI Showcase** app — see "VelvetGallery example app" above (`Examples/VelvetGallery/`, neutral theme, one screen per component). Does not modify the package.
-5. New components on top of the base: carousels, sheets, animated transitions.
+5. New components on top of the base: carousels (✅ `DSCarousel`), sheets, animated transitions.
 
 ## How to add a component (checklist)
 
