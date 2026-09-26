@@ -9,6 +9,14 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// Sample slide for the carousel section.
+private struct CatalogSlide: Identifiable {
+    let id: Int
+    let title: String
+    let subtitle: String
+    let badge: String?
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -29,6 +37,13 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var carouselSelection: Int? = 0
+
+    private let carouselSlides: [CatalogSlide] = [
+        CatalogSlide(id: 0, title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo"),
+        CatalogSlide(id: 1, title: "Loft en la ciudad", subtitle: "$210 / noche", badge: nil),
+        CatalogSlide(id: 2, title: "Casa junto al mar", subtitle: "$340 / noche", badge: "Popular")
+    ]
 
     var body: some View {
         NavigationStack {
@@ -271,6 +286,28 @@ struct ComponentCatalog: View {
                                 activeColor: DSColors.secondary
                             )
                         }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCarousel(carouselSlides, selection: $carouselSelection) { slide in
+                            DSImageCard(title: slide.title, subtitle: slide.subtitle, badge: slide.badge)
+                        }
+                        // Break out of the screen padding so the peek reaches the edges.
+                        .padding(.horizontal, -DSSpacing.screenHorizontal)
+
+                        DSPageControl(
+                            currentPage: Binding(
+                                get: { carouselSelection ?? 0 },
+                                set: { newValue in
+                                    withAnimation(DSAnimation.springSmooth) { carouselSelection = newValue }
+                                }
+                            ),
+                            numberOfPages: carouselSlides.count
+                        )
                         .frame(maxWidth: .infinity)
                     }
                 }
