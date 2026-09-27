@@ -16,6 +16,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSMarquee`: seamless self-scrolling strip for overflowing content (now-playing lines, tickers, announcements). Scrolls only when content overflows, constant `velocity` (pt/s), soft edge `fade`, `TimelineView`-driven modulo-width loop. No haptics (status surface); settles static under Reduce Motion; trailing copy hidden from VoiceOver.
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 

@@ -267,6 +267,18 @@ Types a phrase out character by character, holds it, erases it, then moves to th
 
 ---
 
+## DSMarquee  ✅
+
+`Components/DSMarquee.swift`. Seamless self-scrolling strip for content too wide for its space — now-playing lines, live tickers, scrolling announcements, overflowing labels.
+
+```swift
+DSMarquee(velocity: CGFloat = 40, spacing: CGFloat = DSSpacing.xxl, fade: CGFloat = DSSpacing.lg) { content }
+```
+
+Generic over any content (Text is the common case; icon-plus-label rows and badge sets work too). Scrolls **only when the content overflows** the width it is given; a line that fits sits still, leading-aligned. The loop is a pure function of time: two copies ride an `HStack` and the offset is elapsed distance taken modulo one copy-plus-`spacing`, so the wrap is seamless — no seam, no snap, no animation to restart (driven by `TimelineView(.animation)`). `velocity` is points per second (clamped to ≥ 1); `fade` is the soft alpha fade at each edge so content emerges and leaves instead of hard-clipping (`0` for a crisp edge). No haptics — it is a status surface, not an interaction, like `DSThinkingIndicator` / `DSTypewriterText`. Under Reduce Motion nothing travels: the content settles static at the leading edge and the trailing end fades where it is clipped. The trailing copy is `.accessibilityHidden(true)` so VoiceOver announces the line once. Edge fades use black/clear as a mask (alpha, not colour), so the strip stays theme-agnostic.
+
+---
+
 ## DSStepper  ✅
 
 `Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.
