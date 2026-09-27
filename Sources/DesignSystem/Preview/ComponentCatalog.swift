@@ -373,6 +373,27 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Marquee
+                section("Marquee") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.sm) {
+                                Image(systemName: "waveform")
+                                    .foregroundStyle(theme.gradient.accent)
+                                    .dsBreathe(.subtle)
+                                DSMarquee {
+                                    Text("Midnight City — M83 · from Hurry Up, We're Dreaming")
+                                        .ds(.body)
+                                }
+                            }
+                            DSMarquee {
+                                Text("Fits — stays still").ds(.callout, color: DSColors.textSecondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Slide to Confirm
                 section("Slide to Confirm") {
                     VStack(spacing: DSSpacing.md) {
