@@ -29,6 +29,8 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var chipInterests: Set<String> = ["Design", "Coffee"]
+    @State private var chipCategory: String? = "all"
 
     var body: some View {
         NavigationStack {
@@ -232,6 +234,33 @@ struct ComponentCatalog: View {
                                 style: .underline
                             )
                         }
+                    }
+                }
+
+                // MARK: - Chips
+                section("Chips") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            Text("Multi-select").ds(.footnote, color: DSColors.textSecondary)
+                            DSChipGroup(
+                                selection: $chipInterests,
+                                options: ["Design", "Coffee", "Travel", "Photography",
+                                          "Music", "Cooking", "Reading", "Fitness"]
+                            )
+
+                            Text("Single-select with icons").ds(.footnote, color: DSColors.textSecondary)
+                            DSChipGroup(
+                                selection: $chipCategory,
+                                items: [
+                                    DSChipItem("All", value: "all", icon: "square.grid.2x2"),
+                                    DSChipItem("Nearby", value: "near", icon: "location"),
+                                    DSChipItem("Top rated", value: "top", icon: "star"),
+                                    DSChipItem("Open now", value: "open", icon: "clock")
+                                ],
+                                accent: DSColors.secondary
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 

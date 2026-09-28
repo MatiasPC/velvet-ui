@@ -5,6 +5,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
+- `DSChipGroup` / `DSFilterChip` / `DSChipItem`: selectable, wrapping filter chips for large option sets (filters, tags, interests, categories). Generic over any `Hashable`, with `Set`-based multi-select and optional-based single-select initializers plus `String`-array convenience. Off state is a `subtleFill` wash pill; on state is an `accent` fill with an inserting checkmark. Springs the fill and reflow with `springSmooth`, presses with `DSPress`, fires a `.selection` haptic per toggle, and honours Reduce Motion. Distinct from `DSBadge` (display only) and `DSSegmentedControl` (one exclusive choice).
+- `DSFlowLayout`: a reusable wrapping `Layout` that packs variable-width subviews and wraps to new rows, with per-row `.leading` / `.center` / `.trailing` alignment. Backs `DSChipGroup`; usable for any tag/token flow.
+- `ComponentCatalog` — Chips section demoing multi-select and single-select-with-icons.
 - `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`. Replaces the throwaway `Examples/MotionReview/` harness.
 - `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
 - `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).

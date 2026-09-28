@@ -83,6 +83,40 @@ Pending restyle: background `subtleFill`, focus → `.dsFocusGlow(theme.ink)`, n
 
 ---
 
+## DSChipGroup / DSFilterChip / DSFlowLayout  ✅
+
+`Components/DSChipGroup.swift`. Selectable, wrapping filter chips for large option sets that outgrow a segmented control (filters, tags, interests, categories).
+
+```swift
+// Multi-select
+DSChipGroup(selection: Binding<Set<Value>>, items: [DSChipItem<Value>], accent: Color? = nil, spacing: DSSpacing.xs, haptic: .selection)
+// Single-select (selecting the current chip clears it to nil)
+DSChipGroup(selection: Binding<Value?>, items: [DSChipItem<Value>], accent:, spacing:, haptic:)
+// String convenience for both:
+DSChipGroup(selection: Binding<Set<String>>, options: [String], accent:, spacing:, haptic:)
+DSChipGroup(selection: Binding<String?>, options: [String], accent:, spacing:, haptic:)
+
+DSChipItem(_ title: String, value: Value, icon: String? = nil)   // Identifiable by value
+
+DSFilterChip(_ title: String, icon: String? = nil, isSelected: Bool, accent: Color? = nil, haptic: .selection, action: () -> Void)
+
+DSFlowLayout(spacing: DSSpacing.xs, lineSpacing: DSSpacing.xs, alignment: .leading)   // reusable wrapping Layout
+```
+
+`DSChipGroup` is generic over any `Hashable`. Values must be unique (they are the `ForEach` id). The two initializers translate to the same internal `isSelected`/`toggle` closures, so single- and multi-select share one code path.
+
+**Chip look:** off → `theme.subtleFill` wash pill + `theme.ink` label; on → `accent ?? theme.accent` fill + `theme.onAccent` label + `.sm` shadow. The leading glyph is the item `icon` when off and a `checkmark` when on — it cross-fades (scale + opacity) as selection flips. Radius is a pill (`Capsule`).
+
+**Motion:** selecting springs the fill with `springSmooth`, the group reflows on the same spring (the chip's width changes inside the animation, so `DSFlowLayout` re-packs and neighbours slide), press uses `DSPress.scale` / `DSPress.animation`, and each toggle fires a `.selection` haptic. Under Reduce Motion the checkmark swap falls back to a plain fade.
+
+**Accessibility:** each chip is a button labelled by its title and carries the `.isSelected` trait when on.
+
+`DSFlowLayout` is a standalone reusable `Layout`: it packs variable-width subviews left-to-right and wraps to a new line when the proposed width runs out, centring each subview vertically in its row and honouring `alignment` (`.leading` / `.center` / `.trailing`) per row. Use it for any tag/token flow, not just chips.
+
+Distinct from `DSBadge` (display only, not selectable) and `DSSegmentedControl` (one exclusive choice on a single fixed-width track).
+
+---
+
 ## DSCodeField  🧪 (colors) ⏳ (wash boxes)
 
 `Components/DSCodeField.swift`. OTP / verification input.
