@@ -66,7 +66,7 @@ withAnimation(DSAnimation.normal) { theme.gradient = .lagoon }
 | `DSAnimation` / `DSPress` | 200/240/320/480ms curves, 5 springs, press scale 0.96 | [tokens.md#motion](docs/tokens.md#motion) |
 | `DSHaptics` | 9 styles, pre-warmed engine, `dsHaptic(.success)` | [tokens.md#haptics](docs/tokens.md#haptics) |
 
-Components: buttons, cards, inputs, code field, badges, avatar, list cells, toggle, segmented control, rating, page control, toast, empty state, progress ×4, shimmer, pulse. Full API in [components.md](docs/components.md).
+Components: buttons, cards, inputs, code field, badges, avatar, list cells, toggle, segmented control, chips, rating, page control, toast, empty state, progress ×4, shimmer, pulse. Full API in [components.md](docs/components.md).
 
 ## Building on Velvet
 
