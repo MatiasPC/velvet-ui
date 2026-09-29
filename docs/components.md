@@ -297,6 +297,24 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## Scroll Reveal  ✅
+
+`Animation/DSScrollReveal.swift`. Scroll-driven reveal for rows, cards and carousel items: they arrive faded and scaled-down, then resolve to rest as they reach the viewport centre. Built on iOS 17's `scrollTransition`, so it is position-driven and scrubbable (scroll back and it reverses), not a one-shot entrance. Reveal-on-scroll pattern popularised on `scrollTransition` by the SwiftUI community ([Swift with Majid](https://swiftwithmajid.com/2023/06/13/mastering-scrollview-in-swiftui-transitions/), [Hacking with Swift](https://www.hackingwithswift.com/quick-start/swiftui/how-to-make-views-scroll-with-a-custom-transition)).
+
+```swift
+func dsScrollReveal(_ style: DSScrollRevealStyle = .soft, axis: Axis = .vertical) -> some View
+```
+
+| Style | Effect | Use for |
+|---|---|---|
+| `.soft` | fade + gentle scale (0.94→1), no travel | any list or feed; never moves an element off its layout line |
+| `.rise` | fade + scale (0.96→1) + `DSSpacing.lg` settle along the axis | rows that should rise into place; carousels slide in |
+| `.blur` | fade + scale (0.92→1) + `DSSpacing.xs` defocus | hero cards, full-bleed media, one or two on screen |
+
+Apply per row/card inside a `ScrollView`; pass `axis: .horizontal` for carousels. Position-driven interpolation, not a spring — nothing was touched. Under Reduce Motion the content is returned untouched and fully visible, so layout is identical to no modifier (no parked offset, no residual scale). No haptics: there is no discrete interaction to punctuate.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
