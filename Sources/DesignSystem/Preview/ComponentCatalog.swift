@@ -497,6 +497,31 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("Swipe — cards reveal as they reach the centre")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: DSSpacing.md) {
+                                ForEach(0..<6, id: \.self) { index in
+                                    DSCard {
+                                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                            Text("\(index + 1)").ds(.displayMedium)
+                                            Text("Glass reveal")
+                                                .ds(.callout, color: DSColors.textSecondary)
+                                        }
+                                        .frame(width: DSSpacing.massive * 2, alignment: .leading)
+                                    }
+                                    .dsScrollReveal(.rise, axis: .horizontal)
+                                }
+                            }
+                            .padding(.horizontal, DSSpacing.xxs)
+                            .padding(.vertical, DSSpacing.xs)
+                        }
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
