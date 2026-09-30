@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var accordionRow: Int? = 0
 
     var body: some View {
         NavigationStack {
@@ -434,6 +435,35 @@ struct ComponentCatalog: View {
                             DSStepper(value: $bulk, in: 0...100, step: 5)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Disclosure
+                section("Disclosure") {
+                    VStack(spacing: DSSpacing.sm) {
+                        DSDisclosure(
+                            "Notifications",
+                            icon: "bell.badge",
+                            subtitle: "Sounds, badges, delivery",
+                            initiallyExpanded: true
+                        ) {
+                            DSToggle("Marketing emails", isOn: $notificationsOn)
+                        }
+
+                        // Controlled: opening one row closes the others.
+                        ForEach(0..<3, id: \.self) { index in
+                            DSDisclosure(
+                                ["How do refunds work?", "Change my plan later?", "Is my data encrypted?"][index],
+                                isExpanded: Binding(
+                                    get: { accordionRow == index },
+                                    set: { accordionRow = $0 ? index : nil }
+                                )
+                            ) {
+                                Text("A short, reassuring answer that unfolds when you tap the row and folds away when you tap it again.")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
                     }
                 }
 

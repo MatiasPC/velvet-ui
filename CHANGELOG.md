@@ -16,7 +16,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
-- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
+- `DSDisclosure`: glass expand/collapse container replacing the stock `DisclosureGroup`. Chevron rotates 180° on open; content slides down and fades in while the panel height springs open (`springSmooth`), all in one `withAnimation`; `.light` haptic per toggle. Two inits — self-managed (`initiallyExpanded:`) and controlled (`isExpanded:` binding, for exclusive accordions). Reduce Motion drops the slide to an instant fade; VoiceOver gets an Expanded/Collapsed value and hint.
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the new components (including a Disclosure section with a self-managed row and a controlled exclusive accordion).
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
 ### Changed
