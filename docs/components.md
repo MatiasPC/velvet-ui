@@ -279,6 +279,30 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSDisclosure  ✅
+
+`Components/DSDisclosure.swift`. Glass expand/collapse container — the themeable, tactile replacement for the stock `DisclosureGroup`.
+
+```swift
+// Self-managed (owns its own state):
+DSDisclosure(_ title: String, icon: String? = nil, subtitle: String? = nil,
+             initiallyExpanded: Bool = false, accent: Color? = nil,
+             haptic: DSHapticStyle = .light) { content }
+
+// Controlled (caller owns expansion — bind several to one selection for an accordion):
+DSDisclosure(_ title: String, icon: String? = nil, subtitle: String? = nil,
+             isExpanded: Binding<Bool>, accent: Color? = nil,
+             haptic: DSHapticStyle = .light) { content }
+```
+
+A header row (title, optional leading icon tinted with `accent ?? theme.accent`, optional secondary subtitle, and a chevron that rotates 180° when open) sits on a `.glass` surface at `DSRadius.surface` (16). Toggling reveals the content: it slides down from under the header and fades in while the panel's height springs open with `springSmooth`; closing fades it out. The whole reveal runs inside one `withAnimation` on the toggle, so the height change and the content transition share a single spring. Each toggle fires the `haptic` (default `.light`).
+
+Two ways to drive it. The self-managed init keeps its own `@State`; the controlled init takes an `isExpanded` binding, so a parent holding an `Int?` (or set) can build an exclusive accordion where opening one row closes the rest. A controlled parent that flips the binding should do so inside `withAnimation` to keep the reveal animated.
+
+Under Reduce Motion the spring becomes an instant change and the slide is dropped, keeping only the fade. The header is a button exposing an accessibility value of Expanded/Collapsed and a matching hint, so VoiceOver announces and toggles state without any motion. No shadow: definition comes from the glass edge, so a stack of disclosures reads cleanly without stacked halos.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
