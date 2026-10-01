@@ -279,6 +279,26 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSAudioBars  ✅
+
+`Components/DSAudioBars.swift`. Ambient audio-level visualiser — a row of capsule bars that ripple like a graphic equaliser while active and settle to a flat resting line when idle. The audio sibling of `DSThinkingIndicator`: reach for it on voice/dictation, recording and call UIs, now-playing rows, "listening" states and AI voice.
+
+```swift
+DSAudioBars(isActive: Bool = true,
+            barCount: Int = 5,
+            barWidth: CGFloat = DSSpacing.xxs,
+            spacing: CGFloat = DSSpacing.xxs,
+            height: CGFloat = DSSpacing.xl,
+            color: Color? = nil)       // defaults to theme.accent
+```
+
+Motion: bar heights are computed analytically from a single `TimelineView(.animation)` clock (the `DSParticleField` approach), not N `repeatForever` springs — two summed sines per bar with a per-bar phase offset give an organic travelling ripple with no accumulated state to desync. Toggling `isActive` crossfades to/from rest with `DSAnimation.springSmooth`.
+Reduce Motion: a resting state, not a skip. Idle shows a flat line; active-but-reduced freezes on a symmetric equaliser bell so it still reads as audio.
+Theming: fill is `color ?? theme.accent`; sizes come from `DSSpacing` tokens.
+Accessibility: decorative, so `accessibilityHidden(true)` — pair with a visible/announced label (e.g. "Listening…") when the state must be conveyed to VoiceOver. No haptics: there is no interaction.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.

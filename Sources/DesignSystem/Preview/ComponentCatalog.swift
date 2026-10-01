@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var listening = true
 
     var body: some View {
         NavigationStack {
@@ -421,6 +422,27 @@ struct ComponentCatalog: View {
                                 symbol: "brain",
                                 interval: 2.0
                             )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Audio Bars
+                section("Audio Bars") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.sm) {
+                                DSAudioBars(isActive: listening)
+                                Text(listening ? "Listening…" : "Paused")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                                Spacer()
+                            }
+                            DSToggle("Active", isOn: $listening)
+                            HStack(spacing: DSSpacing.xl) {
+                                DSAudioBars(barCount: 3)
+                                DSAudioBars(barCount: 7, height: DSSpacing.xxl)
+                                DSAudioBars(barCount: 5, color: DSColors.secondary)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
