@@ -497,6 +497,17 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("Scroll the page — each row reveals as it enters, recedes as it leaves")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        revealRow("rise", .rise)
+                        revealRow("scale", .scale)
+                        revealRow("soften", .soften)
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
@@ -521,6 +532,20 @@ struct ComponentCatalog: View {
                 .dsBreathe(intensity)
             Text(label).ds(.caption1, color: DSColors.textTertiary)
         }
+    }
+
+    private func revealRow(_ name: String, _ style: DSScrollRevealStyle) -> some View {
+        DSCard {
+            HStack(spacing: DSSpacing.md) {
+                RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                    .fill(theme.gradient.horizontalGradient)
+                    .frame(width: DSSpacing.xxl, height: DSSpacing.xxl)
+                Text(".dsScrollReveal(.\(name))").ds(.callout)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .dsScrollReveal(style)
     }
 
     private func surfaceRow(_ name: String, _ level: DSSurface) -> some View {

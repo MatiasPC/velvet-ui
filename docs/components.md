@@ -297,6 +297,19 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## Scroll reveal  ✅
+
+`Animation/DSScrollReveal.swift`. A scroll-position-driven reveal built on SwiftUI's `scrollTransition` (iOS 17+): content settles into place as it enters the viewport and recedes as it leaves. Complements the one-shot `dsStaggerIn` / `dsPopIn` entrances — those fire once on appear, this stays tied to the scroll offset so an element re-dims and reveals again each time it crosses the edge.
+
+```swift
+func dsScrollReveal(_ style: DSScrollRevealStyle = .rise, axis: Axis = .vertical) -> some View
+// DSScrollRevealStyle: .rise (fade + travel along the axis) · .scale (fade + scale up) · .soften (blur out, stays faintly visible)
+```
+
+Apply it to the repeating element inside a `ScrollView` (row, card, grid item). `.rise` is the quiet default for feed rows and lists; `.scale` suits cards and grid tiles; `.soften` is a rack-focus pull for hero media. Pass `axis: .horizontal` for a carousel. Travel is `DSSpacing.lg`; SwiftUI interpolates the effects between the resting and edge states per frame, so there is no geometry math. No haptics (scrolling is not a discrete interaction). Under Reduce Motion the transition is dropped and content rests fully in place.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
