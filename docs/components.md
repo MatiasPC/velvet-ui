@@ -297,6 +297,20 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## DSScrollReveal  ✅
+
+`Animation/DSScrollReveal.swift`. Scroll-driven entrance modifier — content rises, scales up, sharpens from a soft defocus and fades in as it scrolls into the viewport, reversing as it leaves.
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View  // .subtle .medium .strong
+```
+
+Built on `scrollTransition` (iOS 17+), so the effect is interpolated continuously as the view travels through the containing `ScrollView` — no timer, no state. `phase.value` drives a directional lift (−1 leading / 0 rest / +1 trailing) so rows rise from below and sink at the top. Intensity sets the edge opacity, scale, blur and travel: `.subtle` (fade 0.4, scale 0.97, blur 0, lift 8), `.medium` (0, 0.92, 2, 16), `.strong` (0, 0.85, 6, 28).
+
+The companion to `.dsStaggerIn` (a one-shot entrance on appear): this one is tied to scroll position and reverses. Apply it to rows/cards inside a `ScrollView` (`LazyVStack` for long feeds). Inert outside a scroll view, so always safe to add. Under Reduce Motion it keeps only the fade (opacity is not motion) and pins the scale, blur and travel to rest. No haptics — it is ambient decoration, not an interaction.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
