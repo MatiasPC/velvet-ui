@@ -497,6 +497,31 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    Text("Each row rises, scales and sharpens into place as you scroll — scroll up and down to see it track the position.")
+                        .ds(.footnote, color: DSColors.textSecondary)
+
+                    ForEach(0..<4, id: \.self) { index in
+                        DSCard {
+                            HStack(spacing: DSSpacing.md) {
+                                Image(systemName: "sparkles")
+                                    .font(.title3)
+                                    .foregroundStyle(theme.gradient.accent)
+                                    .frame(width: DSSpacing.xl)
+                                VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                                    Text("Reveal row \(index + 1)").ds(.title3)
+                                    Text("dsScrollReveal(.medium)")
+                                        .ds(.callout, color: DSColors.textSecondary)
+                                }
+                                Spacer()
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .dsScrollReveal()
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
