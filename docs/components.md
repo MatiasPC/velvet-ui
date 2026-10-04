@@ -136,7 +136,41 @@ DSToast(_ message: String, type: DSToastType = .info)   // .success .error .warn
 DSEmptyState(icon:, title:, message:, actionTitle: String? = nil, action: (() -> Void)? = nil)
 ```
 
-Toast already sits on `.ultraThinMaterial` with `.lg` shadow; `DSToastType.haptic` maps to the matching haptic for the caller to fire on presentation. Empty state uses a `DSButton` for the CTA.
+Toast already sits on `.ultraThinMaterial` with `.lg` shadow; `DSToastType.haptic` maps to the matching haptic, fired for you by the presenter below. Empty state uses a `DSButton` for the CTA.
+
+`DSToast` is just the banner — present it transiently with `.dsToast(_:edge:)` (see below).
+
+---
+
+## DSToastPresenter  ✅
+
+`Components/DSToastPresenter.swift`. Presentation layer for `DSToast`: bind an optional value and the modifier floats the banner in, taps out its haptic, auto-dismisses, and lets the user flick it away. No `withAnimation` at the call site — the modifier owns its motion.
+
+```swift
+DSToastValue(_ message: String, type: DSToastType = .info, duration: Double = 2.5)  // duration <= 0 = sticky
+DSToastEdge { case top, bottom }
+
+// View modifier
+func dsToast(_ toast: Binding<DSToastValue?>, edge: DSToastEdge = .top) -> some View
+```
+
+Usage:
+
+```swift
+@State private var toast: DSToastValue?
+
+DSScreen { content }
+    .dsToast($toast)                 // or .dsToast($toast, edge: .bottom)
+
+toast = DSToastValue("Saved", type: .success)   // present; nil dismisses
+```
+
+- **Present / replace / dismiss.** Assign a value to show it; assign a new value to replace the current one (each `DSToastValue` has its own identity, so re-presenting the same text works); assign `nil` to dismiss. Identity is keyed on the value's `id`, so the banner is re-mounted per presentation.
+- **Motion.** Slides in from `edge` with `.move` + opacity on `springGentle`; drag toward `edge` past `DSSpacing.xl` to flick away, otherwise it springs back (`springSnappy`). Dragging *into* the screen resists at 0.2×.
+- **Auto-dismiss.** A `.task(id:)` sleeps for `duration` then clears the binding; it auto-cancels on replace/dismiss so timers never stack. `duration <= 0` stays up until you clear it.
+- **Haptics.** Fires `DSToastType.haptic` on present (success/error/warning map to the notification haptics, info to `.light`).
+- **Accessibility.** Under Reduce Motion the transition is opacity-only (no slide); drag-to-dismiss still works.
+- Apply at the screen root so the banner lands inside the safe area. Stack two modifiers (one per edge) to run top and bottom toasts independently.
 
 ---
 

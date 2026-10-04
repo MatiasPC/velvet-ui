@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var toast: DSToastValue?
 
     var body: some View {
         NavigationStack {
@@ -40,6 +41,7 @@ struct ComponentCatalog: View {
                 }
             }
             .navigationTitle("Velvet UI")
+            .dsToast($toast)
         }
         .dsTheme(theme)
     }
@@ -326,6 +328,28 @@ struct ComponentCatalog: View {
                         DSToast("Action completed!", type: .success)
                         DSToast("Something went wrong", type: .error)
                         DSToast("Check your connection", type: .warning)
+                    }
+                }
+
+                // MARK: - Toast Presenter
+                section("Toast Presenter") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Text("Present a toast; it slides in, auto-dismisses, or flicks away.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Success", size: .small) {
+                                    toast = DSToastValue("Changes saved", type: .success)
+                                }
+                                DSButton("Error", variant: .secondary, size: .small) {
+                                    toast = DSToastValue("Couldn’t reach the server", type: .error)
+                                }
+                                DSButton("Info", variant: .ghost, size: .small) {
+                                    toast = DSToastValue("Copied to clipboard", type: .info)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
