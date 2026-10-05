@@ -156,6 +156,25 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ---
 
+## DSRadioGroup  ✅
+
+`Components/DSRadioGroup.swift`. Single-select from a vertical list of options. Generic over any `Hashable` value.
+
+```swift
+DSRadioGroup(selection: Binding<Value>, options: [DSRadioOption<Value>],
+             accent: Color? = nil, haptic: DSHapticStyle = .selection)
+DSRadioGroup(selection: Binding<String>, options: [String], accent:, haptic:)   // value == label
+DSRadioOption(_ title: String, value: Value, subtitle: String? = nil, icon: String? = nil)
+```
+
+Fills the gap between `DSSegmentedControl` (one of a few side-by-side modes) and a checkbox (many independent flags): "choose exactly one of several" — a plan, a payment method, a shipping speed, a survey answer. Each row is a button with an optional leading `icon` and `subtitle`.
+
+Two motions run together on a change of selection: the indicator swaps `circle` → `circle.inset.filled` via `.contentTransition(.symbolEffect(.replace))`, tinting to `accent ?? theme.accent`; and a `theme.subtleFill` highlight slides from the old row to the new one with `matchedGeometryEffect` + `springSmooth`, resizing between rows with and without a subtitle. `.selection` haptic fires on change only — reselecting the current value does nothing. No borders: the selected row is a frosted wash, the ring is an SF Symbol glyph. Highlight radius is `DSRadius.control`.
+
+Honors `.disabled()` (0.5 opacity, selection blocked) and Reduce Motion (the symbol cuts instead of morphing and the highlight jumps instead of sliding). Each row exposes `.isButton` + `.isSelected` traits with the subtitle as its accessibility value. Wrap the group in a `DSCard` for the glass container look.
+
+---
+
 ## DSToggle  🧪 (colors) ⏳ (wash track + glow)
 
 `Components/DSToggle.swift`.
