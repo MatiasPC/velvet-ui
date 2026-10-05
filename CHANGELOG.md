@@ -16,6 +16,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSRadioGroup`: single-select control for a vertical list of options, generic over any `Hashable` value (plus a `[String]` convenience init). The indicator morphs `circle` → `circle.inset.filled` with `.contentTransition(.symbolEffect(.replace))` and a `theme.subtleFill` highlight slides between rows via `matchedGeometryEffect` + `springSmooth`. `.selection` haptic on change only; honors `.disabled()` and Reduce Motion.
+- `DSRadioOption`: model for a `DSRadioGroup` choice (`title`, `value`, optional `subtitle` and leading `icon`).
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
