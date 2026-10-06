@@ -497,6 +497,24 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("Scroll the row — tiles reveal as they reach the centre")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: DSSpacing.md) {
+                                ForEach(1...8, id: \.self) { index in
+                                    RoundedRectangle(cornerRadius: DSRadius.card, style: .continuous)
+                                        .fill(theme.gradient.horizontalGradient)
+                                        .frame(width: DSSpacing.massive * 2, height: DSSpacing.massive)
+                                        .overlay(Text("\(index)").ds(.title2, color: theme.gradient.onAccent))
+                                        .dsScrollReveal(.strong, axis: .horizontal)
+                                }
+                            }
+                        }
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
