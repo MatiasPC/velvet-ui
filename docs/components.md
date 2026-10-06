@@ -297,6 +297,25 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## Scroll Reveal  ✅
+
+`Animation/DSScrollReveal.swift`. A scroll-position-driven reveal built on `scrollTransition`: content fades, scales, blurs and drifts toward full presence as it nears the centre of its scroll view, and reverses as it leaves. Unlike `.dsPopIn` / `.dsStaggerIn` (one-shot on `onAppear`), this is linked to the scroll offset and replays every pass, in both directions.
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium,   // .subtle .medium .strong
+                    axis: Axis = .vertical) -> some View
+```
+
+| Intensity | Resting opacity | Resting scale | Blur | Drift |
+|---|---|---|---|---|
+| `.subtle` | 0.75 | 0.96 | 1 | `DSSpacing.xs` |
+| `.medium` | 0.55 | 0.90 | 2 | `DSSpacing.md` |
+| `.strong` | 0.35 | 0.82 | 4 | `DSSpacing.lg` |
+
+Apply it to the elements *inside* a scrolling container (rows in a `LazyVStack`, tiles in an `HStack`), with `axis` matching the scroll direction — the drift follows the axis, giving a light parallax. The closure returns visual effects only (opacity/scale/blur/offset), so it never changes layout. No haptics — it is ambient, not an interaction. Under Reduce Motion the modifier returns the content unchanged, so every element is simply present at full strength. Applied outside a scroll view it stays at rest and does nothing.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
