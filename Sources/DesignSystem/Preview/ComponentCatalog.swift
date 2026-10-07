@@ -158,6 +158,19 @@ struct ComponentCatalog: View {
                     DSImageCard(title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo")
                 }
 
+                // MARK: - Tilt Card
+                section("Tilt Card") {
+                    DSTiltCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                            Text("Velvet Pro").ds(.overline, color: DSColors.textSecondary)
+                            Text("Press & drag to tilt").ds(.title3)
+                            Text("3D lean toward the touch with a specular glare, springs flat on release.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Text Fields
                 section("Text Fields") {
                     DSCard {

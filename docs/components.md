@@ -65,6 +65,23 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSTiltCard  ✅
+
+`Components/DSTiltCard.swift`. A glass card that leans in 3D toward the touch, with a specular glare that tracks the finger, then springs flat on release. For a single hero/feature/showcase card — product shots, a highlighted plan, a collectible — not for dense lists.
+
+```swift
+DSTiltCard(maxTilt: Double = 12,
+           padding: CGFloat = DSSpacing.lg,
+           cornerRadius: CGFloat = DSRadius.card,
+           haptics: Bool = true) { content }
+```
+
+The touch is normalised to −1…1 on each axis (`.onGeometryChange` gives the card's size) and fed to two `rotation3DEffect`s (X and Y) with `Metrics.perspective` 0.5; a radial white highlight (same specular language as `DSBackdrop` / `DSWash.edge`) rides the same point. Motion is explicit `withAnimation` — `DSAnimation.interactive` while the finger is down, `DSAnimation.springSmooth` back to rest — never an implicit value animation, so a theme crossfade never drifts a resting card. While held the card lifts (`Metrics.liftScale` 1.03) and its shadow grows `.md` → `.lg`. A `.light` haptic fires the moment the finger lands (set `haptics: false` to silence).
+
+Surface is `dsSurface(.glass)` + edge, so it falls back to solid under Reduce Transparency like every other surface. The tilt rides a `simultaneousGesture`, so a card inside a `ScrollView` still scrolls. Under Reduce Motion it renders flat and still — no gesture, glare or lift — degrading to a plain glass card.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.
