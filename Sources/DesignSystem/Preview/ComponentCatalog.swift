@@ -9,6 +9,14 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// A sample card for the carousel section.
+private struct CatalogSlide: Identifiable {
+    let id: Int
+    let title: String
+    let subtitle: String
+    let symbol: String
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -22,6 +30,7 @@ struct ComponentCatalog: View {
     @State private var darkModeOn = false
     @State private var rating: Double = 4
     @State private var page: Int = 1
+    @State private var carouselSelection: Int? = 0
     @State private var codeValue = "12"
     @State private var jiggleTrigger = 0
     @State private var sweepOn = true
@@ -275,6 +284,30 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Carousel
+                section("Carousel") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCarousel(carouselSlides, selection: $carouselSelection) { slide in
+                            DSCard(style: .elevated) {
+                                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                                    Image(systemName: slide.symbol)
+                                        .font(.title)
+                                        .foregroundStyle(theme.gradient.accent)
+                                    Spacer(minLength: 0)
+                                    Text(slide.title).ds(.title2)
+                                    Text(slide.subtitle)
+                                        .ds(.callout, color: DSColors.textSecondary)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .frame(height: DSSpacing.massive * 2)
+                            }
+                        }
+
+                        DSPageControl(currentPage: carouselPage, numberOfPages: carouselSlides.count)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+
                 // MARK: - Badges
                 section("Badges & Tags") {
                     DSCard {
@@ -504,6 +537,18 @@ struct ComponentCatalog: View {
     }
 
     // MARK: - Helpers
+
+    private let carouselSlides = [
+        CatalogSlide(id: 0, title: "Weekly recap", subtitle: "4 sessions · 2 h 35 min", symbol: "chart.bar.fill"),
+        CatalogSlide(id: 1, title: "New arrivals", subtitle: "Fresh picks for you", symbol: "sparkles"),
+        CatalogSlide(id: 2, title: "Saved places", subtitle: "12 spots nearby", symbol: "mappin.and.ellipse"),
+        CatalogSlide(id: 3, title: "Your streak", subtitle: "9 days and counting", symbol: "flame.fill")
+    ]
+
+    /// Two-way bridge so the dot indicator and the carousel drive each other.
+    private var carouselPage: Binding<Int> {
+        Binding(get: { carouselSelection ?? 0 }, set: { carouselSelection = $0 })
+    }
 
     @ViewBuilder
     private func section(_ title: String, @ViewBuilder content: () -> some View) -> some View {
