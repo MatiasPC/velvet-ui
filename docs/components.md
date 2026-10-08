@@ -201,6 +201,27 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Horizontal snapping carousel with a depth-of-field feel: the centered card is full size, neighbours recede and dim, and a sliver of each peeks in. Generic over any `Identifiable` item; pair `selection` with `DSPageControl`.
+
+```swift
+DSCarousel<Item: Identifiable, Content: View>(
+    _ items: [Item],
+    selection: Binding<Item.ID?>,
+    peek: CGFloat = DSSpacing.xxl,      // sliver of neighbours shown each side
+    spacing: CGFloat = DSSpacing.md,
+    haptic: DSHapticStyle = .selection, // ticks as each card centers
+    @ViewBuilder content: (Item) -> Content
+)
+```
+
+Built on the iOS 17 scroll APIs: `scrollTargetBehavior(.viewAligned)` snaps each card to center, `scrollTransition(.interactive)` drives the recede/dim off the scroll offset, and `scrollPosition(id:anchor:.center)` makes `selection` two-way (scrolls when set, updates when swiped). Card width is `container − 2·peek`, measured with a background `GeometryReader` so the peek is exact regardless of how content margins are read. The carousel sizes its own width; each card decides its height. Motion: `.selection` haptic on every center change. Reduce Motion drops the scale travel (cards stay full size); the dim stays (opacity is a depth cue, not motion).
+
+Notes: `selection` is the centered id, not an index — hold it as `@State var id: Item.ID?`. For a dot indicator over an `Int`-keyed set, bridge with a `Binding<Int>`.
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.

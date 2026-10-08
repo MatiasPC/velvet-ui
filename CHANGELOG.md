@@ -16,7 +16,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
-- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
+- `DSCarousel`: horizontal snapping carousel with a depth-of-field feel — centered card full size, neighbours recede (`scale 0.9`) and dim (`opacity 0.55`), a `peek` sliver of each showing. Generic over any `Identifiable` item; built on `scrollTargetBehavior(.viewAligned)` + `scrollTransition(.interactive)` + `scrollPosition(id:anchor:.center)`. `selection` is two-way (pairs with `DSPageControl`); `.selection` haptic on each center change; Reduce Motion drops the scale travel and keeps the dim.
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components. Added a Carousel section (cards + synced `DSPageControl`).
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
 ### Changed
