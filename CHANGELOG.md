@@ -16,6 +16,10 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSChipGroup`: multi-select filter chips bound to a `Set`, wrapping across lines. Generic over `Hashable` with a `[String]` convenience; tapping toggles the value under `springSnappy` and fires the selection tick. Selected chips fill `color ?? theme.accent`; off chips use `theme.subtleFill`.
+- `DSChip`: one selectable pill (accent fill on, glass wash off) with `DSPress` feedback and the `.isSelected` accessibility trait — usable directly for custom layouts.
+- `DSChipItem<Value>`: option model (title, value, icon) for `DSChipGroup`.
+- `DSFlowLayout`: reusable wrapping `Layout` (two-pass with an ideal-size cache) — an `HStack` that breaks lines. Useful on its own for tag clouds and token fields.
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
