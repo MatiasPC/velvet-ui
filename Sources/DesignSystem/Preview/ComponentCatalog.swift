@@ -18,6 +18,7 @@ struct ComponentCatalog: View {
     @State private var progress: Double = 0.65
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
+    @State private var chipFilters: Set<String> = ["Thai", "Japanese"]
     @State private var notificationsOn = true
     @State private var darkModeOn = false
     @State private var rating: Double = 4
@@ -232,6 +233,28 @@ struct ComponentCatalog: View {
                                 style: .underline
                             )
                         }
+                    }
+                }
+
+                // MARK: - Chip Group
+                section("Chip Group (filters)") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSChipGroup(
+                                selection: $chipFilters,
+                                options: ["Italian", "Japanese", "Thai", "Mexican", "Indian", "Mediterranean", "Korean BBQ"]
+                            )
+                            DSChipGroup(
+                                selection: $chipFilters,
+                                items: [
+                                    DSChipItem("Thai", value: "Thai", icon: "leaf"),
+                                    DSChipItem("Japanese", value: "Japanese", icon: "fish"),
+                                    DSChipItem("Mexican", value: "Mexican", icon: "flame")
+                                ],
+                                color: DSColors.secondary
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 

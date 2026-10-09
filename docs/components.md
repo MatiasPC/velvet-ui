@@ -156,6 +156,32 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ---
 
+## DSChipGroup / DSChip / DSFlowLayout  ✅
+
+`Components/DSChipGroup.swift`. Multi-select filter chips that wrap across lines. Generic over `Hashable`. For a single choice use `DSSegmentedControl`; this is many-of-N selection that reflows.
+
+```swift
+DSChipGroup(selection: Binding<Set<Value>>, items: [DSChipItem<Value>],
+            color: Color? = nil, haptic: DSHapticStyle = .selection,
+            spacing: CGFloat = DSSpacing.xs)
+DSChipGroup(selection: Binding<Set<String>>, options: [String], color:, haptic:, spacing:)
+DSChipItem(_ title: String, value: Value, icon: String? = nil)
+
+DSChip(_ title: String, icon: String? = nil, isSelected: Bool,
+       color: Color? = nil, haptic: DSHapticStyle = .selection, action: () -> Void)
+
+DSFlowLayout(horizontalSpacing: CGFloat = DSSpacing.xs, verticalSpacing: CGFloat = DSSpacing.xs)
+```
+
+| State | Fill | Text |
+|---|---|---|
+| selected | `color ?? theme.accent` | `color == nil ? theme.onAccent : palette.textOnPrimary` |
+| off | `theme.subtleFill` | `palette.textSecondary` |
+
+Chip label is `.buttonSmall`, padding `sm`/`xs`, clipped to a `Capsule`. Press → `DSPress.scale`; fill crossfades on `DSAnimation.micro`; each toggle fires the selection tick and flips the `Set` under `springSnappy`. Chips carry `.isSelected` accessibility trait. `DSFlowLayout` is a reusable `Layout` (two-pass, ideal-size cache) usable on its own for tag clouds and token fields; a chip wider than the container is not truncated.
+
+---
+
 ## DSToggle  🧪 (colors) ⏳ (wash track + glow)
 
 `Components/DSToggle.swift`.
