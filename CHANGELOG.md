@@ -14,6 +14,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
 - `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
+- `DSStatusMark`: self-drawing success/error outcome mark — a ring draws on, then a check (`.success`) or cross (`.error`) strokes into the middle with a spring pop and a timed notification haptic. Plays once on appear (re-mount with `.id` to replay); `haptics:` and `tint:` knobs; Reduce Motion settles it at rest. The "done" counterpart to `DSThinkingIndicator`.
+- `DSStatusMarkOutcome` enum: `.success` (check, `palette.success`, `.success` haptic) and `.error` (cross, `palette.error`, `.error` haptic).
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
