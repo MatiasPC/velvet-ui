@@ -279,6 +279,24 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSStatusMark  ✅
+
+`Components/DSStatusMark.swift`. Self-drawing success/error outcome mark — the "done" counterpart to `DSThinkingIndicator`'s "working" state.
+
+```swift
+DSStatusMark(_ outcome: DSStatusMarkOutcome = .success,   // .success .error
+             size: CGFloat = 64,
+             tint: Color? = nil,
+             haptics: Bool = true,
+             accessibilityLabel: String? = nil)
+```
+
+A ring draws itself on (a trimmed `Circle`, rotated to start at the top like `DSCircularProgress`), then the glyph — a check for `.success`, a cross for `.error` — strokes into the middle. Both are custom `Shape`s trimmed `0 → 1`. The whole mark springs up from `Metrics.entranceScale` (0.7) on appear via `DSAnimation.springBouncy`; the ring draws with `DSAnimation.normal` and, in its completion, the glyph draws with `DSAnimation.fast` — chained through `withAnimation(_:completion:)` so the glyph's delay is the ring's real duration. The outcome's notification haptic (`.success` / `.error`) fires on the exact frame the glyph lands; set `haptics: false` when several marks appear at once (a checklist) so they don't buzz in a row.
+
+Color is `palette.success` / `palette.error`, overridable with `tint`. It plays once per identity — re-mount with `.id(attempt)` to replay (same pattern as `DSSlideToConfirm`'s morph). Under Reduce Motion it settles at the finished state with no draw or travel, but the haptic still fires (feedback, not motion). VoiceOver reads "Success" / "Error" (or `accessibilityLabel`) and the mark is exposed as an image.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.

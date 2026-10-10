@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var markAttempt = 0
 
     var body: some View {
         NavigationStack {
@@ -423,6 +424,36 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Status Mark
+                section("Status Mark") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.lg) {
+                            HStack(spacing: DSSpacing.xxl) {
+                                VStack(spacing: DSSpacing.sm) {
+                                    DSStatusMark(.success)
+                                    Text("Paid").ds(.footnote, color: DSColors.textSecondary)
+                                }
+                                VStack(spacing: DSSpacing.sm) {
+                                    DSStatusMark(.error)
+                                    Text("Declined").ds(.footnote, color: DSColors.textSecondary)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .id(markAttempt)
+
+                            HStack(spacing: DSSpacing.md) {
+                                DSStatusMark(.success, size: 24, haptics: false)
+                                Text("Changes saved").ds(.callout)
+                                Spacer()
+                                DSButton("Replay", variant: .ghost, size: .small) {
+                                    markAttempt += 1
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 }
 
