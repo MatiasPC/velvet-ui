@@ -497,6 +497,29 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.md) {
+                        Text("dsScrollReveal — scroll the catalog; each card settles in as it enters")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        DSCard {
+                            Text("subtle").ds(.body)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .dsScrollReveal(.subtle)
+                        DSCard {
+                            Text("medium").ds(.body)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .dsScrollReveal(.medium)
+                        DSCard {
+                            Text("strong").ds(.body)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .dsScrollReveal(.strong)
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
