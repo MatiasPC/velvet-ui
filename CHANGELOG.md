@@ -11,6 +11,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
 - `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
 - View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
+- `DSScrollRevealIntensity` enum (`.subtle` / `.medium` / `.strong`) and `.dsScrollReveal(_:axis:)` — a scroll-linked reveal that fades, shrinks and rises each row into place as it enters a `ScrollView` and settles it back on the way out. Driven continuously by scroll position via `scrollTransition(.interactive,…)` (reversible, position-tracking), unlike the one-shot `.dsStaggerIn`. Reduce Motion keeps only the cross-fade.
 - `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
 - `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
@@ -18,6 +19,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
+- Tests: 2 new tests for `DSScrollRevealIntensity` — the `.subtle`/`.medium`/`.strong` ladder is monotonic in rise, shrink and dim, and every edge state stays visible (dim and scale strictly between 0 and 1).
 
 ### Changed
 - `DSSlideToConfirm.onConfirm` is now `async throws`, so one closure carries a payment's latency and its outcome. The control spins while awaiting it (500ms floor, applied after the closure returns) and treats a thrown error as a refusal: `.error` haptic, then it re-opens for a retry. **Not source-breaking** — `() -> Void` is a subtype of `() async throws -> Void`, so existing call sites compile unchanged.

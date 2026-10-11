@@ -297,6 +297,18 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## dsScrollReveal  ✅
+
+`Animation/DSScrollReveal.swift`. A scroll-linked reveal: items fade, softly shrink and rise into place as they enter the viewport, and settle back the same way as they leave. Driven continuously by scroll position via `scrollTransition(.interactive,…)` (iOS 17+) — not a one-shot on-appear — so it tracks the finger, plays in reverse on scroll-up, and never fires twice for the same row. The companion to `dsStaggerIn`: stagger is a one-time entrance when a view mounts, reveal is an ambient, reversible response to scrolling.
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium, axis: Axis = .vertical) -> some View
+```
+
+`DSScrollRevealIntensity` is `.subtle` / `.medium` (default) / `.strong` — each a longer rise (`DSSpacing.xs`/`.md`/`.xl`), deeper dim and bigger shrink. Apply it to each row or card inside a `ScrollView`; it is a no-op outside one, so it costs nothing left applied. Pass `axis: .horizontal` inside a horizontal `ScrollView`. Under Reduce Motion the scale and offset drop out and only the cross-fade remains (a fade reads as a state change, not travel). Uses GPU transforms only, so it stays cheap across a `LazyVStack` of many rows.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
