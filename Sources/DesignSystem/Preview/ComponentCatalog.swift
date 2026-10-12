@@ -437,6 +437,17 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(spacing: DSSpacing.sm) {
+                        scrollRevealRow(".soft", .soft)
+                        scrollRevealRow(".fade", .fade)
+                        scrollRevealRow(".scale", .scale)
+                        scrollRevealRow(".rise", .rise)
+                        scrollRevealRow(".blur", .blur)
+                    }
+                }
+
                 // MARK: - Motion
                 section("Motion") {
                     VStack(spacing: DSSpacing.md) {
@@ -521,6 +532,18 @@ struct ComponentCatalog: View {
                 .dsBreathe(intensity)
             Text(label).ds(.caption1, color: DSColors.textTertiary)
         }
+    }
+
+    private func scrollRevealRow(_ label: String, _ style: DSScrollRevealStyle) -> some View {
+        HStack {
+            Text("Scroll reveal").ds(.body)
+            Spacer()
+            Text(label).ds(.caption1, color: DSColors.textTertiary)
+        }
+        .padding(DSSpacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .dsSurface(.glass, radius: DSRadius.surface)
+        .dsScrollReveal(style)
     }
 
     private func surfaceRow(_ name: String, _ level: DSSurface) -> some View {

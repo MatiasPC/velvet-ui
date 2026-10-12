@@ -16,7 +16,10 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
-- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
+- `.dsScrollReveal(_:)` — scroll-position-driven reveal for `ScrollView` / `List` items, built on `scrollTransition`. Items settle at the viewport centre and recede toward the edges, continuously and interruptibly (unlike `dsStaggerIn` / `dsPopIn`, which fire once on appear).
+- `DSScrollRevealStyle` enum: `.soft` (default, fade + shrink, never fully hidden), `.fade`, `.scale`, `.rise` (direction-signed translate), `.blur` (depth cue). Under Reduce Motion every style keeps only its cross-fade.
+- `DSScrollReveal` namespace enum: tuned magnitudes `softOpacity` 0.4, `softScale` 0.94, `popScale` 0.80, `blurOpacity` 0.6, `blurRadius` (`DSSpacing.xs`), `riseDistance` (`DSSpacing.lg`).
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components, and a Scroll Reveal section demoing all five reveal styles.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
 ### Changed
