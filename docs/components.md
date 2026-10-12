@@ -297,6 +297,29 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## DSScrollReveal  ✅
+
+`Animation/DSScrollReveal.swift`. Scroll-position-driven reveal for the repeating items of a `ScrollView` / `List`, built on the iOS 17 `scrollTransition` API.
+
+```swift
+func dsScrollReveal(_ style: DSScrollRevealStyle = .soft) -> some View
+// .soft (default) · .fade · .scale · .rise · .blur
+```
+
+Each item is fully shown at the centre of the viewport and recedes toward its `style` look at the top and bottom edges; `scrollTransition(.interactive)` interpolates continuously as the item scrolls, so it is interruptible and re-reveals every time the item returns to view. This is the piece `dsStaggerIn` / `dsPopIn` can't do — those fire once on `onAppear`, so an item already on screen never animates and one scrolled back never animates again.
+
+| Style | Edge look |
+|---|---|
+| `.soft` | fade to `DSScrollReveal.softOpacity` (0.4) + shrink to `softScale` (0.94) — never fully hidden |
+| `.fade` | pure cross-fade to 0 |
+| `.scale` | fade to 0 + shrink to `popScale` (0.80) — cards pop up |
+| `.rise` | fade to 0 + translate `riseDistance` (`DSSpacing.lg`), signed by scroll direction |
+| `.blur` | stays placed, fades to `blurOpacity` (0.6) + blurs `blurRadius` (`DSSpacing.xs`) — a depth cue |
+
+No color (opacity / scale / offset / blur only), so light and dark are automatic. No haptics — it is ambient, scroll-driven motion, not an interaction. Under Reduce Motion only the cross-fade survives: nothing scales, travels or softens (a cross-fade is what the system itself substitutes for slides, so it is not "motion"). Magnitudes live in the `DSScrollReveal` namespace enum; spatial values come from `DSSpacing`. Only has an effect inside a scroll container.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
