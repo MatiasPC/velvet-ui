@@ -9,6 +9,19 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// A slide model for the carousel section.
+private struct CatalogSlide: Identifiable {
+    let id: Int
+    let title: String
+    let icon: String
+}
+
+private let catalogSlides = [
+    CatalogSlide(id: 0, title: "Glass over gradient", icon: "square.stack.3d.up.fill"),
+    CatalogSlide(id: 1, title: "Springs, not ramps", icon: "waveform.path"),
+    CatalogSlide(id: 2, title: "No borders. Ever.", icon: "sparkles")
+]
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -29,6 +42,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var carouselPage: Int? = 0
 
     var body: some View {
         NavigationStack {
@@ -156,6 +170,34 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo")
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCarousel(catalogSlides, selection: $carouselPage) { slide in
+                            DSCard(style: .elevated) {
+                                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                                    Image(systemName: slide.icon)
+                                        .font(.system(size: 28, weight: .semibold))
+                                        .foregroundStyle(theme.gradient.accent)
+                                    Spacer(minLength: 0)
+                                    Text(slide.title).ds(.title3)
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                            }
+                        }
+                        .frame(height: 160)
+
+                        DSPageControl(
+                            currentPage: Binding(
+                                get: { carouselPage ?? 0 },
+                                set: { carouselPage = $0 }
+                            ),
+                            numberOfPages: catalogSlides.count
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
                 }
 
                 // MARK: - Text Fields

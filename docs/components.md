@@ -65,6 +65,24 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Snapping, one-page-at-a-time carousel: the centred item is full size, neighbours recede (scaled + dimmed) and the depth tracks the finger as pages scroll through the middle.
+
+```swift
+DSCarousel(_ data: Data,                              // any RandomAccessCollection of Identifiable
+           selection: Binding<Data.Element.ID?>? = nil,
+           spacing: CGFloat = DSSpacing.md,           // gap between pages
+           sidePeek: CGFloat = DSSpacing.xl,          // neighbour peek per edge; 0 = edge-to-edge
+           minScale: CGFloat = 0.9,                   // scale of a fully off-centre page
+           minOpacity: Double = 0.6,                  // opacity of a fully off-centre page
+           content: (Data.Element) -> Content)
+```
+
+Built on the iOS 17 scroll APIs — `.scrollTargetBehavior(.viewAligned)` for the snap, `.containerRelativeFrame(.horizontal)` for one page per width, `.contentMargins(_:for: .scrollContent)` for the peek, and `.scrollTransition` for the scale/opacity falloff. `selection` is optional: bind it to drive a `DSPageControl` or to scroll programmatically, or leave it `nil` and the carousel tracks the centred page internally. Each settle fires a `.selection` haptic like a picker (the initial appear is skipped). Under Reduce Motion the scale falloff is pinned to 1 (scaling is the motion); the dimming stays as a focus cue. Distinct from `DSHorizontalScroll`, which is a free-scrolling, non-snapping row.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.
