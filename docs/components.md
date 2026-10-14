@@ -201,6 +201,26 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 
 ---
 
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`. Snapping, peeking horizontal carousel with a depth transition.
+
+```swift
+// Bound: drive / observe the centred item from outside.
+DSCarousel(_ items: [Item], selection: Binding<Item.ID?>,
+           height: CGFloat = 220, spacing: DSSpacing.md, sidePeek: DSSpacing.xl,
+           minScale: CGFloat = 0.9, minOpacity: Double = 0.55,
+           showsPageControl: Bool = true, haptics: Bool = true,
+           content: (Item) -> some View)
+
+// Self-managed: same, without the selection binding.
+DSCarousel(_ items: [Item], height: ... , content: (Item) -> some View)
+```
+
+Built on the native iOS 17 scroll stack: `scrollTargetLayout()` + `.scrollTargetBehavior(.viewAligned)` for the snap, `.scrollPosition(id:anchor: .center)` for the live centred item, and `.scrollTransition` for the depth — the centred item sits at full size while neighbours fall to `minScale` / `minOpacity`. `sidePeek` sets how much of the neighbours shows (items are framed to `containerWidth − 2·sidePeek`). Each settle fires a `.selection` tick (the initial layout is silent). An optional `DSPageControl` beneath reflects the live page (indicator only, not tappable). `Item` must be `Identifiable`. Under Reduce Motion the snapping stays but neighbours settle at full size and opacity. `selection` is two-way: set it to scroll programmatically (`springSmooth`), read it to react to paging. Items are framed to a fixed `height`, so size the row rather than relying on intrinsic content height.
+
+---
+
 ## Progress  ✅ 🧪 (colors)
 
 `Animation/DSProgressAnimation.swift`.
