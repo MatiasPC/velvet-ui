@@ -9,6 +9,14 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// A featured card for the carousel section.
+private struct CatalogSlide: Identifiable {
+    let id = UUID()
+    let title: String
+    let subtitle: String
+    let symbol: String
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -29,6 +37,14 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var carouselSelection: UUID?
+
+    private let carouselSlides: [CatalogSlide] = [
+        CatalogSlide(title: "Glass over gradient", subtitle: "The Velvet surface language", symbol: "square.stack.3d.up.fill"),
+        CatalogSlide(title: "Springs, not ramps", subtitle: "Every touch answers back", symbol: "waveform.path"),
+        CatalogSlide(title: "No borders. Ever.", subtitle: "Edges are light, not strokes", symbol: "sparkles"),
+        CatalogSlide(title: "Tokens only", subtitle: "One knob re-themes the tree", symbol: "paintpalette.fill")
+    ]
 
     var body: some View {
         NavigationStack {
@@ -272,6 +288,23 @@ struct ComponentCatalog: View {
                             )
                         }
                         .frame(maxWidth: .infinity)
+                    }
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    DSCarousel(carouselSlides, selection: $carouselSelection, height: 160) { slide in
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Image(systemName: slide.symbol)
+                                .font(.system(size: 28))
+                                .foregroundStyle(theme.gradient.accent)
+                            Spacer(minLength: 0)
+                            Text(slide.title).ds(.title3)
+                            Text(slide.subtitle).ds(.callout, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .padding(DSSpacing.lg)
+                        .dsSurface(.glass, radius: DSRadius.card)
                     }
                 }
 
