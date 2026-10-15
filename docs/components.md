@@ -297,6 +297,31 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## DSScrollReveal  ✅
+
+`Animation/DSScrollReveal.swift`. Scroll-linked entrance built on iOS 17's `scrollTransition`: content fades, rises, scales and softens as it crosses the viewport edges, resting while centred — the "cards settle into place" feel of the App Store / Apple Music.
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View
+// DSScrollRevealIntensity: .subtle · .medium · .strong
+```
+
+Apply to each item inside a `ScrollView` (a `LazyVStack`/`LazyHStack` row, a card, a media tile):
+
+```swift
+ScrollView {
+    LazyVStack(spacing: DSSpacing.md) {
+        ForEach(items) { item in
+            DSCard { … }.dsScrollReveal()
+        }
+    }
+}
+```
+
+The scroll-driven sibling of `dsStaggerIn(index:)`: use `dsStaggerIn` for content already on screen at mount (fires once, sequenced by index); use `dsScrollReveal` for long lists that should react continuously as the user scrolls (re-reveals each time an item passes an edge, no index needed). Under Reduce Motion the crossfade stays (opacity is not motion) while scale, lift and blur pin at rest so nothing travels.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
