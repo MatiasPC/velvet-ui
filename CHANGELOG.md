@@ -5,6 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
+- `DSScrollReveal` (`.dsScrollReveal(_ intensity:)`): scroll-linked entrance built on iOS 17's `scrollTransition` — content fades, rises, scales and softens as it crosses the viewport edges, resting while centred. `DSScrollRevealIntensity` has `.subtle`, `.medium` (default) and `.strong`. The scroll-driven sibling of `dsStaggerIn(index:)`; honours Reduce Motion by keeping the crossfade while pinning scale, lift and blur at rest. Demoed in a new `ComponentCatalog` "Scroll Reveal" section.
 - `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`. Replaces the throwaway `Examples/MotionReview/` harness.
 - `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
 - `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).

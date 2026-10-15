@@ -497,6 +497,25 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(spacing: DSSpacing.md) {
+                        Text("Scroll the catalog — each tile fades, rises and scales as it crosses the edges.")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ForEach(["Overview", "Details", "Activity"], id: \.self) { title in
+                            DSCard {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                    Text(title).ds(.title3)
+                                    Text("dsScrollReveal() — scroll-linked entrance")
+                                        .ds(.callout, color: DSColors.textSecondary)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .dsScrollReveal()
+                        }
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
