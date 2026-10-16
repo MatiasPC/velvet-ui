@@ -27,6 +27,8 @@ struct ComponentCatalog: View {
     @State private var sweepOn = true
     @State private var quantity = 2
     @State private var bulk = 25
+    @State private var volume: Double = 0.6
+    @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
 
@@ -432,6 +434,36 @@ struct ComponentCatalog: View {
                         VStack(alignment: .leading, spacing: DSSpacing.md) {
                             DSStepper(value: $quantity)
                             DSStepper(value: $bulk, in: 0...100, step: 5)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Slider
+                section("Slider") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                HStack {
+                                    Text("Volume").ds(.footnote, color: DSColors.textSecondary)
+                                    Spacer()
+                                    Text("\(Int(volume * 100))%").ds(.numeric)
+                                }
+                                DSSlider(value: $volume)
+                            }
+
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                HStack {
+                                    Text("Max price — snaps in 25s")
+                                        .ds(.footnote, color: DSColors.textSecondary)
+                                    Spacer()
+                                    Text("$\(Int(priceLimit))").ds(.numeric)
+                                }
+                                DSSlider(value: $priceLimit, in: 0...500, step: 25)
+                            }
+
+                            DSSlider(value: .constant(0.5), accent: DSColors.secondary)
+                                .disabled(true)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }

@@ -279,6 +279,18 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSSlider  ✅
+
+`Components/DSSlider.swift`. Continuous value control on a glass track — the input Stepper/Rating/Toggle (all discrete) left uncovered.
+
+```swift
+DSSlider(value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double? = nil, accent: Color? = nil, haptics: Bool = true)
+```
+
+A slim `theme.subtleFill` track, an accent fill that trails to the knob's centre, and a white knob (`palette.textOnPrimary`, like DSToggle) that lifts `1.12×` and grows a diffuse accent halo (the focus-glow recipe) while grabbed. The knob tracks the finger 1:1 and a tap anywhere jumps to that spot (`minimumDistance: 0`); the touch travel is inset by the knob radius at each end so finger and knob centre agree. `step` nil is continuous; a positive `step` snaps and fires a `.selection` ratchet tick per notch. Either way a single `.rigid` detent fires the moment travel reaches a bound (re-arms when it leaves), so a continuous drag never spams haptics. The grab lift is gated on Reduce Motion (the knob still follows the finger — that *is* the interaction); `.disabled(true)` dims to 0.5 and drops the gesture. Exposes `.accessibilityAdjustableAction` (step, or `span/10` when continuous) and reads back a percentage for the default `0...1` or the raw value otherwise. Show your own visible read-out alongside it, the way `DSRating`'s call sites do.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
