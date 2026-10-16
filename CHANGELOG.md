@@ -16,6 +16,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSSlider`: continuous value control on a glass track (`value:in:step:accent:haptics:`) — the input DSStepper/DSRating/DSToggle (all discrete) left uncovered. Accent fill trails a white knob that lifts and grows a focus-glow halo on grab; tap-to-position; `.selection` tick per `step` notch and one `.rigid` detent at each bound, with continuous sliders silent in between so a drag never spams haptics. Grab lift settles under Reduce Motion (the knob still follows the finger); `.accessibilityAdjustableAction` for VoiceOver.
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
