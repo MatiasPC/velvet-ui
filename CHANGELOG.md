@@ -13,6 +13,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
 - `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
 - `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
+- `DSHoldToConfirm`: press-and-hold confirmation control, the companion to `DSSlideToConfirm` (hold gates on time, slide gates on gesture). A progress ring charges around a glass pill over `duration`; the charge is timed by a cancellable `Task` so an early release reliably cancels. Ramped `.soft` detents through the hold, `.success` on completion, `.light` on cancel. Honors the accent-role rules for the filled label, exposes an `.accessibilityAction` for VoiceOver, and settles filled with a check (re-mount with `.id` to reset).
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.

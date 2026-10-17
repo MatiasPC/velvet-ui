@@ -29,6 +29,8 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var holdAttempt = 0
+    @State private var holdDeleteAttempt = 0
 
     var body: some View {
         NavigationStack {
@@ -407,6 +409,26 @@ struct ComponentCatalog: View {
                         DSButton("Reset payments", variant: .ghost, size: .small) {
                             paidAttempt += 1
                             refusedAttempt += 1
+                        }
+                    }
+                }
+
+                // MARK: - Hold to Confirm
+                section("Hold to Confirm") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSHoldToConfirm("Hold to confirm", icon: "hand.tap") { }
+                            .id(holdAttempt)
+                        DSHoldToConfirm(
+                            "Hold to delete",
+                            icon: "trash",
+                            confirmedLabel: "Deleted",
+                            accent: DSColors.error
+                        ) { }
+                        .id(holdDeleteAttempt)
+
+                        DSButton("Reset holds", variant: .ghost, size: .small) {
+                            holdAttempt += 1
+                            holdDeleteAttempt += 1
                         }
                     }
                 }
