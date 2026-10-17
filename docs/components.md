@@ -243,6 +243,24 @@ Under Reduce Motion the knob and trail still move, but the per-letter label stag
 
 ---
 
+## DSHoldToConfirm  ✅
+
+`Components/DSHoldToConfirm.swift`. Press-and-hold confirmation control — the companion to `DSSlideToConfirm`. Where a slide gates an action behind a deliberate *gesture*, a hold gates it behind deliberate *time*.
+
+```swift
+DSHoldToConfirm(_ label: String, icon: String? = nil, confirmedLabel: String = "Confirmed", duration: Double = 1.2, accent: Color? = nil, isFullWidth: Bool = true, onConfirm: @escaping () -> Void)
+```
+
+A glass pill (`glassThin`, `DSRadius.chip`). While a finger is down, a progress ring charges around the pill over `duration`, drawn as a `trim` of the capsule — so at rest (`progress == 0`) it draws nothing and there is no border. The ring is the theme gradient by default, or a solid `accent` when one is passed. The moment the ring closes, the whole pill fills `accent ?? theme.accent`, the label swaps to a checkmark and `confirmedLabel`, and the action runs. Lifting before the ring closes cancels: the ring springs back and `onConfirm` never runs.
+
+The charge clock is a cancellable `Task`, not the ring animation — a lifted finger cancels it so the confirmation can't slip through on a fractional-second overshoot. A `.soft` detent fires on touch-down and at each of 6 steps, ramped 0.2 → 0.6 so the ring feels like it is tightening; completing fires `.success`, cancelling fires `.light`. The press dips the pill with `DSPress.scale`.
+
+Per the accent-role rules, the filled label uses `theme.onAccent` when the fill is the theme accent and `palette.textOnPrimary` (white) when the caller overrode `accent` with a status color; at rest the label is `theme.ink` on glass. There is no ambient loop to suppress for Reduce Motion — the ring is essential progress feedback — but the spring-back and fill collapse to `DSAnimation.fast` under it. VoiceOver gets an `.accessibilityAction` so a single activation confirms without a timed hold. No reset API — re-mount with `.id(attempt)` to run it again.
+
+Pick a slide when the risk is an accidental touch (a payment, a destructive button a thumb could brush); pick a hold when the risk is sustained intent (power off, hold-to-record) or when one hand is all the user has.
+
+---
+
 ## DSThinkingIndicator  ✅
 
 `Components/DSThinkingIndicator.swift`. Ambient indicator for AI and background processing states.
