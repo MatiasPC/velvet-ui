@@ -497,6 +497,31 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("Scroll the row — cards swell at the centre, recede at the edges")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ScrollView(.horizontal) {
+                            HStack(spacing: DSSpacing.md) {
+                                ForEach(0..<5, id: \.self) { index in
+                                    DSCard {
+                                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                            Text("Card \(index + 1)").ds(.title3)
+                                            Text("Centre me").ds(.callout, color: DSColors.textSecondary)
+                                        }
+                                        .frame(width: 160, alignment: .leading)
+                                    }
+                                    .dsScrollReveal(.strong)
+                                }
+                            }
+                            .scrollTargetLayout()
+                        }
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollIndicators(.hidden)
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
