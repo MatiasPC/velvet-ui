@@ -297,6 +297,21 @@ Reach for `.dsBreathe()` on any element that should read as "alive and waiting" 
 
 ---
 
+## Scroll reveal  ✅
+
+`Animation/DSScrollEffects.swift`. The scroll-coupled member of the motion vocabulary: a view's prominence tracks its position in the enclosing `ScrollView`, built on iOS 17's `scrollTransition`. Unlike `dsPopIn` / `dsStaggerIn` (one-shot, `onAppear`), it is bidirectional and reversible — a card swells to full presence at the centre and recedes toward the edges, and does it again in reverse when the user scrolls back.
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View
+// DSScrollRevealIntensity: .subtle (scale 0.96 · opacity 0.65)
+//                          .medium (0.90 · 0.40, default)
+//                          .strong (0.80 · 0.15)
+```
+
+Axis is inferred from the scroll view, so one modifier covers both a vertical feed (`.medium` on each row) and a horizontal `.viewAligned` carousel (`.strong` on each card). Only scale and opacity are touched — both are render transforms, so nothing reflows and neighbours never shift. Ambient, so no haptics (same call as `DSThinkingIndicator`: not an interaction). Under Reduce Motion it settles at full presence for every item rather than dimming the off-centre ones, which would otherwise lower contrast for the people the setting protects.
+
+---
+
 ## Layout  ✅
 
 `DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.

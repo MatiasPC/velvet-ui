@@ -87,4 +87,28 @@ final class DSMotionTests: XCTestCase {
         XCTAssertGreaterThan(DSMotion.jiggleDuration, 0.2)
         XCTAssertLessThan(DSMotion.jiggleDuration, 0.8)
     }
+
+    // MARK: - Scroll Reveal
+
+    /// Off-centre items recede — never grow — and a stronger intensity pulls them
+    /// further back, while the strongest still leaves something on screen.
+    func testScrollRevealIntensitiesRecedeAndStayOrdered() {
+        let scales = [
+            DSScrollRevealIntensity.subtle.minScale,
+            DSScrollRevealIntensity.medium.minScale,
+            DSScrollRevealIntensity.strong.minScale
+        ]
+        XCTAssertEqual(scales, scales.sorted(by: >), "a stronger reveal recedes further")
+        XCTAssertLessThan(scales[0], 1, "an off-centre item shrinks toward rest, never past it")
+        XCTAssertGreaterThan(scales[2], 0, "even the strongest reveal keeps the card on screen")
+
+        let opacities = [
+            DSScrollRevealIntensity.subtle.minOpacity,
+            DSScrollRevealIntensity.medium.minOpacity,
+            DSScrollRevealIntensity.strong.minOpacity
+        ]
+        XCTAssertEqual(opacities, opacities.sorted(by: >), "a stronger reveal fades further")
+        XCTAssertLessThan(opacities[0], 1, "an off-centre item dims below full presence")
+        XCTAssertGreaterThan(opacities[2], 0, "even the strongest reveal never fully hides a card")
+    }
 }
