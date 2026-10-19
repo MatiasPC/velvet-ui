@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var statsFlipped = false
 
     var body: some View {
         NavigationStack {
@@ -497,6 +498,24 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Flip Card
+                section("Flip Card") {
+                    DSFlipCard {
+                        flipFace(title: "Aurora", caption: "Tap to reveal the hex")
+                    } back: {
+                        flipFace(title: "#7F5AF0", caption: "Violet → fuchsia")
+                    }
+
+                    DSFlipCard(isFlipped: $statsFlipped, axis: .vertical, tapToFlip: false) {
+                        flipFace(title: "1 248", caption: "Steps today")
+                    } back: {
+                        flipFace(title: "+12%", caption: "vs. yesterday")
+                    }
+                    DSButton(statsFlipped ? "Show total" : "Show change", size: .small) {
+                        statsFlipped.toggle()
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
@@ -504,6 +523,16 @@ struct ComponentCatalog: View {
     }
 
     // MARK: - Helpers
+
+    private func flipFace(title: String, caption: String) -> some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                Text(title).ds(.title2)
+                Text(caption).ds(.callout, color: DSColors.textSecondary)
+            }
+            .frame(maxWidth: .infinity, minHeight: DSSpacing.xxl, alignment: .leading)
+        }
+    }
 
     @ViewBuilder
     private func section(_ title: String, @ViewBuilder content: () -> some View) -> some View {

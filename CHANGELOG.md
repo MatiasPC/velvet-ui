@@ -16,6 +16,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
 - `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
 - `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSFlipCard`: two-faced surface that turns over in 3D (`rotation3DEffect`) to reveal its back — flashcards, stat tiles, "tap to reveal". Generic over two `View` faces; uncontrolled (tap-to-flip) and controlled (`isFlipped` binding) inits, `.horizontal` / `.vertical` axis, `.rigid` haptic on flip. Only the visible face takes hits and is seen by VoiceOver; a "Flip" accessibility action when tappable. Reduce Motion drops the 3D turn for a flat cross-fade.
+- `DSFlipAxis` enum: `.horizontal` (turns around Y) and `.vertical` (turns around X).
 - `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 

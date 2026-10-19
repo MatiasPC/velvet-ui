@@ -279,6 +279,27 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSFlipCard  ✅
+
+`Components/DSFlipCard.swift`. A two-faced surface that turns over in 3D to reveal its back — flashcards, stat tiles that flip to a breakdown, loyalty cards, "tap to reveal". Generic over two `View` faces, so it stays content-agnostic; the glass look comes from whatever you put on each side (usually a `DSCard`).
+
+```swift
+// Uncontrolled — owns its state, flips on tap
+DSFlipCard(axis: DSFlipAxis = .horizontal, haptic: DSHapticStyle = .rigid) { front } back: { back }
+
+// Controlled — you drive the turn through the binding
+DSFlipCard(isFlipped: Binding<Bool>, axis: DSFlipAxis = .horizontal,
+           haptic: DSHapticStyle = .rigid, tapToFlip: Bool = true) { front } back: { back }
+
+enum DSFlipAxis { case horizontal, vertical }   // Y axis (left-right) · X axis (top-bottom)
+```
+
+Both faces live in one `ZStack` that rotates 0 → 180° with `DSAnimation.springSmooth`. The back is pre-rotated a half-turn so it reads the right way round once flipped, and each face fades out as it turns away — the swap lands at the 90° midpoint where the card is edge-on, so the crossfade is hidden behind the turn rather than seen as a dissolve. Only the face in view takes hits and is visible to VoiceOver, so interactive content on the hidden side can't be reached by accident. A `haptic` (default `.rigid`) fires on every flip the card initiates.
+
+`tapToFlip` is on by default; keep it for the uncontrolled flashcard case, turn it off in controlled mode when a face has its own controls and only the binding should flip the card. VoiceOver gets a "Flip" action and the `.isButton` trait whenever tapping flips. Under Reduce Motion the 3D rotation is dropped and the two faces cross-fade flat (the back is not pre-rotated in that case, so it never reads mirrored). No internal colors — theming comes entirely from the face content.
+
+---
+
 ## Motion primitives  ✅
 
 `Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
