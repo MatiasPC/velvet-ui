@@ -243,6 +243,22 @@ Under Reduce Motion the knob and trail still move, but the per-letter label stag
 
 ---
 
+## DSSuccessCheck  ✅
+
+`Components/DSSuccessCheck.swift`. Standalone animated "done" seal for the success state a flow hands off to — payment cleared, file uploaded, form saved.
+
+```swift
+DSSuccessCheck(size: CGFloat = DSSpacing.massive, tint: Color? = nil, haptic: DSHapticStyle? = .success, accessibilityLabel: String = "Success")
+```
+
+A soft tinted disc (`tint ?? palette.success`, filled at 0.15) springs in with `springBouncy`, a checkmark strokes itself across it (`DSAnimation.normal`, delayed one beat behind the pop) and a halo ring ripples outward once and fades (`DSAnimation.slow`). The mark is drawn by trimming a three-point `Path` `0 → progress` before stroking it with a round cap — not an SF Symbol, so it draws like a hand. The `haptic` (`.success` by default) fires once as the seal lands; pass `nil` for a decorative mark.
+
+It plays once on appear — mounting it is the trigger, so there is no play/stop API. Re-mount with `.id(attempt)` to replay (the same reset `DSSlideToConfirm` uses). Distinct from the tiny SF-Symbol check inside a `DSSlideToConfirm` knob: this is the screen-worthy, reusable version.
+
+Under Reduce Motion nothing travels — the mark is already fully drawn and only fades in, and the halo is skipped — but the haptic still fires. VoiceOver reads `accessibilityLabel` and the element is marked an image.
+
+---
+
 ## DSThinkingIndicator  ✅
 
 `Components/DSThinkingIndicator.swift`. Ambient indicator for AI and background processing states.
