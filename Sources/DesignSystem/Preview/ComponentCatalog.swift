@@ -29,6 +29,7 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var successAttempt = 0
 
     var body: some View {
         NavigationStack {
@@ -408,6 +409,25 @@ struct ComponentCatalog: View {
                             paidAttempt += 1
                             refusedAttempt += 1
                         }
+                    }
+                }
+
+                // MARK: - Success Check
+                section("Success Check") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.xl) {
+                                DSSuccessCheck()
+                                    .id(successAttempt)
+                                DSSuccessCheck(size: DSSpacing.huge, tint: DSColors.secondary, haptic: nil)
+                                    .id(successAttempt)
+                            }
+                            Text("Saved").ds(.title3)
+                            DSButton("Replay", variant: .ghost, size: .small) {
+                                successAttempt += 1
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 }
 
