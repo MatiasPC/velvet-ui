@@ -5,6 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
+- `DSTiltCard` — a glass card that leans in 3D toward the finger (~12° peak, shallow 0.5 perspective) with a white specular sheen tracking the lean; `.soft` haptic on touch-down, snappy `DSAnimation.interactive` follow and a `springGentle` return to flat. Wraps arbitrary content (`padding:`, `cornerRadius:`). Reduce Motion drops the lean to a plain resting card; Reduce Transparency falls back to a solid surface. `ComponentCatalog` gains a Tilt Card section.
 - `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`. Replaces the throwaway `Examples/MotionReview/` harness.
 - `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
 - `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).
