@@ -13,7 +13,7 @@ A slide-to-confirm gate for irreversible actions like payments. The label dissol
 .product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`.dsTheme(DSTheme(gradient: .sunset))`); see [the README](../../README.md#install) and its [quick start](../../README.md#quick-start) for the full theming setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -101,4 +101,4 @@ There is no reset API; re-mount with `.id(attempt)` to run it again.
 
 - [DSButton](DSButton.md)
 - [DSToggle](DSToggle.md)
-- [All components](../components.md) · [Theming](../../README.md#quick-start)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)

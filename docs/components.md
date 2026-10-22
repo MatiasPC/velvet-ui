@@ -1,5 +1,7 @@
 # Components reference
 
+> Looking for usage? Each component has a page with a copyable snippet, parameters and accessibility notes in [`docs/components/`](components/). This file is the maintainers' reference: status, restyle backlog and implementation notes.
+
 One section per component: what it is for, the public API, variants and states, motion and haptics, theming notes, and anything known to be missing. Keep this file in sync with the code — a component change without a doc change is not done.
 
 Conventions that apply to every component:
@@ -140,7 +142,7 @@ DSToast(_ message: String, type: DSToastType = .info)   // .success .error .warn
 DSEmptyState(icon:, title:, message:, actionTitle: String? = nil, action: (() -> Void)? = nil)
 ```
 
-Toast already sits on `.ultraThinMaterial` with `.lg` shadow; `DSToastType.haptic` maps to the matching haptic for the caller to fire on presentation. Empty state uses a `DSButton` for the CTA.
+Toast already sits on `.ultraThinMaterial` with `.lg` shadow; `DSToastType.haptic` is internal; callers fire the matching haptic themselves on presentation (mapping in [DSToast.md](components/DSToast.md)). Empty state uses a `DSButton` for the CTA.
 
 ---
 

@@ -98,5 +98,5 @@ struct ToastDemo: View {
 
 - [DSEmptyState](DSEmptyState.md)
 - [Progress](Progress.md) for long-running work
-- [DSButton](../components.md#dsbutton) as the typical trigger
+- [DSButton](DSButton.md) as the typical trigger
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)

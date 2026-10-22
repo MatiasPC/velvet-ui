@@ -146,5 +146,5 @@ struct CardStylesDemo: View {
 
 - [DSListCell](DSListCell.md) for rows inside a card
 - [DSBadge](DSBadge.md) for status labels
-- [DSButton](../components.md#dsbutton) for actions
+- [DSButton](DSButton.md) for actions
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
