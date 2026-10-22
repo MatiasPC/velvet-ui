@@ -88,7 +88,7 @@ public struct DSThinkingIndicator: View {
 
     private var symbolView: some View {
         Image(systemName: symbol)
-            .font(DSTextStyle.footnote.font)
+            .dsFont(.footnote)
             .foregroundStyle(theme.gradient.horizontalGradient)
             .symbolEffect(.breathe.byLayer, isActive: !reduceMotion)
             .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
