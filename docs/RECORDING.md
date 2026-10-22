@@ -18,9 +18,11 @@ scripts/record-stage.sh DSToggle 8 sunset dark
 
 It boots the simulator (`$VELVET_SIM`, default `iPhone 16 Pro`), overrides the
 status bar (9:41, full battery), builds and installs the Gallery, launches the
-stage with autoplay on, records, and writes `docs/media/<StageID>.mp4` and
-`docs/media/<StageID>.gif`. Stages that need a gesture (see the table) cannot
-play themselves: use the manual path.
+stage with autoplay on, records, and writes the X clip to `clips/<StageID>.mp4`
+(gitignored) and the README GIF to `docs/media/<StageID>.gif`. Stages that need a
+gesture (see the table) don't play themselves: when the script prints
+`==> Recording`, perform the gesture in the Simulator window with the mouse, or
+use the manual path.
 
 `VELVET_RAW_ONLY=/path/clip.mov` skips ffmpeg and just saves the raw recording.
 
@@ -73,7 +75,7 @@ CROP="crop=iw:trunc(iw*16/9/2)*2:0:(ih-trunc(iw*16/9/2)*2)/2"
 
 # MP4 for X
 ffmpeg -i raw.mov -vf "$CROP,scale=1080:1920:flags=lanczos,fps=30" \
-  -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an docs/media/DSToggle.mp4
+  -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an clips/DSToggle.mp4
 
 # GIF for the README
 ffmpeg -i raw.mov -vf "$CROP,fps=20,scale=480:-2:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5" \
@@ -87,8 +89,9 @@ ffmpeg -i raw.mov -vf "$CROP,fps=20,scale=480:-2:flags=lanczos,split[a][b];[a]pa
 | X | vertical 9:16 MP4, 1080x1920, H.264, 30 fps, 5-10 s, no audio, at most 512 MB |
 | README GIF | 480 px wide, 20 fps, loops forever, at most 5 MB |
 
-Name files `docs/media/<StageID>.gif` (and `.mp4`). Do not commit recordings
-unless you mean to; the script writes them into `docs/media/`.
+Name files after the stage ID. GIFs go in `docs/media/<StageID>.gif` and are
+committed: they replace the placeholders the README and component pages show.
+MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit them.
 
 ## Stages
 

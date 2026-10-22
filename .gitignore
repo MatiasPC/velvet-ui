@@ -17,3 +17,6 @@ AGENTS.md
 .claude/
 .opencode/
 docs/superpowers/
+
+# Recorded MP4 clips for posting (scripts/record-stage.sh)
+clips/

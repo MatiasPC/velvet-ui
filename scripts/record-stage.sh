@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Record a VelvetGallery recording stage in the iOS Simulator and export an
-# X-ready MP4 and a README GIF to docs/media/<StageID>.{mp4,gif}.
+# X-ready MP4 to clips/<StageID>.mp4 (gitignored) and a README GIF to
+# docs/media/<StageID>.gif.
 #
 # Usage: scripts/record-stage.sh <StageID> [seconds=8] [background=neutral] [appearance=light]
 #   StageID     one of the IDs in docs/RECORDING.md (Hero, DSToggle, Motion, ...)
@@ -25,6 +26,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/Examples/VelvetGallery/VelvetGallery.xcodeproj"
 DERIVED="$ROOT/.build/gallery-record"
 OUT_DIR="$ROOT/docs/media"
+CLIPS_DIR="$ROOT/clips"   # gitignored: MP4s are for posting, not for the repo
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
@@ -78,7 +80,7 @@ xcrun simctl launch "$SIM" "$BUNDLE_ID" \
   -VelvetAppearance "$APPEARANCE" -VelvetStageAutoplay YES >/dev/null
 sleep 4   # let the first frame settle before recording
 
-echo "==> Recording ${SECONDS_TO_RECORD}s"
+echo "==> Recording ${SECONDS_TO_RECORD}s (interact in the Simulator window now for gesture stages)"
 RAW="$TMP/raw.mov"
 xcrun simctl io "$SIM" recordVideo --codec=h264 --force "$RAW" >/dev/null 2>&1 &
 REC_PID=$!
@@ -94,14 +96,14 @@ if [ -n "$RAW_ONLY" ]; then
   exit 0
 fi
 
-mkdir -p "$OUT_DIR"
+mkdir -p "$OUT_DIR" "$CLIPS_DIR"
 # Center crop to 9:16 (portrait). Source is taller than 9:16, so keep full width.
 CROP="crop=iw:trunc(iw*16/9/2)*2:0:(ih-trunc(iw*16/9/2)*2)/2"
 
-echo "==> Writing $OUT_DIR/$STAGE.mp4"
+echo "==> Writing $CLIPS_DIR/$STAGE.mp4"
 ffmpeg -y -loglevel error -i "$RAW" \
   -vf "$CROP,scale=1080:1920:flags=lanczos,fps=30" \
-  -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an "$OUT_DIR/$STAGE.mp4"
+  -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an "$CLIPS_DIR/$STAGE.mp4"
 
 echo "==> Writing $OUT_DIR/$STAGE.gif"
 ffmpeg -y -loglevel error -i "$RAW" \
@@ -115,4 +117,4 @@ fi
 
 xcrun simctl status_bar "$SIM" clear >/dev/null 2>&1 || true
 echo "Done:"
-ls -lh "$OUT_DIR/$STAGE.mp4" "$OUT_DIR/$STAGE.gif"
+ls -lh "$CLIPS_DIR/$STAGE.mp4" "$OUT_DIR/$STAGE.gif"
