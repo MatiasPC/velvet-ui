@@ -27,6 +27,15 @@ public enum DSToastType {
         }
     }
 
+    var accessibilityName: String {
+        switch self {
+        case .success: return "Success"
+        case .error:   return "Error"
+        case .warning: return "Warning"
+        case .info:    return "Info"
+        }
+    }
+
     var haptic: DSHapticStyle {
         switch self {
         case .success: return .success
@@ -53,6 +62,7 @@ public struct DSToast: View {
             Image(systemName: type.icon)
                 .foregroundStyle(type.color(in: theme.palette))
                 .font(.system(size: 18, weight: .semibold))
+                .accessibilityHidden(true)
 
             Text(message)
                 .ds(.callout)
@@ -65,6 +75,15 @@ public struct DSToast: View {
         .clipShape(RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous))
         .dsShadow(.lg)
         .padding(.horizontal, DSSpacing.screenHorizontal)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Self.accessibilityLabel(message: message, type: type))
+        .onAppear {
+            AccessibilityNotification.Announcement(Self.accessibilityLabel(message: message, type: type)).post()
+        }
+    }
+
+    static func accessibilityLabel(message: String, type: DSToastType) -> String {
+        "\(type.accessibilityName): \(message)"
     }
 }
 

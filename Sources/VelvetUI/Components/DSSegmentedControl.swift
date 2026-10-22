@@ -69,6 +69,7 @@ public struct DSSegmentedControl<Value: Hashable>: View {
         }
         .padding(style == .pill ? DSSpacing.xxs : 0)
         .background(track)
+        .accessibilityElement(children: .contain)
     }
 
     // MARK: - Segments
@@ -86,6 +87,7 @@ public struct DSSegmentedControl<Value: Hashable>: View {
                 if let icon = segment.icon {
                     Image(systemName: icon)
                         .font(.system(size: 13, weight: .semibold))
+                        .accessibilityHidden(!segment.title.isEmpty)
                 }
                 Text(segment.title)
                     .font(DSTextStyle.buttonSmall.font)
@@ -99,6 +101,8 @@ public struct DSSegmentedControl<Value: Hashable>: View {
             .animation(DSAnimation.micro, value: isSelected)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(segment.title)
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 
     // MARK: - Selection Indicator

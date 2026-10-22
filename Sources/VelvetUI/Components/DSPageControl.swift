@@ -62,6 +62,26 @@ public struct DSPageControl: View {
             }
         }
         .animation(DSAnimation.springSmooth, value: currentPage)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Page")
+        .accessibilityValue(Self.accessibilityValue(currentPage: currentPage, numberOfPages: numberOfPages))
+        .accessibilityAdjustableAction { direction in
+            guard allowsTap else { return }
+            switch direction {
+            case .increment: select(Self.clampedPage(currentPage + 1, numberOfPages: numberOfPages))
+            case .decrement: select(Self.clampedPage(currentPage - 1, numberOfPages: numberOfPages))
+            @unknown default: break
+            }
+        }
+    }
+
+    /// 1-based "N of M".
+    static func accessibilityValue(currentPage: Int, numberOfPages: Int) -> String {
+        "\(currentPage + 1) of \(numberOfPages)"
+    }
+
+    static func clampedPage(_ page: Int, numberOfPages: Int) -> Int {
+        min(max(page, 0), max(numberOfPages - 1, 0))
     }
 
     private func select(_ index: Int) {

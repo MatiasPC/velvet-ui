@@ -117,8 +117,7 @@ public struct DSRating: View {
         .animation(DSAnimation.springBouncy, value: displayValue)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Rating")
-        .accessibilityValue("\(formatted(displayValue)) out of \(count) stars")
-        .accessibilityAddTraits(isEditable ? .isButton : [])
+        .accessibilityValue(Self.accessibilityValue(rating: displayValue, count: count))
         .accessibilityAdjustableAction { direction in
             guard isEditable else { return }
             switch direction {
@@ -212,7 +211,11 @@ public struct DSRating: View {
         }
     }
 
-    private func formatted(_ value: Double) -> String {
+    static func accessibilityValue(rating: Double, count: Int) -> String {
+        "\(formatted(rating)) out of \(count) stars"
+    }
+
+    private static func formatted(_ value: Double) -> String {
         value == value.rounded() ? String(Int(value)) : String(format: "%.1f", value)
     }
 }

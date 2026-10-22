@@ -82,7 +82,8 @@ public struct DSToggle: View {
         }
         .buttonStyle(.plain)
         .opacity(isEnabled ? 1 : 0.5)
-        .accessibilityValue(isOn ? Text("On") : Text("Off"))
+        .accessibilityValue(Text(Self.accessibilityValue(isOn: isOn)))
+        .accessibilityAddTraits(.isToggle)
     }
 
     // MARK: - Track + Knob
@@ -101,6 +102,8 @@ public struct DSToggle: View {
         .frame(width: size.trackWidth, height: size.trackHeight)
         .animation(DSAnimation.springSnappy, value: isOn)
     }
+
+    static func accessibilityValue(isOn: Bool) -> String { isOn ? "On" : "Off" }
 
     private func toggle() {
         guard isEnabled else { return }

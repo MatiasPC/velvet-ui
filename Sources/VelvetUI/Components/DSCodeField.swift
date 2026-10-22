@@ -51,7 +51,8 @@ public struct DSCodeField: View {
                 .focused($isFocused)
                 .frame(width: 1, height: 1)
                 .opacity(0.01)
-                .accessibilityHidden(true)
+                .accessibilityLabel("Verification code")
+                .accessibilityValue(Self.accessibilityValue(code: code, length: length, state: state))
 
             // Visual digit boxes.
             HStack(spacing: DSSpacing.xs) {
@@ -60,6 +61,7 @@ public struct DSCodeField: View {
                 }
             }
             .modifier(DSCodeFieldShake(shakes: shakeTrigger))
+            .accessibilityHidden(true)
         }
         .contentShape(Rectangle())
         .onTapGesture { isFocused = true }
@@ -131,6 +133,19 @@ public struct DSCodeField: View {
     }
 
     // MARK: - Helpers
+
+    /// e.g. "1 2 3, 3 of 6 digits", plus ", incorrect code" / ", verified".
+    static func accessibilityValue(code: String, length: Int, state: DSCodeFieldState) -> String {
+        let digits = code.map(String.init).joined(separator: " ")
+        var value = digits.isEmpty ? "" : "\(digits), "
+        value += "\(code.count) of \(length) digits"
+        switch state {
+        case .normal:  break
+        case .error:   value += ", incorrect code"
+        case .success: value += ", verified"
+        }
+        return value
+    }
 
     private func character(at index: Int) -> Character? {
         guard index < code.count else { return nil }

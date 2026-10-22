@@ -253,7 +253,12 @@ public struct DSSlideToConfirm: View {
         .gesture(dragGesture, including: isInteractive ? .all : .none)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(label)
-        .accessibilityHint("Swipe right to confirm")
+        .accessibilityHint(Self.accessibilityHint)
+        .accessibilityValue(Self.accessibilityValue(
+            isProcessing: phase == .committing || phase == .collapsing || phase == .processing,
+            isConfirmed: phase == .succeeded || phase == .vanishing || phase == .gone,
+            confirmedLabel: confirmedLabel
+        ))
         .accessibilityAddTraits(.isButton)
         .accessibilityAction {
             startConfirmation()
@@ -411,6 +416,15 @@ public struct DSSlideToConfirm: View {
     }
 
     // MARK: Choreography
+
+    static let accessibilityHint = "Double-tap to confirm"
+
+    /// Empty while idle/dragging/failing, "Processing" while awaiting the action,
+    /// the confirmed label once it succeeded.
+    static func accessibilityValue(isProcessing: Bool, isConfirmed: Bool, confirmedLabel: String) -> String {
+        if isConfirmed { return confirmedLabel }
+        return isProcessing ? "Processing" : ""
+    }
 
     private func startConfirmation() {
         guard isInteractive else { return }
