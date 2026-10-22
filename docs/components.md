@@ -65,6 +65,29 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSTiltCard  🧪
+
+`Components/DSTiltCard.swift`. A glass card that leans in 3D toward the finger, with a specular sheen tracking the lean — the "parallax / holographic card" effect on Velvet tokens. Wraps arbitrary content.
+
+```swift
+DSTiltCard(padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card) { content }
+```
+
+Surface: `.glass` + specular edge + `.md` shadow (the `.elevated` look). Everything visual derives from one state value — the finger position in the card's own space — mapped to `-1...1` per axis.
+
+Motion: a frozen feel (no knobs). Lean peaks at ~12° with a shallow 0.5 perspective; under the finger the card follows with `DSAnimation.interactive`, and on release a `DSAnimation.springGentle` floats it back to flat. Sheen is a white `RadialGradient` under the glass, centred on the touch, brightening with the lean (peak 0.32 light / 0.18 dark) and fading to clear at rest — never a border.
+
+Haptics: `.soft`, once, the instant the finger lands.
+
+Accessibility: Reduce Motion drops the lean entirely (plain resting glass card, no gesture); Reduce Transparency falls back to a solid surface via `dsSurface`. The card itself adds no accessibility traits — its `content` carries its own semantics.
+
+Notes: the drag uses `minimumDistance: 0`, so a press that starts on the card tilts rather than scrolls a surrounding `ScrollView` (same trade-off as `DSSlideToConfirm`). The lean/perspective/sheen constants are motion-shaping values with no token to borrow; they live in the file's private `Metrics`, justified the way `DSMotion` documents its bounds.
+
+Previews: light + dark on `.dsBackdrop()` (a loyalty-card layout and a stat card).
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.

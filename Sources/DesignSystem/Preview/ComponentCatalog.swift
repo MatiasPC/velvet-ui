@@ -158,6 +158,24 @@ struct ComponentCatalog: View {
                     DSImageCard(title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo")
                 }
 
+                // MARK: - Tilt Card
+                section("Tilt Card") {
+                    DSTiltCard(padding: DSSpacing.lg) {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            HStack {
+                                Text("VELVET").ds(.overline, color: theme.ink)
+                                Spacer()
+                                Image(systemName: "wave.3.right")
+                                    .foregroundStyle(theme.ink)
+                            }
+                            Text("Press and lean").ds(.title3)
+                            Text("Drag anywhere on the card — it tips toward your finger and a sheen tracks the lean.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Text Fields
                 section("Text Fields") {
                     DSCard {
