@@ -145,6 +145,8 @@ Shadow color is black except for `.glow`. `color(for:)` is scheme-aware; the mod
 | `numeric` | 17 semibold | Rounded, monospaced digits | 0 | Prices, counters inline |
 | `badge` | 11 bold | Rounded | 0 | Count badges |
 
+**Dynamic Type.** `.ds(_:)` / `.dsTextStyle(_:)` scale with the user's text size: each style scales along a system text style (`DSTextStyle.textStyle`, e.g. `body` -> `.body`, `hero` -> `.largeTitle`) via `@ScaledMetric`, and line spacing scales too. At the default size the output is identical to the old fixed fonts. `DSTextStyle.size/weight/design/textStyle` are public. `.dsFont(_:)` applies only the scaled font (no color, tracking or line spacing); `DSTextStyle.font` stays fixed-size. Fixed-height controls (DSButton, DSTextField, DSSearchBar, DSSegmentedControl, DSBadge/DSCountBadge, DSStepper, DSCodeField, DSSlideToConfirm) still use fixed fonts.
+
 Rule: numbers are always Rounded; titles are never Rounded. Max three styles per visual section.
 
 ## Motion

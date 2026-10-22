@@ -5,6 +5,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
+- `View.dsFont(_:)`: applies a text style's font scaled with Dynamic Type.
+- `DSTextStyle.size`, `.weight`, `.design`, `.textStyle` (the Dynamic Type curve) are now public.
 - `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`. Replaces the throwaway `Examples/MotionReview/` harness.
 - `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
 - `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).
@@ -21,6 +23,10 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
 
 ### Changed
+- Text styles (`.ds(_:)`, `.dsTextStyle(_:)`) now scale with Dynamic Type; identical at the default size. `DSTextStyle.font` stays fixed-size. `DSThinkingIndicator` scales; fixed-height controls do not yet.
+- VoiceOver: `DSToggle` has the toggle trait; `DSSegmentedControl` exposes one button per segment with selected state; `DSCodeField` is a single "Verification code" element reading the digits; `DSPageControl` is one adjustable "Page N of M" element; `DSToast` reads "<Type>: <message>" and announces on appear.
+- `DSSlideToConfirm`: accessibility hint is now "Double-tap to confirm" and it reports a value ("Processing" / confirmed label).
+- `DSRating` no longer carries the button trait (adjustable only).
 - **BREAKING:** the SwiftPM package, product and target are renamed from `DesignSystem` to **`VelvetUI`** (sources now live in `Sources/VelvetUI/`, tests in `Tests/VelvetUITests/`). Migrate with `import DesignSystem` → `import VelvetUI`, and in `Package.swift` depend on `.product(name: "VelvetUI", package: "velvet-ui")`. Xcode projects that added the package locally need the `DesignSystem` framework removed and `VelvetUI` added under the target's *Frameworks, Libraries, and Embedded Content*. Every type keeps its `DS` prefix; no symbol was renamed. The iOS build scheme is now `VelvetUI`.
 - `DSSlideToConfirm.onConfirm` is now `async throws`, so one closure carries a payment's latency and its outcome. The control spins while awaiting it (500ms floor, applied after the closure returns) and treats a thrown error as a refusal: `.error` haptic, then it re-opens for a retry. **Not source-breaking** — `() -> Void` is a subtype of `() async throws -> Void`, so existing call sites compile unchanged.
 - `DSSlideToConfirm` gains a `finish:` parameter, placed after `accent:` so no existing parameter changes label or position.

@@ -29,6 +29,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | Topic | What to know |
 |---|---|
 | `swift build` only builds macOS | The package targets iOS 18 + macOS 15. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme VelvetUI -destination 'generic/platform=iOS Simulator'`. |
+| `ScaledMetric` in a modifier init | `@ScaledMetric` set via `ScaledMetric(wrappedValue:relativeTo:)` in `init` (see `DSTextStyleModifier`), because the base size depends on the style, which is only known at init. Fixed-height controls still use `DSTextStyle.font` (fixed): larger text would clip in their fixed frames. They need layout changes (min-height + scaled padding) before they can scale. |
 | Haptics are a no-op on macOS | `DSHapticEngine` is guarded with `#if canImport(UIKit)`. Fine, just don't expect feedback in macOS previews. |
 | `@DSThemed` is `@MainActor` | It works in any `View` / `ViewModifier` body. It cannot live in an enum or a non-view struct; pass `theme.palette` into helpers instead (see `DSToastType.color(in:)`). |
 | Material over a saturated gradient | `.ultraThinMaterial` lets too much color through and secondary text loses contrast. Cards use `.thinMaterial` (`.glass`); reserve `.glassThin` for small floating elements. |

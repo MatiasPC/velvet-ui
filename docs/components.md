@@ -87,6 +87,8 @@ Pending restyle: background `subtleFill`, focus → `.dsFocusGlow(theme.ink)`, n
 
 `Components/DSCodeField.swift`. OTP / verification input.
 
+**Accessibility:** VoiceOver lands on the hidden field that owns the keyboard: "Verification code", value like "1 2 3, 3 of 6 digits" (+ ", incorrect code" / ", verified"). Boxes and caret are hidden. Override with `.accessibilityLabel(...)`.
+
 ```swift
 DSCodeField(length: Int = 6, code: Binding<String>,
             state: DSCodeFieldState = .normal,   // .normal .error .success
@@ -131,6 +133,8 @@ A cell with an `action` becomes a button with a chevron and a `.light` haptic. S
 
 `Components/DSToast.swift`.
 
+**Accessibility:** One element reading "Success: <message>" (Success/Error/Warning/Info); icon hidden. The toast is announced on appear without moving focus. Override with `.accessibilityLabel(...)`.
+
 ```swift
 DSToast(_ message: String, type: DSToastType = .info)   // .success .error .warning .info
 DSEmptyState(icon:, title:, message:, actionTitle: String? = nil, action: (() -> Void)? = nil)
@@ -143,6 +147,8 @@ Toast already sits on `.ultraThinMaterial` with `.lg` shadow; `DSToastType.hapti
 ## DSSegmentedControl  🧪 (colors) ⏳ (glass track)
 
 `Components/DSSegmentedControl.swift`. Generic over `Hashable`.
+
+**Accessibility:** Container with one button per segment, labelled with its title, `selected` trait on the active one; icons hidden when a title exists. Double-tap selects with the same haptic as tap.
 
 ```swift
 DSSegmentedControl(selection: Binding<Value>, segments: [DSSegment<Value>],
@@ -160,6 +166,8 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 `Components/DSToggle.swift`.
 
+**Accessibility:** One switch element: label text, value "On"/"Off", toggle trait; dimmed when disabled. Override the label with `.accessibilityLabel(...)`, especially for label-less toggles.
+
 ```swift
 DSToggle(_ label: String? = nil, isOn: Binding<Bool>,
          size: DSToggleSize = .medium,      // .small 42×26 · .medium 51×31
@@ -175,6 +183,8 @@ Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic).
 
 `Components/DSRating.swift`.
 
+**Accessibility:** Label "Rating", value "N out of M stars", adjustable (swipe up/down) when editable. Not a button. Override with `.accessibilityLabel(...)`.
+
 ```swift
 DSRating(rating: Binding<Double>, count: Int = 5, step: Double = 1,   // 0.5 for half stars
          symbol: "star.fill", emptySymbol: "star", size: 28, spacing: DSSpacing.xs,
@@ -189,6 +199,8 @@ Drag-to-rate with `.selection` tick per star and `.light` on release; active sta
 ## DSPageControl  ✅ 🧪 (colors)
 
 `Components/DSPageControl.swift`.
+
+**Accessibility:** One adjustable element: label "Page", value "N of M" (1-based); swipe up/down changes page when `allowsTap` is true, read-only otherwise. Dots hidden. Override with `.accessibilityLabel(...)`.
 
 ```swift
 DSPageControl(currentPage: Binding<Int>, numberOfPages: Int,
@@ -222,6 +234,8 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 ## DSSlideToConfirm  ✅
 
 `Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions, including payments.
+
+**Accessibility:** Button with the label, hint "Double-tap to confirm", and a value: empty at rest, "Processing" while `onConfirm` runs, the `confirmedLabel` once confirmed. Activation is ignored while processing/confirmed.
 
 ```swift
 DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel: String = "Confirmed", accent: Color? = nil, finish: DSSlideFinish = .settle, onConfirm: @escaping () async throws -> Void)
