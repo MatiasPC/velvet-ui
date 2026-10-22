@@ -101,3 +101,7 @@ xcodebuild build -scheme DesignSystem \
 ## Browsing the catalog
 
 Open the package in Xcode and run the `#Preview` on `Sources/DesignSystem/Preview/ComponentCatalog.swift`. It has theme dots, a backdrop toggle and every component with its variants. The standalone showcase app is the next milestone (see the roadmap in the engineering notes).
+
+## License
+
+Velvet UI is released under the [MIT License](LICENSE). Copyright © 2026 Matias Peralta.
