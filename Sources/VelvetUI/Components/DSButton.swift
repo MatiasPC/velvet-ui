@@ -183,27 +183,42 @@ public struct DSIconButton: View {
     let size: CGFloat
     let color: Color?
     let haptic: DSHapticStyle
+    let accessibilityLabel: String?
     let action: () -> Void
 
     @State private var isPressed = false
     @DSThemed private var theme
 
-    /// - Parameter color: Icon tint. Defaults to the theme's primary text color.
+    /// - Parameters:
+    ///   - color: Icon tint. Defaults to the theme's primary text color.
+    ///   - accessibilityLabel: What VoiceOver reads, e.g. "Share". An icon-only button
+    ///     has no visible text, so pass one; when nil, VoiceOver falls back to the
+    ///     SF Symbol's built-in description, which is often missing or vague.
     public init(
         icon: String,
         size: CGFloat = 44,
         color: Color? = nil,
         haptic: DSHapticStyle = .light,
+        accessibilityLabel: String? = nil,
         action: @escaping () -> Void
     ) {
         self.icon = icon
         self.size = size
         self.color = color
         self.haptic = haptic
+        self.accessibilityLabel = accessibilityLabel
         self.action = action
     }
 
     public var body: some View {
+        if let accessibilityLabel {
+            button.accessibilityLabel(accessibilityLabel)
+        } else {
+            button
+        }
+    }
+
+    private var button: some View {
         Button {
             DSHapticEngine.shared.fire(haptic)
             action()

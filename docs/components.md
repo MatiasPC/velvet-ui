@@ -35,7 +35,7 @@ DSButton(_ title: String,
 Motion: press → `DSPress.scale`; loading dims to 0.8 and disables. Haptic on tap (configurable).
 Radius: `.small` → `DSRadius.chip`, others → `DSRadius.control`.
 
-**DSIconButton**: `DSIconButton(icon:size: 44,color: Color? = nil,haptic: .light,action:)`. Color defaults to `palette.textPrimary`; press uses `DSPress.iconScale`.
+**DSIconButton**: `DSIconButton(icon:size: 44,color: Color? = nil,haptic: .light,accessibilityLabel: String? = nil,action:)`. Color defaults to `palette.textPrimary`; press uses `DSPress.iconScale`. Icon-only, so pass `accessibilityLabel` ("Share"); when nil VoiceOver falls back to the SF Symbol's own description.
 
 Notes: icon font sizes (12 / 14) are still literals — candidate for a `DSIconSize` token when a third component needs it.
 

@@ -109,9 +109,9 @@ struct ComponentCatalog: View {
                         DSButton("Loading...", isLoading: true) { }
 
                         HStack(spacing: DSSpacing.sm) {
-                            DSIconButton(icon: "heart") { }
-                            DSIconButton(icon: "square.and.arrow.up") { }
-                            DSIconButton(icon: "ellipsis") { }
+                            DSIconButton(icon: "heart", accessibilityLabel: "Like") { }
+                            DSIconButton(icon: "square.and.arrow.up", accessibilityLabel: "Share") { }
+                            DSIconButton(icon: "ellipsis", accessibilityLabel: "More") { }
                         }
                     }
                 }

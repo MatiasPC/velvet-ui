@@ -36,9 +36,9 @@ struct ButtonsScreen: View {
             }
             LabeledExample("Icon buttons") {
                 HStack(spacing: DSSpacing.md) {
-                    DSIconButton(icon: "heart") { print("like") }
-                    DSIconButton(icon: "square.and.arrow.up") { print("share") }
-                    DSIconButton(icon: "ellipsis") { print("more") }
+                    DSIconButton(icon: "heart", accessibilityLabel: "Like") { print("like") }
+                    DSIconButton(icon: "square.and.arrow.up", accessibilityLabel: "Share") { print("share") }
+                    DSIconButton(icon: "ellipsis", accessibilityLabel: "More") { print("more") }
                 }
             }
         }
