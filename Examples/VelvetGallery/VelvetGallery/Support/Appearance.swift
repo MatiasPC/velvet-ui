@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 enum Appearance: String, CaseIterable, Identifiable {
     case system, light, dark

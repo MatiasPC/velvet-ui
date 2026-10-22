@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct EmptyStateScreen: View {
     @State private var hasResults = false

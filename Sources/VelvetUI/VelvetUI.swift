@@ -1,10 +1,10 @@
 // MARK: - Velvet UI — Design System
-// A SwiftUI design system for iOS 17+ / macOS 14+: frosted glass over a
+// A SwiftUI design system for iOS 18+ / macOS 15+: frosted glass over a
 // selectable gradient theme, spring motion, haptics, no borders.
 // Import this single module to access all tokens, components, and utilities.
 //
 // Usage:
-//   import DesignSystem
+//   import VelvetUI
 //
 // Quick start:
 //   ContentView().dsTheme(DSTheme(gradient: .sunset))   // at the root

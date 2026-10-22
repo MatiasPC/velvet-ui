@@ -31,7 +31,7 @@
 		C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F60FD1D436135BECE7C11C /* ListsScreen.swift */; };
 		CB8F7A87E639B8926DF98407 /* NeutralTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5782F9BF254DA5CE52B57A7F /* NeutralTheme.swift */; };
 		D6C1A13E07F8E43DA1E8F356 /* ToggleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C3F5EBC1DA66C560962D1C /* ToggleScreen.swift */; };
-		D96C9A7BAD30BB912DB8F225 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 18939BFFA2665A1606EB89A4 /* DesignSystem */; };
+		D96C9A7BAD30BB912DB8F225 /* VelvetUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A46D949DBAFBFE32716A4CF /* VelvetUI */; };
 		F20212FE31979162C787E5C2 /* GalleryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36781F6D81C2396DB54B944F /* GalleryScreen.swift */; };
 		F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */; };
 /* End PBXBuildFile section */
@@ -72,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D96C9A7BAD30BB912DB8F225 /* DesignSystem in Frameworks */,
+				D96C9A7BAD30BB912DB8F225 /* VelvetUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +177,7 @@
 			);
 			name = VelvetGallery;
 			packageProductDependencies = (
-				18939BFFA2665A1606EB89A4 /* DesignSystem */,
+				2A46D949DBAFBFE32716A4CF /* VelvetUI */,
 			);
 			productName = VelvetGallery;
 			productReference = 337B87D9114B656E1412E8BF /* VelvetGallery.app */;
@@ -445,9 +445,9 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		18939BFFA2665A1606EB89A4 /* DesignSystem */ = {
+		2A46D949DBAFBFE32716A4CF /* VelvetUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = DesignSystem;
+			productName = VelvetUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

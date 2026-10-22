@@ -1,6 +1,6 @@
 # Tokens reference
 
-Every value a component is allowed to use. If you need something that isn't here, add a token first, then use it. Files live in `Sources/DesignSystem/Tokens/`, `Animation/`, `Haptics/`, `Layout/`.
+Every value a component is allowed to use. If you need something that isn't here, add a token first, then use it. Files live in `Sources/VelvetUI/Tokens/`, `Animation/`, `Haptics/`, `Layout/`.
 
 ## Theme
 
@@ -22,7 +22,7 @@ theme.isDark / theme.onBackdrop
 
 ## Gradient themes
 
-`DSGradientTheme` (`Tokens/DSGradientTheme.swift`). Four derived colors, each with one job. Contrast is verified by `DesignSystemTests.testGradientThemesMeetAAContrast`.
+`DSGradientTheme` (`Tokens/DSGradientTheme.swift`). Four derived colors, each with one job. Contrast is verified by `VelvetUITests.testGradientThemesMeetAAContrast`.
 
 | Theme | Stops | `accent` | `onAccent` | `ink` | `inkDark` |
 |---|---|---|---|---|---|

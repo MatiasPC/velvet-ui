@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct ProgressLoadingScreen: View {
     @State private var progress: Double = 0.65

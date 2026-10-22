@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct TextFieldScreen: View {
     @State private var email = ""

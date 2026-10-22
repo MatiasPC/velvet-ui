@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 /// Shared chrome for every component screen: neutral background, scroll,
 /// screen padding, a header, and the appearance menu in the toolbar. No backdrop.

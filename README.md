@@ -1,6 +1,6 @@
 # Velvet UI
 
-SwiftUI design system for iOS 18+ and macOS 15+. Frosted glass over a selectable gradient theme, spring motion, haptics on every primary action, no borders. One `import DesignSystem`.
+SwiftUI design system for iOS 18+ and macOS 15+. Frosted glass over a selectable gradient theme, spring motion, haptics on every primary action, no borders. One `import VelvetUI`.
 
 | | |
 |---|---|
@@ -11,12 +11,12 @@ SwiftUI design system for iOS 18+ and macOS 15+. Frosted glass over a selectable
 ## Install
 
 - **Local package**: Xcode → File → Add Package Dependencies → Add Local → this folder.
-- **Remote**: `.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")`, product `DesignSystem`.
+- **Remote**: `.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")`, product `VelvetUI`.
 
 ## Quick start
 
 ```swift
-import DesignSystem
+import VelvetUI
 
 @main
 struct MyApp: App {
@@ -85,14 +85,14 @@ struct PriceTag: View {
 }
 ```
 
-Rules for anything that lands in `Sources/DesignSystem/Components/` are in [CLAUDE.md](CLAUDE.md). The short version: tokens only, `@DSThemed` for colors, `DSPress` for press states, `DSAnimation` springs, haptics on primary actions, `Color? = nil` defaults that follow the theme, a `#Preview` in light and dark, a section in the catalog, an entry in `docs/components.md` and `CHANGELOG.md`.
+Rules for anything that lands in `Sources/VelvetUI/Components/` are in [CLAUDE.md](CLAUDE.md). The short version: tokens only, `@DSThemed` for colors, `DSPress` for press states, `DSAnimation` springs, haptics on primary actions, `Color? = nil` defaults that follow the theme, a `#Preview` in light and dark, a section in the catalog, an entry in `docs/components.md` and `CHANGELOG.md`.
 
 ## Verify before you push
 
 ```bash
 swift build                                   # macOS build
 swift test                                    # tokens, theme resolution, AA contrast
-xcodebuild build -scheme DesignSystem \
+xcodebuild build -scheme VelvetUI \
   -destination 'generic/platform=iOS Simulator' | tail -3   # iOS build
 ```
 
@@ -100,7 +100,7 @@ xcodebuild build -scheme DesignSystem \
 
 ## Browsing the catalog
 
-Open the package in Xcode and run the `#Preview` on `Sources/DesignSystem/Preview/ComponentCatalog.swift`. It has theme dots, a backdrop toggle and every component with its variants. The standalone showcase app is the next milestone (see the roadmap in the engineering notes).
+Open the package in Xcode and run the `#Preview` on `Sources/VelvetUI/Preview/ComponentCatalog.swift`. It has theme dots, a backdrop toggle and every component with its variants. The standalone showcase app is the next milestone (see the roadmap in the engineering notes).
 
 ## License
 

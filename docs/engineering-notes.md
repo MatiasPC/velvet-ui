@@ -28,7 +28,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 
 | Topic | What to know |
 |---|---|
-| `swift build` only builds macOS | The package targets iOS 18 + macOS 15. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme DesignSystem -destination 'generic/platform=iOS Simulator'`. |
+| `swift build` only builds macOS | The package targets iOS 18 + macOS 15. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme VelvetUI -destination 'generic/platform=iOS Simulator'`. |
 | Haptics are a no-op on macOS | `DSHapticEngine` is guarded with `#if canImport(UIKit)`. Fine, just don't expect feedback in macOS previews. |
 | `@DSThemed` is `@MainActor` | It works in any `View` / `ViewModifier` body. It cannot live in an enum or a non-view struct; pass `theme.palette` into helpers instead (see `DSToastType.color(in:)`). |
 | Material over a saturated gradient | `.ultraThinMaterial` lets too much color through and secondary text loses contrast. Cards use `.thinMaterial` (`.glass`); reserve `.glassThin` for small floating elements. |
@@ -37,7 +37,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | Theme crossfade | `DSBackdrop` animates the gradient swap with `DSAnimation.normal` keyed on the theme id. Change the theme inside `withAnimation(DSAnimation.normal)` so components crossfade too. |
 | Reduce Transparency / Reduce Motion | `dsSurface` falls back to `.solid`; `dsStaggerIn` and `dsShimmer` skip their animation. Keep honoring both in new components. |
 | `Color` equality | `Color` is `Equatable`, so `DSGradientTheme` is `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
-| Contrast is tested | `DesignSystemTests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
+| Contrast is tested | `VelvetUITests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
 | One checkout only: `~/Documents/velvet-ui` | The stale `~/Documents/DesignSystem` clone was removed on 2026-09-06. Global CLAUDE.md and the `design-system` skill now point here. Apps add the package as `relativePath = ../velvet-ui`; the SwiftPM product stays named `DesignSystem`. Apps created before that date still reference `../DesignSystem` and must be repointed to `../velvet-ui` when next opened (MindBite, Tic-tac-toe, AquaSync, Tetris-Silver, Tetris-game, PowderRush, snake). |
 | Reduce Motion is a resting state, not a skip | `DSMotion.loop` returns `nil` when Reduce Motion is on, so `withAnimation(nil)` applies changes instantly and every ambient effect settles at its resting state. Never wrap an effect in a bare `guard !reduceMotion else { return }` that leaves it mid-transition. |
 | Decaying motion → `keyframeAnimator`, not `phaseAnimator` | `phaseAnimator` runs a fresh animation per phase and each one *settles* before the next fires, so a multi-swing shake reads as separate twitches. `dsJiggle` uses one `keyframeAnimator` track (`DSMotion.jiggleSwings`) whose Cubic keyframes carry velocity across the whole timeline. The `DSAnimation` springs are frozen and none is damped low enough to ring, so the decay is a hand-shaped envelope rather than an underdamped spring. |
@@ -95,7 +95,7 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
 ## How to add a component (checklist)
 
 1. Build it in a real app first; only reusable, polished, non-duplicate work gets in.
-2. `Sources/DesignSystem/Components/DS<Name>.swift`, types prefixed `DS`, public with a minimal API.
+2. `Sources/VelvetUI/Components/DS<Name>.swift`, types prefixed `DS`, public with a minimal API.
 3. Tokens only. `@DSThemed` for colors, `Color? = nil` for overridable ones, `DSPress` for press, `DSAnimation` springs, `DSHapticEngine` on primary actions, `#if os(iOS)` around iOS-only modifiers.
 4. `#Preview` in light and dark, on `.dsBackdrop()`.
 5. Section in `ComponentCatalog`.

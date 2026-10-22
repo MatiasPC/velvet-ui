@@ -1,6 +1,6 @@
 import XCTest
 import SwiftUI
-@testable import DesignSystem
+@testable import VelvetUI
 
 @MainActor
 final class DSMotionTests: XCTestCase {

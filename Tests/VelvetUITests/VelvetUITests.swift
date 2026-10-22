@@ -1,6 +1,6 @@
 import XCTest
 import SwiftUI
-@testable import DesignSystem
+@testable import VelvetUI
 
 #if canImport(UIKit)
 import UIKit
@@ -9,7 +9,7 @@ import AppKit
 #endif
 
 @MainActor
-final class DesignSystemTests: XCTestCase {
+final class VelvetUITests: XCTestCase {
 
     // MARK: - Spacing / Radius
 
