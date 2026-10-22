@@ -43,8 +43,19 @@ After changing the file list or target settings, re-run `xcodegen generate` and
   the motion set: `MotionScreen` (the five `DSMotion` primitives),
   `SlideToConfirmScreen` (async slide-to-pay + "next charge fails" toggle),
   `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`.
+- `Stages/` — recording stages: `Stage` enum + launch arguments, `StageContainer`
+  (chrome-free host, long-press the background to exit), `StageListView`, `StageView`
+  (one isolated view per component).
 - `Support/` — `GalleryScreen` + `LabeledExample` chrome, `Appearance` toggle.
 - `Theme/NeutralTheme.swift` — `DSGradientTheme.neutral`.
+
+## Recording
+
+The **Recording → Recording stages** list opens chrome-free, centered views of
+each component for clips and GIFs, and `scripts/record-stage.sh` records one
+end-to-end. Launch arguments: `-VelvetStage <ID>`, `-VelvetStageBackground
+neutral|sunset|aurora|lagoon`, `-VelvetStageAutoplay YES|NO`,
+`-VelvetAppearance light|dark|system`. See [`docs/RECORDING.md`](../../docs/RECORDING.md).
 
 ## Design
 
