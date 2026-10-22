@@ -101,7 +101,6 @@ public struct DSSegmentedControl<Value: Hashable>: View {
             .animation(DSAnimation.micro, value: isSelected)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(segment.title)
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 
