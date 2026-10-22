@@ -54,5 +54,4 @@ local `DSGradientTheme.neutral` with a graphite accent. Semantic status colours
 neutral with one labelled colourful example each. Appearance (System / Light /
 Dark) is switchable from the toolbar and persisted.
 
-Rationale in `docs/engineering-notes.md` and
-`docs/superpowers/specs/2026-09-08-velvet-gallery-app-design.md`.
+Rationale in `docs/engineering-notes.md` ("VelvetGallery example app").

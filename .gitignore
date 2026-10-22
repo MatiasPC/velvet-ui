@@ -10,3 +10,10 @@ DerivedData/
 Sources/.DS_Store
 .DS_Store
 .claude/worktrees/
+
+# Local agent tooling — used on the maintainer's machine, not published.
+CLAUDE.md
+AGENTS.md
+.claude/
+.opencode/
+docs/superpowers/

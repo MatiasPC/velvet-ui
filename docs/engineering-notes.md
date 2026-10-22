@@ -38,7 +38,6 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | Reduce Transparency / Reduce Motion | `dsSurface` falls back to `.solid`; `dsStaggerIn` and `dsShimmer` skip their animation. Keep honoring both in new components. |
 | `Color` equality | `Color` is `Equatable`, so `DSGradientTheme` is `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
 | Contrast is tested | `VelvetUITests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
-| One checkout only: `~/Documents/velvet-ui` | The stale `~/Documents/DesignSystem` clone was removed on 2026-09-06. Global CLAUDE.md and the `design-system` skill now point here. Apps add the package as `relativePath = ../velvet-ui`; the SwiftPM product stays named `DesignSystem`. Apps created before that date still reference `../DesignSystem` and must be repointed to `../velvet-ui` when next opened (MindBite, Tic-tac-toe, AquaSync, Tetris-Silver, Tetris-game, PowderRush, snake). |
 | Reduce Motion is a resting state, not a skip | `DSMotion.loop` returns `nil` when Reduce Motion is on, so `withAnimation(nil)` applies changes instantly and every ambient effect settles at its resting state. Never wrap an effect in a bare `guard !reduceMotion else { return }` that leaves it mid-transition. |
 | Decaying motion → `keyframeAnimator`, not `phaseAnimator` | `phaseAnimator` runs a fresh animation per phase and each one *settles* before the next fires, so a multi-swing shake reads as separate twitches. `dsJiggle` uses one `keyframeAnimator` track (`DSMotion.jiggleSwings`) whose Cubic keyframes carry velocity across the whole timeline. The `DSAnimation` springs are frozen and none is damped low enough to ring, so the decay is a hand-shaped envelope rather than an underdamped spring. |
 | `swift-tools-version: 6.0` does not mean Swift 6 | The tools version is pinned to 6.0 for iOS 18 / macOS 15 symbol access, but language mode is explicitly `.v5` via `swiftSettings`. Raising it to Swift 6 language mode is a separate migration. |
@@ -82,12 +81,11 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
   and a "next charge fails" toggle), `StepperScreen`, `ThinkingIndicatorScreen`,
   `TypewriterTextScreen`. The Simulator shows the animation; haptics need a
   device (Signing & Capabilities → set your Team, then run on the phone).
-- Spec: `docs/superpowers/specs/2026-09-08-velvet-gallery-app-design.md`.
 
 ## Roadmap
 
 1. ✅ v0.2 foundations: tokens, theme plumbing, DSCard as the glass reference.
-2. Manual walkthrough of every component and variant in the catalog (owner: Mati).
+2. Manual walkthrough of every component and variant in the catalog.
 3. Apply the glass restyle to the remaining components, one PR each, with before/after previews.
 4. ✅ **Velvet UI Showcase** app — see "VelvetGallery example app" above (`Examples/VelvetGallery/`, neutral theme, one screen per component). Does not modify the package.
 5. New components on top of the base: carousels, sheets, animated transitions.
@@ -101,4 +99,4 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
 5. Section in `ComponentCatalog`.
 6. Entry in `docs/components.md`, line in `CHANGELOG.md` under Unreleased.
 7. `swift build`, `swift test`, iOS `xcodebuild`.
-8. Commit `add: DS<Name> — one line`, PR, update the `design-system` skill references.
+8. Commit `add: DS<Name> — one line` and open a PR. See [CONTRIBUTING.md](../CONTRIBUTING.md).

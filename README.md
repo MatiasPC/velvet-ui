@@ -85,7 +85,7 @@ struct PriceTag: View {
 }
 ```
 
-Rules for anything that lands in `Sources/VelvetUI/Components/` are in [CLAUDE.md](CLAUDE.md). The short version: tokens only, `@DSThemed` for colors, `DSPress` for press states, `DSAnimation` springs, haptics on primary actions, `Color? = nil` defaults that follow the theme, a `#Preview` in light and dark, a section in the catalog, an entry in `docs/components.md` and `CHANGELOG.md`.
+Rules for anything that lands in `Sources/VelvetUI/Components/` are in [CONTRIBUTING.md](CONTRIBUTING.md). The short version: tokens only, `@DSThemed` for colors, `DSPress` for press states, `DSAnimation` springs, haptics on primary actions, `Color? = nil` defaults that follow the theme, a `#Preview` in light and dark, a section in the catalog, an entry in `docs/components.md` and `CHANGELOG.md`.
 
 ## Verify before you push
 
