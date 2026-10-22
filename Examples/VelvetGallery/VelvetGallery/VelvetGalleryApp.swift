@@ -4,7 +4,17 @@ import VelvetUI
 @main
 struct VelvetGalleryApp: App {
     @AppStorage("gallery.appearance") private var appearanceRaw = Appearance.system.rawValue
+    @AppStorage(StageDefaults.storedBackground) private var stageBackgroundRaw = StageBackground.neutral.rawValue
+    @AppStorage(StageDefaults.storedAutoplay) private var stageAutoplay = false
+    @State private var launchStage: Stage?
     private let theme = DSTheme(gradient: .neutral)
+
+    init() {
+        // Launch arguments (-VelvetStage, -VelvetStageBackground, ...) are copied
+        // into the stored settings before any view reads them.
+        StageDefaults.applyLaunchArguments()
+        _launchStage = State(initialValue: StageDefaults.launchStage())
+    }
 
     private var appearance: Binding<Appearance> {
         Binding(
@@ -15,8 +25,18 @@ struct VelvetGalleryApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack { ComponentListView() }
-                .dsTheme(theme)
+            Group {
+                if let stage = launchStage {
+                    StageContainer(
+                        stage: stage,
+                        background: StageBackground(rawValue: stageBackgroundRaw) ?? .neutral,
+                        autoplay: stageAutoplay
+                    ) { launchStage = nil }
+                } else {
+                    NavigationStack { ComponentListView() }
+                        .dsTheme(theme)
+                }
+            }
                 .tint(DSColors.textPrimary)
                 .environment(\.galleryAppearance, appearance)
                 .preferredColorScheme(appearance.wrappedValue.colorScheme)

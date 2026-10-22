@@ -16,15 +16,19 @@
 		38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC668E35B60F699D3690AA /* MotionScreen.swift */; };
 		4386829CB14CD0D06D656762 /* CodeFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F832409543665FBF97B12CD /* CodeFieldScreen.swift */; };
 		4849096CCD819E56769681C3 /* ThemeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F06770FADF1115A1222AB96 /* ThemeScreen.swift */; };
+		4CF51BEF9FD582C6C0B9F6B6 /* StageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931294FB9DE3CEC60EEB2738 /* StageView.swift */; };
 		4D88FE867C7446369EED6C5B /* EmptyStateScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */; };
 		53489226AEA731905E636AC4 /* VelvetGalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609840D6239B663FA5055A33 /* VelvetGalleryApp.swift */; };
 		5E2A0B87946889ED5E9765C8 /* BadgesAvatarsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */; };
 		6B4931D0526771EB741B5798 /* ComponentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */; };
 		6E55A10EACCACAB360C3A32D /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */; };
 		792006BF73E9FAEFFD7CEBE8 /* ThinkingIndicatorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */; };
+		7C8799E4A4CBFD7A15829475 /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5BAE8780B3FD380C2CFDE /* Stage.swift */; };
 		8034B5A1DB2FF10A31851FCE /* TypewriterTextScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D1AFC884CFBA3FE202ADEF /* TypewriterTextScreen.swift */; };
 		9722FA983500E3DDFCFBDD7D /* ButtonsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C211B7682F0E826683528A4 /* ButtonsScreen.swift */; };
+		9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B172A6E35E9B09EE2507CF /* StageContainer.swift */; };
 		A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629C745CA3297503D924937D /* LayoutScreen.swift */; };
+		A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70D448B6642D640F23AFC4 /* StageListView.swift */; };
 		A9367F1E12EFE69857EE8A71 /* StepperScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C54157D449912B0364C807 /* StepperScreen.swift */; };
 		B76C2E76BF9616710DE63A2E /* CardsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E328F00376EC8C549740513E /* CardsScreen.swift */; };
 		BEFFD9CE369EEB96948701A0 /* ProgressLoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */; };
@@ -38,10 +42,12 @@
 
 /* Begin PBXFileReference section */
 		01D1AFC884CFBA3FE202ADEF /* TypewriterTextScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypewriterTextScreen.swift; sourceTree = "<group>"; };
+		04A5BAE8780B3FD380C2CFDE /* Stage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
 		1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		2B6F0563E4BBB324996A851C /* ToastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastScreen.swift; sourceTree = "<group>"; };
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33B172A6E35E9B09EE2507CF /* StageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageContainer.swift; sourceTree = "<group>"; };
 		36781F6D81C2396DB54B944F /* GalleryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryScreen.swift; sourceTree = "<group>"; };
 		380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateScreen.swift; sourceTree = "<group>"; };
 		3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLoadingScreen.swift; sourceTree = "<group>"; };
@@ -56,10 +62,12 @@
 		6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyScreen.swift; sourceTree = "<group>"; };
 		7719CDE3248D798BF625C212 /* RatingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingScreen.swift; sourceTree = "<group>"; };
 		8F832409543665FBF97B12CD /* CodeFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeFieldScreen.swift; sourceTree = "<group>"; };
+		931294FB9DE3CEC60EEB2738 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
 		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
+		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
 		D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesAvatarsScreen.swift; sourceTree = "<group>"; };
 		E328F00376EC8C549740513E /* CardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScreen.swift; sourceTree = "<group>"; };
@@ -93,6 +101,17 @@
 				337B87D9114B656E1412E8BF /* VelvetGallery.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		55165A7506784712E9B17393 /* Stages */ = {
+			isa = PBXGroup;
+			children = (
+				04A5BAE8780B3FD380C2CFDE /* Stage.swift */,
+				33B172A6E35E9B09EE2507CF /* StageContainer.swift */,
+				CC70D448B6642D640F23AFC4 /* StageListView.swift */,
+				931294FB9DE3CEC60EEB2738 /* StageView.swift */,
+			);
+			path = Stages;
 			sourceTree = "<group>";
 		};
 		6F3FC7BD7D5E68E24B0AAE58 = {
@@ -155,6 +174,7 @@
 				D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */,
 				609840D6239B663FA5055A33 /* VelvetGalleryApp.swift */,
 				D7E2BEC39477C80B58A76451 /* Screens */,
+				55165A7506784712E9B17393 /* Stages */,
 				6F75B9CF7EAF36DDD691674C /* Support */,
 				8EC0392604216D6FC827158B /* Theme */,
 			);
@@ -236,6 +256,10 @@
 				2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */,
 				2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */,
 				F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */,
+				7C8799E4A4CBFD7A15829475 /* Stage.swift in Sources */,
+				9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */,
+				A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */,
+				4CF51BEF9FD582C6C0B9F6B6 /* StageView.swift in Sources */,
 				A9367F1E12EFE69857EE8A71 /* StepperScreen.swift in Sources */,
 				17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */,
 				4849096CCD819E56769681C3 /* ThemeScreen.swift in Sources */,
