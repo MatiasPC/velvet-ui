@@ -69,7 +69,7 @@ public struct DSCarousel<Data: RandomAccessCollection, Content: View>: View wher
     ///   - currentPage: The page index. Changing it scrolls there; scrolling updates it. Out-of-range values are clamped.
     ///   - peek: Margin on each side of the centred item; `peek - spacing` of each neighbour shows. Defaults to `DSSpacing.xxxl`.
     ///   - spacing: Gap between items. Defaults to `DSSpacing.sm`.
-    ///   - haptic: Fired once each time the user settles on a new page. `nil` for none. Defaults to `.selection`.
+    ///   - haptic: Fired once per page change. `nil` for none. Defaults to `.selection`.
     ///   - content: The view for one item.
     public init(
         _ data: Data,
@@ -92,7 +92,7 @@ public struct DSCarousel<Data: RandomAccessCollection, Content: View>: View wher
     ///   - data: The items. Each element's `id` identifies its page.
     ///   - peek: Margin on each side of the centred item; `peek - spacing` of each neighbour shows. Defaults to `DSSpacing.xxxl`.
     ///   - spacing: Gap between items. Defaults to `DSSpacing.sm`.
-    ///   - haptic: Fired once each time the user settles on a new page. `nil` for none. Defaults to `.selection`.
+    ///   - haptic: Fired once per page change. `nil` for none. Defaults to `.selection`.
     ///   - content: The view for one item.
     public init(
         _ data: Data,
@@ -175,7 +175,7 @@ public struct DSCarousel<Data: RandomAccessCollection, Content: View>: View wher
         if page != pageBinding.wrappedValue { pageBinding.wrappedValue = page }
         let target = ids[page]
         guard scrollID != target else { return }
-        if animated {
+        if animated && !reduceMotion {
             withAnimation(DSAnimation.springSmooth) { scrollID = target }
         } else {
             scrollID = target

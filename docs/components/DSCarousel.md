@@ -65,7 +65,7 @@ struct CarouselDemo: View {
 | `currentPage` | `Binding<Int>` | none | The page index. Scrolling updates it; changing it scrolls there with a spring. Out-of-range values are clamped. Leave it out and the carousel keeps its own index. |
 | `peek` | `CGFloat` | `DSSpacing.xxxl` | Margin on each side of the centred item. `peek - spacing` of each neighbour shows. |
 | `spacing` | `CGFloat` | `DSSpacing.sm` | Gap between items. |
-| `haptic` | `DSHapticStyle?` | `.selection` | Fired once each time the user settles on a new page. `nil` for none. |
+| `haptic` | `DSHapticStyle?` | `.selection` | Fired once per page change. `nil` for none. |
 | `content` | `(Element) -> View` | required | The view for one item. Trailing closure. |
 
 Each item is as wide as the carousel minus `peek` on both sides. Give the carousel a height and let each item fill it with `.frame(maxHeight: .infinity)`: content taller than the carousel is clipped.
@@ -96,7 +96,7 @@ Smaller peek and spacing, no haptic. Without `currentPage` the carousel manages 
 
 - Scrolling snaps to whole items.
 - Items away from the centre shrink to about 90%, fade to about 60% and yaw a few degrees towards the centre.
-- Setting `currentPage` from code scrolls there with `DSAnimation.springSmooth`. Only user scrolling fires the haptic.
+- Setting `currentPage` from code scrolls there with `DSAnimation.springSmooth` (without animation under Reduce Motion). Only user scrolling fires the haptic.
 - Reduce Motion: the scale, fade and yaw are skipped (items stay at full size). Snapping stays.
 
 ## Accessibility
