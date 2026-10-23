@@ -43,7 +43,7 @@ velvet-ui-pro/                      (private repository)
 ```swift
 // Package.swift of an app using Pro
 dependencies: [
-    .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.3.0"),
+    .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0"),
     .package(url: "git@github.com:MatiasPC/velvet-ui-pro.git", from: "0.3.0"),
 ],
 targets: [

@@ -217,7 +217,7 @@ Under the components sit the tokens: glass surfaces (`DSSurface`), the wash that
 
 ## Velvet UI Pro (coming soon)
 
-Complete screens, flows and an app starter built on this free core, in a separate package. The core stays MIT and complete: nothing here moves behind Pro. [What's planned](docs/PRO.md)<!-- TODO: replace with the Pro waitlist URL once it exists -->.
+Complete screens, flows and an app starter built on this free core, in a separate package. The core stays MIT and complete: nothing here moves behind Pro. [What's planned](docs/PRO.md), and [tell us what you'd want in it](https://github.com/MatiasPC/velvet-ui/discussions).
 
 ## Contributing
 
