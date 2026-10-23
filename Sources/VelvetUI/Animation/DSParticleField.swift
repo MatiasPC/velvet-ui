@@ -189,7 +189,7 @@ struct DSParticleField: View, Animatable {
     // MARK: Animatable
 
     /// Only the tint blend is animatable; positions come from the timeline.
-    var animatableData: Double {
+    nonisolated var animatableData: Double {
         get { tintMix }
         set { tintMix = newValue }
     }
