@@ -4,45 +4,12 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
-### Added
-- **New components**, each with a docs page, a Gallery screen and recording stage, light and dark previews, a `ComponentCatalog` section and tests:
-  - `DSTabBar` / `DSTabItem`: floating glass tab bar with a sliding accent capsule, a selected-symbol swap with one bounce, and count badges.
-  - `DSCarousel`: snapping carousel with peeking neighbors and scroll-driven depth; index-based so it pairs with `DSPageControl`.
-  - `View.dsSheet(isPresented:detents:onDismiss:content:)` and `dsSheet(item:…)`: the native sheet with Velvet chrome (detents, grabber, glass background before iOS 26, the theme carried in).
-  - `DSNumberTicker`: odometer-style rolling digits for any `FormatStyle` (currency, percent, grouped integers).
-  - `DSSparkline` and `DSBarChart`: light animated charts without Swift Charts (monotone curve that draws and morphs, staggered bars, drag to scrub, VoiceOver Audio Graphs).
-  - `DSSkeleton` and `View.dsSkeleton(_:)`: shimmering placeholder blocks, and an in-place redaction that keeps the wrapped view's identity and state.
-  - `DSSuccessCheck`: success seal whose ring, disc and check draw on, then pop with a haptic on the beat.
-  - `View.dsConfetti(trigger:origin:count:haptic:)`: themed confetti burst with closed-form `Canvas` physics; its timeline sleeps when idle; removed under Reduce Motion.
-- **Example flows** (examples, not components): Onboarding, Settings and Checkout in `Examples/VelvetGallery/VelvetGallery/Flows/`, with an Examples section and full-screen stages in the Gallery and pages in `docs/examples/`.
-- **Agent-ready files:**
-  - `AGENTS.md`: public guide for AI coding agents with the rules, a component chooser, a token cheat sheet, copyable patterns and anti-patterns. Its snippets are compiled by `DocSnippetsAgentsTests`.
-  - `llms.txt` and `llms-full.txt`, generated from the docs.
-  - `registry.json`: every component with its source files, dependencies, docs page and Gallery stage.
-  - `scripts/velvet.swift`, a dependency-free Swift CLI: `list`, `info`, `add` (copies a component plus the shared core into an app, leaves out previews, updates files you haven't edited and skips the ones you have, writes nothing if a download fails), and the maintainer commands `verify` (typechecks every component on its own in Swift 5 and 6, Debug, for macOS and iOS) and `llms [--check]`.
-  - `RegistryTests`: the registry covers every source file, docs page and stage.
-- `docs/PRO.md`: proposal for a separate, paid Velvet UI Pro package (screens, flows, app starter, presets) that leaves the free core complete.
-- `docs/discoverability.md`: repository description, GitHub topics and the social preview image spec.
-- CI runs `velvet.swift verify` and `velvet.swift llms --check`.
-- README and component pages show real stills of every stage instead of placeholders. Recordings later replace them with animated GIFs.
-
-### Changed
-- README: a new hero with the value props and quick links, a "copy one component" install path, Examples, "Use it with AI agents", and a short "Pro (coming soon)" section.
-- `AGENTS.md` at the repo root is now published (it was gitignored). `CLAUDE.md`, `.claude/` and `.opencode/` stay local.
-- Component pages and `docs/tokens.md` were audited against the source and corrected. For example, `DSStepper` glyphs default to theme ink, `DSSegmentedControl.accent` only tints the underline style, `DSSlideToConfirm.accent` fills only the knob, and several Dynamic Type notes were fixed. The Install block is now identical on every page.
-- `scripts/record-stage.sh` forces English and US formatting so prices read "$115.00", and keeps the full height for the full-screen example flows.
-
-### Fixed
-- `DSToast` now uses a solid background under Reduce Transparency. It painted its material directly before.
-- `dsBreathe` and `dsHueDrift` now rest at scale 1 and 0° under Reduce Motion. Before, they froze at the peak of the effect.
-- Sources compile in Swift 6 language mode when copied into an app target. `DSParticleField`'s `Animatable` conformance crossed actor isolation, and `DSTypewriterText` had a mutable static preference default.
-
-## [0.2.0] — 2026-10-22
+## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
 
 ### Highlights
-- **Glass over a gradient theme.** Three built-in themes (Sunset, Aurora, Lagoon), every component reads its colors through `@DSThemed`, dark mode everywhere, no borders. Proposal: [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
+- **Glass over a gradient theme.** Three built-in themes (Sunset, Aurora, Lagoon), every component reads its colors through `@DSThemed`, dark mode everywhere, no borders. Proposal: [docs/proposals/0001-glass-tokens.md](docs/proposals/0001-glass-tokens.md).
 - **Motion.** Five ambient modifiers (`dsBreathe`, `dsJiggle`, `dsPopIn`, `dsEdgeSweep`, `dsHueDrift`) and four motion components: `DSSlideToConfirm`, `DSStepper`, `DSThinkingIndicator`, `DSTypewriterText`. Proposal: [docs/proposals/0002-motion-library.md](docs/proposals/0002-motion-library.md).
 - **Accessibility.** VoiceOver labels, values and traits on every interactive control; text styles scale with Dynamic Type; Reduce Motion and Reduce Transparency honored.
 - **Ready to share.** MIT license, CI, a docs page per component, and a demo app with recording stages.
@@ -87,6 +54,26 @@ The first tagged release, and the first you can install by version with SwiftPM.
 - VelvetGallery recording stages: a clean full-screen stage per component (neutral or gradient background, light or dark, optional autoplay), launch arguments to open one directly, and `scripts/record-stage.sh` to record a clip and GIF from the simulator. See `docs/RECORDING.md`.
 - `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), issue forms for bugs and component requests, a pull request template, and `docs/RELEASING.md`.
 - Tests: Dynamic Type mapping and fixed-font equality for every text style, VoiceOver string builders.
+- **New components**, each with a docs page, a Gallery screen and recording stage, light and dark previews, a `ComponentCatalog` section and tests:
+  - `DSTabBar` / `DSTabItem`: floating glass tab bar with a sliding accent capsule, a selected-symbol swap with one bounce, and count badges.
+  - `DSCarousel`: snapping carousel with peeking neighbors and scroll-driven depth; index-based so it pairs with `DSPageControl`.
+  - `View.dsSheet(isPresented:detents:onDismiss:content:)` and `dsSheet(item:…)`: the native sheet with Velvet chrome (detents, grabber, glass background before iOS 26, the theme carried in).
+  - `DSNumberTicker`: odometer-style rolling digits for any `FormatStyle` (currency, percent, grouped integers).
+  - `DSSparkline` and `DSBarChart`: light animated charts without Swift Charts (monotone curve that draws and morphs, staggered bars, drag to scrub, VoiceOver Audio Graphs).
+  - `DSSkeleton` and `View.dsSkeleton(_:)`: shimmering placeholder blocks, and an in-place redaction that keeps the wrapped view's identity and state.
+  - `DSSuccessCheck`: success seal whose ring, disc and check draw on, then pop with a haptic on the beat.
+  - `View.dsConfetti(trigger:origin:count:haptic:)`: themed confetti burst with closed-form `Canvas` physics; its timeline sleeps when idle; removed under Reduce Motion.
+- **Example flows** (examples, not components): Onboarding, Settings and Checkout in `Examples/VelvetGallery/VelvetGallery/Flows/`, with an Examples section and full-screen stages in the Gallery and pages in `docs/examples/`.
+- **Agent-ready files:**
+  - `AGENTS.md`: public guide for AI coding agents with the rules, a component chooser, a token cheat sheet, copyable patterns and anti-patterns. Its snippets are compiled by `DocSnippetsAgentsTests`.
+  - `llms.txt` and `llms-full.txt`, generated from the docs.
+  - `registry.json`: every component with its source files, dependencies, docs page and Gallery stage.
+  - `scripts/velvet.swift`, a dependency-free Swift CLI: `list`, `info`, `add` (copies a component plus the shared core into an app, leaves out previews, updates files you haven't edited and skips the ones you have, writes nothing if a download fails), and the maintainer commands `verify` (typechecks every component on its own in Swift 5 and 6, Debug, for macOS and iOS) and `llms [--check]`.
+  - `RegistryTests`: the registry covers every source file, docs page and stage.
+- `docs/PRO.md`: proposal for a separate, paid Velvet UI Pro package (screens, flows, app starter, presets) that leaves the free core complete.
+- `docs/discoverability.md`: repository description, GitHub topics and the social preview image spec.
+- CI runs `velvet.swift verify` and `velvet.swift llms --check`.
+- README and component pages show real stills of every stage instead of placeholders. Recordings later replace them with animated GIFs.
 
 ### Changed
 - **DSTheme is `@Observable`** (still conforms to `ObservableObject`). `@Published` removed; `@StateObject` / `@EnvironmentObject` call sites keep compiling.
@@ -113,6 +100,10 @@ The first tagged release, and the first you can install by version with SwiftPM.
 - `.dsJiggle(trigger:)` motion reworked from a stepped `phaseAnimator` (five spring-settled phases, read as robotic) to one continuous `keyframeAnimator` track over `jiggleSwings` / `jiggleDuration`. Same API, same peak, smoother decay.
 - `swift-tools-version` raised from 5.9 to 6.0; language mode explicitly pinned to Swift 5 via `swiftSettings` (the tools version does not imply Swift 6 here).
 - `.dsPulse()` now respects Reduce Motion. It previously looped regardless of the setting; the guard was added on the way to deprecating it. Its curve is unchanged.
+- README: a new hero with the value props and quick links, a "copy one component" install path, Examples, "Use it with AI agents", and a short "Pro (coming soon)" section.
+- `AGENTS.md` at the repo root is now published (it was gitignored). `CLAUDE.md`, `.claude/` and `.opencode/` stay local.
+- Component pages and `docs/tokens.md` were audited against the source and corrected. For example, `DSStepper` glyphs default to theme ink, `DSSegmentedControl.accent` only tints the underline style, `DSSlideToConfirm.accent` fills only the knob, and several Dynamic Type notes were fixed. The Install block is now identical on every page.
+- `scripts/record-stage.sh` forces English and US formatting so prices read "$115.00", and keeps the full height for the full-screen example flows.
 
 ### Deprecated
 - `dsCornerRadius(_:strokeColor:strokeWidth:)` — Velvet doesn't draw borders; use `dsSurface` or `dsWashEdge`.
@@ -129,6 +120,9 @@ The first tagged release, and the first you can install by version with SwiftPM.
 - `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
 - `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.
 - `DSSlideToConfirm` clears its instruction label the instant the confirmation commits. The letter-by-letter dissolve is paced by the drag (stagger up to `count × 0.05s`) and only reaches zero on an unhurried drag; a quick flick past the threshold used to leave lit text over the pill as it masked down to a circle. The label is now `phase`-gated like the knob glyph.
+- `DSToast` now uses a solid background under Reduce Transparency. It painted its material directly before.
+- `dsBreathe` and `dsHueDrift` now rest at scale 1 and 0° under Reduce Motion. Before, they froze at the peak of the effect.
+- Sources compile in Swift 6 language mode when copied into an app target. `DSParticleField`'s `Animatable` conformance crossed actor isolation, and `DSTypewriterText` had a mutable static preference default.
 
 ## [0.1.0] — 2026-03-11
 
