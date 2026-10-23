@@ -1,0 +1,557 @@
+{
+  "name": "Velvet UI",
+  "summary": "Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.",
+  "repository": "https://github.com/MatiasPC/velvet-ui",
+  "raw": "https://raw.githubusercontent.com/MatiasPC/velvet-ui",
+  "package": {
+    "url": "https://github.com/MatiasPC/velvet-ui.git",
+    "product": "VelvetUI",
+    "module": "VelvetUI",
+    "from": "0.2.0"
+  },
+  "platforms": {
+    "iOS": "18.0",
+    "macOS": "15.0"
+  },
+  "core": {
+    "summary": "Tokens, theme, glass surfaces, typography, spacing, radius, shadows, springs, haptics and layout helpers. Every component needs it; the CLI adds it once.",
+    "files": [
+      "Sources/VelvetUI/Tokens/DSColors.swift",
+      "Sources/VelvetUI/Tokens/DSGradientTheme.swift",
+      "Sources/VelvetUI/Tokens/DSRadius.swift",
+      "Sources/VelvetUI/Tokens/DSShadow.swift",
+      "Sources/VelvetUI/Tokens/DSSpacing.swift",
+      "Sources/VelvetUI/Tokens/DSSurface.swift",
+      "Sources/VelvetUI/Tokens/DSTheme.swift",
+      "Sources/VelvetUI/Tokens/DSTypography.swift",
+      "Sources/VelvetUI/Tokens/DSWash.swift",
+      "Sources/VelvetUI/Haptics/DSHaptics.swift",
+      "Sources/VelvetUI/Layout/DSBackdrop.swift",
+      "Sources/VelvetUI/Layout/DSLayout.swift",
+      "Sources/VelvetUI/Animation/DSAnimation.swift",
+      "Sources/VelvetUI/Preview/DSPreviewSupport.swift"
+    ]
+  },
+  "components": [
+    {
+      "name": "DSButton",
+      "category": "actions",
+      "summary": "Text button with five variants, three sizes, an icon and a loading state.",
+      "symbols": [
+        "DSButton",
+        "DSButtonVariant",
+        "DSButtonSize"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSButton.md",
+      "stage": "DSButton"
+    },
+    {
+      "name": "DSIconButton",
+      "category": "actions",
+      "summary": "Icon-only button with press scale, a haptic and a VoiceOver label.",
+      "symbols": [
+        "DSIconButton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSIconButton.md",
+      "stage": "DSIconButton"
+    },
+    {
+      "name": "DSSlideToConfirm",
+      "category": "actions",
+      "summary": "Slide-to-confirm for payments and destructive actions, with an async result.",
+      "symbols": [
+        "DSSlideToConfirm",
+        "DSSlideFinish"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSlideToConfirm.swift",
+        "Sources/VelvetUI/Animation/DSParticleField.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSSlideToConfirm.md",
+      "stage": "DSSlideToConfirm"
+    },
+    {
+      "name": "DSToggle",
+      "category": "inputs",
+      "summary": "Switch with a spring knob and a rigid haptic.",
+      "symbols": [
+        "DSToggle",
+        "DSToggleSize"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSToggle.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSToggle.md",
+      "stage": "DSToggle"
+    },
+    {
+      "name": "DSStepper",
+      "category": "inputs",
+      "summary": "Minus/plus stepper that ticks on every step and jiggles at its bounds.",
+      "symbols": [
+        "DSStepper"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSStepper.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSStepper.md",
+      "stage": "DSStepper"
+    },
+    {
+      "name": "DSRating",
+      "category": "inputs",
+      "summary": "Drag-to-rate stars, with half steps and a read-only mode.",
+      "symbols": [
+        "DSRating"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSRating.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSRating.md",
+      "stage": "DSRating"
+    },
+    {
+      "name": "DSSegmentedControl",
+      "category": "inputs",
+      "summary": "Pill or underline picker with a sliding indicator.",
+      "symbols": [
+        "DSSegmentedControl",
+        "DSSegment",
+        "DSSegmentedControlStyle"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSegmentedControl.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSegmentedControl.md",
+      "stage": "DSSegmentedControl"
+    },
+    {
+      "name": "DSTextField",
+      "category": "inputs",
+      "summary": "Text field with label, icon and validation states, plus DSSearchBar.",
+      "symbols": [
+        "DSTextField",
+        "DSTextFieldState",
+        "DSSearchBar"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTextField.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSTextField.md",
+      "stage": "DSTextField"
+    },
+    {
+      "name": "DSCodeField",
+      "category": "inputs",
+      "summary": "One-time-code input with SMS autofill, a shake on error and success feedback.",
+      "symbols": [
+        "DSCodeField",
+        "DSCodeFieldState"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCodeField.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSCodeField.md",
+      "stage": "DSCodeField"
+    },
+    {
+      "name": "DSPageControl",
+      "category": "inputs",
+      "summary": "Page dots whose active dot stretches into a capsule.",
+      "symbols": [
+        "DSPageControl"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSPageControl.swift"
+      ],
+      "dependencies": [
+        "DSButton"
+      ],
+      "docs": "docs/components/DSPageControl.md",
+      "stage": "DSPageControl"
+    },
+    {
+      "name": "DSTabBar",
+      "category": "navigation",
+      "summary": "Floating glass tab bar with a sliding accent capsule, a symbol swap and count badges.",
+      "symbols": [
+        "DSTabBar",
+        "DSTabItem"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTabBar.swift"
+      ],
+      "dependencies": [
+        "DSBadge"
+      ],
+      "docs": "docs/components/DSTabBar.md",
+      "stage": "DSTabBar"
+    },
+    {
+      "name": "DSCard",
+      "category": "containers",
+      "summary": "The glass surface everything sits on: elevated, outlined, flat, tappable or with an image.",
+      "symbols": [
+        "DSCard",
+        "DSCardStyle",
+        "DSInteractiveCard",
+        "DSImageCard"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCard.swift"
+      ],
+      "dependencies": [
+        "Progress"
+      ],
+      "docs": "docs/components/DSCard.md",
+      "stage": "DSCard"
+    },
+    {
+      "name": "DSListCell",
+      "category": "containers",
+      "summary": "List rows, section headers and dividers.",
+      "symbols": [
+        "DSListCell",
+        "DSSectionHeader",
+        "DSDivider"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSList.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSListCell.md",
+      "stage": "DSListCell"
+    },
+    {
+      "name": "DSCarousel",
+      "category": "containers",
+      "summary": "Snapping carousel with peeking neighbors and scroll-driven depth; pairs with DSPageControl.",
+      "symbols": [
+        "DSCarousel"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCarousel.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSCarousel.md",
+      "stage": "DSCarousel"
+    },
+    {
+      "name": "DSSheet",
+      "category": "containers",
+      "summary": "Native sheet with Velvet chrome: detents, a grabber, a glass background and the theme carried in.",
+      "symbols": [
+        "dsSheet"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSheet.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSheet.md",
+      "stage": "DSSheet"
+    },
+    {
+      "name": "DSBadge",
+      "category": "display",
+      "summary": "Status pills and count badges.",
+      "symbols": [
+        "DSBadge",
+        "DSBadgeVariant",
+        "DSCountBadge"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSBadge.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSBadge.md",
+      "stage": "DSBadge"
+    },
+    {
+      "name": "DSAvatar",
+      "category": "display",
+      "summary": "Remote image with an initials fallback.",
+      "symbols": [
+        "DSAvatar"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSBadge.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSAvatar.md",
+      "stage": "DSAvatar"
+    },
+    {
+      "name": "DSNumberTicker",
+      "category": "display",
+      "summary": "A number whose digits roll like an odometer, for any FormatStyle (currency, percent, grouping).",
+      "symbols": [
+        "DSNumberTicker"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSNumberTicker.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSNumberTicker.md",
+      "stage": "DSNumberTicker"
+    },
+    {
+      "name": "Charts",
+      "category": "charts",
+      "summary": "Light animated charts: a sparkline that draws and morphs, and a bar chart you can scrub.",
+      "symbols": [
+        "DSSparkline",
+        "DSBarChart"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCharts.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/Charts.md",
+      "stage": "Charts"
+    },
+    {
+      "name": "DSToast",
+      "category": "feedback",
+      "summary": "Success, error, warning and info toasts that VoiceOver announces.",
+      "symbols": [
+        "DSToast",
+        "DSToastType"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSToast.swift"
+      ],
+      "dependencies": [
+        "DSButton"
+      ],
+      "docs": "docs/components/DSToast.md",
+      "stage": "DSToast"
+    },
+    {
+      "name": "DSEmptyState",
+      "category": "feedback",
+      "summary": "Icon, title, message and an optional call to action.",
+      "symbols": [
+        "DSEmptyState"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSToast.swift"
+      ],
+      "dependencies": [
+        "DSButton"
+      ],
+      "docs": "docs/components/DSEmptyState.md",
+      "stage": "DSEmptyState"
+    },
+    {
+      "name": "Progress",
+      "category": "feedback",
+      "summary": "Circular, linear, gradient and step progress, animated numbers, shimmer skeletons.",
+      "symbols": [
+        "DSCircularProgress",
+        "DSLinearProgress",
+        "DSGradientProgress",
+        "DSStepProgress",
+        "DSAnimatedNumber",
+        "DSShimmer"
+      ],
+      "files": [
+        "Sources/VelvetUI/Animation/DSProgressAnimation.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/Progress.md",
+      "stage": "Progress"
+    },
+    {
+      "name": "DSThinkingIndicator",
+      "category": "feedback",
+      "summary": "Ambient \"thinking\" state for AI and background work.",
+      "symbols": [
+        "DSThinkingIndicator"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSThinkingIndicator.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSThinkingIndicator.md",
+      "stage": "DSThinkingIndicator"
+    },
+    {
+      "name": "DSSkeleton",
+      "category": "feedback",
+      "summary": "Loading placeholder blocks, plus .dsSkeleton(_:) to redact a real view in place.",
+      "symbols": [
+        "DSSkeleton",
+        "dsSkeleton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSkeleton.swift"
+      ],
+      "dependencies": [
+        "Progress",
+        "Motion"
+      ],
+      "docs": "docs/components/DSSkeleton.md",
+      "stage": "DSSkeleton"
+    },
+    {
+      "name": "DSSuccessCheck",
+      "category": "feedback",
+      "summary": "An animated success seal: the ring draws, the check strokes in, one pop and a haptic on the beat.",
+      "symbols": [
+        "DSSuccessCheck"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSuccessCheck.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSuccessCheck.md",
+      "stage": "DSSuccessCheck"
+    },
+    {
+      "name": "DSTypewriterText",
+      "category": "motion",
+      "summary": "Types phrases out character by character, with a blinking caret.",
+      "symbols": [
+        "DSTypewriterText"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTypewriterText.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSTypewriterText.md",
+      "stage": "DSTypewriterText"
+    },
+    {
+      "name": "Motion",
+      "category": "motion",
+      "summary": "dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.",
+      "symbols": [
+        "DSMotion",
+        "DSBreatheIntensity",
+        "dsBreathe",
+        "dsJiggle",
+        "dsPopIn",
+        "dsEdgeSweep",
+        "dsHueDrift"
+      ],
+      "files": [
+        "Sources/VelvetUI/Animation/DSMotion.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/Motion.md",
+      "stage": "Motion"
+    },
+    {
+      "name": "DSConfetti",
+      "category": "motion",
+      "summary": "A themed confetti burst from any point, fired whenever a trigger value changes.",
+      "symbols": [
+        "dsConfetti"
+      ],
+      "files": [
+        "Sources/VelvetUI/Animation/DSConfetti.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSConfetti.md",
+      "stage": "DSConfetti"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Onboarding",
+      "category": "examples",
+      "summary": "Example: paged welcome with a typed headline, a live theme picker, notification toggles and a success seal with confetti.",
+      "symbols": [
+        "OnboardingFlow"
+      ],
+      "files": [
+        "Examples/VelvetGallery/VelvetGallery/Flows/OnboardingFlow.swift"
+      ],
+      "dependencies": [
+        "DSButton",
+        "DSPageControl",
+        "DSTypewriterText",
+        "DSCard",
+        "DSToggle",
+        "DSSegmentedControl",
+        "DSSuccessCheck",
+        "DSConfetti",
+        "Motion"
+      ],
+      "docs": "docs/examples/Onboarding.md",
+      "stage": "OnboardingFlow"
+    },
+    {
+      "name": "Settings",
+      "category": "examples",
+      "summary": "Example: grouped glass rows with toggles and a segmented control, a Saved toast, and account deletion in a sheet with slide-to-confirm.",
+      "symbols": [
+        "SettingsFlow"
+      ],
+      "files": [
+        "Examples/VelvetGallery/VelvetGallery/Flows/SettingsFlow.swift"
+      ],
+      "dependencies": [
+        "DSCard",
+        "DSAvatar",
+        "DSBadge",
+        "DSListCell",
+        "DSToggle",
+        "DSSegmentedControl",
+        "DSSheet",
+        "DSSlideToConfirm",
+        "DSToast"
+      ],
+      "docs": "docs/examples/Settings.md",
+      "stage": "SettingsFlow"
+    },
+    {
+      "name": "Checkout",
+      "category": "examples",
+      "summary": "Example: quantity steppers, a promo code, a rolling total, slide-to-pay with a declined-card path and a success moment.",
+      "symbols": [
+        "CheckoutFlow"
+      ],
+      "files": [
+        "Examples/VelvetGallery/VelvetGallery/Flows/CheckoutFlow.swift"
+      ],
+      "dependencies": [
+        "DSCard",
+        "DSStepper",
+        "DSTextField",
+        "DSButton",
+        "DSNumberTicker",
+        "DSSlideToConfirm",
+        "DSToggle",
+        "DSEmptyState",
+        "DSSuccessCheck",
+        "DSConfetti"
+      ],
+      "docs": "docs/examples/Checkout.md",
+      "stage": "CheckoutFlow"
+    }
+  ]
+}
