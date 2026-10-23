@@ -53,7 +53,7 @@ swift velvet.swift list                                  # every component, by c
 swift velvet.swift add DSSlideToConfirm --dest MyApp/VelvetUI
 ```
 
-Copied files compile in Swift 5 and Swift 6 language mode. Use one install path per target, not both. `--ref` pins a tag or commit (the default is `main`).
+Copied files compile in Swift 5 and Swift 6 language mode, in Debug and Release. `#Preview`s aren't copied, because they use other components. Re-running `add` updates the files you haven't edited and skips the ones you have. Use one install path per target, not both. `--ref` pins a tag or commit (the default is `main`).
 
 ## Quick start
 

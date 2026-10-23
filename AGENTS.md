@@ -25,7 +25,7 @@ curl -fsSLO https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/ve
 swift velvet.swift add DSTabBar --dest MyApp/VelvetUI   # also: list, info <name>
 ```
 
-Copied files compile in Swift 5 and Swift 6 language mode and need no `import`.
+Copied files compile in Swift 5 and Swift 6 language mode and need no `import`. Previews aren't copied. Running `add` again updates untouched files and never overwrites your edits without `--force`.
 
 **Theme at the root.** Both paths need exactly one theme injected at the top of the view tree:
 

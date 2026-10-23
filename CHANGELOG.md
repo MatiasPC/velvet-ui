@@ -19,7 +19,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
   - `AGENTS.md`: public guide for AI coding agents with the rules, a component chooser, a token cheat sheet, copyable patterns and anti-patterns. Its snippets are compiled by `DocSnippetsAgentsTests`.
   - `llms.txt` and `llms-full.txt`, generated from the docs.
   - `registry.json`: every component with its source files, dependencies, docs page and Gallery stage.
-  - `scripts/velvet.swift`, a dependency-free Swift CLI: `list`, `info`, `add` (copies a component plus the shared core into an app), and the maintainer commands `verify` (typechecks every component on its own in Swift 5 and 6, for macOS and iOS) and `llms [--check]`.
+  - `scripts/velvet.swift`, a dependency-free Swift CLI: `list`, `info`, `add` (copies a component plus the shared core into an app, leaves out previews, updates files you haven't edited and skips the ones you have, writes nothing if a download fails), and the maintainer commands `verify` (typechecks every component on its own in Swift 5 and 6, Debug, for macOS and iOS) and `llms [--check]`.
   - `RegistryTests`: the registry covers every source file, docs page and stage.
 - `docs/PRO.md`: proposal for a separate, paid Velvet UI Pro package (screens, flows, app starter, presets) that leaves the free core complete.
 - `docs/discoverability.md`: repository description, GitHub topics and the social preview image spec.
@@ -33,6 +33,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `scripts/record-stage.sh` forces English and US formatting so prices read "$115.00", and keeps the full height for the full-screen example flows.
 
 ### Fixed
+- `DSToast` now uses a solid background under Reduce Transparency. It painted its material directly before.
 - `dsBreathe` and `dsHueDrift` now rest at scale 1 and 0° under Reduce Motion. Before, they froze at the peak of the effect.
 - Sources compile in Swift 6 language mode when copied into an app target. `DSParticleField`'s `Animatable` conformance crossed actor isolation, and `DSTypewriterText` had a mutable static preference default.
 
