@@ -87,7 +87,7 @@ struct BadgeDemo: View {
 ## Accessibility
 
 - `DSBadge` and `DSCountBadge` are plain text, so VoiceOver reads the label or the number as shown (`99+` is read as written). Add context from outside, for example `.accessibilityLabel("3 unread notifications")` on the count badge or on the view it decorates.
-- Dynamic Type: both badges keep a fixed size for now (fixed-height pills with the `.buttonSmall` / `.badge` text styles); they do not grow with the user's text size. Keep badge text short.
+- Dynamic Type: both badges keep a fixed size for now (fixed-size fonts from the `.buttonSmall` / `.badge` text styles); they do not grow with the user's text size. Keep badge text short.
 
 ## See also
 

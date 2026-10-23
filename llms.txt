@@ -1,0 +1,55 @@
+# Velvet UI
+
+> Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.
+
+Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, product `VelvetUI`, from 0.2.0) and `import VelvetUI`, or copy a single component and the core it needs into your app with the CLI: download https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(gradient: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
+
+## Start here
+
+- [AGENTS.md](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/AGENTS.md): Read this first: rules, component chooser, tokens, copyable patterns and anti-patterns
+- [README.md](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/README.md): Install (package or copy-in), quick start, theming and accessibility
+- [docs/tokens.md](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/tokens.md): Every design token and its value
+- [registry.json](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/registry.json): Machine-readable registry of components, files, dependencies and docs
+
+## Components
+
+- [DSButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSButton.md): Text button with five variants, three sizes, an icon and a loading state.
+- [DSIconButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSIconButton.md): Icon-only button with press scale, a haptic and a VoiceOver label.
+- [DSSlideToConfirm](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSlideToConfirm.md): Slide-to-confirm for payments and destructive actions, with an async result.
+- [DSToggle](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToggle.md): Switch with a spring knob and a rigid haptic.
+- [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
+- [DSRating](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRating.md): Drag-to-rate stars, with half steps and a read-only mode.
+- [DSSegmentedControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSegmentedControl.md): Pill or underline picker with a sliding indicator.
+- [DSTextField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTextField.md): Text field with label, icon and validation states, plus DSSearchBar.
+- [DSCodeField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCodeField.md): One-time-code input with SMS autofill, a shake on error and success feedback.
+- [DSPageControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSPageControl.md): Page dots whose active dot stretches into a capsule.
+- [DSTabBar](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTabBar.md): Floating glass tab bar with a sliding accent capsule, a symbol swap and count badges.
+- [DSCard](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCard.md): The glass surface everything sits on: elevated, outlined, flat, tappable or with an image.
+- [DSListCell](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSListCell.md): List rows, section headers and dividers.
+- [DSCarousel](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCarousel.md): Snapping carousel with peeking neighbors and scroll-driven depth; pairs with DSPageControl.
+- [DSSheet](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSheet.md): Native sheet with Velvet chrome: detents, a grabber, a glass background and the theme carried in.
+- [DSBadge](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSBadge.md): Status pills and count badges.
+- [DSAvatar](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSAvatar.md): Remote image with an initials fallback.
+- [DSNumberTicker](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSNumberTicker.md): A number whose digits roll like an odometer, for any FormatStyle (currency, percent, grouping).
+- [Charts](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Charts.md): Light animated charts: a sparkline that draws and morphs, and a bar chart you can scrub.
+- [DSToast](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToast.md): Success, error, warning and info toasts that VoiceOver announces.
+- [DSEmptyState](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSEmptyState.md): Icon, title, message and an optional call to action.
+- [Progress](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Progress.md): Circular, linear, gradient and step progress, animated numbers, shimmer skeletons.
+- [DSThinkingIndicator](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSThinkingIndicator.md): Ambient "thinking" state for AI and background work.
+- [DSSkeleton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSkeleton.md): Loading placeholder blocks, plus .dsSkeleton(_:) to redact a real view in place.
+- [DSSuccessCheck](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSuccessCheck.md): An animated success seal: the ring draws, the check strokes in, one pop and a haptic on the beat.
+- [DSTypewriterText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTypewriterText.md): Types phrases out character by character, with a blinking caret.
+- [Motion](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Motion.md): dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.
+- [DSConfetti](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSConfetti.md): A themed confetti burst from any point, fired whenever a trigger value changes.
+
+## Examples
+
+- [Onboarding](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/examples/Onboarding.md): Example: paged welcome with a typed headline, a live theme picker, notification toggles and a success seal with confetti.
+- [Settings](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/examples/Settings.md): Example: grouped glass rows with toggles and a segmented control, a Saved toast, and account deletion in a sheet with slide-to-confirm.
+- [Checkout](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/examples/Checkout.md): Example: quantity steppers, a promo code, a rolling total, slide-to-pay with a declined-card path and a success moment.
+
+## Optional
+
+- [CHANGELOG.md](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/CHANGELOG.md): Every user-visible change
+- [docs/engineering-notes.md](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/engineering-notes.md): Architecture decisions, gotchas and roadmap
+- [llms-full.txt](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/llms-full.txt): This index plus the full text of every page above in one file

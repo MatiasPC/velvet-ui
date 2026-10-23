@@ -30,6 +30,17 @@ struct StageView: View {
         case .DSTypewriterText:    TypewriterTextStage()
         case .Progress:            ProgressStage(autoplay: autoplay)
         case .Motion:              MotionStage()
+        case .DSTabBar:            TabBarStage(autoplay: autoplay)
+        case .DSCarousel:          CarouselStage(autoplay: autoplay)
+        case .DSSheet:             SheetStage(autoplay: autoplay)
+        case .DSNumberTicker:      NumberTickerStage(autoplay: autoplay)
+        case .Charts:              ChartsStage(autoplay: autoplay)
+        case .DSSkeleton:          SkeletonStage(autoplay: autoplay)
+        case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
+        case .DSConfetti:          ConfettiStage(autoplay: autoplay)
+        case .OnboardingFlow:      OnboardingFlowStage()
+        case .SettingsFlow:        SettingsFlowStage()
+        case .CheckoutFlow:        CheckoutFlowStage()
         }
     }
 }

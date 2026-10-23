@@ -9,8 +9,10 @@ A one-time-code input of separate digit boxes with a blinking caret, a springy a
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -66,7 +68,7 @@ struct CodeFieldDemo: View {
 
 - One element labelled "Verification code" that accepts typing.
 - Its value spells the digits and progress, for example "1 2 3, 3 of 6 digits", plus ", incorrect code" for `.error` or ", verified" for `.success`.
-- Label text doesn't scale with Dynamic Type yet: the control has a fixed height, so its label keeps a fixed size. Text elsewhere on your screen that uses `.ds(_:)` / `.dsTextStyle(_:)` does scale.
+- Dynamic Type: the digits use `.ds(.title1)` and scale, but each box keeps the fixed `boxHeight`, so very large sizes can clip.
 
 ## See also
 

@@ -77,7 +77,8 @@ xcrun simctl install "$SIM" "$APP"
 xcrun simctl terminate "$SIM" "$BUNDLE_ID" >/dev/null 2>&1 || true
 xcrun simctl launch "$SIM" "$BUNDLE_ID" \
   -VelvetStage "$STAGE" -VelvetStageBackground "$BACKGROUND" \
-  -VelvetAppearance "$APPEARANCE" -VelvetStageAutoplay YES >/dev/null
+  -VelvetAppearance "$APPEARANCE" -VelvetStageAutoplay YES \
+  -AppleLanguages "(en)" -AppleLocale en_US >/dev/null   # "$115.00", not the Mac's locale
 sleep 4   # let the first frame settle before recording
 
 echo "==> Recording ${SECONDS_TO_RECORD}s (interact in the Simulator window now for gesture stages)"
@@ -98,11 +99,19 @@ fi
 
 mkdir -p "$OUT_DIR" "$CLIPS_DIR"
 # Center crop to 9:16 (portrait). Source is taller than 9:16, so keep full width.
-CROP="crop=iw:trunc(iw*16/9/2)*2:0:(ih-trunc(iw*16/9/2)*2)/2"
+# The example flows (*Flow) fill the whole screen, so they keep the device's
+# full height instead (about 1:2.17, which X still accepts for vertical video).
+if [[ "$STAGE" == *Flow ]]; then
+  CROP="null"
+  MP4_SIZE="scale=1080:-2:flags=lanczos"
+else
+  CROP="crop=iw:trunc(iw*16/9/2)*2:0:(ih-trunc(iw*16/9/2)*2)/2"
+  MP4_SIZE="scale=1080:1920:flags=lanczos"
+fi
 
 echo "==> Writing $CLIPS_DIR/$STAGE.mp4"
 ffmpeg -y -loglevel error -i "$RAW" \
-  -vf "$CROP,scale=1080:1920:flags=lanczos,fps=30" \
+  -vf "$CROP,$MP4_SIZE,fps=30" \
   -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an "$CLIPS_DIR/$STAGE.mp4"
 
 echo "==> Writing $OUT_DIR/$STAGE.gif"

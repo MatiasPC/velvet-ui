@@ -2,7 +2,8 @@ import SwiftUI
 import VelvetUI
 
 /// Full-screen host for one stage: clean background, no chrome, status bar
-/// hidden. Long-press (~1 s) the background — not the component — to exit.
+/// hidden. Long-press (~1 s) the background — not the component — to exit
+/// (the top edge, for full-screen flow stages).
 struct StageContainer: View {
     let stage: Stage
     let background: StageBackground
@@ -23,7 +24,18 @@ struct StageContainer: View {
         ZStack {
             backdrop
             StageView(stage: stage, autoplay: autoplay)
-                .padding(.horizontal, DSSpacing.xxl)
+                .padding(.horizontal, stage.isFullScreen ? 0 : DSSpacing.xxl)
+        }
+        .overlay(alignment: .top) {
+            // Full-screen flows cover the background, so their exit gesture lives
+            // on a thin strip along the (hidden) status bar instead.
+            if stage.isFullScreen {
+                Color.clear
+                    .frame(height: DSSpacing.xxl)
+                    .contentShape(Rectangle())
+                    .onLongPressGesture(minimumDuration: 1.0, perform: onExit)
+                    .ignoresSafeArea()
+            }
         }
         .dsTheme(theme)
         .statusBarHidden()

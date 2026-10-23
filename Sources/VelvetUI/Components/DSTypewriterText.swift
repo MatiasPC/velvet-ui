@@ -38,7 +38,7 @@ private enum Metrics {
 /// Reports the rendered height of the longest phrase so the caret can be
 /// sized to the text style without a hardcoded point value.
 private struct DSTypewriterLineHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
+    static let defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = max(value, nextValue())
     }

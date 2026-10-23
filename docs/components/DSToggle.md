@@ -1,6 +1,6 @@
 # DSToggle
 
-A themed on/off switch whose knob springs across a glass track and snaps with a rigid haptic.
+A themed on/off switch whose knob springs across a pill track and snaps with a rigid haptic.
 
 ![DSToggle](../media/DSToggle.gif)
 
@@ -9,8 +9,10 @@ A themed on/off switch whose knob springs across a glass track and snaps with a 
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -60,7 +62,7 @@ DSToggle(isOn: $notifications).accessibilityLabel("Push notifications")
 
 ## Behavior
 
-- The knob springs across the track with a snappy spring; the track fills with the accent when on.
+- The knob springs across the track with `DSAnimation.springSnappy`. The track fills with `onColor` (theme accent by default) when on and with the palette border color when off.
 - A rigid haptic fires on every change (not when disabled).
 
 ## Accessibility

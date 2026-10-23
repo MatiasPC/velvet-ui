@@ -133,7 +133,7 @@ struct CardStylesDemo: View {
 
 - `DSInteractiveCard` scales to `DSPress.scale` (0.96) while pressed using `DSPress.animation`, and fires `haptic` (default `.light`) on tap.
 - `DSImageCard` shows a shimmering placeholder until the image loads; the image gets the glass edge highlight.
-- The shimmer placeholder stays still under Reduce Motion. Glass falls back to the plain background if there is no backdrop.
+- The shimmer placeholder stays still under Reduce Motion. Under Reduce Transparency the glass becomes a solid elevated background. On a screen without a backdrop, `.flat` uses `backgroundSecondary` so it stays visible.
 
 ## Accessibility
 

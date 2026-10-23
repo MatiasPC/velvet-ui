@@ -51,6 +51,7 @@ public struct DSToast: View {
     let type: DSToastType
 
     @DSThemed private var theme
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     public init(_ message: String, type: DSToastType = .info) {
         self.message = message
@@ -71,7 +72,11 @@ public struct DSToast: View {
         }
         .padding(.horizontal, DSSpacing.md)
         .padding(.vertical, DSSpacing.sm)
-        .background(.ultraThinMaterial)
+        .background(
+            reduceTransparency
+                ? AnyShapeStyle(theme.palette.backgroundElevated)
+                : AnyShapeStyle(.ultraThinMaterial)
+        )
         .clipShape(RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous))
         .dsShadow(.lg)
         .padding(.horizontal, DSSpacing.screenHorizontal)

@@ -10,32 +10,44 @@
 		17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */; };
 		1A9107756FFA38B7F26FD72F /* ToastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6F0563E4BBB324996A851C /* ToastScreen.swift */; };
 		1AEC99C7B4DD64853B18865E /* TypographyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */; };
+		218C88C5ECDDF0D161E88C6D /* SuccessCheckScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */; };
 		2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */; };
+		24571EF6E1B3534C30DE94D3 /* NumberTickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */; };
 		2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7719CDE3248D798BF625C212 /* RatingScreen.swift */; };
 		37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316D05380CECE2E8681282F6 /* PageControlScreen.swift */; };
 		38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC668E35B60F699D3690AA /* MotionScreen.swift */; };
+		3F9C6E939063C3A8F3ECA9BC /* FlowStages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9B0C04AFCD8F2D1ECC23AD /* FlowStages.swift */; };
+		424574B6BCA10E08E2F3A5F2 /* ConfettiScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6134837B127382EC53CC0104 /* ConfettiScreen.swift */; };
 		4386829CB14CD0D06D656762 /* CodeFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F832409543665FBF97B12CD /* CodeFieldScreen.swift */; };
 		4849096CCD819E56769681C3 /* ThemeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F06770FADF1115A1222AB96 /* ThemeScreen.swift */; };
 		4CF51BEF9FD582C6C0B9F6B6 /* StageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931294FB9DE3CEC60EEB2738 /* StageView.swift */; };
 		4D88FE867C7446369EED6C5B /* EmptyStateScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */; };
+		4F7CF4519B8AC093FDE4C65B /* TabBarScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */; };
 		53489226AEA731905E636AC4 /* VelvetGalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609840D6239B663FA5055A33 /* VelvetGalleryApp.swift */; };
 		5E2A0B87946889ED5E9765C8 /* BadgesAvatarsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */; };
+		6174D8134DEFDA37922203C0 /* ChartsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F764E802EE484CCD96ADDF /* ChartsScreen.swift */; };
 		6B4931D0526771EB741B5798 /* ComponentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */; };
 		6E55A10EACCACAB360C3A32D /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */; };
 		792006BF73E9FAEFFD7CEBE8 /* ThinkingIndicatorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */; };
 		7C8799E4A4CBFD7A15829475 /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5BAE8780B3FD380C2CFDE /* Stage.swift */; };
 		8034B5A1DB2FF10A31851FCE /* TypewriterTextScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D1AFC884CFBA3FE202ADEF /* TypewriterTextScreen.swift */; };
 		9722FA983500E3DDFCFBDD7D /* ButtonsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C211B7682F0E826683528A4 /* ButtonsScreen.swift */; };
+		98F1401DE187A997E091F1C4 /* SkeletonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */; };
 		9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B172A6E35E9B09EE2507CF /* StageContainer.swift */; };
 		A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629C745CA3297503D924937D /* LayoutScreen.swift */; };
 		A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70D448B6642D640F23AFC4 /* StageListView.swift */; };
+		A6DEFEDDD886C10265B0FF20 /* CheckoutFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D000BBF8E60C773068243C /* CheckoutFlow.swift */; };
 		A9367F1E12EFE69857EE8A71 /* StepperScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C54157D449912B0364C807 /* StepperScreen.swift */; };
+		B1CCE98D199E6C37CD770D10 /* SheetScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */; };
 		B76C2E76BF9616710DE63A2E /* CardsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E328F00376EC8C549740513E /* CardsScreen.swift */; };
 		BEFFD9CE369EEB96948701A0 /* ProgressLoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */; };
 		C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F60FD1D436135BECE7C11C /* ListsScreen.swift */; };
 		CB8F7A87E639B8926DF98407 /* NeutralTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5782F9BF254DA5CE52B57A7F /* NeutralTheme.swift */; };
+		CC7D5C064E844C7B045CC451 /* CarouselScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881BF062001690F173C72A36 /* CarouselScreen.swift */; };
+		D631D0C5204131B963AB76F7 /* SettingsFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88C16EA4FAB1FBD60ACA1D2 /* SettingsFlow.swift */; };
 		D6C1A13E07F8E43DA1E8F356 /* ToggleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C3F5EBC1DA66C560962D1C /* ToggleScreen.swift */; };
 		D96C9A7BAD30BB912DB8F225 /* VelvetUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A46D949DBAFBFE32716A4CF /* VelvetUI */; };
+		EFF9FCAD32DBAB9F8F0E08BA /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A58BF4F0ACB59CB636CB48 /* OnboardingFlow.swift */; };
 		F20212FE31979162C787E5C2 /* GalleryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36781F6D81C2396DB54B944F /* GalleryScreen.swift */; };
 		F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */; };
 /* End PBXBuildFile section */
@@ -43,7 +55,10 @@
 /* Begin PBXFileReference section */
 		01D1AFC884CFBA3FE202ADEF /* TypewriterTextScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypewriterTextScreen.swift; sourceTree = "<group>"; };
 		04A5BAE8780B3FD380C2CFDE /* Stage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
+		18F764E802EE484CCD96ADDF /* ChartsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsScreen.swift; sourceTree = "<group>"; };
 		1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
+		24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetScreen.swift; sourceTree = "<group>"; };
+		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		2B6F0563E4BBB324996A851C /* ToastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastScreen.swift; sourceTree = "<group>"; };
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +66,7 @@
 		36781F6D81C2396DB54B944F /* GalleryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryScreen.swift; sourceTree = "<group>"; };
 		380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateScreen.swift; sourceTree = "<group>"; };
 		3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLoadingScreen.swift; sourceTree = "<group>"; };
+		4A9B0C04AFCD8F2D1ECC23AD /* FlowStages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStages.swift; sourceTree = "<group>"; };
 		54F60FD1D436135BECE7C11C /* ListsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsScreen.swift; sourceTree = "<group>"; };
 		5782F9BF254DA5CE52B57A7F /* NeutralTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeutralTheme.swift; sourceTree = "<group>"; };
 		5C211B7682F0E826683528A4 /* ButtonsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsScreen.swift; sourceTree = "<group>"; };
@@ -58,21 +74,29 @@
 		609840D6239B663FA5055A33 /* VelvetGalleryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VelvetGalleryApp.swift; sourceTree = "<group>"; };
 		60C3F5EBC1DA66C560962D1C /* ToggleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleScreen.swift; sourceTree = "<group>"; };
 		60C54157D449912B0364C807 /* StepperScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperScreen.swift; sourceTree = "<group>"; };
+		6134837B127382EC53CC0104 /* ConfettiScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiScreen.swift; sourceTree = "<group>"; };
 		629C745CA3297503D924937D /* LayoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutScreen.swift; sourceTree = "<group>"; };
 		6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyScreen.swift; sourceTree = "<group>"; };
+		70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonScreen.swift; sourceTree = "<group>"; };
 		7719CDE3248D798BF625C212 /* RatingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingScreen.swift; sourceTree = "<group>"; };
+		881BF062001690F173C72A36 /* CarouselScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselScreen.swift; sourceTree = "<group>"; };
 		8F832409543665FBF97B12CD /* CodeFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeFieldScreen.swift; sourceTree = "<group>"; };
 		931294FB9DE3CEC60EEB2738 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
+		93D000BBF8E60C773068243C /* CheckoutFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutFlow.swift; sourceTree = "<group>"; };
+		98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessCheckScreen.swift; sourceTree = "<group>"; };
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
-		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
+		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
 		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
 		D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesAvatarsScreen.swift; sourceTree = "<group>"; };
 		E328F00376EC8C549740513E /* CardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScreen.swift; sourceTree = "<group>"; };
+		F4A58BF4F0ACB59CB636CB48 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
 		F7FC668E35B60F699D3690AA /* MotionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionScreen.swift; sourceTree = "<group>"; };
+		F88C16EA4FAB1FBD60ACA1D2 /* SettingsFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFlow.swift; sourceTree = "<group>"; };
 		F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlScreen.swift; sourceTree = "<group>"; };
+		FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberTickerScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,23 +164,42 @@
 			path = Theme;
 			sourceTree = "<group>";
 		};
+		ABC2940767B26B1CFCC6026B /* Flows */ = {
+			isa = PBXGroup;
+			children = (
+				93D000BBF8E60C773068243C /* CheckoutFlow.swift */,
+				4A9B0C04AFCD8F2D1ECC23AD /* FlowStages.swift */,
+				F4A58BF4F0ACB59CB636CB48 /* OnboardingFlow.swift */,
+				F88C16EA4FAB1FBD60ACA1D2 /* SettingsFlow.swift */,
+			);
+			path = Flows;
+			sourceTree = "<group>";
+		};
 		D7E2BEC39477C80B58A76451 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
 				D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */,
 				5C211B7682F0E826683528A4 /* ButtonsScreen.swift */,
 				E328F00376EC8C549740513E /* CardsScreen.swift */,
+				881BF062001690F173C72A36 /* CarouselScreen.swift */,
+				18F764E802EE484CCD96ADDF /* ChartsScreen.swift */,
 				8F832409543665FBF97B12CD /* CodeFieldScreen.swift */,
+				6134837B127382EC53CC0104 /* ConfettiScreen.swift */,
 				380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */,
 				629C745CA3297503D924937D /* LayoutScreen.swift */,
 				54F60FD1D436135BECE7C11C /* ListsScreen.swift */,
 				F7FC668E35B60F699D3690AA /* MotionScreen.swift */,
+				FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */,
 				316D05380CECE2E8681282F6 /* PageControlScreen.swift */,
 				3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */,
 				7719CDE3248D798BF625C212 /* RatingScreen.swift */,
 				F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */,
+				24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */,
+				70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */,
 				9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */,
 				60C54157D449912B0364C807 /* StepperScreen.swift */,
+				98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */,
+				BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */,
 				A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */,
 				5F06770FADF1115A1222AB96 /* ThemeScreen.swift */,
 				B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */,
@@ -173,6 +216,7 @@
 			children = (
 				D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */,
 				609840D6239B663FA5055A33 /* VelvetGalleryApp.swift */,
+				ABC2940767B26B1CFCC6026B /* Flows */,
 				D7E2BEC39477C80B58A76451 /* Screens */,
 				55165A7506784712E9B17393 /* Stages */,
 				6F75B9CF7EAF36DDD691674C /* Support */,
@@ -243,24 +287,36 @@
 				5E2A0B87946889ED5E9765C8 /* BadgesAvatarsScreen.swift in Sources */,
 				9722FA983500E3DDFCFBDD7D /* ButtonsScreen.swift in Sources */,
 				B76C2E76BF9616710DE63A2E /* CardsScreen.swift in Sources */,
+				CC7D5C064E844C7B045CC451 /* CarouselScreen.swift in Sources */,
+				6174D8134DEFDA37922203C0 /* ChartsScreen.swift in Sources */,
+				A6DEFEDDD886C10265B0FF20 /* CheckoutFlow.swift in Sources */,
 				4386829CB14CD0D06D656762 /* CodeFieldScreen.swift in Sources */,
 				6B4931D0526771EB741B5798 /* ComponentListView.swift in Sources */,
+				424574B6BCA10E08E2F3A5F2 /* ConfettiScreen.swift in Sources */,
 				4D88FE867C7446369EED6C5B /* EmptyStateScreen.swift in Sources */,
+				3F9C6E939063C3A8F3ECA9BC /* FlowStages.swift in Sources */,
 				F20212FE31979162C787E5C2 /* GalleryScreen.swift in Sources */,
 				A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */,
 				C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */,
 				38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */,
 				CB8F7A87E639B8926DF98407 /* NeutralTheme.swift in Sources */,
+				24571EF6E1B3534C30DE94D3 /* NumberTickerScreen.swift in Sources */,
+				EFF9FCAD32DBAB9F8F0E08BA /* OnboardingFlow.swift in Sources */,
 				37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */,
 				BEFFD9CE369EEB96948701A0 /* ProgressLoadingScreen.swift in Sources */,
 				2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */,
 				2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */,
+				D631D0C5204131B963AB76F7 /* SettingsFlow.swift in Sources */,
+				B1CCE98D199E6C37CD770D10 /* SheetScreen.swift in Sources */,
+				98F1401DE187A997E091F1C4 /* SkeletonScreen.swift in Sources */,
 				F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */,
 				7C8799E4A4CBFD7A15829475 /* Stage.swift in Sources */,
 				9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */,
 				A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */,
 				4CF51BEF9FD582C6C0B9F6B6 /* StageView.swift in Sources */,
 				A9367F1E12EFE69857EE8A71 /* StepperScreen.swift in Sources */,
+				218C88C5ECDDF0D161E88C6D /* SuccessCheckScreen.swift in Sources */,
+				4F7CF4519B8AC093FDE4C65B /* TabBarScreen.swift in Sources */,
 				17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */,
 				4849096CCD819E56769681C3 /* ThemeScreen.swift in Sources */,
 				792006BF73E9FAEFFD7CEBE8 /* ThinkingIndicatorScreen.swift in Sources */,

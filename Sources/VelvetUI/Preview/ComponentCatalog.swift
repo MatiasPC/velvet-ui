@@ -9,6 +9,11 @@ import SwiftUI
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
 
+/// A page for the carousel section.
+private struct CatalogPage: Identifiable {
+    let id: Int
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -29,6 +34,16 @@ struct ComponentCatalog: View {
     @State private var bulk = 25
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var tabbarSelection = "home"
+    @State private var showsSheet = false
+    @State private var carouselPage = 0
+    @State private var tickerValue: Double = 1284.5
+    @State private var sparkline: [Double] = [12, 18, 14, 22, 19, 27, 24, 31, 28, 36]
+    @State private var weekly: [Double] = [12, 18, 9, 22, 15, 6, 11]
+    @State private var selectedDay: Int? = 3
+    @State private var isLoadingCard = true
+    @State private var isPaymentDone = false
+    @State private var confettiBursts = 0
 
     var body: some View {
         NavigationStack {
@@ -435,6 +450,112 @@ struct ComponentCatalog: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                }
+
+                // MARK: - Tab Bar
+                section("Tab Bar") {
+                    DSTabBar(selection: $tabbarSelection, items: [
+                        DSTabItem("Home", value: "home", icon: "house", selectedIcon: "house.fill"),
+                        DSTabItem("Search", value: "search", icon: "magnifyingglass"),
+                        DSTabItem("Inbox", value: "inbox", icon: "tray", selectedIcon: "tray.fill", badge: 3),
+                        DSTabItem("Profile", value: "profile", icon: "person", selectedIcon: "person.fill")
+                    ])
+                }
+
+                // MARK: - Carousel
+                section("Carousel") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSCarousel((0..<4).map(CatalogPage.init), currentPage: $carouselPage) { page in
+                            Text("Page \(page.id + 1)")
+                                .ds(.title2)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .dsSurface(.glass, radius: DSRadius.card)
+                        }
+                        .frame(height: 140)
+                        .padding(.horizontal, -DSSpacing.screenHorizontal)
+                        DSPageControl(currentPage: $carouselPage, numberOfPages: 4)
+                    }
+                }
+
+                // MARK: - Sheet
+                section("Sheet") {
+                    DSButton("Show sheet", variant: .secondary) { showsSheet = true }
+                        .dsSheet(isPresented: $showsSheet) {
+                            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                                Text("Share trip").ds(.title2)
+                                Text("Glass background, a grabber and two detents.").ds(.callout)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(DSSpacing.xl)
+                        }
+                }
+
+                // MARK: - Number Ticker
+                section("Number Ticker") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSNumberTicker(tickerValue, format: .currency(code: "USD"))
+                            DSButton("Random jump", variant: .ghost, size: .small) {
+                                tickerValue = Double.random(in: 0...50_000).rounded()
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Charts
+                section("Charts") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSSparkline(sparkline).frame(height: 72)
+                            DSBarChart(weekly, labels: ["M", "T", "W", "T", "F", "S", "S"], selection: $selectedDay)
+                                .frame(height: 140)
+                            DSButton("Shuffle data", variant: .ghost, size: .small) {
+                                sparkline = sparkline.map { _ in Double.random(in: 10...40) }
+                                weekly = weekly.map { _ in Double.random(in: 2...30) }
+                            }
+                        }
+                    }
+                }
+
+                // MARK: - Skeleton
+                section("Skeleton") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.sm) {
+                                DSSkeleton.circle(DSSpacing.xxxl)
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                    DSSkeleton(width: 140)
+                                    DSSkeleton(width: 90)
+                                }
+                            }
+                            VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                                Text("Weekend in Lisbon").ds(.title3)
+                                Text("Three nights by the river, two guests.").ds(.callout)
+                            }
+                            .dsSkeleton(isLoadingCard)
+                            DSToggle("Loading", isOn: $isLoadingCard)
+                        }
+                    }
+                }
+
+                // MARK: - Success Check
+                section("Success Check") {
+                    HStack(spacing: DSSpacing.lg) {
+                        DSSuccessCheck(isComplete: isPaymentDone, size: 64)
+                        DSButton(isPaymentDone ? "Reset" : "Complete", variant: .secondary, size: .small) {
+                            isPaymentDone.toggle()
+                        }
+                    }
+                }
+
+                // MARK: - Confetti
+                section("Confetti") {
+                    DSCard {
+                        DSButton("Celebrate", icon: "sparkles") { confettiBursts += 1 }
+                            .frame(maxWidth: .infinity, minHeight: 120)
+                    }
+                    .dsConfetti(trigger: confettiBursts)
                 }
 
                 // MARK: - Motion
