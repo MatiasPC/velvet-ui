@@ -8,7 +8,7 @@ import SwiftUI
 // How it avoids layout jitter and per-frame work:
 //
 // 1. **One layout, no GeometryReader.** `RollingColumnLayout` sizes itself to
-//    its first child (the "0") and places the ten glyphs at `(i - position)`
+//    its first child (the "0") and places the glyphs (0-9 plus a sentinel 9 before and 0 after) at `(i - position)`
 //    glyph-heights. `position` is its `animatableData`, so a spring on the
 //    digit interpolates the offset inside the layout pass itself.
 // 2. **Identity counts from the right.** The units digit keeps its identity
@@ -162,10 +162,15 @@ public struct DSNumberTicker: View {
                 }
                 .animation(DSAnimation.fast, value: digit)
             } else {
-                RollingColumnLayout(position: Double(digit)) {
+                // A "9" sits before the 0 and a "0" after the 9: the spring
+                // overshoots a few percent, and on a 9 -> 0 wrap that would
+                // otherwise reveal an empty band past the end of the column.
+                RollingColumnLayout(position: Double(digit + 1)) {
+                    Text(String(Metrics.digitCount - 1)).ds(style, color: ink)
                     ForEach(0..<Metrics.digitCount, id: \.self) { value in
                         Text(String(value)).ds(style, color: ink)
                     }
+                    Text("0").ds(style, color: ink)
                 }
                 .clipped()
                 .animation(
