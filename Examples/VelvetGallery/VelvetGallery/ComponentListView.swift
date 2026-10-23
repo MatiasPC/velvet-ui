@@ -1,9 +1,12 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct ComponentListView: View {
     var body: some View {
         List {
+            Section("Recording") {
+                row("Recording stages", "Clean, chrome-free views for clips") { StageListView() }
+            }
             Section("Foundations") {
                 row("Theme", "Neutral palette & glass surfaces") { ThemeScreen() }
                 row("Typography", "Every text style") { TypographyScreen() }

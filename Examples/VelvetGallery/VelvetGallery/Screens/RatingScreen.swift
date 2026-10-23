@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct RatingScreen: View {
     @State private var rating: Double = 3

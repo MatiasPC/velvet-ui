@@ -4,43 +4,19 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
-### Added
-- `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`. Replaces the throwaway `Examples/MotionReview/` harness.
-- `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
-- `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).
-- `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
-- `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
-- View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
-- `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
-- `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
-- `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
-- `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
-- `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
-- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
-- Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
+## [0.2.0] — 2026-10-22
 
-### Changed
-- `DSSlideToConfirm.onConfirm` is now `async throws`, so one closure carries a payment's latency and its outcome. The control spins while awaiting it (500ms floor, applied after the closure returns) and treats a thrown error as a refusal: `.error` haptic, then it re-opens for a retry. **Not source-breaking** — `() -> Void` is a subtype of `() async throws -> Void`, so existing call sites compile unchanged.
-- `DSSlideToConfirm` gains a `finish:` parameter, placed after `accent:` so no existing parameter changes label or position.
-- `DSSlideToConfirm` emits a cloud of motes around the finger for the whole gesture; their tint is the status channel, sweeping to `palette.success` on success and staying neutral on refusal. Suppressed under Reduce Motion or Reduce Transparency.
-- `DSSlideToConfirm` drag haptics went from a single threshold tap to a detent texture: 8 `.soft` ticks across the travel with intensity ramped 0.2 → 0.6, plus the existing `.rigid` at the threshold.
-- **BREAKING:** Package now targets **iOS 18 / macOS 15** (was iOS 17 / macOS 14). Apps must update their deployment targets.
-- `.dsJiggle(trigger:)` motion reworked from a stepped `phaseAnimator` (five spring-settled phases, read as robotic) to one continuous `keyframeAnimator` track over `jiggleSwings` / `jiggleDuration`. Same API, same peak, smoother decay.
-- `swift-tools-version` raised from 5.9 to 6.0; language mode explicitly pinned to Swift 5 via `swiftSettings` (the tools version does not imply Swift 6 here).
-- `.dsPulse()` now respects Reduce Motion. It previously looped regardless of the setting; the guard was added on the way to deprecating it. Its curve is unchanged.
+The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
 
-### Deprecated
-- `.dsPulse()` — use `.dsBreathe(_:)` instead.
+### Highlights
+- **Glass over a gradient theme.** Three built-in themes (Sunset, Aurora, Lagoon), every component reads its colors through `@DSThemed`, dark mode everywhere, no borders. Proposal: [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
+- **Motion.** Five ambient modifiers (`dsBreathe`, `dsJiggle`, `dsPopIn`, `dsEdgeSweep`, `dsHueDrift`) and four motion components: `DSSlideToConfirm`, `DSStepper`, `DSThinkingIndicator`, `DSTypewriterText`. Proposal: [docs/proposals/0002-motion-library.md](docs/proposals/0002-motion-library.md).
+- **Accessibility.** VoiceOver labels, values and traits on every interactive control; text styles scale with Dynamic Type; Reduce Motion and Reduce Transparency honored.
+- **Ready to share.** MIT license, CI, a docs page per component, and a demo app with recording stages.
 
-### Fixed
-- `DSSlideToConfirm` knob is now a circle as tall as the track (was inset 4pt top and bottom), so no glass shows above or below it and it travels flush edge-to-edge. It's layered over the track's pill clip so its shadow isn't cropped.
-- `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
-- `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.
-- `DSSlideToConfirm` clears its instruction label the instant the confirmation commits. The letter-by-letter dissolve is paced by the drag (stagger up to `count × 0.05s`) and only reaches zero on an unhurried drag; a quick flick past the threshold used to leave lit text over the pill as it masked down to a circle. The label is now `phase`-gated like the knob glyph.
-
-## [0.2.0] — 2026-09-05
-
-The Arc-inspired surface language: glass over a selectable gradient theme. Proposal and decisions in [docs/proposals/0001-arc-tokens.md](docs/proposals/0001-arc-tokens.md).
+### Breaking changes — migrating from 0.1
+- The SwiftPM package, product and target are renamed from `DesignSystem` to **`VelvetUI`** (sources now live in `Sources/VelvetUI/`, tests in `Tests/VelvetUITests/`). Migrate with `import DesignSystem` → `import VelvetUI`, and in `Package.swift` depend on `.product(name: "VelvetUI", package: "velvet-ui")`. Xcode projects that added the package locally need the `DesignSystem` framework removed and `VelvetUI` added under the target's *Frameworks, Libraries, and Embedded Content*. Every type keeps its `DS` prefix; no symbol was renamed. The iOS build scheme is now `VelvetUI`.
+- Package now targets **iOS 18 / macOS 15** (was iOS 17 / macOS 14). Apps must update their deployment targets.
 
 ### Added
 - `DSGradientTheme` with three built-in themes (`.sunset` default, `.aurora`, `.lagoon`), each with `accent`, `onAccent`, `ink`, `inkDark`, `lightWash`, `darkDim`.
@@ -56,7 +32,28 @@ The Arc-inspired surface language: glass over a selectable gradient theme. Propo
 - `Color.dsDynamic(light:dark:)`.
 - `DSCard` previews over the backdrop in light and dark, plus a no-backdrop fallback preview.
 - Tests: gradient theme AA contrast (onAccent/accent, ink/white, inkDark/dark glass), theme resolution, press constants, radius aliases.
-- Docs: README, `docs/tokens.md`, `docs/components.md`, `docs/engineering-notes.md`.
+- `View.dsFont(_:)`: applies a text style's font scaled with Dynamic Type.
+- `DSTextStyle.size`, `.weight`, `.design`, `.textStyle` (the Dynamic Type curve) are now public.
+- `Examples/VelvetGallery/` — a runnable per-component demo app: one screen per component, neutral non-gradient theme, System/Light/Dark toggle. For demos and video capture. XcodeGen project consuming the package as a local dependency; `Package.swift` untouched and not part of `swift build` / `swift test`. The generated `.xcodeproj` is committed (open and Run, no commands) and now covers the motion set too — `MotionScreen`, `SlideToConfirmScreen` (async slide-to-pay), `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`.
+- `DSAnimation.ambient`: easeInOut 1.8s, the base curve for ambient loops.
+- `DSMotion` enum: constants `breatheDuration` 2.4s, `sweepDuration` 2.0s, `driftDuration` 8.0s, `driftDegrees` 12, `jiggleDegrees` 7, `jiggleDuration` 0.45s, `jiggleSwings` (the five-point decay envelope).
+- `DSMotion.loop(_:autoreverses:unless:)` — wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on, so ambient effects settle at rest instead of being skipped.
+- `DSBreatheIntensity` enum: `.subtle` (scale 1.02), `.medium` (1.05, default), `.strong` (1.10).
+- View modifiers: `.dsBreathe(_ intensity:)` (ambient swell), `.dsJiggle(trigger:)` (one decaying shake), `.dsPopIn(delay:)` (springBouncy entrance), `.dsEdgeSweep(radius:isActive:)` (specular highlight on edge), `.dsHueDrift(isActive:)` (slow hue rotation).
+- `DSSlideToConfirm`: slide-to-confirm gate for destructive actions; rigid haptic on threshold, success on confirm, light on snap-back.
+- `DSSlideFinish` enum: `.settle` (default, rests in place) and `.morphAndVanish` (pill collapses to a circle, resolves, then dissolves leaving its layout slot).
+- `DSThinkingIndicator`: ambient processing indicator with animated symbol and phrase cycling.
+- `DSTypewriterText`: character-by-character typing with blinking caret and phrase looping.
+- `DSStepper`: numeric stepper with selection haptic per step, warning haptic and jiggle at bounds.
+- `DSIconButton(accessibilityLabel:)`: optional VoiceOver label for icon-only buttons, placed before `action` so existing call sites compile unchanged.
+- `ComponentCatalog` — Motion section demoing all five modifiers, plus a section for each of the four new components.
+- Tests: 8 new tests for DSMotion covering Reduce Motion nil contract, drift/jiggle bounds, breathe intensities, ambient curve timing, jiggle-envelope decay and jiggle duration.
+- `LICENSE`: Velvet UI is MIT-licensed.
+- CI on GitHub Actions: `swift build` + `swift test` on macOS, `xcodebuild test` on an iOS Simulator and a VelvetGallery build, on pushes to `main` and on pull requests.
+- A page per component in `docs/components/` (usage snippet, parameters, variants, behavior, accessibility). Every snippet in those pages and in the README is compiled by the test suite (`DocSnippets*Tests`).
+- VelvetGallery recording stages: a clean full-screen stage per component (neutral or gradient background, light or dark, optional autoplay), launch arguments to open one directly, and `scripts/record-stage.sh` to record a clip and GIF from the simulator. See `docs/RECORDING.md`.
+- `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), issue forms for bugs and component requests, a pull request template, and `docs/RELEASING.md`.
+- Tests: Dynamic Type mapping and fixed-font equality for every text style, VoiceOver string builders.
 
 ### Changed
 - **DSTheme is `@Observable`** (still conforms to `ObservableObject`). `@Published` removed; `@StateObject` / `@EnvironmentObject` call sites keep compiling.
@@ -72,6 +69,22 @@ The Arc-inspired surface language: glass over a selectable gradient theme. Propo
 - `DSInteractiveCard` press scale 0.97 → 0.96 (`DSPress.scale`).
 - `DSCountBadge` uses tokens (`DSTextStyle.badge`, `DSSpacing`, palette) instead of raw values.
 - `dsCornerRadius(_:)` no longer takes stroke parameters; the stroking overload is deprecated.
+- Text styles (`.ds(_:)`, `.dsTextStyle(_:)`) now scale with Dynamic Type; identical at the default size. `DSTextStyle.font` stays fixed-size. `DSThinkingIndicator` scales; fixed-height controls do not yet.
+- VoiceOver: `DSToggle` has the toggle trait; `DSSegmentedControl` exposes one button per segment with selected state; `DSCodeField` is a single "Verification code" element reading the digits; `DSPageControl` is one adjustable "Page N of M" element; `DSToast` reads "<Type>: <message>" and announces on appear.
+- `DSSlideToConfirm`: accessibility hint is now "Double-tap to confirm" and it reports a value ("Processing" / confirmed label).
+- `DSRating` no longer carries the button trait (adjustable only).
+- `DSSlideToConfirm.onConfirm` is now `async throws`, so one closure carries a payment's latency and its outcome. The control spins while awaiting it (500ms floor, applied after the closure returns) and treats a thrown error as a refusal: `.error` haptic, then it re-opens for a retry. **Not source-breaking** — `() -> Void` is a subtype of `() async throws -> Void`, so existing call sites compile unchanged.
+- `DSSlideToConfirm` gains a `finish:` parameter, placed after `accent:` so no existing parameter changes label or position.
+- `DSSlideToConfirm` emits a cloud of motes around the finger for the whole gesture; their tint is the status channel, sweeping to `palette.success` on success and staying neutral on refusal. Suppressed under Reduce Motion or Reduce Transparency.
+- `DSSlideToConfirm` drag haptics went from a single threshold tap to a detent texture: 8 `.soft` ticks across the travel with intensity ramped 0.2 → 0.6, plus the existing `.rigid` at the threshold.
+- `.dsJiggle(trigger:)` motion reworked from a stepped `phaseAnimator` (five spring-settled phases, read as robotic) to one continuous `keyframeAnimator` track over `jiggleSwings` / `jiggleDuration`. Same API, same peak, smoother decay.
+- `swift-tools-version` raised from 5.9 to 6.0; language mode explicitly pinned to Swift 5 via `swiftSettings` (the tools version does not imply Swift 6 here).
+- `.dsPulse()` now respects Reduce Motion. It previously looped regardless of the setting; the guard was added on the way to deprecating it. Its curve is unchanged.
+
+### Deprecated
+- `dsCornerRadius(_:strokeColor:strokeWidth:)` — Velvet doesn't draw borders; use `dsSurface` or `dsWashEdge`.
+- `DSAnimatedValue` — unused; removal planned for 0.3.
+- `.dsPulse()` — use `.dsBreathe(_:)` instead.
 
 ### Fixed
 - `dsStaggerIn` was a no-op (animated a constant). It now fades and rises with the stagger delay and respects Reduce Motion.
@@ -79,11 +92,14 @@ The Arc-inspired surface language: glass over a selectable gradient theme. Propo
 - `DSImageCard` and `DSAvatar` accepted `imageURL` and ignored it; both load it with `AsyncImage` and fall back to the placeholder / initials.
 - `DSCard(style: .flat)` was invisible on a white screen.
 - Dark palette was never applied to components.
-
-### Deprecated
-- `dsCornerRadius(_:strokeColor:strokeWidth:)` — Velvet doesn't draw borders; use `dsSurface` or `dsWashEdge`.
-- `DSAnimatedValue` — unused; removal planned for 0.3.
+- `DSSlideToConfirm` knob is now a circle as tall as the track (was inset 4pt top and bottom), so no glass shows above or below it and it travels flush edge-to-edge. It's layered over the track's pill clip so its shadow isn't cropped.
+- `DSSlideToConfirm` now fills the track edge-to-edge on confirm. The gradient trail stops at the knob's centre while dragging, so without this the trailing half of the track would stay uncoloured once the knob reaches the end.
+- `DSSlideToConfirm` trail now stops at the knob's centre while dragging, so the opaque knob caps it with a true circle instead of the gradient showing square corners past the knob's edge.
+- `DSSlideToConfirm` clears its instruction label the instant the confirmation commits. The letter-by-letter dissolve is paced by the drag (stagger up to `count × 0.05s`) and only reaches zero on an unhurried drag; a quick flick past the threshold used to leave lit text over the pill as it masked down to a circle. The label is now `phase`-gated like the knob glyph.
 
 ## [0.1.0] — 2026-03-11
 
 Initial release: tokens (colors, typography, spacing, radius, shadow, animation, haptics), components (button, card, text field, search bar, list cell, section header, divider, badge, count badge, avatar, toast, empty state, progress ×4, animated number, shimmer, pulse), layout helpers, ComponentCatalog preview. Later additions before 0.2: `DSSegmentedControl`, `DSToggle`, `DSRating`, `DSPageControl`, `DSCodeField`.
+
+[Unreleased]: https://github.com/MatiasPC/velvet-ui/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/MatiasPC/velvet-ui/releases/tag/v0.2.0

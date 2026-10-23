@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct PageControlScreen: View {
     @State private var page = 0

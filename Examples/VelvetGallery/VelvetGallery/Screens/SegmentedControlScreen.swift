@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct SegmentedControlScreen: View {
     @State private var period = "Day"

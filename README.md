@@ -1,103 +1,164 @@
 # Velvet UI
 
-SwiftUI design system for iOS 18+ and macOS 15+. Frosted glass over a selectable gradient theme, spring motion, haptics on every primary action, no borders. One `import DesignSystem`.
+**Glassy SwiftUI components with spring motion and haptics, for iOS 18+ and macOS 15+.**
 
-| | |
-|---|---|
-| **Repo** | github.com/MatiasPC/velvet-ui |
-| **Version** | 0.2.0 (unreleased) — see [CHANGELOG](CHANGELOG.md) |
-| **Docs** | [Tokens](docs/tokens.md) · [Components](docs/components.md) · [Engineering notes](docs/engineering-notes.md) · [Proposals](docs/proposals/) |
+[![CI](https://github.com/MatiasPC/velvet-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/MatiasPC/velvet-ui/actions/workflows/ci.yml)
+[![Swift 6.0+](https://img.shields.io/badge/Swift-6.0%2B-F05138?logo=swift&logoColor=white)](https://www.swift.org)
+[![Platforms](https://img.shields.io/badge/platforms-iOS%2018%2B%20%C2%B7%20macOS%2015%2B-0A84FF)](#requirements)
+[![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-34C759)](#install)
+[![License: MIT](https://img.shields.io/badge/license-MIT-8E8E93)](LICENSE)
+
+<p align="center">
+  <img src="docs/media/Hero.gif" alt="Velvet UI components: a glass card with a toggle, a stepper and a slide-to-pay control" width="320">
+</p>
+
+Frosted glass over a gradient theme you pick (Sunset, Aurora or Lagoon). Every control has spring motion and a haptic on the beat, and there are no borders. You get one `import`, no dependencies, and VoiceOver, Reduce Motion and Dynamic Type support built in.
 
 ## Install
 
-- **Local package**: Xcode → File → Add Package Dependencies → Add Local → this folder.
-- **Remote**: `.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")`, product `DesignSystem`.
+**Xcode:** File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git` → add the **VelvetUI** library to your app target.
+
+**Package.swift:**
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+],
+targets: [
+    .target(name: "MyApp", dependencies: [
+        .product(name: "VelvetUI", package: "velvet-ui")
+    ])
+]
+```
 
 ## Quick start
 
+Inject a theme once at the root:
+
 ```swift
-import DesignSystem
+import VelvetUI
 
-@main
-struct MyApp: App {
+@main struct MyApp: App {
     @State private var theme = DSTheme(gradient: .sunset)
-
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .dsTheme(theme)          // inject once at the root
-        }
-    }
+    var body: some Scene { WindowGroup { ContentView().dsTheme(theme) } }
 }
+```
 
+Then use any component, anywhere below it:
+
+```swift
 struct ContentView: View {
     var body: some View {
-        DSScreen(backdrop: true) {       // themed gradient behind everything
-            VStack(spacing: DSSpacing.lg) {
-                Text("Tu semana").ds(.title1)
-                DSCard {                 // glass + edge highlight + soft shadow
-                    Text("4 sesiones · 2 h 35 min").ds(.callout)
+        DSScreen(backdrop: true) {                  // the theme's gradient behind everything
+            DSCard {
+                DSSlideToConfirm("Slide to pay") {
+                    try await checkout()             // throw to refuse; the control re-opens
                 }
-                DSButton("Continuar", isFullWidth: true) { }
             }
             .dsScreenPadding()
         }
     }
+
+    func checkout() async throws { /* charge the card */ }
 }
 ```
 
-Switch the theme at runtime and everything re-renders:
+## Components
 
-```swift
-withAnimation(DSAnimation.normal) { theme.gradient = .lagoon }
-```
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes.
 
-## The system in one screen
+| Preview | Component | What it does |
+|:---:|---|---|
+| <img src="docs/media/DSButton.gif" width="120" alt="DSButton"> | [DSButton](docs/components/DSButton.md) | Text button with five variants, three sizes, an icon and a loading state. |
+| <img src="docs/media/DSIconButton.gif" width="120" alt="DSIconButton"> | [DSIconButton](docs/components/DSIconButton.md) | Icon-only button with press scale, a haptic and a VoiceOver label. |
+| <img src="docs/media/DSSlideToConfirm.gif" width="120" alt="DSSlideToConfirm"> | [DSSlideToConfirm](docs/components/DSSlideToConfirm.md) | Slide-to-confirm for payments and destructive actions, with an async result. |
+| <img src="docs/media/DSToggle.gif" width="120" alt="DSToggle"> | [DSToggle](docs/components/DSToggle.md) | Switch with a spring knob and a rigid haptic. |
+| <img src="docs/media/DSStepper.gif" width="120" alt="DSStepper"> | [DSStepper](docs/components/DSStepper.md) | −/+ stepper that ticks on every step and jiggles at its bounds. |
+| <img src="docs/media/DSRating.gif" width="120" alt="DSRating"> | [DSRating](docs/components/DSRating.md) | Drag-to-rate stars, with half steps and a read-only mode. |
+| <img src="docs/media/DSSegmentedControl.gif" width="120" alt="DSSegmentedControl"> | [DSSegmentedControl](docs/components/DSSegmentedControl.md) | Pill or underline picker with a sliding indicator. |
+| <img src="docs/media/DSTextField.gif" width="120" alt="DSTextField"> | [DSTextField](docs/components/DSTextField.md) | Text field with label, icon and validation states, plus `DSSearchBar`. |
+| <img src="docs/media/DSCodeField.gif" width="120" alt="DSCodeField"> | [DSCodeField](docs/components/DSCodeField.md) | One-time-code input with SMS autofill, a shake on error and success feedback. |
+| <img src="docs/media/DSPageControl.gif" width="120" alt="DSPageControl"> | [DSPageControl](docs/components/DSPageControl.md) | Page dots whose active dot stretches into a capsule. |
+| <img src="docs/media/DSCard.gif" width="120" alt="DSCard"> | [DSCard](docs/components/DSCard.md) | The glass surface everything sits on: elevated, outlined, flat, tappable or with an image. |
+| <img src="docs/media/DSListCell.gif" width="120" alt="DSListCell"> | [DSListCell](docs/components/DSListCell.md) | List rows, section headers and dividers. |
+| <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
+| <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
+| <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts that VoiceOver announces. |
+| <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
+| <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, gradient and step progress, animated numbers, shimmer skeletons. |
+| <img src="docs/media/DSThinkingIndicator.gif" width="120" alt="DSThinkingIndicator"> | [DSThinkingIndicator](docs/components/DSThinkingIndicator.md) | Ambient "thinking" state for AI and background work. |
+| <img src="docs/media/DSTypewriterText.gif" width="120" alt="DSTypewriterText"> | [DSTypewriterText](docs/components/DSTypewriterText.md) | Types phrases out character by character, with a blinking caret. |
+| <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
 
-| Layer | What it gives you | Reference |
+Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`. The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
+
+## Theming
+
+A theme is a gradient plus four derived colors: `accent` for fills, `onAccent` for text on the accent, and `ink` / `inkDark` for text and icons on glass in light and dark mode. Three themes ship built in:
+
+| Theme | Gradient | Use it as |
 |---|---|---|
-| `DSGradientTheme` | Sunset / Aurora / Lagoon: background gradient + `accent`, `onAccent`, `ink`, `inkDark` | [tokens.md#gradient-themes](docs/tokens.md#gradient-themes) |
-| `DSSurface` / `.dsSurface()` | Glass levels: `.glassThin`, `.glass`, `.glassThick`, `.solid` | [tokens.md#surfaces](docs/tokens.md#surfaces) |
-| `DSWash` | The border replacement: translucent fill, 1pt specular edge, focus glow | [tokens.md#wash](docs/tokens.md#wash) |
-| `DSShadow` | Soft ambient shadows + `.glow(accent)` | [tokens.md#shadows](docs/tokens.md#shadows) |
-| `DSRadius` | 4…24, pill; semantic `card` 20 / `surface` 16 / `control` 12 / `chip` | [tokens.md#radius](docs/tokens.md#radius) |
-| `DSSpacing` | 4pt grid, 2…64, screen margins | [tokens.md#spacing](docs/tokens.md#spacing) |
-| `DSTextStyle` | 17 styles; SF Pro titles with tight tracking, rounded numbers | [tokens.md#typography](docs/tokens.md#typography) |
-| `DSAnimation` / `DSPress` | 200/240/320/480ms curves, 5 springs, press scale 0.96 | [tokens.md#motion](docs/tokens.md#motion) |
-| `DSHaptics` | 9 styles, pre-warmed engine, `dsHaptic(.success)` | [tokens.md#haptics](docs/tokens.md#haptics) |
+| `.sunset` (default) | peach → coral | `DSTheme(gradient: .sunset)` |
+| `.aurora` | violet → fuchsia | `DSTheme(gradient: .aurora)` |
+| `.lagoon` | mint → cyan | `DSTheme(gradient: .lagoon)` |
 
-Components: buttons, cards, inputs, code field, badges, avatar, list cells, toggle, segmented control, rating, page control, toast, empty state, progress ×4, shimmer, pulse. Full API in [components.md](docs/components.md).
+- **Backdrop.** Glass needs something to blur. Wrap a screen in `DSScreen(backdrop: true) { … }` or add `.dsBackdrop()`. Without a backdrop, components still work and read as plain surfaces.
+- **Switch at runtime.** Every component re-renders, and animating the change crossfades them:
+  ```swift
+  withAnimation(DSAnimation.normal) { theme.gradient = .lagoon }
+  ```
+- **Light and dark** are automatic. Dark mode is the same gradient under a dim, so the hue is preserved.
+- **Your own theme.** `DSGradientTheme(id:name:stops:accent:onAccent:ink:inkDark:)`. The built-in themes pass a WCAG AA contrast test, and yours should too.
+- **Your own views.** Read the resolved theme instead of hard-coding colors:
+  ```swift
+  struct PriceTag: View {
+      @DSThemed private var theme
 
-## Building on Velvet
+      var body: some View {
+          Text("$120").ds(.numeric, color: theme.ink)
+              .padding(.horizontal, DSSpacing.sm)
+              .background(theme.subtleFill)
+              .clipShape(Capsule())
+      }
+  }
+  ```
 
-Inside any view, read the theme with the property wrapper and never touch raw colors:
+Under the components sit the tokens: glass surfaces (`DSSurface`), the wash that replaces borders (`DSWash`), soft shadows, radius by role, a 4 pt spacing grid, 17 text styles, motion curves and springs, and haptics. Every value is in [docs/tokens.md](docs/tokens.md).
 
-```swift
-struct PriceTag: View {
-    @DSThemed private var theme
+## Accessibility
 
-    var body: some View {
-        Text("$120").ds(.numeric, color: theme.ink)
-            .padding(.horizontal, DSSpacing.sm)
-            .background(theme.subtleFill)
-            .clipShape(Capsule())
-    }
-}
-```
+- **VoiceOver.** Interactive controls expose a label, a value and the right traits. `DSStepper`, `DSRating` and `DSPageControl` are adjustable (swipe up and down). `DSSlideToConfirm` confirms with a double-tap, so nobody has to drag. `DSToast` announces itself. Icon-only buttons take an `accessibilityLabel:`. Each component page lists exactly what VoiceOver reads.
+- **Dynamic Type.** Text styled with `.ds(_:)`, `.dsTextStyle(_:)` or `.dsFont(_:)` scales with the user's text size, and looks identical at the default size. Fixed-height controls (buttons, fields, the segmented control, stepper, code field, slide-to-confirm and badges) keep a fixed label size for now.
+- **Reduce Motion** puts ambient effects in a resting state instead of cutting them mid-animation. Gesture feedback stays, and decorative particles are removed.
+- **Reduce Transparency** swaps glass for solid surfaces.
+- **Contrast.** Each built-in theme is tested for WCAG AA (4.5:1) on its accent, on white and on dark glass.
+- **Haptics** support visual feedback and never replace it. They are a no-op on macOS.
 
-Rules for anything that lands in `Sources/DesignSystem/Components/` are in [CLAUDE.md](CLAUDE.md). The short version: tokens only, `@DSThemed` for colors, `DSPress` for press states, `DSAnimation` springs, haptics on primary actions, `Color? = nil` defaults that follow the theme, a `#Preview` in light and dark, a section in the catalog, an entry in `docs/components.md` and `CHANGELOG.md`.
+## Requirements
 
-## Verify before you push
+| | |
+|---|---|
+| Platforms | iOS 18.0+, macOS 15.0+ |
+| Toolchain | Swift 6.0+ (swift-tools 6.0; the package builds in Swift 5 language mode) |
+| Xcode | A version with the iOS 18 / macOS 15 SDKs; CI uses the latest stable release |
+| Dependencies | None |
 
-```bash
-swift build                                   # macOS build
-swift test                                    # tokens, theme resolution, AA contrast
-xcodebuild build -scheme DesignSystem \
-  -destination 'generic/platform=iOS Simulator' | tail -3   # iOS build
-```
+## Demo app
 
-`swift build` alone only compiles for macOS. iOS-only modifiers must be guarded with `#if os(iOS)`; see [engineering notes](docs/engineering-notes.md).
+[`Examples/VelvetGallery`](Examples/VelvetGallery) is a runnable iOS app with one screen per component and a clean full-screen recording stage for each. Open `Examples/VelvetGallery/VelvetGallery.xcodeproj` and press Run. [docs/RECORDING.md](docs/RECORDING.md) shows how to record clips from the simulator.
 
-## Browsing the catalog
+## Documentation
 
-Open the package in Xcode and run the `#Preview` on `Sources/DesignSystem/Preview/ComponentCatalog.swift`. It has theme dots, a backdrop toggle and every component with its variants. The standalone showcase app is the next milestone (see the roadmap in the engineering notes).
+- [Component pages](docs/components/): one per component
+- [Tokens](docs/tokens.md): every color, surface, type style, spacing, radius, motion and haptic value
+- [Engineering notes](docs/engineering-notes.md): architecture decisions and gotchas
+- [Proposals](docs/proposals/): design proposals behind each version
+- [Changelog](CHANGELOG.md)
+
+## Contributing
+
+Bug reports, fixes and component proposals are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the rules every component follows and the definition of done. This project follows a [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## License
+
+Velvet UI is released under the [MIT License](LICENSE). Copyright © 2026 Matias Peralta.

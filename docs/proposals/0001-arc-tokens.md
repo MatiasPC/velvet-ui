@@ -51,9 +51,8 @@
 ### 0.3 Hallazgos estructurales (condicionan la propuesta)
 
 1. **`DSTheme` está desconectado.** Todos los componentes leen `DSColors.defaultPalette` (estático, light). `DSColors.primary` también devuelve siempre la paleta light. Consecuencia: la paleta dark existe pero **ningún componente la usa**, y el theming "en vivo" del paso 5 es imposible con la plomería actual. Es el único cambio interno no-visual que necesito hacer (ver §3); no cambia firmas públicas.
-2. **`iOS_DESIGN.md` no existe** ni en este repo ni en `~/Documents`. Trabajé con `DesignSystem.swift` (es solo un comentario de cabecera), los tokens, y la skill `design-system` (`~/.claude/skills/design-system/`), que es la doc real del sistema.
-3. **`~/Documents/DesignSystem` es un clon viejo** del mismo repo (5 commits atrás, en `b0deebe`). La skill y el CLAUDE.md global apuntan ahí. Conviene apuntar a `velvet-ui` o hacer `git pull`.
-4. **Dos tensiones entre tus reglas y la referencia Arc**, resueltas en §5:
+2. **No había una guía de diseño escrita** en el repo. Trabajé con `DesignSystem.swift` (es solo un comentario de cabecera) y los tokens, que son la fuente de verdad del sistema.
+3. **Dos tensiones entre tus reglas y la referencia Arc**, resueltas en §5:
    - "cornerRadius(20) en cards" vs Arc "12–16px en cards".
    - "sin bordes" vs variantes públicas `.outline` / `.outlined` y los focus rings de inputs.
 

@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 /// The five `DSMotion` ambient primitives. Neutral fills — the gallery draws no
 /// gradient — so the motion itself is the subject, not the colour.

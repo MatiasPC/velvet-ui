@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct StepperScreen: View {
     @State private var quantity = 3

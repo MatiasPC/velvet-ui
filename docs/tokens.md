@@ -1,6 +1,6 @@
 # Tokens reference
 
-Every value a component is allowed to use. If you need something that isn't here, add a token first, then use it. Files live in `Sources/DesignSystem/Tokens/`, `Animation/`, `Haptics/`, `Layout/`.
+Every value a component is allowed to use. If you need something that isn't here, add a token first, then use it. Files live in `Sources/VelvetUI/Tokens/`, `Animation/`, `Haptics/`, `Layout/`.
 
 ## Theme
 
@@ -22,7 +22,7 @@ theme.isDark / theme.onBackdrop
 
 ## Gradient themes
 
-`DSGradientTheme` (`Tokens/DSGradientTheme.swift`). Four derived colors, each with one job. Contrast is verified by `DesignSystemTests.testGradientThemesMeetAAContrast`.
+`DSGradientTheme` (`Tokens/DSGradientTheme.swift`). Four derived colors, each with one job. Contrast is verified by `VelvetUITests.testGradientThemesMeetAAContrast`.
 
 | Theme | Stops | `accent` | `onAccent` | `ink` | `inkDark` |
 |---|---|---|---|---|---|
@@ -144,6 +144,8 @@ Shadow color is black except for `.glow`. `color(for:)` is scheme-aware; the mod
 | `displayLarge` / `displayMedium` | 60 / 40 bold | Rounded, monospaced digits | −1.2 / −0.6 | Stats, timers |
 | `numeric` | 17 semibold | Rounded, monospaced digits | 0 | Prices, counters inline |
 | `badge` | 11 bold | Rounded | 0 | Count badges |
+
+**Dynamic Type.** `.ds(_:)` / `.dsTextStyle(_:)` scale with the user's text size: each style scales along a system text style (`DSTextStyle.textStyle`, e.g. `body` -> `.body`, `hero` -> `.largeTitle`) via `@ScaledMetric`, and line spacing scales too. At the default size the output is identical to the old fixed fonts. `DSTextStyle.size/weight/design/textStyle` are public. `.dsFont(_:)` applies only the scaled font (no color, tracking or line spacing); `DSTextStyle.font` stays fixed-size. Fixed-height controls (DSButton, DSTextField, DSSearchBar, DSSegmentedControl, DSBadge/DSCountBadge, DSStepper, DSCodeField, DSSlideToConfirm) still use fixed fonts.
 
 Rule: numbers are always Rounded; titles are never Rounded. Max three styles per visual section.
 
