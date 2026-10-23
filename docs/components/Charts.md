@@ -101,7 +101,7 @@ A sparkline without fill or dot is a plain line, good for table rows. A bar char
 - **Draw-on.** On appear the sparkline line draws itself in one second, the fill fades in behind it, and the dot appears last and breathes.
 - **Morph.** When `values` changes and keeps its length, the sparkline line morphs to the new shape and the bars spring to their new heights. A different length redraws the sparkline.
 - **Bars.** Bars have rounded tops and grow from the baseline with staggered springs. Negative values clamp to 0.
-- **Selection.** Tap or drag across the bars to scrub: each new bar fires a selection haptic and a value label rises above it. Lifting your finger keeps the selection, and tapping the selected bar again clears it. While a bar is selected the others dim.
+- **Selection.** Tap a bar, or drag horizontally across the bars, to scrub (vertical drags are left to an enclosing scroll view): each new bar fires a selection haptic and a value label rises above it. Lifting your finger keeps the selection, and tapping the selected bar again clears it. While a bar is selected the others dim.
 - Reduce Motion: no draw-on, morph or growth. Data appears at rest, and sparkline changes crossfade. The dot does not breathe.
 
 ## Accessibility

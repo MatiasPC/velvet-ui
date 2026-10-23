@@ -223,7 +223,14 @@ struct DSChartDescriptor: AXChartDescriptorRepresentable {
     }
 
     func updateChartDescriptor(_ descriptor: AXChartDescriptor) {
-        descriptor.summary = DSChartFormat.summary(values: values)
+        // SwiftUI calls update (not make) when the data changes, so copy
+        // everything from a fresh descriptor to keep the Audio Graph current.
+        let fresh = makeChartDescriptor()
+        descriptor.title = fresh.title
+        descriptor.summary = fresh.summary
+        descriptor.xAxis = fresh.xAxis
+        descriptor.yAxis = fresh.yAxis
+        descriptor.series = fresh.series
     }
 }
 
@@ -504,9 +511,9 @@ public struct DSBarChart: View {
     private let label: String
 
     @State private var grown = false
-    @State private var scrubActive = false
-    @State private var scrubChanged = false
-    @State private var scrubStart: Int?
+    /// Whether the current drag scrubs: `nil` until the first change decides
+    /// (horizontal scrubs, vertical is left to the enclosing scroll view).
+    @State private var scrubsHorizontally: Bool?
     @DSThemed private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -561,7 +568,8 @@ public struct DSBarChart: View {
                 }
                 .frame(width: proxy.size.width, height: proxy.size.height, alignment: .bottom)
                 .contentShape(Rectangle())
-                .gesture(scrubGesture(width: proxy.size.width), including: selection == nil ? .none : .all)
+                .gesture(tapGesture(width: proxy.size.width), including: selection == nil ? .none : .all)
+                .simultaneousGesture(scrubGesture(width: proxy.size.width), including: selection == nil ? .none : .all)
             }
 
             if let labels, !labels.isEmpty {
@@ -643,34 +651,33 @@ public struct DSBarChart: View {
         DSHapticEngine.shared.fire(.selection)
     }
 
+    /// A tap selects a bar, or clears it when it is already selected.
+    private func tapGesture(width: CGFloat) -> some Gesture {
+        SpatialTapGesture()
+            .onEnded { tap in
+                guard let index = DSChartGeometry.barIndex(atX: tap.location.x, width: width, count: values.count)
+                else { return }
+                toggle(index)
+            }
+    }
+
+    /// A horizontally dominant drag scrubs across the bars. Vertical drags are
+    /// ignored so the chart doesn't steal scrolling from an enclosing ScrollView.
     private func scrubGesture(width: CGFloat) -> some Gesture {
-        DragGesture(minimumDistance: 0)
+        DragGesture(minimumDistance: DSSpacing.xs)
             .onChanged { drag in
-                guard let selection,
-                      let index = DSChartGeometry.barIndex(atX: drag.location.x, width: width, count: values.count)
+                if scrubsHorizontally == nil {
+                    scrubsHorizontally = abs(drag.translation.width) > abs(drag.translation.height)
+                }
+                guard scrubsHorizontally == true,
+                      let selection,
+                      let index = DSChartGeometry.barIndex(atX: drag.location.x, width: width, count: values.count),
+                      selection.wrappedValue != index
                 else { return }
-                if !scrubActive {
-                    scrubActive = true
-                    scrubChanged = false
-                    scrubStart = selection.wrappedValue
-                }
-                if selection.wrappedValue != index {
-                    scrubChanged = true
-                    withAnimation(DSAnimation.fast) { selection.wrappedValue = index }
-                    DSHapticEngine.shared.fire(.selection)
-                }
+                withAnimation(DSAnimation.fast) { selection.wrappedValue = index }
+                DSHapticEngine.shared.fire(.selection)
             }
-            .onEnded { drag in
-                defer { scrubActive = false; scrubChanged = false; scrubStart = nil }
-                guard let selection,
-                      let index = DSChartGeometry.barIndex(atX: drag.location.x, width: width, count: values.count)
-                else { return }
-                // A tap on the bar that was already selected clears it.
-                if !scrubChanged, scrubStart == index, selection.wrappedValue == index {
-                    withAnimation(DSAnimation.fast) { selection.wrappedValue = nil }
-                    DSHapticEngine.shared.fire(.selection)
-                }
-            }
+            .onEnded { _ in scrubsHorizontally = nil }
     }
 }
 
