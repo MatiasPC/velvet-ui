@@ -6,6 +6,9 @@ import VelvetUI
 // (DSCard, DSAvatar, DSBadge, DSListCell, DSDivider, DSSectionHeader, DSToggle,
 // DSSegmentedControl, .dsSheet, DSSlideToConfirm, DSToast). Appearance really
 // drives the flow's color scheme, and the theme row really re-themes the screen.
+// It has no NavigationStack of its own (nested stacks are unsupported): the host
+// provides one, and the Theme detail pushes onto it. Wrap it in
+// `NavigationStack { SettingsFlow() }` when you show it standalone.
 // Copy it with `swift velvet.swift add Settings` and adapt it.
 
 struct SettingsFlow: View {
@@ -19,9 +22,7 @@ struct SettingsFlow: View {
     }
 
     var body: some View {
-        NavigationStack {
-            SettingsList(theme: theme, appearance: $appearance, notify: show)
-        }
+        SettingsList(theme: theme, appearance: $appearance, notify: show)
         .overlay(alignment: .bottom) {
             if let toast {
                 DSToast(toast.message, type: toast.type)
@@ -306,11 +307,11 @@ private struct DeleteAccountSheet: View {
 // MARK: - Previews
 
 #Preview("Settings — Light") {
-    SettingsFlow(theme: DSTheme(gradient: .aurora))
+    NavigationStack { SettingsFlow(theme: DSTheme(gradient: .aurora)) }
         .preferredColorScheme(.light)
 }
 
 #Preview("Settings — Dark") {
-    SettingsFlow(theme: DSTheme(gradient: .lagoon))
+    NavigationStack { SettingsFlow(theme: DSTheme(gradient: .lagoon)) }
         .preferredColorScheme(.dark)
 }

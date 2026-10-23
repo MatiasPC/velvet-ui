@@ -18,6 +18,7 @@ A settings screen with a profile header, preference toggles, a theme detail scre
 
 ## How it works
 
+- `SettingsFlow` has no `NavigationStack` of its own, because nested stacks are unsupported. The host provides one (the Gallery pushes it inside its list's stack); wrap it in `NavigationStack { SettingsFlow() }` to show it standalone.
 - Appearance (System, Light, Dark) really drives `.preferredColorScheme` on the flow.
 - The Theme row pushes a detail screen. Choosing a theme sets `theme.gradient` in `withAnimation`, so the backdrop crossfades behind the navigation bar.
 - Changing any toggle, the appearance or the theme shows a "Saved" toast for about 1.6 s. There is one toast at a time: a new one replaces the old and restarts the timer.

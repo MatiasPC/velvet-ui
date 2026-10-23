@@ -20,8 +20,8 @@ A cart with quantity steppers, a promo code, a rolling total and a slide to pay 
 ## How it works
 
 - Try the code `VELVET` for 10% off. Any other code shows the error state. Editing the code clears the result.
-- The slide's `onConfirm` awaits `CheckoutService.charge` (about 1.2 s). Turn on "Simulate a declined card" to make it throw: the control re-opens and a message explains why.
-- On success the view swaps to the confirmation with `DSAnimation.springSmooth`, and the confetti trigger is bumped on the same beat. The confetti is attached to the root container, which covers the screen.
+- The slide's `onConfirm` awaits `CheckoutService.charge` (about 1.2 s). Turn on "Simulate a declined card" to make it throw: the control re-opens and a message explains why. While the charge runs the cart steppers, promo field and decline toggle are disabled, so the charged total is the one shown.
+- On success the slide plays its `.morphAndVanish` finish; about 0.9 s later (in a cancellable `Task`) the view swaps to the confirmation with `DSAnimation.springSmooth`, and the confetti trigger is bumped on the same beat. The confirmation's `DSSuccessCheck` passes `haptic: nil`, so the payment has a single success haptic (the slide's). The confetti is attached to the root container, which covers the screen.
 - "Done" calls `onFinish()`, resets the cart, and remounts the slide with a new `.id` so it starts fresh.
 - Set every quantity to 0 to see the empty state with "Restore cart". The pay control is hidden while the cart is empty.
 

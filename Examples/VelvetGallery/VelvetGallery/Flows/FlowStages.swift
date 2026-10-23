@@ -9,7 +9,7 @@ struct OnboardingFlowStage: View {
 }
 
 struct SettingsFlowStage: View {
-    var body: some View { SettingsFlow() }
+    var body: some View { NavigationStack { SettingsFlow() } }
 }
 
 struct CheckoutFlowStage: View {

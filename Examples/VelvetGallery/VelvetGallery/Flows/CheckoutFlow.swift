@@ -21,6 +21,13 @@ struct CheckoutFlow: View {
     @State private var celebrations = 0
     /// Changing this remounts the slide control, so it starts fresh after "Done".
     @State private var slideID = 0
+    /// True while the charge is in flight; the cart is locked so the charged
+    /// total is the one on screen.
+    @State private var isPaying = false
+    /// The pending swap to the confirmation, held back so the slide's finish is seen.
+    @State private var placeTask: Task<Void, Never>?
+
+    private var isLocked: Bool { isPaying || placeTask != nil }
 
     private var subtotal: Double { items.reduce(0) { $0 + $1.price * Double($1.quantity) } }
     private var discount: Double { promo == .applied ? subtotal * CheckoutPromo.rate : 0 }
@@ -40,6 +47,7 @@ struct CheckoutFlow: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         // The paper falls through the whole screen, so it goes on the root.
         .dsConfetti(trigger: celebrations, origin: UnitPoint(x: 0.5, y: 0.3))
+        .onDisappear { placeTask?.cancel() }
     }
 
     // MARK: Cart
@@ -60,7 +68,9 @@ struct CheckoutFlow: View {
                     .frame(maxWidth: .infinity)
                 } else {
                     cartCard
+                        .disabled(isLocked)
                     CheckoutPromoField(code: $code, promo: $promo)
+                        .disabled(isLocked)
                     CheckoutTotals(subtotal: subtotal, discount: discount, total: total)
                     payControl
                 }
@@ -88,6 +98,8 @@ struct CheckoutFlow: View {
                 confirmedLabel: "Paid",
                 finish: .morphAndVanish
             ) {
+                isPaying = true
+                defer { isPaying = false }
                 declineMessage = nil
                 do {
                     let number = try await CheckoutService.charge(amount: total, declined: simulatesDecline)
@@ -109,18 +121,28 @@ struct CheckoutFlow: View {
     private var demoCard: some View {
         DSCard(style: .flat) {
             DSToggle("Simulate a declined card", isOn: $simulatesDecline)
+                .disabled(isLocked)
         }
     }
 
     // MARK: Actions
 
-    /// The swap and the confetti share one beat.
+    /// Waits for the slide's finish to play, then swaps to the confirmation. The
+    /// swap and the confetti share one beat.
     private func place(_ number: String) {
-        withAnimation(DSAnimation.springSmooth) { orderNumber = number }
-        celebrations += 1
+        placeTask?.cancel()
+        placeTask = Task {
+            try? await Task.sleep(for: .seconds(0.9))
+            guard !Task.isCancelled else { return }
+            withAnimation(DSAnimation.springSmooth) { orderNumber = number }
+            celebrations += 1
+            placeTask = nil
+        }
     }
 
     private func reset() {
+        placeTask?.cancel()
+        placeTask = nil
         onFinish()
         withAnimation(DSAnimation.springSmooth) {
             orderNumber = nil
@@ -289,7 +311,8 @@ private struct CheckoutConfirmation: View {
     var body: some View {
         VStack(spacing: DSSpacing.lg) {
             Spacer()
-            DSSuccessCheck(isComplete: true, size: DSSpacing.massive + DSSpacing.xl)
+            // No haptic of its own: the slide already fired .success for this payment.
+            DSSuccessCheck(isComplete: true, size: DSSpacing.massive + DSSpacing.xl, haptic: nil)
             VStack(spacing: DSSpacing.xs) {
                 Text("Order placed").ds(.largeTitle)
                 Text("Order \(orderNumber)")
