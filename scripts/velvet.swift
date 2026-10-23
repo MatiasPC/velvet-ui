@@ -10,6 +10,7 @@
 // when there is one, otherwise downloaded from GitHub.
 
 import Foundation
+import CryptoKit
 
 let usage = """
 Velvet UI CLI
@@ -218,7 +219,7 @@ struct Context {
 
     static func load(ref: String?) throws -> Context {
         let root = findCheckout()
-        let ref = ref ?? "main"
+        let ref = root != nil ? localRef(root: root!) : (ref ?? "main")
         let data: String
         if let override = ProcessInfo.processInfo.environment["VELVET_REGISTRY"], !override.isEmpty {
             data = override.hasPrefix("http") ? try download(override) : try readFile(override)
@@ -231,6 +232,15 @@ struct Context {
             let registry = try JSONDecoder().decode(Registry.self, from: Data(data.utf8))
             return Context(root: root, ref: ref, registry: registry)
         } catch { throw VelvetError.io("registry.json is invalid: \(error)") }
+    }
+
+    var isLocal: Bool { root != nil }
+
+    /// "local" or "local <short sha>" when files come from a checkout's working tree.
+    static func localRef(root: String) -> String {
+        let r = runProcess("/usr/bin/git", ["-C", root, "rev-parse", "--short", "HEAD"])
+        let sha = r.output.trimmingCharacters(in: .whitespacesAndNewlines)
+        return r.status == 0 && !sha.isEmpty && !sha.contains(" ") ? "local \(sha)" : "local"
     }
 
     static func findCheckout() -> String? {
@@ -312,30 +322,66 @@ struct Resolver {
 
 struct OutputFile { let source: String; let relative: String; let contents: String; var body: String }
 
+/// A registry path is safe when it is relative and has no `..` component.
+func isSafeRegistryPath(_ p: String) -> Bool {
+    !p.isEmpty && !p.hasPrefix("/") && !p.hasPrefix("~") && !p.components(separatedBy: "/").contains("..")
+}
+
+func sha16(_ text: String) -> String {
+    SHA256.hash(data: Data(text.utf8)).prefix(8).map { String(format: "%02x", $0) }.joined()
+}
+
 struct Installer {
     let ctx: Context
     static let license = "// https://github.com/MatiasPC/velvet-ui · MIT License"
     static let importLine = "import VelvetUI"
     static let importReplacement = "// import VelvetUI — not needed: Velvet sources are compiled into this target"
+    static let hashMarker = " · sha256:"
+    static let previewKeepPath = "Sources/VelvetUI/Preview/DSPreviewSupport.swift"
 
     func relativeDestination(_ path: String) -> String {
         let prefix = "Sources/VelvetUI/"
         return path.hasPrefix(prefix) ? String(path.dropFirst(prefix.count)) : "Examples/" + (path as NSString).lastPathComponent
     }
 
-    func header(_ path: String) -> String { "// Velvet UI \(ctx.ref) — \(path)\n" + Installer.license + "\n" }
-
-    func prepare(_ path: String) throws -> OutputFile {
-        let body = try ctx.source(of: path).components(separatedBy: "\n")
-            .map { $0 == Installer.importLine ? Installer.importReplacement : $0 }.joined(separator: "\n")
-        return OutputFile(source: path, relative: relativeDestination(path), contents: header(path) + body, body: body)
+    func docsURL(for path: String) -> String {
+        let reg = ctx.registry
+        if let e = reg.components.first(where: { $0.files.contains(path) }) { return "\(reg.repository)/blob/main/\(e.docs)" }
+        return "\(reg.repository)#readme"
     }
 
-    /// Returns the body of a file previously written by this tool, or nil if it isn't one.
-    static func writtenBody(_ text: String) -> String? {
+    /// Cuts the trailing `// MARK: - Preview` section (previews use other components, which a copy may lack).
+    func stripPreviews(_ body: String, path: String) -> String {
+        guard path.hasPrefix("Sources/VelvetUI/"), path != Installer.previewKeepPath else { return body }
+        let lines = body.components(separatedBy: "\n")
+        guard let idx = lines.firstIndex(where: { $0.trimmingCharacters(in: .whitespaces) == "// MARK: - Preview" && $0.hasPrefix("// MARK: - Preview") })
+        else { return body }
+        let note = "// Previews aren't copied (they use other components). See \(docsURL(for: path))"
+        return (Array(lines[..<idx]) + [note, ""]).joined(separator: "\n")
+    }
+
+    func header(_ path: String, body: String) -> String {
+        "// Velvet UI \(ctx.ref) — \(path)\(Installer.hashMarker)\(sha16(body))\n" + Installer.license + "\n"
+    }
+
+    func prepare(_ path: String) throws -> OutputFile {
+        guard isSafeRegistryPath(path) else { throw VelvetError.failed("Unsafe path in registry: \(path) (absolute paths and '..' are not allowed).") }
+        let raw = try ctx.source(of: path).components(separatedBy: "\n")
+            .map { $0 == Installer.importLine ? Installer.importReplacement : $0 }.joined(separator: "\n")
+        let body = stripPreviews(raw, path: path)
+        return OutputFile(source: path, relative: relativeDestination(path), contents: header(path, body: body) + body, body: body)
+    }
+
+    /// For a file previously written by this tool: its body and the hash recorded in its header (nil for old headers).
+    static func parseWritten(_ text: String) -> (body: String, hash: String?)? {
         let lines = text.components(separatedBy: "\n")
         guard lines.count >= 2, lines[0].hasPrefix("// Velvet UI "), lines[1] == license else { return nil }
-        return lines.dropFirst(2).joined(separator: "\n")
+        var hash: String? = nil
+        if let r = lines[0].range(of: hashMarker, options: .backwards) {
+            let h = String(lines[0][r.upperBound...])
+            if h.count == 16, h.allSatisfy({ $0.isHexDigit }) { hash = h }
+        }
+        return (lines.dropFirst(2).joined(separator: "\n"), hash)
     }
 }
 
@@ -382,7 +428,7 @@ extension String { var nonEmpty: String? { isEmpty ? nil : self } }
 
 // MARK: - Command: add
 
-enum FileStatus: String { case added, unchanged, skipped = "skipped (modified locally)", overwritten }
+enum FileStatus: String { case added, updated, unchanged, skipped = "skipped (modified locally)", overwritten }
 
 func looksLikePackageUser() -> Bool {
     let fm = FileManager.default
@@ -409,32 +455,53 @@ func commandAdd(_ ctx: Context, _ opts: Options) throws {
     if looksLikePackageUser() {
         warn("this project already depends on the VelvetUI Swift package. Mixing it with copied sources causes duplicate symbols; use one or the other.")
     }
-    let source = ctx.root.map { _ in "local checkout" } ?? "\(ctx.registry.raw)/\(ctx.ref)"
+    if ctx.isLocal, opts.ref != nil { warn("--ref ignored: copying from the local checkout at \(ctx.root ?? "")") }
+    let source = ctx.root.map { _ in "local checkout (\(ctx.ref))" } ?? "\(ctx.registry.raw)/\(ctx.ref)"
     out("Adding \(roots.isEmpty ? "core" : closure.map { $0.name }.joined(separator: ", ")) from \(source)\(opts.dryRun ? " (dry run)" : "")")
 
-    var counts: [FileStatus: Int] = [:]
+    // 1. Prepare everything (download/read + transform) before touching the destination.
+    var plan: [(file: OutputFile, target: String, status: FileStatus)] = []
+    var seen: [String: String] = [:]
     for path in paths {
         let file = try installer.prepare(path)
-        let target = dest + "/" + file.relative
-        let status = try install(file, to: target, force: opts.force, dryRun: opts.dryRun)
-        counts[status, default: 0] += 1
-        out("  \(pad(status.rawValue, 27)) \(file.relative)")
+        if let other = seen[file.relative] {
+            throw VelvetError.failed("\(other) and \(path) would both be written to \(file.relative). Nothing was written.")
+        }
+        seen[file.relative] = path
+        let target = try safeTarget(dest: dest, relative: file.relative)
+        plan.append((file, target, try plannedStatus(file, at: target, force: opts.force)))
     }
-    let summary = [FileStatus.added, .overwritten, .unchanged, .skipped].compactMap { s in counts[s].map { "\($0) \(s.rawValue)" } }
+    // 2. Write.
+    var counts: [FileStatus: Int] = [:]
+    for item in plan {
+        if !opts.dryRun, [.added, .updated, .overwritten].contains(item.status) { try writeFile(item.target, item.file.contents) }
+        counts[item.status, default: 0] += 1
+        out("  \(pad(item.status.rawValue, 27)) \(item.file.relative)")
+    }
+    let summary = [FileStatus.added, .updated, .overwritten, .unchanged, .skipped].compactMap { s in counts[s].map { "\($0) \(s.rawValue)" } }
     out("\n\(summary.joined(separator: ", ")) -> \(opts.dest)")
-    if counts[.skipped, default: 0] > 0 { out("Skipped files differ from upstream. Re-run with --force to overwrite them.") }
+    if counts[.skipped, default: 0] > 0 { out("Skipped files were edited locally (or are not Velvet files). Re-run with --force to overwrite them.") }
     printNextSteps(ctx, opts)
 }
 
-func install(_ file: OutputFile, to target: String, force: Bool, dryRun: Bool) throws -> FileStatus {
-    var status = FileStatus.added
-    if FileManager.default.fileExists(atPath: target) {
-        let existing = try readFile(target)
-        if let body = Installer.writtenBody(existing), body == file.body { return .unchanged }
-        status = force ? .overwritten : .skipped
+/// Resolves `<dest>/<relative>` and asserts it stays inside `dest`.
+func safeTarget(dest: String, relative: String) throws -> String {
+    let base = URL(fileURLWithPath: dest).standardizedFileURL.path
+    let url = URL(fileURLWithPath: base + "/" + relative).standardizedFileURL
+    guard url.path.hasPrefix(base + "/") else { throw VelvetError.failed("Refusing to write outside \(dest): \(relative)") }
+    return url.path
+}
+
+/// Decides what installing `file` at `target` would do, without writing.
+func plannedStatus(_ file: OutputFile, at target: String, force: Bool) throws -> FileStatus {
+    guard FileManager.default.fileExists(atPath: target) else { return .added }
+    let existing = try readFile(target)
+    if let written = Installer.parseWritten(existing) {
+        if let recorded = written.hash {
+            if sha16(written.body) == recorded { return written.body == file.body ? .unchanged : .updated }
+        } else if written.body == file.body { return .unchanged }   // old header: no hash, can only compare
     }
-    if status != .skipped && !dryRun { try writeFile(target, file.contents) }
-    return status
+    return force ? .overwritten : .skipped
 }
 
 func printNextSteps(_ ctx: Context, _ opts: Options) {
@@ -445,7 +512,7 @@ func printNextSteps(_ ctx: Context, _ opts: Options) {
       2. Inject a theme once at the root of your app:  .dsTheme(DSTheme(gradient: .sunset))
       3. Docs: \(ctx.registry.repository)#readme
     """)
-    if ctx.ref == "main" {
+    if !ctx.isLocal && ctx.ref == "main" {
         out("\nTip: pin a release tag or a commit SHA with --ref for reproducible installs.")
     }
 }
@@ -462,6 +529,8 @@ func structuralChecks(_ ctx: Context, root: String) -> [String] {
 
     let names = reg.allEntries.map { $0.name }
     for n in Set(names) where names.filter({ $0 == n }).count > 1 { problems.append("duplicate entry name: \(n)") }
+    for p in reg.core.files where !isSafeRegistryPath(p) { problems.append("core: unsafe path \(p)") }
+    for e in reg.allEntries { for p in e.files where !isSafeRegistryPath(p) { problems.append("\(e.name): unsafe path \(p)") } }
     for p in reg.core.files where !exists(p) { problems.append("core: missing file \(p)") }
     let resolver = Resolver(registry: reg)
     for e in reg.allEntries {
@@ -508,10 +577,11 @@ func commandVerify(_ ctx: Context, _ opts: Options) throws {
     let macSDK = sdkPath("macosx"), iosSDK = sdkPath("iphonesimulator")
     let temp = FileManager.default.temporaryDirectory.appendingPathComponent("velvet-verify-\(UUID().uuidString)").path
     defer { try? FileManager.default.removeItem(atPath: temp) }
+    // Every config also defines DEBUG (as Xcode's Debug configuration does): no source uses `#if !DEBUG`/`#else`, so it is a superset.
     let configs: [(label: String, args: [String])] = [
-        ("macOS/Swift 5", ["-sdk", macSDK, "-target", "arm64-apple-macos15", "-swift-version", "5"]),
-        ("macOS/Swift 6", ["-sdk", macSDK, "-target", "arm64-apple-macos15", "-swift-version", "6"]),
-        ("iOS/Swift 5", ["-sdk", iosSDK, "-target", "arm64-apple-ios18.0-simulator", "-swift-version", "5"]),
+        ("macOS/Swift 5", ["-sdk", macSDK, "-target", "arm64-apple-macos15", "-swift-version", "5", "-D", "DEBUG"]),
+        ("macOS/Swift 6", ["-sdk", macSDK, "-target", "arm64-apple-macos15", "-swift-version", "6", "-D", "DEBUG"]),
+        ("iOS/Swift 5", ["-sdk", iosSDK, "-target", "arm64-apple-ios18.0-simulator", "-swift-version", "5", "-D", "DEBUG"]),
     ]
 
     var jobs: [Job] = [], buildErrors: [String: String] = [:]

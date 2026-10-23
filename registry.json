@@ -183,9 +183,7 @@
       "files": [
         "Sources/VelvetUI/Components/DSPageControl.swift"
       ],
-      "dependencies": [
-        "DSButton"
-      ],
+      "dependencies": [],
       "docs": "docs/components/DSPageControl.md",
       "stage": "DSPageControl"
     },
