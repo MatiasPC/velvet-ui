@@ -241,7 +241,7 @@ private struct DSCardPreviewHost: View {
                     }
                 }
 
-                DSImageCard(title: "Cabaña en el bosque", subtitle: "$120 / noche", badge: "Nuevo")
+                DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.xl)
