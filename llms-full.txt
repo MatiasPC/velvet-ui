@@ -34,7 +34,7 @@ curl -fsSLO https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/ve
 swift velvet.swift add DSTabBar --dest MyApp/VelvetUI   # also: list, info <name>
 ```
 
-Copied files compile in Swift 5 and Swift 6 language mode and need no `import`.
+Copied files compile in Swift 5 and Swift 6 language mode and need no `import`. Previews aren't copied. Running `add` again updates untouched files and never overwrites your edits without `--force`.
 
 **Theme at the root.** Both paths need exactly one theme injected at the top of the view tree:
 
@@ -1502,8 +1502,10 @@ A floating glass tab bar. The selected tab sits on an accent capsule that slides
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -1873,8 +1875,10 @@ A snapping carousel where the neighbouring items peek in at the edges and lean a
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -1927,7 +1931,7 @@ struct CarouselDemo: View {
 | `currentPage` | `Binding<Int>` | none | The page index. Scrolling updates it; changing it scrolls there with a spring. Out-of-range values are clamped. Leave it out and the carousel keeps its own index. |
 | `peek` | `CGFloat` | `DSSpacing.xxxl` | Margin on each side of the centred item. `peek - spacing` of each neighbour shows. |
 | `spacing` | `CGFloat` | `DSSpacing.sm` | Gap between items. |
-| `haptic` | `DSHapticStyle?` | `.selection` | Fired once each time the user settles on a new page. `nil` for none. |
+| `haptic` | `DSHapticStyle?` | `.selection` | Fired once per page change. `nil` for none. |
 | `content` | `(Element) -> View` | required | The view for one item. Trailing closure. |
 
 Each item is as wide as the carousel minus `peek` on both sides. Give the carousel a height and let each item fill it with `.frame(maxHeight: .infinity)`: content taller than the carousel is clipped.
@@ -1958,7 +1962,7 @@ Smaller peek and spacing, no haptic. Without `currentPage` the carousel manages 
 
 - Scrolling snaps to whole items.
 - Items away from the centre shrink to about 90%, fade to about 60% and yaw a few degrees towards the centre.
-- Setting `currentPage` from code scrolls there with `DSAnimation.springSmooth`. Only user scrolling fires the haptic.
+- Setting `currentPage` from code scrolls there with `DSAnimation.springSmooth` (without animation under Reduce Motion). Only user scrolling fires the haptic.
 - Reduce Motion: the scale, fade and yaw are skipped (items stay at full size). Snapping stays.
 
 ## Accessibility
@@ -1986,8 +1990,10 @@ A Velvet-styled native sheet: detents, a visible grabber, a glass background, an
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -2283,8 +2289,10 @@ A number whose digits roll like an odometer. Each digit slides to its new value,
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -2336,6 +2344,7 @@ VStack(alignment: .leading, spacing: DSSpacing.md) {
 - Digits roll with a smooth spring, 0.03 s later for each place to the left of the units digit.
 - Digits are counted from the right, so going from 99 to 100 keeps the existing digits and fades in the new leading one.
 - Each digit's width and height come from the text style, so the number never changes height as it rolls.
+- The ticker never compresses: it always takes the width its formatted value needs. Give it room (or pick a smaller `style`) for long currency strings such as "US$ 12,906.40".
 - No haptics: it's a display.
 - Reduce Motion: digits don't roll. The new value appears with a short crossfade.
 
@@ -2365,8 +2374,10 @@ Two light charts with no Swift Charts dependency: `DSSparkline`, a trend line th
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -2455,7 +2466,7 @@ A sparkline without fill or dot is a plain line, good for table rows. A bar char
 - **Draw-on.** On appear the sparkline line draws itself in one second, the fill fades in behind it, and the dot appears last and breathes.
 - **Morph.** When `values` changes and keeps its length, the sparkline line morphs to the new shape and the bars spring to their new heights. A different length redraws the sparkline.
 - **Bars.** Bars have rounded tops and grow from the baseline with staggered springs. Negative values clamp to 0.
-- **Selection.** Tap or drag across the bars to scrub: each new bar fires a selection haptic and a value label rises above it. Lifting your finger keeps the selection, and tapping the selected bar again clears it. While a bar is selected the others dim.
+- **Selection.** Tap a bar, or drag horizontally across the bars, to scrub (vertical drags are left to an enclosing scroll view): each new bar fires a selection haptic and a value label rises above it. Lifting your finger keeps the selection, and tapping the selected bar again clears it. While a bar is selected the others dim.
 - Reduce Motion: no draw-on, morph or growth. Data appears at rest, and sparkline changes crossfade. The dot does not breathe.
 
 ## Accessibility
@@ -2910,8 +2921,10 @@ Loading placeholders: a shimmering block you compose by hand, and a `.dsSkeleton
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -2982,7 +2995,7 @@ A feed-style block: image, title line, short subtitle.
 ## Behavior
 
 - `DSSkeleton` is a block in the wash colour (on a backdrop) or the palette border colour (elsewhere), with a shimmer sweep.
-- `.dsSkeleton(true)` redacts the view as placeholder shapes of its own layout, pulses its opacity gently between full and about half, and blocks touches.
+- `.dsSkeleton(true)` redacts the view as placeholder shapes of its own layout, pulses its opacity gently between full and half (a 3.6 s cycle sampled from a timeline, so it stops the moment loading ends), and blocks touches.
 - When `isLoading` goes false the redaction lifts with a short fade.
 - The wrapped view keeps its identity when the flag flips: its `@State`, `.task` and `.onAppear` are not reset or run twice. That is why the modifier pulses instead of sweeping: a sweep needs a second copy of the content.
 - Reduce Motion: no shimmer and no pulse. Placeholders rest at full opacity.
@@ -3012,8 +3025,10 @@ An animated success seal: the ring strokes itself, the disc fills, the checkmark
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -3064,7 +3079,7 @@ The seal is only a fill and two strokes, so it works at any size from a list row
 
 ## Behavior
 
-- The animation plays when `isComplete` becomes `true`, and once on appear if it already is. It takes about 0.9 seconds.
+- The animation plays when `isComplete` becomes `true`, and once on first appear if it already is. A view that re-appears already complete (tab switch, navigating back) shows the finished seal at rest, with no haptic or announcement. It takes about 0.9 seconds.
 - Order: the ring strokes itself, the disc fills behind it, then the check draws. A single spring pop peaks as the check finishes, together with one soft halo that expands and fades.
 - The haptic fires at that peak, not at the start.
 - When `isComplete` goes back to `false` the seal fades out quietly. Setting it to `true` again replays the animation.
@@ -3330,8 +3345,10 @@ A one-shot burst of confetti from any point of a view, fired whenever a trigger 
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -3390,7 +3407,7 @@ Attach it to a container that covers the area the paper should fall through, suc
 
 - Pieces fan upward and outward, slow down from air drag, then drift down under gravity while spinning and tumbling.
 - Each piece lives 1.6 to 2.4 s and fades out over the last 30%.
-- Colors come from the theme's accent and gradient, plus lighter tints of each.
+- Colors come from the theme: the accent, the gradient stops, lighter tints of each, and the theme ink, which keeps the burst visible against the backdrop.
 - Several triggers in a row overlap; earlier pieces finish their fall.
 - Nothing runs while idle: the animation stops once the last piece is gone.
 - `haptic` is `nil` by default because the action that triggers confetti (a button press, a confirmed slide) usually has its own haptic. Set it when the trigger is a state change with no haptic of its own.
@@ -3470,6 +3487,7 @@ A settings screen with a profile header, preference toggles, a theme detail scre
 
 ## How it works
 
+- `SettingsFlow` has no `NavigationStack` of its own, because nested stacks are unsupported. The host provides one (the Gallery pushes it inside its list's stack); wrap it in `NavigationStack { SettingsFlow() }` to show it standalone.
 - Appearance (System, Light, Dark) really drives `.preferredColorScheme` on the flow.
 - The Theme row pushes a detail screen. Choosing a theme sets `theme.gradient` in `withAnimation`, so the backdrop crossfades behind the navigation bar.
 - Changing any toggle, the appearance or the theme shows a "Saved" toast for about 1.6 s. There is one toast at a time: a new one replaces the old and restarts the timer.
@@ -3511,8 +3529,8 @@ A cart with quantity steppers, a promo code, a rolling total and a slide to pay 
 ## How it works
 
 - Try the code `VELVET` for 10% off. Any other code shows the error state. Editing the code clears the result.
-- The slide's `onConfirm` awaits `CheckoutService.charge` (about 1.2 s). Turn on "Simulate a declined card" to make it throw: the control re-opens and a message explains why.
-- On success the view swaps to the confirmation with `DSAnimation.springSmooth`, and the confetti trigger is bumped on the same beat. The confetti is attached to the root container, which covers the screen.
+- The slide's `onConfirm` awaits `CheckoutService.charge` (about 1.2 s). Turn on "Simulate a declined card" to make it throw: the control re-opens and a message explains why. While the charge runs the cart steppers, promo field and decline toggle are disabled, so the charged total is the one shown.
+- On success the slide plays its `.morphAndVanish` finish; about 0.9 s later (in a cancellable `Task`) the view swaps to the confirmation with `DSAnimation.springSmooth`, and the confetti trigger is bumped on the same beat. The confirmation's `DSSuccessCheck` passes `haptic: nil`, so the payment has a single success haptic (the slide's). The confetti is attached to the root container, which covers the screen.
 - "Done" calls `onFinish()`, resets the cart, and remounts the slide with a new `.id` so it starts fresh.
 - Set every quantity to 0 to see the empty state with "Restore cart". The pay control is hidden while the cart is empty.
 
