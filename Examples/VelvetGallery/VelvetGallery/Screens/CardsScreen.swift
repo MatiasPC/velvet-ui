@@ -35,9 +35,9 @@ struct CardsScreen: View {
             LabeledExample("Image card") {
                 DSImageCard(
                     imageURL: URL(string: "https://picsum.photos/seed/velvet/600/400"),
-                    title: "Cabaña en el bosque",
-                    subtitle: "$120 / noche",
-                    badge: "Nuevo"
+                    title: "Cabin in the woods",
+                    subtitle: "$120 / night",
+                    badge: "New"
                 )
             }
         }
