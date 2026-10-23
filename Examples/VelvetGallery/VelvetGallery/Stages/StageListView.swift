@@ -41,7 +41,7 @@ struct StageListView: View {
             } header: {
                 Text("Stages")
             } footer: {
-                Text("Stages show no chrome. Long-press the background for 1 second to exit.")
+                Text("Stages show no chrome. Long-press the background for 1 second to exit (the top edge on the example flows).")
             }
         }
         .listStyle(.insetGrouped)
