@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Design System Gradient Theme
 // The surface language of Velvet UI since v0.2: frosted glass over a saturated,
-// user-selectable gradient (Arc-inspired, translated to native SwiftUI).
+// user-selectable gradient.
 // A theme is a background gradient plus four derived colors. Each slot has a
 // fixed job so components never have to guess which one to use:
 //
