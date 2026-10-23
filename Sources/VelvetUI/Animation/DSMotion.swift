@@ -97,12 +97,15 @@ public struct DSBreatheModifier: ViewModifier {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public func body(content: Content) -> some View {
-        content
-            .scaleEffect(isSwollen ? intensity.scale : 1)
-            .opacity(isSwollen ? 1 - intensity.dip : 1)
+        // Under Reduce Motion the swell never engages, so the view rests at
+        // scale 1 instead of freezing at the peak of the breath.
+        let swollen = isSwollen && !reduceMotion
+        return content
+            .scaleEffect(swollen ? intensity.scale : 1)
+            .opacity(swollen ? 1 - intensity.dip : 1)
             .animation(
                 DSMotion.loop(.easeInOut(duration: DSMotion.breatheDuration), unless: reduceMotion),
-                value: isSwollen
+                value: swollen
             )
             .onAppear { isSwollen = true }
     }
@@ -227,11 +230,13 @@ public struct DSHueDriftModifier: ViewModifier {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public func body(content: Content) -> some View {
-        content
-            .hueRotation(.degrees(hasDrifted && isActive ? DSMotion.driftDegrees : 0))
+        // Same resting rule as breathe: no drift under Reduce Motion, so the hue stays at 0°.
+        let drifted = hasDrifted && !reduceMotion
+        return content
+            .hueRotation(.degrees(drifted && isActive ? DSMotion.driftDegrees : 0))
             .animation(
                 DSMotion.loop(.easeInOut(duration: DSMotion.driftDuration), unless: reduceMotion),
-                value: hasDrifted
+                value: drifted
             )
             .onAppear { hasDrifted = true }
     }
