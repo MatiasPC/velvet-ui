@@ -90,8 +90,9 @@ private struct SealPop {
 /// An animated success seal: ring, filled disc and checkmark, with a single springy
 /// pop and a soft halo when `isComplete` turns true.
 ///
-/// It plays once when `isComplete` becomes `true` (and once on appear if it already
-/// is). The haptic fires on the beat the check completes. When `isComplete` goes
+/// It plays on every change of `isComplete` to `true` (and once on first appear if it
+/// already is); a view that re-appears already complete shows the finished seal at
+/// rest, without haptic or announcement. The haptic fires on the beat the check completes. When `isComplete` goes
 /// back to `false` the seal fades out quietly. With Reduce Motion on, the finished
 /// seal crossfades in; the haptic still fires. The halo extends past `size`, so leave
 /// a little room around it.
@@ -107,6 +108,10 @@ public struct DSSuccessCheck: View {
     @State private var check: CGFloat = 0
     @State private var sealOpacity: Double = 0
     @State private var popTrigger = 0
+    /// True while the seal shows (or is playing) its finished state. A view that
+    /// re-appears with this still set (tab switch, pop-back) stays at rest
+    /// instead of replaying the haptic and announcement.
+    @State private var hasPlayed = false
     @DSThemed private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -197,12 +202,17 @@ public struct DSSuccessCheck: View {
     private func run(complete: Bool) async {
         guard complete else {
             // Quiet reset: fade, then rewind the strokes out of sight.
+            hasPlayed = false
             withAnimation(DSAnimation.fast) { sealOpacity = 0 }
             try? await Task.sleep(for: .seconds(0.3))
             guard !Task.isCancelled else { return }
             setInstantly { ring = 0; disc = 0; check = 0 }
             return
         }
+
+        // Re-appeared with the finished seal intact: leave it at rest.
+        guard !hasPlayed else { return }
+        hasPlayed = true
 
         if reduceMotion {
             setInstantly { ring = 1; disc = 1; check = 1 }
@@ -213,6 +223,11 @@ public struct DSSuccessCheck: View {
 
         typealias T = DSSuccessCheckTimeline
         setInstantly { ring = 0; disc = 0; check = 0; sealOpacity = 1 }
+        // Let the rewound state commit before animating, otherwise both changes
+        // merge into one transaction and the strokes never redraw.
+        await Task.yield()
+        try? await Task.sleep(for: .milliseconds(16))
+        guard !Task.isCancelled else { return }
         withAnimation(.easeOut(duration: T.ringDuration).delay(T.ringStart)) { ring = 1 }
         withAnimation(.easeOut(duration: T.discDuration).delay(T.discStart)) { disc = 1 }
         withAnimation(.easeInOut(duration: T.checkDuration).delay(T.checkStart)) { check = 1 }

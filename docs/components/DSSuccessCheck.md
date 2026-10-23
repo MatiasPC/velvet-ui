@@ -63,7 +63,7 @@ The seal is only a fill and two strokes, so it works at any size from a list row
 
 ## Behavior
 
-- The animation plays when `isComplete` becomes `true`, and once on appear if it already is. It takes about 0.9 seconds.
+- The animation plays when `isComplete` becomes `true`, and once on first appear if it already is. A view that re-appears already complete (tab switch, navigating back) shows the finished seal at rest, with no haptic or announcement. It takes about 0.9 seconds.
 - Order: the ring strokes itself, the disc fills behind it, then the check draws. A single spring pop peaks as the check finishes, together with one soft halo that expands and fades.
 - The haptic fires at that peak, not at the start.
 - When `isComplete` goes back to `false` the seal fades out quietly. Setting it to `true` again replays the animation.
