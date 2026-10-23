@@ -48,13 +48,16 @@ A change is done when it has:
 - [ ] Code, plus a `#Preview` in light and dark on `.dsBackdrop()`
 - [ ] A section in `Sources/VelvetUI/Preview/ComponentCatalog.swift`
 - [ ] For a new component: a page in `docs/components/<Name>.md`, an entry in `docs/components.md`, a row in the README's component table, and a stage in the VelvetGallery (see [docs/RECORDING.md](docs/RECORDING.md))
+- [ ] For a new component: an entry in `registry.json` (files, dependencies, docs page, stage), then regenerate the agent files with `swift scripts/velvet.swift llms`
 - [ ] A line in `CHANGELOG.md` under `[Unreleased]`
 - [ ] Any gotcha or decision worth remembering, written up in `docs/engineering-notes.md`
 - [ ] A green build and green tests on both platforms:
 
 ```bash
 swift build                                    # macOS
-swift test                                     # tokens, theme, contrast, accessibility, doc snippets
+swift test                                     # tokens, theme, contrast, accessibility, doc snippets, registry
+swift scripts/velvet.swift verify              # every component compiles on its own (Swift 5 and 6)
+swift scripts/velvet.swift llms --check        # llms.txt / llms-full.txt are up to date
 xcodebuild build -scheme VelvetUI \
   -destination 'generic/platform=iOS Simulator'  # iOS
 ```

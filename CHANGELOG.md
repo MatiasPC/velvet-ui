@@ -4,6 +4,38 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- **New components**, each with a docs page, a Gallery screen and recording stage, light and dark previews, a `ComponentCatalog` section and tests:
+  - `DSTabBar` / `DSTabItem`: floating glass tab bar with a sliding accent capsule, a selected-symbol swap with one bounce, and count badges.
+  - `DSCarousel`: snapping carousel with peeking neighbors and scroll-driven depth; index-based so it pairs with `DSPageControl`.
+  - `View.dsSheet(isPresented:detents:onDismiss:content:)` and `dsSheet(item:…)`: the native sheet with Velvet chrome (detents, grabber, glass background before iOS 26, the theme carried in).
+  - `DSNumberTicker`: odometer-style rolling digits for any `FormatStyle` (currency, percent, grouped integers).
+  - `DSSparkline` and `DSBarChart`: light animated charts without Swift Charts (monotone curve that draws and morphs, staggered bars, drag to scrub, VoiceOver Audio Graphs).
+  - `DSSkeleton` and `View.dsSkeleton(_:)`: shimmering placeholder blocks, and an in-place redaction that keeps the wrapped view's identity and state.
+  - `DSSuccessCheck`: success seal whose ring, disc and check draw on, then pop with a haptic on the beat.
+  - `View.dsConfetti(trigger:origin:count:haptic:)`: themed confetti burst with closed-form `Canvas` physics; its timeline sleeps when idle; removed under Reduce Motion.
+- **Example flows** (examples, not components): Onboarding, Settings and Checkout in `Examples/VelvetGallery/VelvetGallery/Flows/`, with an Examples section and full-screen stages in the Gallery and pages in `docs/examples/`.
+- **Agent-ready files:**
+  - `AGENTS.md`: public guide for AI coding agents with the rules, a component chooser, a token cheat sheet, copyable patterns and anti-patterns. Its snippets are compiled by `DocSnippetsAgentsTests`.
+  - `llms.txt` and `llms-full.txt`, generated from the docs.
+  - `registry.json`: every component with its source files, dependencies, docs page and Gallery stage.
+  - `scripts/velvet.swift`, a dependency-free Swift CLI: `list`, `info`, `add` (copies a component plus the shared core into an app), and the maintainer commands `verify` (typechecks every component on its own in Swift 5 and 6, for macOS and iOS) and `llms [--check]`.
+  - `RegistryTests`: the registry covers every source file, docs page and stage.
+- `docs/PRO.md`: proposal for a separate, paid Velvet UI Pro package (screens, flows, app starter, presets) that leaves the free core complete.
+- `docs/discoverability.md`: repository description, GitHub topics and the social preview image spec.
+- CI runs `velvet.swift verify` and `velvet.swift llms --check`.
+- README and component pages show real stills of every stage instead of placeholders. Recordings later replace them with animated GIFs.
+
+### Changed
+- README: a new hero with the value props and quick links, a "copy one component" install path, Examples, "Use it with AI agents", and a short "Pro (coming soon)" section.
+- `AGENTS.md` at the repo root is now published (it was gitignored). `CLAUDE.md`, `.claude/` and `.opencode/` stay local.
+- Component pages and `docs/tokens.md` were audited against the source and corrected. For example, `DSStepper` glyphs default to theme ink, `DSSegmentedControl.accent` only tints the underline style, `DSSlideToConfirm.accent` fills only the knob, and several Dynamic Type notes were fixed. The Install block is now identical on every page.
+- `scripts/record-stage.sh` forces English and US formatting so prices read "$115.00", and keeps the full height for the full-screen example flows.
+
+### Fixed
+- `dsBreathe` and `dsHueDrift` now rest at scale 1 and 0° under Reduce Motion. Before, they froze at the peak of the effect.
+- Sources compile in Swift 6 language mode when copied into an app target. `DSParticleField`'s `Animatable` conformance crossed actor isolation, and `DSTypewriterText` had a mutable static preference default.
+
 ## [0.2.0] — 2026-10-22
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
