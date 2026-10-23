@@ -9,8 +9,10 @@ A labelled text input with leading icon, secure mode and validation states, plus
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -65,9 +67,9 @@ struct TextFieldDemo: View {
 
 ## Variants
 
-- `.normal` / `.focused`: focus tints the icon and outline with the theme ink.
-- `.error("message")`: red icon and the message below the field.
-- `.success`: a check mark appears.
+- `.normal`: neutral. Real keyboard focus tints the icon and a 1.5pt outline with theme ink. `.focused` is accepted but looks the same as `.normal`; focus is read from the system, not from `state`.
+- `.error("message")`: red outline, a red warning icon and the message below the field.
+- `.success`: a green check mark appears (the green outline shows only while focused).
 - `.disabled`: dimmed to 50%.
 
 ## Behavior
@@ -79,7 +81,7 @@ struct TextFieldDemo: View {
 
 - The field is a standard SwiftUI `TextField` (or `SecureField`); VoiceOver uses its placeholder as the field name, and `label` is shown as visible text above it.
 - Override the spoken name with `.accessibilityLabel("Email address")`.
-- Label text doesn't scale with Dynamic Type yet: the control has a fixed height, so its label keeps a fixed size. Text elsewhere on your screen that uses `.ds(_:)` / `.dsTextStyle(_:)` does scale. The same applies to `DSSearchBar`.
+- Dynamic Type: the caption above the field and the error message use `.ds(_:)` and scale. The typed text and placeholder use a fixed-size font inside a fixed-height box (48pt; `DSSearchBar` is 44pt), so they do not.
 
 ## See also
 

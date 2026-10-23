@@ -33,7 +33,7 @@ theme.isDark / theme.onBackdrop
 | Slot | Use it for | Contrast rule |
 |---|---|---|
 | `stops` | `DSBackdrop`, `DSGradientProgress`, decorative fills | — |
-| `accent` | Primary CTA fill, toggle on, active page dot, rating, filled badge | — |
+| `accent` | Primary CTA fill, toggle on, active page dot, filled badge, progress fills | — |
 | `onAccent` | Text and icons on `accent` | ≥ 4.5:1 on accent |
 | `ink` | Text, icons, links, focus glow on light glass | ≥ 4.5:1 on white |
 | `inkDark` | Same, on dark glass | ≥ 4.5:1 on `#1A1A2E` |
@@ -67,8 +67,8 @@ Custom themes: `DSGradientTheme(id:name:stops:accent:onAccent:ink:inkDark:)`. Ke
 
 | Level | Material | Use |
 |---|---|---|
-| `.glassThin` | `ultraThinMaterial` | Chips, badges, toolbars, toast, page-control track |
-| `.glass` | `thinMaterial` | **Cards (default)**, list groups, inputs, segmented track |
+| `.glassThin` | `ultraThinMaterial` | Chips, toolbars, small floating elements; `DSStepper` and `DSSlideToConfirm` tracks |
+| `.glass` | `thinMaterial` | **Cards (default)**, list groups |
 | `.glassThick` | `regularMaterial` | Sheets, modals, popovers, outlined cards |
 | `.solid` | `backgroundElevated` | Fallback; also what every level becomes under Reduce Transparency |
 
@@ -80,7 +80,7 @@ The modifier fills, clips to a continuous rounded rect and draws `DSWash.edge` i
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `surface(for:)` | white 0.45 | white 0.10 | Flat translucent fill: input inside a card, toggle track off, flat card. Read via `theme.washSurface`, or `theme.subtleFill` for the no-backdrop fallback. |
+| `surface(for:)` | white 0.45 | white 0.10 | Flat translucent fill for a surface nested inside another, such as the flat card. Read via `theme.washSurface`, or `theme.subtleFill` for the no-backdrop fallback. |
 | `edge(for:)` | white 0.55 → 0.05, top → bottom | white 0.18 → 0.02 | 1pt specular highlight (`edgeWidth`), drawn with `strokeBorder`. `.dsWashEdge(radius:)` |
 | focus | opacity 0.35, width 2, blur 1.5 | same | `.dsFocusGlow(color, radius:, isActive:)` — pass `theme.ink` or a status color |
 
@@ -98,7 +98,7 @@ The modifier fills, clips to a continuous rounded rect and draws `DSWash.edge` i
 |---|---|---|
 | `.sm` | 8 / 0.04 / 2 | Toggle knob, active segment |
 | `.md` | 16 / 0.06 / 4 | Cards at rest |
-| `.lg` | 24 / 0.08 / 8 | Interactive cards, toast, popovers |
+| `.lg` | 24 / 0.08 / 8 | Toast, popovers |
 | `.xl` | 32 / 0.10 / 12 | Sheets, modals |
 | `.glow(tint)` | 20 / 0.28 light · 0.40 dark / 8 | Primary CTA, toggle on. Pass `theme.accent`. |
 
@@ -112,8 +112,8 @@ Shadow color is black except for `.glow`. `color(for:)` is scheme-aware; the mod
 |---|---|---|---|
 | `xs` | 4 | | |
 | `sm` | 8 | | |
-| `md` | 12 | `control` | Buttons medium/large, inputs, code-field boxes |
-| `lg` | 16 | `surface` | Nested surfaces: toast, list group, empty state |
+| `md` | 12 | `control` | Buttons medium/large, inputs, code-field boxes, toast |
+| `lg` | 16 | `surface` | Nested surfaces, such as a flat card inside a card |
 | `xl` | 20 | `card` | DSCard, DSInteractiveCard, DSImageCard, sheets |
 | `xxl` | 24 | | Hero cards |
 | `pill` | 9999 | `chip` | Badges, tags, small buttons, search bar, segmented pill |
@@ -145,7 +145,7 @@ Shadow color is black except for `.glow`. `color(for:)` is scheme-aware; the mod
 | `numeric` | 17 semibold | Rounded, monospaced digits | 0 | Prices, counters inline |
 | `badge` | 11 bold | Rounded | 0 | Count badges |
 
-**Dynamic Type.** `.ds(_:)` / `.dsTextStyle(_:)` scale with the user's text size: each style scales along a system text style (`DSTextStyle.textStyle`, e.g. `body` -> `.body`, `hero` -> `.largeTitle`) via `@ScaledMetric`, and line spacing scales too. At the default size the output is identical to the old fixed fonts. `DSTextStyle.size/weight/design/textStyle` are public. `.dsFont(_:)` applies only the scaled font (no color, tracking or line spacing); `DSTextStyle.font` stays fixed-size. Fixed-height controls (DSButton, DSTextField, DSSearchBar, DSSegmentedControl, DSBadge/DSCountBadge, DSStepper, DSCodeField, DSSlideToConfirm) still use fixed fonts.
+**Dynamic Type.** `.ds(_:)` / `.dsTextStyle(_:)` scale with the user's text size: each style scales along a system text style (`DSTextStyle.textStyle`, e.g. `body` -> `.body`, `hero` -> `.largeTitle`) via `@ScaledMetric`, and line spacing scales too. At the default size the output is identical to the old fixed fonts. `DSTextStyle.size/weight/design/textStyle` are public. `.dsFont(_:)` applies only the scaled font (no color, tracking or line spacing); `DSTextStyle.font` stays fixed-size. Some controls still use fixed fonts: DSButton, the input text of DSTextField / DSSearchBar, DSSegmentedControl and DSBadge / DSCountBadge. DSStepper (number), DSCodeField (digits) and DSSlideToConfirm (label) use `.ds(_:)` and scale, but their boxes and tracks have fixed heights.
 
 Rule: numbers are always Rounded; titles are never Rounded. Max three styles per visual section.
 

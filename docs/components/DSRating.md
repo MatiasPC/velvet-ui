@@ -9,8 +9,10 @@ A star rating you can drag or tap, with a selection tick per star and a pop on t
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -68,7 +70,7 @@ Use `step: 0.5` for half stars. Use `DSRating(value:)` for displaying averages.
 ## Accessibility
 
 - Editable: one adjustable element labelled "Rating" with the value "3 out of 5 stars". Swipe up or down to change it.
-- The read-only init is announced as static text with the same value format.
+- The read-only init has the same label and value format ("Rating", "3.5 out of 5 stars"). VoiceOver still announces it as adjustable, but swiping does nothing.
 - Dynamic Type: stars are sized by the `size` parameter, so they don't scale with text size.
 
 ## See also

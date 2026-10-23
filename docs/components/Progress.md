@@ -117,8 +117,8 @@ struct ProgressDemo: View {
 
 ## Behavior
 
-- Every progress view starts at 0 and animates to `progress` on appear (`DSAnimation.progress`, 0.8s ease in-out), then animates again whenever `progress` changes. The number counts up with `DSAnimation.counting` (1s ease out).
-- `DSStepProgress` staggers its segments with `DSAnimation.stagger(index:)`.
+- The ring and both bars start at 0 and animate to `progress` on appear (`DSAnimation.progress`, 0.8s ease in-out), then animate again whenever `progress` changes. `DSAnimatedNumber` does the same with `DSAnimation.counting` (1s ease out).
+- `DSStepProgress` does not start at 0: it draws `currentStep` filled segments at once and staggers the color change when `currentStep` changes, with `DSAnimation.stagger(index:)`.
 - No haptics: these are status displays, not controls.
 - `.dsShimmer()` does not start under Reduce Motion: the view simply stays static. The progress and counting animations are plain value transitions.
 

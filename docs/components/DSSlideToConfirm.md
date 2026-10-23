@@ -9,8 +9,10 @@ A slide-to-confirm gate for irreversible actions like payments. The label dissol
 ## Install
 
 ```swift
+// Package.swift
 .package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-.product(name: "VelvetUI", package: "velvet-ui")   // add to your target's dependencies
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
 ```
 
 In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
@@ -47,7 +49,7 @@ struct SlideToConfirmDemo: View {
 | `label` | `String` | required | Text on the track (unlabeled first argument). |
 | `icon` | `String` | `"chevron.right"` | SF Symbol on the knob. |
 | `confirmedLabel` | `String` | `"Confirmed"` | Text shown once the action succeeds. |
-| `accent` | `Color?` | `nil` | Knob and trail color. Defaults to the theme accent. |
+| `accent` | `Color?` | `nil` | Knob fill. Defaults to the theme accent. The trail is always the theme gradient. |
 | `finish` | `DSSlideFinish` | `.settle` | What happens after success: `.settle` or `.morphAndVanish`. |
 | `onConfirm` | `() async throws -> Void` | required | Runs when the slide commits. Throwing counts as a refusal. |
 
@@ -95,7 +97,7 @@ There is no reset API; re-mount with `.id(attempt)` to run it again.
 - One element, read as a button with the `label` you passed and the hint "Double-tap to confirm". VoiceOver users confirm with a double-tap, no dragging.
 - Value is "Processing" while `onConfirm` runs, then the `confirmedLabel` once done.
 - Override the label with `.accessibilityLabel("Pay 24 dollars")` on the outside.
-- Label text doesn't scale with Dynamic Type yet: the control has a fixed height, so its label keeps a fixed size. Text elsewhere on your screen that uses `.ds(_:)` / `.dsTextStyle(_:)` does scale.
+- Dynamic Type: the label uses `.ds(.button)` and scales, but the track is a fixed 56pt tall, so long labels at large sizes will clip.
 
 ## See also
 

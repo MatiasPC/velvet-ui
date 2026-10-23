@@ -7,7 +7,7 @@ One section per component: what it is for, the public API, variants and states, 
 Conventions that apply to every component:
 - Colors come from `@DSThemed`. Parameters typed `Color? = nil` follow the theme when nil.
 - Press states use `DSPress.scale` (0.96) or `DSPress.iconScale` (0.88) with `DSPress.animation`.
-- Haptics fire inside the component; don't add another on the call site.
+- Haptics fire inside the component; don't add another on the call site. The exception is `DSToast`, which fires none: the caller does.
 - Status: ✅ complete · 🧪 v0.2 glass restyle applied · ⏳ restyle pending (works, still v0.1 look).
 
 ---
@@ -79,7 +79,7 @@ DSTextField(label: String = "", placeholder: String, icon: String? = nil,
 DSSearchBar(placeholder: String = "Search", text: Binding<String>)
 ```
 
-States: focus tints icon and border with `theme.ink`; `.error` shows message + red icon; `.success` shows a check; `.disabled` at 0.5 opacity. Height 48 (search 44) — literal, candidate for a control-height token. Clear button in the search bar fires `.light`.
+States: real focus (not `.focused`, which looks like `.normal`) tints icon and border with `theme.ink`; `.error` shows message + red icon; `.success` shows a check; `.disabled` at 0.5 opacity. Height 48 (search 44) — literal, candidate for a control-height token. Clear button in the search bar fires `.light`.
 
 Pending restyle: background `subtleFill`, focus → `.dsFocusGlow(theme.ink)`, no stroke.
 
@@ -194,7 +194,7 @@ DSRating(rating: Binding<Double>, count: Int = 5, step: Double = 1,   // 0.5 for
 DSRating(value: Double, count:, symbol:, emptySymbol:, size: 20, spacing: DSSpacing.xxs, tint:, emptyColor:)  // read-only, fractional fills
 ```
 
-Drag-to-rate with `.selection` tick per star and `.light` on release; active star pops 1.22× with `springBouncy`. `tint` defaults to `palette.warning`, `emptyColor` to `palette.border`. Full accessibility (adjustable action).
+Drag-to-rate with `.selection` tick per star and `.light` on release; active star pops 1.22× with `springBouncy`. `tint` defaults to `palette.warning`, `emptyColor` to `palette.border`. Adjustable action when editable; the read-only init exposes the same label and value but its adjust action does nothing.
 
 ---
 
@@ -227,7 +227,7 @@ DSStepProgress(currentStep:, totalSteps:, activeColor:, inactiveColor:)
 DSAnimatedNumber(value:, format: "%.0f", style: .displayLarge)
 ```
 
-All animate with `DSAnimation.progress` on appear and on change; the number uses `.counting` + `numericText` content transition.
+Ring and bars start at 0 and animate with `DSAnimation.progress` on appear and on change; `DSStepProgress` draws `currentStep` segments at once and staggers color changes; the number uses `.counting` + `numericText` content transition.
 
 Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Motion), `.dsPulse()` (deprecated — use `.dsBreathe(_:)` instead).
 
@@ -288,7 +288,7 @@ Types a phrase out character by character, holds it, erases it, then moves to th
 `Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.
 
 ```swift
-DSStepper(value: Binding<Int>, in range: ClosedRange<Int> = 0...99, step: Int = 1, accent: Color? = nil)
+DSStepper(value: Binding<Int>, in range: ClosedRange<Int> = 0...99, step: Int = 1, accent: Color? = nil)   // accent tints the − and + glyphs; defaults to theme.ink
 ```
 
 Tapping either glyph steps the bound value, clamped into `range`. The number rolls with `.numericText`. Each successful step fires `.selection` haptic; at a bound the value does not move, the whole track fires one `.dsJiggle` refusal wiggle plus a `.warning` haptic. The buttons deliberately stay hit-testable at a bound (never `.disabled`) so refusal can actually be felt — they just dim. Stepping clamps into `range`, so a `step` that does not evenly divide the range lands on the bound instead of overshooting; a non-positive `step` is treated as `1`. Exposes `.accessibilityAdjustableAction` so VoiceOver gets native increment/decrement.
@@ -297,7 +297,7 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ## Motion primitives  ✅
 
-`Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The four motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
+`Animation/DSMotion.swift`. Ambient effects for decorative swell, attention-holding jiggles, entrances, edge highlights, and hue shifts. The motion components adapt techniques (not code) from [amosgyamfi/open-swiftui-animations](https://github.com/amosgyamfi/open-swiftui-animations); each file names its upstream inspiration in a header comment.
 
 ```swift
 func dsBreathe(_ intensity: DSBreatheIntensity = .medium) -> some View
