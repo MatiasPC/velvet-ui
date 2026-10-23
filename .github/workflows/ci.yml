@@ -26,6 +26,10 @@ jobs:
         run: swift build
       - name: Test
         run: swift test
+      - name: Registry (each component compiles on its own, Swift 5 and 6)
+        run: swift scripts/velvet.swift verify
+      - name: llms.txt and llms-full.txt are up to date
+        run: swift scripts/velvet.swift llms --check
 
   ios:
     name: iOS Simulator · xcodebuild
