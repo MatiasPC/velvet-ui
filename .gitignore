@@ -12,8 +12,8 @@ Sources/.DS_Store
 .claude/worktrees/
 
 # Local agent tooling — used on the maintainer's machine, not published.
+# (AGENTS.md at the root IS published: it's the public guide for agents using Velvet.)
 CLAUDE.md
-AGENTS.md
 .claude/
 .opencode/
 docs/superpowers/
