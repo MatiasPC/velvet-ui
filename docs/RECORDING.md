@@ -31,7 +31,8 @@ use the manual path.
 1. Run the Gallery, open **Recording → Recording stages**.
 2. Pick a background (Neutral, Sunset, Aurora, Lagoon), appearance and autoplay.
 3. Tap a stage. It fills the screen with no chrome. **Long-press the
-   background for 1 second to exit.**
+   background for 1 second to exit** (on the full-screen example flows,
+   long-press the top edge).
 4. Record from a terminal:
    ```bash
    xcrun simctl io booted recordVideo --codec=h264 --force raw.mov
@@ -44,10 +45,11 @@ in-app pickers):
 ```bash
 xcrun simctl launch booted com.matiasperaltacharro.VelvetGallery \
   -VelvetStage Hero -VelvetStageBackground sunset \
-  -VelvetAppearance dark -VelvetStageAutoplay NO
+  -VelvetAppearance dark -VelvetStageAutoplay NO \
+  -AppleLanguages "(en)" -AppleLocale en_US
 ```
 
-Invalid values fall back to defaults.
+Invalid values fall back to defaults. The last two arguments force English and US formatting, so prices read "$115.00" whatever the Mac's region is; `scripts/record-stage.sh` passes them too.
 
 ### Gesture stages
 
@@ -86,7 +88,7 @@ ffmpeg -i raw.mov -vf "$CROP,fps=20,scale=480:-2:flags=lanczos,split[a][b];[a]pa
 
 | Target | Format |
 | --- | --- |
-| X | vertical 9:16 MP4, 1080x1920, H.264, 30 fps, 5-10 s, no audio, at most 512 MB |
+| X | vertical 9:16 MP4, 1080x1920, H.264, 30 fps, 5-10 s, no audio, at most 512 MB. The full-screen example flows keep the device height instead (1080x2348), which X also accepts. |
 | README GIF | 480 px wide, 20 fps, loops forever, at most 5 MB |
 
 Name files after the stage ID. GIFs go in `docs/media/<StageID>.gif` and are
@@ -118,3 +120,14 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSTypewriterText` | Runs on its own. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
+| `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
+| `DSCarousel` | Autoplay: advances a page every 1.6 s and wraps. Swipe it by hand for the depth effect. |
+| `DSSheet` | Autoplay: presents the sheet, holds, dismisses. |
+| `DSNumberTicker` | Autoplay: rolls a balance through a sequence (including 99.99 → 100.05). |
+| `Charts` | Autoplay: shuffles the data every 2 s (line morph, bars regrow). Drag across the bars to scrub. |
+| `DSSkeleton` | Autoplay: loading → loaded → loading. |
+| `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
+| `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
+| `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |
+| `SettingsFlow` | Full screen. Flip a toggle (toast), open Delete account and slide. Manual. |
+| `CheckoutFlow` | Full screen. Step a quantity (total rolls), apply `VELVET`, slide to pay. Manual. |
