@@ -309,7 +309,117 @@ func dsHueDrift(isActive: Bool = true) -> some View
 DSMotion.loop(_ base: Animation, autoreverses: Bool = true, unless reduceMotion: Bool) -> Animation?
 ```
 
-Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a static gradient without leaving the theme. All five settle to a resting state under Reduce Motion instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
+Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a static gradient without leaving the theme. All five settle to a resting state under Reduce Motion (breathe at scale 1, drift at 0°) instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
+
+---
+
+## DSTabBar  ✅
+
+`Components/DSTabBar.swift`. Floating glass tab bar. Depends on `DSCountBadge`.
+
+```swift
+DSTabBar(selection: Binding<Value>, items: [DSTabItem<Value>],
+         accent: Color? = nil,                    // selected capsule; nil = theme accent
+         haptic: DSHapticStyle = .selection)
+DSTabItem(_ title: String, value: Value, icon: String, selectedIcon: String? = nil, badge: Int? = nil)
+```
+
+Glass capsule (`.glass`, `DSRadius.chip`, `.lg` shadow). The selected tab sits on a solid accent capsule (`onAccent` content) that slides with `matchedGeometryEffect` on `springSnappy` (`fast` under Reduce Motion); the icon swaps to `selectedIcon` and bounces once. The haptic fires only when the selection changes. VoiceOver: tab-bar trait, one button per tab with `.isSelected`, badge read as "3 new". Place with `.safeAreaInset(edge: .bottom)`.
+
+---
+
+## DSCarousel  ✅
+
+`Components/DSCarousel.swift`.
+
+```swift
+DSCarousel(_ data: Data, currentPage: Binding<Int>,      // or omit currentPage for a self-managed index
+           peek: CGFloat = DSSpacing.xxxl, spacing: CGFloat = DSSpacing.sm,
+           haptic: DSHapticStyle? = .selection) { item in … }
+```
+
+`.viewAligned` scroll, `contentMargins` peek (`peek - spacing` of each neighbor shows), `containerRelativeFrame` items, `scrollTransition` depth from `DSCarouselMath.depth(for:)` (scale 0.9, opacity 0.6, 4° yaw at ±1, scaled toward the centre item so the peek survives). Identity under Reduce Motion. Haptic once per user-driven page change, not on programmatic ones. Items should fill the carousel's height (`.frame(maxHeight: .infinity)`): the scroll view clips.
+
+---
+
+## DSSheet  ✅
+
+`Components/DSSheet.swift`. Styling wrapper over the native sheet.
+
+```swift
+.dsSheet(isPresented: Binding<Bool>, detents: Set<PresentationDetent> = [.medium, .large], onDismiss: (() -> Void)? = nil) { … }
+.dsSheet(item: Binding<Item?>, detents:, onDismiss:) { item in … }
+```
+
+Detents + visible grabber. Background: `.regularMaterial` before iOS/macOS 26, the system Liquid Glass sheet from 26 on, solid `backgroundElevated` under Reduce Transparency. Re-injects the presenter's `DSTheme` and sets `dsOnBackdrop` to false inside. No haptic.
+
+---
+
+## DSNumberTicker  ✅
+
+`Components/DSNumberTicker.swift`.
+
+```swift
+DSNumberTicker(_ value: Double, format: some FormatStyle<Double, String>,
+               style: DSTextStyle = .displayMedium, color: Color? = nil)
+DSNumberTicker(_ value: Int, style: DSTextStyle = .displayMedium, color: Color? = nil)
+```
+
+Odometer digits: each digit is a 0–9 column in a private animatable `Layout` that rolls on `springSmooth`, staggered 0.03 s from the units digit. Slot ids count from the right (`slots(for:)`, tested), so 99 → 100 keeps its digits. The view is `fixedSize()`: it never compresses, because a squeezed static slot ("US$") would clip. Reduce Motion: crossfade. One accessibility element with the formatted string and `.updatesFrequently`. No haptics.
+
+---
+
+## Charts: DSSparkline / DSBarChart  ✅
+
+`Components/DSCharts.swift`. No Swift Charts dependency.
+
+```swift
+DSSparkline(_ values: [Double], color: Color? = nil, lineWidth: CGFloat = 2,
+            showsFill: Bool = true, showsLastPoint: Bool = true, accessibilityLabel: String = "Trend")
+DSBarChart(_ values: [Double], labels: [String]? = nil, selection: Binding<Int?>? = nil,
+           color: Color? = nil, accessibilityLabel: String = "Chart")
+```
+
+Sparkline: monotone cubic (Fritsch–Carlson) so the curve never overshoots the data, draw-on with `trim`, morph between same-count datasets through an animatable series, breathing last point. Bar chart: staggered spring growth, negative values clamp to 0, tap or drag to scrub with a `.selection` haptic per bar, bars dim only while one is selected. Both provide `AXChartDescriptorRepresentable` (VoiceOver Audio Graphs) and a spoken summary. Reduce Motion: data appears at rest.
+
+---
+
+## DSSkeleton  ✅
+
+`Components/DSSkeleton.swift`.
+
+```swift
+DSSkeleton(width: CGFloat? = nil, height: CGFloat = DSSpacing.sm, cornerRadius: CGFloat = DSRadius.xs)
+DSSkeleton.circle(_ diameter: CGFloat)
+.dsSkeleton(_ isLoading: Bool)
+```
+
+Blocks: `washSurface` on a backdrop, `palette.border` elsewhere, with `dsShimmer`; hidden from VoiceOver. The modifier redacts the real view (`.redacted(reason: .placeholder)`), pulses its opacity from a `TimelineView` (1 → 0.5 → 1 over 3.6 s; paused when not loading or under Reduce Motion), disables hit testing and reads "Loading". It never branches on `isLoading` and never duplicates content, so `@State` and `.task` inside survive the toggle. A `repeatForever` animation was avoided on purpose: it can keep running after loading ends.
+
+---
+
+## DSSuccessCheck  ✅
+
+`Components/DSSuccessCheck.swift`.
+
+```swift
+DSSuccessCheck(isComplete: Bool, size: CGFloat = 64, color: Color? = nil,
+               haptic: DSHapticStyle? = .success, accessibilityLabel: String = "Done")
+```
+
+Ring strokes, disc fills, check draws (eased state), then one pop and a fading halo on a `keyframeAnimator` track (`SpringKeyframe` matching `springBouncy`). The haptic and the VoiceOver announcement land at the pop peak (0.65 s of 0.9 s). Fill is `palette.success`, check `palette.textOnPrimary`. Resets quietly; Reduce Motion crossfades the finished seal in.
+
+---
+
+## dsConfetti  ✅
+
+`Animation/DSConfetti.swift`.
+
+```swift
+.dsConfetti(trigger: some Equatable, origin: UnitPoint = .center, count: Int = 80, haptic: DSHapticStyle? = nil)
+```
+
+Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-form physics (gravity + exponential drag, spin, flutter) from a seeded SplitMix64, so it's testable; count clamped to 150. Colors: accent, gradient stops, their light tints and the theme ink (for contrast on the backdrop). Draws inside the view it's attached to, so attach it to a container that covers the area. Removed under Reduce Motion; no haptic by default because the triggering action usually has one.
 
 ---
 
