@@ -23,6 +23,8 @@ struct ComponentCatalog: View {
     @State private var progress: Double = 0.65
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
+    @State private var chipFilters: Set<String> = ["Design"]
+    @State private var chipSort: String? = "Trending"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
     @State private var rating: Double = 4
@@ -247,6 +249,23 @@ struct ComponentCatalog: View {
                                 style: .underline
                             )
                         }
+                    }
+                }
+
+                // MARK: - Chips
+                section("Chips") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                ["Design", "Engineering", "Product", "Research", "Marketing", "Finance"],
+                                selection: $chipFilters
+                            )
+                            DSChipGroup(
+                                ["Trending", "Newest", "Top rated", "Nearby"],
+                                selection: $chipSort
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
