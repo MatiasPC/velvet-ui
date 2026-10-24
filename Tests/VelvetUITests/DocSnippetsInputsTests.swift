@@ -35,6 +35,26 @@ enum DocSnippetsInputs {
         }
     }
 
+    struct ChipDemo: View {
+        @State private var topics: Set<String> = ["Design"]
+        @State private var sort: String? = "Trending"
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                    // Multiple selection — tap to add or remove.
+                    DSChipGroup(
+                        ["Design", "Engineering", "Product", "Research", "Marketing"],
+                        selection: $topics
+                    )
+                    // Single selection — tap the selected chip again to clear it.
+                    DSChipGroup(["Trending", "Newest", "Top rated", "Nearby"], selection: $sort)
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+
     struct CodeFieldDemo: View {
         @State private var code = ""
         @State private var state = DSCodeFieldState.normal
@@ -232,6 +252,7 @@ final class DocSnippetsInputsTests: XCTestCase {
     func testSnippetsInstantiate() {
         _ = DocSnippetsInputs.ButtonDemo()
         _ = DocSnippetsInputs.ButtonVariantsDemo()
+        _ = DocSnippetsInputs.ChipDemo()
         _ = DocSnippetsInputs.CodeFieldDemo()
         _ = DocSnippetsInputs.IconButtonDemo()
         _ = DocSnippetsInputs.PageControlDemo()

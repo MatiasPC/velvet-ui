@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSChip` and `DSChipGroup`: selectable pill chips for filters, tags and category pickers, laid out with a wrapping flow `Layout` and managing single (`Binding<Value?>`) or multiple (`Binding<Set<Value>>`) selection. Generic over any `Hashable` value, with a `String` convenience. Selection springs the fill into the accent and ticks a selection haptic.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

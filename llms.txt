@@ -20,6 +20,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
 - [DSRating](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRating.md): Drag-to-rate stars, with half steps and a read-only mode.
 - [DSSegmentedControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSegmentedControl.md): Pill or underline picker with a sliding indicator.
+- [DSChipGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSChip.md): Selectable pill chips for filters and tags, on a wrapping flow layout, with single or multiple selection.
 - [DSTextField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTextField.md): Text field with label, icon and validation states, plus DSSearchBar.
 - [DSCodeField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCodeField.md): One-time-code input with SMS autofill, a shake on error and success feedback.
 - [DSPageControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSPageControl.md): Page dots whose active dot stretches into a capsule.

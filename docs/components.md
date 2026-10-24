@@ -164,6 +164,26 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ---
 
+## DSChip / DSChipGroup  ✅ 🧪
+
+`Components/DSChip.swift`. `DSChipGroup` is generic over `Hashable`: selectable pill chips on a wrapping flow `Layout`, single or multiple selection. Built glass-native for v0.2.
+
+**Accessibility:** Container of buttons, each labelled with its title and `selected` when active; a leading icon is decorative and hidden from VoiceOver. Labels use the rounded button text style and scale with Dynamic Type.
+
+```swift
+DSChip(_ title: String, icon: String? = nil, isSelected: Bool = false,
+       accent: Color? = nil, haptic: DSHapticStyle = .selection, action: () -> Void)
+DSChipGroup(_ items: [DSChipItem<Value>], selection: Binding<Set<Value>>,   // multiple
+            spacing: CGFloat = DSSpacing.xs, accent: Color? = nil)
+DSChipGroup(_ items: [DSChipItem<Value>], selection: Binding<Value?>, ...)  // single: tap selected to clear
+DSChipGroup(_ options: [String], selection: Binding<Set<String>>, ...)      // String shortcut (also Binding<String?>)
+DSChipItem(_ title: String, value: Value, icon: String? = nil)
+```
+
+Selected chips crossfade `theme.subtleFill` → `accent ?? theme.accent` with `springSnappy` and a `.sm` lift; selecting ticks `.selection`. A private `Layout` wraps chips onto new lines — no borders, no horizontal scroll.
+
+---
+
 ## DSToggle  🧪 (colors) ⏳ (wash track + glow)
 
 `Components/DSToggle.swift`.

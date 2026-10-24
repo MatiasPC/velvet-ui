@@ -143,6 +143,21 @@
       "stage": "DSSegmentedControl"
     },
     {
+      "name": "DSChipGroup",
+      "category": "inputs",
+      "summary": "Selectable pill chips for filters and tags, on a wrapping flow layout, with single or multiple selection.",
+      "symbols": [
+        "DSChip",
+        "DSChipItem",
+        "DSChipGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSChip.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSChip.md"
+    },
+    {
       "name": "DSTextField",
       "category": "inputs",
       "summary": "Text field with label, icon and validation states, plus DSSearchBar.",
