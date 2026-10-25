@@ -122,7 +122,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
 
-Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`. The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
+Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`, [`DSFlowLayout`](docs/components/DSFlowLayout.md) (wrapping layout for tags and filter chips). The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
 
 ## Examples
 

@@ -268,6 +268,19 @@
       "stage": "DSSheet"
     },
     {
+      "name": "DSFlowLayout",
+      "category": "containers",
+      "summary": "Wrapping layout that flows items onto new rows when they overflow the width — tag clouds, filter chips, keyword lists.",
+      "symbols": [
+        "DSFlowLayout"
+      ],
+      "files": [
+        "Sources/VelvetUI/Layout/DSFlowLayout.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSFlowLayout.md"
+    },
+    {
       "name": "DSBadge",
       "category": "display",
       "summary": "Status pills and count badges.",
