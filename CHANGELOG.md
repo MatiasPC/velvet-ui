@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSFlowLayout` — a pure SwiftUI `Layout` that wraps its subviews to new rows when they overflow the available width, for tag clouds, filter chips and keyword lists. Greedy first-fit packing; `spacing`, `lineSpacing` and `alignment` (`.leading`/`.center`/`.trailing`); an over-wide item lands on its own row rather than clipping. No color or haptics of its own (a layout positions, it never paints) — reflow animates on-system when the caller wraps content changes in `withAnimation`. Docs: [docs/components/DSFlowLayout.md](docs/components/DSFlowLayout.md).
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

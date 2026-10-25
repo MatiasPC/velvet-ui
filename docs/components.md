@@ -425,7 +425,9 @@ Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-f
 
 ## Layout  ✅
 
-`DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
+`DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)` · `DSFlowLayout(spacing: .xs, lineSpacing: .xs, alignment: .leading) { }`.
+
+`DSFlowLayout` is a pure SwiftUI `Layout` (not a container view): greedy first-fit packing that wraps items to new rows when they overflow the proposed width — tag clouds, filter chips, keyword lists. No color, fill or haptics of its own (a layout positions, it never paints); style the chips inside it. Reflow animates on-system when the caller wraps content changes in `withAnimation`. Full page: [docs/components/DSFlowLayout.md](components/DSFlowLayout.md).
 
 ---
 
