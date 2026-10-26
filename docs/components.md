@@ -67,6 +67,21 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSTiltCard  ✅
+
+`Components/DSTiltCard.swift`. A glass card that tips in 3D toward the finger as you drag, with a specular sheen sliding across the surface, then springs back on release.
+
+```swift
+DSTiltCard(maxTilt: Angle = .degrees(12),       // peak rotation at the edge of the drag
+           padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card,
+           haptic: DSHapticStyle = .soft) { content }
+```
+
+Drag tilts the card around both axes (clamped at `maxTilt`); the sheen fades in with the tilt and the shadow deepens from `.lg` to `.xl` while held; release springs it flat with `DSAnimation.springGentle`. A `.soft` haptic fires once as the drag begins. Under Reduce Motion the tilt and sheen switch off and it rests as a plain glass surface (the drag passes through to any controls inside). Decoration only — for a tappable surface use `DSInteractiveCard`.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.

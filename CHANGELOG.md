@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSTiltCard` — a glass card that tips in 3D toward the finger as you drag, with a specular sheen that slides across the surface, a deepening shadow while held, and a `springGentle` snap-back on release. Rests flat under Reduce Motion. Pure SwiftUI, tokens-only, core dependencies only.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
