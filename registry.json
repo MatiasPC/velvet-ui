@@ -224,6 +224,19 @@
       "stage": "DSCard"
     },
     {
+      "name": "DSTiltCard",
+      "category": "containers",
+      "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
+      "symbols": [
+        "DSTiltCard"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTiltCard.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSTiltCard.md"
+    },
+    {
       "name": "DSListCell",
       "category": "containers",
       "summary": "List rows, section headers and dividers.",
