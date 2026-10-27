@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSFlipCard` — a two-sided glass card that turns over in 3D on tap or from an `isFlipped` binding, with a `.rigid` haptic on the turn. `axis` (`.horizontal` / `.vertical`), `DSCard`-style `style` / `padding` / `cornerRadius`, and `flipOnTap` to opt faces with their own controls out of the tap gesture. One animated angle runs through an `Animatable` container so the faces swap at the 90° edge with no ghosting; Reduce Motion swaps faces instantly instead of spinning. Adds `DSFlipAxis`.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

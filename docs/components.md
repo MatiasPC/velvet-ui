@@ -67,6 +67,32 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSFlipCard  🧪
+
+`Components/DSFlipCard.swift`. A two-sided glass card that turns over in 3D.
+
+```swift
+DSFlipCard(axis: DSFlipAxis = .horizontal,       // .horizontal (y) · .vertical (x)
+           style: DSCardStyle = .elevated,
+           padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card,
+           flipOnTap: Bool = true,
+           haptic: DSHapticStyle = .rigid) { front } back: { back }
+
+// Controlled: same params plus a leading `isFlipped: Binding<Bool>`.
+DSFlipCard(isFlipped: $revealed, axis: .vertical) { front } back: { back }
+```
+
+Each face is a `DSCard` (depends on it). The turn is one `DSAnimation.springSmooth` about `axis` with `perspective` 0.5. A single animated angle runs through an inner `Animatable` container (`DSFlipFaces`); the faces swap on the `angle >= 90` threshold, so the hand-off lands at the edge for any animation, spring included — no opacity cross-fade, no ghosting. The back face is pre-rotated 180° about the same axis so it reads correctly once flipped. Haptic (`.rigid`) fires on tap and on binding-driven flips via `.animation(_:value:)`.
+
+Motion: `.animation(reduceMotion ? nil : .springSmooth, value: isFlipped)` — under Reduce Motion the angle jumps, so faces swap instantly with no 3D spin. No `compositingGroup()`: it is unnecessary once the faces never overlap, and it risks changing how the glass material samples the backdrop.
+
+Accessibility: with `flipOnTap` the card adds `.isButton` + hint "Double tap to flip"; the hidden face is `.accessibilityHidden`. With `flipOnTap: false` no button semantics are added, so faces keep their own hit testing — the documented path for a face with its own controls.
+
+Previews: light and dark on `.dsBackdrop()`, a tap-to-flip stat card and a binding-driven vertical card.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.
