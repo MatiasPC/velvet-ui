@@ -13,6 +13,7 @@ struct StageView: View {
         case .DSButton:            ButtonStage()
         case .DSIconButton:        IconButtonStage()
         case .DSCard:              CardStage()
+        case .DSFlipCard:          FlipCardStage(autoplay: autoplay)
         case .DSTextField:         TextFieldStage()
         case .DSCodeField:         CodeFieldStage(autoplay: autoplay)
         case .DSBadge:             BadgeStage()
@@ -122,6 +123,36 @@ private struct CardStage: View {
                 Text("$480").ds(.title2).padding(.top, DSSpacing.xs)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+private struct FlipCardStage: View {
+    let autoplay: Bool
+    @State private var flipped = false
+
+    var body: some View {
+        DSFlipCard(isFlipped: $flipped) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                Text("This month").ds(.footnote, color: DSColors.textSecondary)
+                Text("1 248").ds(.displayMedium)
+                Text("Tap to see the trend").ds(.callout, color: DSColors.textSecondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } back: {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                Text("vs. last month").ds(.footnote, color: DSColors.textSecondary)
+                Text("+12%").ds(.displayMedium)
+                Text("Tap to flip back").ds(.callout, color: DSColors.textSecondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .task(id: autoplay) {
+            guard autoplay else { return }
+            await stageLoop {
+                await stagePause(1.8)
+                flipped.toggle()
+            }
         }
     }
 }

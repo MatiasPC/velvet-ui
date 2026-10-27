@@ -25,6 +25,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSPageControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSPageControl.md): Page dots whose active dot stretches into a capsule.
 - [DSTabBar](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTabBar.md): Floating glass tab bar with a sliding accent capsule, a symbol swap and count badges.
 - [DSCard](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCard.md): The glass surface everything sits on: elevated, outlined, flat, tappable or with an image.
+- [DSFlipCard](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSFlipCard.md): Two-sided glass card that turns over in 3D on tap or from a binding, with a haptic and a Reduce Motion fallback.
 - [DSListCell](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSListCell.md): List rows, section headers and dividers.
 - [DSCarousel](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCarousel.md): Snapping carousel with peeking neighbors and scroll-driven depth; pairs with DSPageControl.
 - [DSSheet](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSheet.md): Native sheet with Velvet chrome: detents, a grabber, a glass background and the theme carried in.

@@ -44,6 +44,7 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var cardFlipped = false
 
     var body: some View {
         NavigationStack {
@@ -171,6 +172,30 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
+                }
+
+                // MARK: - Flip Card
+                section("Flip Card") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSFlipCard(isFlipped: $cardFlipped) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("This month").ds(.footnote, color: DSColors.textSecondary)
+                                Text("1 248").ds(.displayMedium)
+                                Text("Tap to see the trend").ds(.callout, color: DSColors.textSecondary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        } back: {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("vs. last month").ds(.footnote, color: DSColors.textSecondary)
+                                Text("+12%").ds(.displayMedium)
+                                Text("Tap to flip back").ds(.callout, color: DSColors.textSecondary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        DSButton(cardFlipped ? "Flip to front" : "Flip to back", variant: .ghost, size: .small) {
+                            withAnimation(DSAnimation.springSmooth) { cardFlipped.toggle() }
+                        }
+                    }
                 }
 
                 // MARK: - Text Fields
