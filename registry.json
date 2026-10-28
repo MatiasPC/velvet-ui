@@ -312,6 +312,23 @@
       "stage": "DSNumberTicker"
     },
     {
+      "name": "DSTimeline",
+      "category": "display",
+      "summary": "A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.",
+      "symbols": [
+        "DSTimeline",
+        "DSTimelineItem"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTimeline.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSTimeline.md",
+      "stage": "DSTimeline"
+    },
+    {
       "name": "Charts",
       "category": "charts",
       "summary": "Light animated charts: a sparkline that draws and morphs, and a bar chart you can scrub.",

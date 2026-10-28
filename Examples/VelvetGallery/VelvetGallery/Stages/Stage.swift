@@ -9,7 +9,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSAvatar, DSListCell, DSToast, DSEmptyState, DSSegmentedControl, DSToggle
     case DSRating, DSPageControl, DSStepper, DSSlideToConfirm, DSThinkingIndicator
     case DSTypewriterText, Progress, Motion
-    case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
+    case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, DSTimeline, Charts, DSSkeleton
     case DSSuccessCheck, DSConfetti
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 

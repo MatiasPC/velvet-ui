@@ -44,6 +44,7 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var timelineStep = 2
 
     var body: some View {
         NavigationStack {
@@ -331,6 +332,33 @@ struct ComponentCatalog: View {
                             } action: { }
                             DSDivider(inset: DSSpacing.screenHorizontal)
                             DSListCell(title: "About", subtitle: "Version 0.2.0")
+                        }
+                    }
+                }
+
+                // MARK: - Timeline
+                section("Timeline") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSTimeline(
+                                [
+                                    DSTimelineItem("Order placed", subtitle: "9:41 AM", icon: "bag"),
+                                    DSTimelineItem("Shipped", subtitle: "Picked up by courier", icon: "shippingbox"),
+                                    DSTimelineItem("Out for delivery", subtitle: "Arriving today", icon: "box.truck"),
+                                    DSTimelineItem("Delivered", icon: "house")
+                                ],
+                                currentStep: timelineStep
+                            )
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Back", variant: .ghost, size: .small) {
+                                    timelineStep = max(timelineStep - 1, 0)
+                                }
+                                DSButton("Advance", size: .small) {
+                                    timelineStep = min(timelineStep + 1, 4)
+                                }
+                            }
                         }
                     }
                 }
