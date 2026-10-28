@@ -369,6 +369,24 @@ Odometer digits: each digit is a 0–9 column in a private animatable `Layout` t
 
 ---
 
+## DSTimeline  ✅
+
+`Components/DSTimeline.swift`. Vertical progress timeline — the content-bearing, vertical complement to `DSStepProgress`.
+
+```swift
+DSTimeline(_ items: [DSTimelineItem], currentStep: Int,
+           nodeSize: CGFloat = 28, lineWidth: CGFloat = DSSpacing.xxxs,
+           accent: Color? = nil, haptics: Bool = true)
+
+DSTimelineItem(_ title: String, subtitle: String? = nil, icon: String? = nil)
+```
+
+Steps are positional: identity is the enumerated index (`id: \.offset`), so rebuilding `items` keeps nodes animating in place. `status(for:)` splits them by `currentStep` into complete (`< step`), current (`== step`) and upcoming (`> step`); `currentStep == items.count` means all done. Each row is `HStack(alignment: .top)` with a leading rail (`VStack { node; connector }`, fixed `width: nodeSize`) and the content. The connector is a `Capsule` track with an accent capsule on top at `scaleEffect(y: filled ? 1 : 0, anchor: .top)`, both `frame(maxHeight: .infinity)` so the flexible connector fills the gap between consecutive nodes without geometry reads. Filled when `index < currentStep`. The live node gets `.glow` + `dsBreathe(.subtle)` (no border); rows enter with `dsStaggerIn`. A single `.success` haptic fires on forward `currentStep` change only (`onChange`, guarded). One accessibility element per step: title+subtitle as label, status as value.
+
+Known gaps: vertical only; no branching. `nodeSize` 28 is a public knob (not a token) — glyph/glow geometry derives from it, matching the `DSRating`/`DSAvatar` size-param precedent.
+
+---
+
 ## Charts: DSSparkline / DSBarChart  ✅
 
 `Components/DSCharts.swift`. No Swift Charts dependency.

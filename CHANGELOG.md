@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSTimeline` — a vertical progress timeline with `DSTimelineItem`. Nodes joined by a connector that fills as `currentStep` advances; the live node glows and breathes, rows cascade in with `dsStaggerIn`, and a `.success` haptic fires on forward progress. The content-bearing, vertical complement to `DSStepProgress`. For order tracking, multi-step flows and activity histories.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

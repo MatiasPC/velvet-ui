@@ -352,6 +352,30 @@ enum DocSnippetsDisplay {
         }
     }
     // END MotionDemo
+
+    // BEGIN TimelineDemo
+    struct TimelineDemo: View {
+        @State private var step = 2
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                DSCard {
+                    DSTimeline(
+                        [
+                            DSTimelineItem("Order placed", subtitle: "March 3, 9:41 AM", icon: "bag"),
+                            DSTimelineItem("Shipped", subtitle: "Picked up by courier", icon: "shippingbox"),
+                            DSTimelineItem("Out for delivery", subtitle: "Arriving today", icon: "box.truck"),
+                            DSTimelineItem("Delivered", icon: "house")
+                        ],
+                        currentStep: step
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+    // END TimelineDemo
 }
 
 @MainActor
@@ -368,5 +392,6 @@ final class DocSnippetsDisplayTests: XCTestCase {
         _ = DocSnippetsDisplay.ThinkingDemo()
         _ = DocSnippetsDisplay.TypewriterDemo()
         _ = DocSnippetsDisplay.MotionDemo()
+        _ = DocSnippetsDisplay.TimelineDemo()
     }
 }

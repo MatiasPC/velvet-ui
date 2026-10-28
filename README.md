@@ -89,7 +89,7 @@ struct ContentView: View {
 
 ## Components
 
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 28 components, every one with a Gallery stage.
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 29 components, every one with a Gallery stage.
 
 | Preview | Component | What it does |
 |:---:|---|---|
@@ -111,6 +111,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
 | <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
+| <img src="docs/media/DSTimeline.gif" width="120" alt="DSTimeline"> | [DSTimeline](docs/components/DSTimeline.md) | Vertical progress timeline: nodes joined by a connector that fills as the flow advances. |
 | <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |
 | <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts that VoiceOver announces. |
 | <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
