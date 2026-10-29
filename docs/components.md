@@ -283,6 +283,18 @@ Types a phrase out character by character, holds it, erases it, then moves to th
 
 ---
 
+## DSExpandableText  ✅
+
+`Components/DSExpandableText.swift`. Clamp-and-reveal for long copy.
+
+```swift
+DSExpandableText(_ text: String, lineLimit: Int = 3, expandLabel: String = "Show more", collapseLabel: String = "Show less", style: DSTextStyle = .body, color: Color? = nil, haptic: DSHapticStyle = .light)
+```
+
+Collapses `text` to `lineLimit` lines and springs open on tap. Truncation is measured, not guessed: two off-screen copies of the text (one clamped to `lineLimit`, one unbounded) are laid out at the real text width with `onGeometryChange` (iOS 18 / macOS 15), and the toggle shows only when the unbounded copy is taller — so short copy renders with no affordance. Both probes are independent of the expanded state, so `isTruncated` never flips mid-reveal and the button never flickers. Expand/collapse animates the height with `DSAnimation.springSmooth`; the chevron rotates 180° and the label crossfades (`.contentTransition(.opacity)`). The configurable haptic fires on each toggle. Copy color is `color ?? palette.textPrimary` via `.ds(_:)`, so it scales with Dynamic Type and the measurement re-runs at the new size. The toggle link uses `theme.ink`. Reduce Motion makes the reveal instant (animation resolves to `nil`); VoiceOver reads the full copy whether collapsed or expanded, and the toggle is a button labelled with its current action.
+
+---
+
 ## DSStepper  ✅
 
 `Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.

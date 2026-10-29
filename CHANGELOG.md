@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap, with a measured truncation check (`onGeometryChange`), a rotating chevron, a crossfading Show more / Show less toggle, a haptic and full Reduce Motion / VoiceOver / Dynamic Type support.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
