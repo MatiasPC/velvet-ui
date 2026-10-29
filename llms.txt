@@ -39,6 +39,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSSkeleton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSkeleton.md): Loading placeholder blocks, plus .dsSkeleton(_:) to redact a real view in place.
 - [DSSuccessCheck](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSuccessCheck.md): An animated success seal: the ring draws, the check strokes in, one pop and a haptic on the beat.
 - [DSTypewriterText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTypewriterText.md): Types phrases out character by character, with a blinking caret.
+- [DSExpandableText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSExpandableText.md): Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.
 - [Motion](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Motion.md): dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.
 - [DSConfetti](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSConfetti.md): A themed confetti burst from any point, fired whenever a trigger value changes.
 

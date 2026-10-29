@@ -388,6 +388,21 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Expandable Text
+                section("Expandable Text") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSExpandableText(
+                                "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a gradient theme, spring motion on everything you touch, and haptics that make the interface feel alive. Every component honors Reduce Motion, Reduce Transparency and Dynamic Type out of the box.",
+                                lineLimit: 2,
+                                expandLabel: "Read more",
+                                collapseLabel: "Read less"
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Slide to Confirm
                 section("Slide to Confirm") {
                     VStack(spacing: DSSpacing.md) {
