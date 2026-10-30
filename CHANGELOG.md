@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSMarquee` — scrolls overflowing single-line content in a seamless, duplicated-copy loop, but only when it is too wide to fit; static and left-aligned when it fits. Configurable `velocity`, `spacing` and edge `fade`; soft gradient-mask edges (no border); rests static with a trailing fade under Reduce Motion; content exposed to VoiceOver as one element.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

@@ -475,6 +475,19 @@
       "dependencies": [],
       "docs": "docs/components/DSConfetti.md",
       "stage": "DSConfetti"
+    },
+    {
+      "name": "DSMarquee",
+      "category": "display",
+      "summary": "Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.",
+      "symbols": [
+        "DSMarquee"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSMarquee.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSMarquee.md"
     }
   ],
   "examples": [

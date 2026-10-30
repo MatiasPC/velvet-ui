@@ -41,6 +41,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSTypewriterText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTypewriterText.md): Types phrases out character by character, with a blinking caret.
 - [Motion](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Motion.md): dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.
 - [DSConfetti](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSConfetti.md): A themed confetti burst from any point, fired whenever a trigger value changes.
+- [DSMarquee](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSMarquee.md): Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.
 
 ## Examples
 
