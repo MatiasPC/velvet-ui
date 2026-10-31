@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSFlipCard<Front, Back>` — a two-sided card that turns over in 3D (`rotation3DEffect` + perspective) to reveal its back. For flashcards, loyalty/credit cards, stat tiles that flip to detail, and question/answer reveals. Imposes no surface of its own (each face is any view, usually a `DSCard`), counter-mirrors the back so its text never reads backwards, and crossfades the faces edge-on so the mirror never bleeds through. `springSmooth` on touch, a `.rigid` snap haptic per flip, VoiceOver button trait + flip action, and a plain in-place crossfade under Reduce Motion. Self-managed tap-to-flip by default, with an optional `isFlipped` binding for external control; `axis` (`.horizontal` / `.vertical`). New "Flip Card" section in the `ComponentCatalog`.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
