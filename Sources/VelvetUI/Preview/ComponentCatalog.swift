@@ -44,6 +44,7 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var flipTile = false
 
     var body: some View {
         NavigationStack {
@@ -171,6 +172,28 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
+                }
+
+                // MARK: - Flip Card
+                section("Flip Card") {
+                    Text("Tap a card to flip it").ds(.footnote, color: DSColors.textSecondary)
+
+                    DSFlipCard {
+                        flipFace("¿Cómo estás?", caption: "TAP TO REVEAL")
+                    } back: {
+                        flipFace("How are you?", caption: "TRANSLATION")
+                    }
+
+                    HStack(spacing: DSSpacing.md) {
+                        DSFlipCard(axis: .vertical, isFlipped: $flipTile) {
+                            flipFace("1,248", caption: "STEPS TODAY")
+                        } back: {
+                            flipFace("82%", caption: "OF YOUR GOAL")
+                        }
+                        DSButton("Flip", variant: .secondary, size: .small) {
+                            flipTile.toggle()
+                        }
+                    }
                 }
 
                 // MARK: - Text Fields
@@ -631,6 +654,16 @@ struct ComponentCatalog: View {
         VStack(alignment: .leading, spacing: DSSpacing.md) {
             Text(title).ds(.overline, color: DSColors.textSecondary)
             content()
+        }
+    }
+
+    private func flipFace(_ text: String, caption: String) -> some View {
+        DSCard {
+            VStack(spacing: DSSpacing.xs) {
+                Text(caption).ds(.overline, color: DSColors.textTertiary)
+                Text(text).ds(.title2)
+            }
+            .frame(maxWidth: .infinity, minHeight: 96)
         }
     }
 
