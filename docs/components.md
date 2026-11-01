@@ -67,6 +67,30 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSFlipCard  ✅
+
+`Components/DSFlipCard.swift`. A two-sided card that turns over in 3D on tap. Faces are caller-supplied views (wrap each in a `DSCard` for glass).
+
+```swift
+// self-managed
+DSFlipCard(axis: DSFlipAxis = .horizontal,       // .horizontal .vertical
+           showsBackFirst: Bool = false,
+           haptic: DSHapticStyle? = .rigid) { front } back: { back }
+
+// bound
+DSFlipCard(isShowingBack: Binding<Bool>,
+           axis: DSFlipAxis = .horizontal,
+           haptic: DSHapticStyle? = .rigid) { front } back: { back }
+```
+
+Motion: `DSAnimation.springSmooth` turn, `.rigid` haptic on each flip. The face swap is driven by a private `Animatable` `ViewModifier` (`DSFlipFace`) so visibility switches exactly as a face passes edge-on (90°) — no mirrored flash. The back is mounted pre-rotated 180° so it reads un-mirrored at rest. `DSFlipAxis.vector` maps `.horizontal` → `(0,1,0)`, `.vertical` → `(1,0,0)`; perspective `0.5` (file-private `Metrics`).
+
+Accessibility: container with `.isButton` and a "Flip" custom action; the hidden face is `.accessibilityHidden`. Reduce Motion: `withAnimation(nil)` swaps faces instantly, haptic still fires.
+
+Previews: light and dark on a backdrop, a self-managed flashcard and a binding-driven vertical reveal. Theming: no own colors — faces follow the theme through whatever they contain. Known missing: no built-in glass on the faces (kept unopinionated so an image or chart can be a face); callers add `DSCard` when they want it.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.

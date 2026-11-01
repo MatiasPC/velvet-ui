@@ -44,6 +44,7 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var flipRevealed = false
 
     var body: some View {
         NavigationStack {
@@ -171,6 +172,27 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
+                }
+
+                // MARK: - Flip Card
+                section("Flip Card") {
+                    Text("Tap a card to turn it over").ds(.footnote, color: DSColors.textSecondary)
+
+                    DSFlipCard {
+                        flipFace("Capital of France?", style: .title2)
+                    } back: {
+                        flipFace("Paris", style: .displayMedium, accent: true)
+                    }
+
+                    DSFlipCard(isShowingBack: $flipRevealed, axis: .vertical) {
+                        flipFace("Tap to reveal balance", style: .title3)
+                    } back: {
+                        flipFace("$1,248.00", style: .displayMedium, accent: true)
+                    }
+
+                    DSButton(flipRevealed ? "Hide" : "Reveal", variant: .secondary) {
+                        withAnimation(DSAnimation.springSmooth) { flipRevealed.toggle() }
+                    }
                 }
 
                 // MARK: - Text Fields
@@ -641,6 +663,15 @@ struct ComponentCatalog: View {
                 .frame(width: DSSpacing.xxl, height: DSSpacing.xxl)
                 .dsBreathe(intensity)
             Text(label).ds(.caption1, color: DSColors.textTertiary)
+        }
+    }
+
+    private func flipFace(_ text: String, style: DSTextStyle, accent: Bool = false) -> some View {
+        DSCard {
+            Text(text)
+                .ds(style, color: accent ? theme.gradient.accent : nil)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, minHeight: DSSpacing.massive * 2)
         }
     }
 
