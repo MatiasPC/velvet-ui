@@ -5,7 +5,7 @@ import VelvetUI
 /// Raw values are the stage IDs and double as the GIF file names
 /// (`docs/media/<ID>.gif`).
 enum Stage: String, CaseIterable, Identifiable {
-    case Hero, DSButton, DSIconButton, DSCard, DSTextField, DSCodeField, DSBadge
+    case Hero, DSButton, DSIconButton, DSCard, DSFlipCard, DSTextField, DSCodeField, DSBadge
     case DSAvatar, DSListCell, DSToast, DSEmptyState, DSSegmentedControl, DSToggle
     case DSRating, DSPageControl, DSStepper, DSSlideToConfirm, DSThinkingIndicator
     case DSTypewriterText, Progress, Motion

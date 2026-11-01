@@ -224,6 +224,21 @@
       "stage": "DSCard"
     },
     {
+      "name": "DSFlipCard",
+      "category": "containers",
+      "summary": "A two-sided card that turns over in 3D when tapped, with a rigid haptic on the turn.",
+      "symbols": [
+        "DSFlipCard",
+        "DSFlipAxis"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSFlipCard.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSFlipCard.md",
+      "stage": "DSFlipCard"
+    },
+    {
       "name": "DSListCell",
       "category": "containers",
       "summary": "List rows, section headers and dividers.",

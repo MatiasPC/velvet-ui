@@ -13,6 +13,7 @@ struct StageView: View {
         case .DSButton:            ButtonStage()
         case .DSIconButton:        IconButtonStage()
         case .DSCard:              CardStage()
+        case .DSFlipCard:          FlipCardStage(autoplay: autoplay)
         case .DSTextField:         TextFieldStage()
         case .DSCodeField:         CodeFieldStage(autoplay: autoplay)
         case .DSBadge:             BadgeStage()
@@ -122,6 +123,35 @@ private struct CardStage: View {
                 Text("$480").ds(.title2).padding(.top, DSSpacing.xs)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+private struct FlipCardStage: View {
+    let autoplay: Bool
+    @State private var revealed = false
+
+    var body: some View {
+        DSFlipCard(isShowingBack: $revealed) {
+            DSCard {
+                Text("Capital of France?")
+                    .ds(.title2)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, minHeight: DSSpacing.massive * 2)
+            }
+        } back: {
+            DSCard {
+                Text("Paris")
+                    .ds(.displayMedium)
+                    .frame(maxWidth: .infinity, minHeight: DSSpacing.massive * 2)
+            }
+        }
+        .task(id: autoplay) {
+            guard autoplay else { return }
+            await stageLoop {
+                await stagePause(1.6)
+                withAnimation(DSAnimation.springSmooth) { revealed.toggle() }
+            }
         }
     }
 }
