@@ -44,6 +44,7 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var faqOpen = true
 
     var body: some View {
         NavigationStack {
@@ -331,6 +332,28 @@ struct ComponentCatalog: View {
                             } action: { }
                             DSDivider(inset: DSSpacing.screenHorizontal)
                             DSListCell(title: "About", subtitle: "Version 0.2.0")
+                        }
+                    }
+                }
+
+                // MARK: - Disclosure Group
+                section("Disclosure Group") {
+                    VStack(spacing: DSSpacing.sm) {
+                        DSDisclosureGroup(
+                            "What's included",
+                            subtitle: "3 items",
+                            icon: "shippingbox",
+                            isExpanded: $faqOpen
+                        ) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("• Unlimited projects").ds(.callout)
+                                Text("• Priority support").ds(.callout)
+                                Text("• Early access to betas").ds(.callout)
+                            }
+                        }
+                        DSDisclosureGroup("Can I cancel anytime?") {
+                            Text("Yes — cancel from Settings and keep access until the end of the period.")
+                                .ds(.callout, color: DSColors.textSecondary)
                         }
                     }
                 }
