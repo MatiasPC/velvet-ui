@@ -355,6 +355,21 @@ Detents + visible grabber. Background: `.regularMaterial` before iOS/macOS 26, t
 
 ---
 
+## DSDisclosureGroup  ✅
+
+`Components/DSDisclosureGroup.swift`. Glass accordion / FAQ row — a custom, themed replacement for the stock `DisclosureGroup` (whose open/close animation breaks inside a `ForEach` on iOS 17, whose chevron ignores the tint, and which has no haptics or glass).
+
+```swift
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  initiallyExpanded: Bool = false, haptic: DSHapticStyle = .light) { content }
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  isExpanded: Binding<Bool>, haptic: DSHapticStyle = .light) { content }
+```
+
+Two inits: self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`, for "one open at a time"). On a `.glass` surface at `DSRadius.card`. Toggle springs the body open on `springSmooth` and rotates the chevron 180°; a hairline `palette.divider` splits header from body. `.light` haptic on each toggle. Reduce Motion: instant toggle, no chevron sweep, haptic still fires. Reduce Transparency: solid elevated surface. Header is one combined button with value Expanded/Collapsed and an expand/collapse hint; the leading icon is `accessibilityHidden`.
+
+---
+
 ## DSNumberTicker  ✅
 
 `Components/DSNumberTicker.swift`.

@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSDisclosureGroup`: a glass accordion / FAQ row — a themed replacement for the stock `DisclosureGroup`. Springs open on `springSmooth` with a rotating chevron, a hairline divider and a `.light` haptic; honors Reduce Motion and Reduce Transparency. Self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`) initializers.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
