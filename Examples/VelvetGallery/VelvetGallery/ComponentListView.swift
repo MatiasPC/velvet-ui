@@ -25,6 +25,7 @@ struct ComponentListView: View {
                 row("Typography", "Every text style") { TypographyScreen() }
                 row("Layout", "Stacks & grids") { LayoutScreen() }
                 row("Motion", "Ambient primitives") { MotionScreen() }
+                row("Scroll Reveal", "Rows recede at the edges") { ScrollRevealScreen() }
             }
             Section("Actions") {
                 row("Buttons", "Variants, sizes, states") { ButtonsScreen() }
