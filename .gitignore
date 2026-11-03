@@ -1,5 +1,22 @@
 .build/
 .swiftpm/
 *.xcodeproj/
+# The showcase app's project is committed so it opens and runs with no commands.
+# project.yml stays the source of truth — regenerate with `xcodegen generate`.
+!Examples/VelvetGallery/VelvetGallery.xcodeproj/
 xcuserdata/
 DerivedData/
+.superpowers/
+Sources/.DS_Store
+.DS_Store
+.claude/worktrees/
+
+# Local agent tooling — used on the maintainer's machine, not published.
+# (AGENTS.md at the root IS published: it's the public guide for agents using Velvet.)
+CLAUDE.md
+.claude/
+.opencode/
+docs/superpowers/
+
+# Recorded MP4 clips for posting (scripts/record-stage.sh)
+clips/

@@ -1,0 +1,77 @@
+# VelvetGallery
+
+A runnable iOS app that shows every Velvet UI component on its own screen, three
+example flows, and a recording stage for each, for demos and video capture. Not
+part of `swift build` / `swift test`.
+
+## Run
+
+Open `VelvetGallery.xcodeproj`, pick an iPhone simulator, press Run. The project
+is committed, so there are no commands to run first.
+
+```bash
+open Examples/VelvetGallery/VelvetGallery.xcodeproj
+```
+
+Headless build:
+
+```bash
+xcodebuild build -project Examples/VelvetGallery/VelvetGallery.xcodeproj \
+  -scheme VelvetGallery \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.0'
+```
+
+### Haptics
+
+The Simulator has no Taptic Engine. To feel the haptics — `DSSlideToConfirm`
+(soft detent texture, rigid tick at the 75 % threshold, success / error on the
+outcome) and `DSStepper` (tick per step, warning + jiggle at a bound) — run on a
+device: select the **VelvetGallery** target → Signing & Capabilities → set your
+Team, then pick the phone as the run destination.
+
+## Regenerate the project
+
+`project.yml` is the source of truth ([XcodeGen](https://github.com/yonwoo9/XcodeGen)).
+After changing the file list or target settings, re-run `xcodegen generate` and
+**commit** the updated `.xcodeproj` (`.gitignore` negates it out of the blanket
+`*.xcodeproj/` rule; `xcuserdata/` stays ignored).
+
+## Layout
+
+- `VelvetGalleryApp.swift` — entry point; injects the neutral theme and the appearance binding.
+- `ComponentListView.swift` — grouped `List`, one row per component.
+- `Screens/` — one screen per component, each built on `GalleryScreen`. Includes
+  the motion set: `MotionScreen` (the five `DSMotion` primitives),
+  `SlideToConfirmScreen` (async slide-to-pay + "next charge fails" toggle),
+  `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`.
+- `Screens/` also holds the newer components, each with its stage in the same
+  file: `TabBarScreen`, `CarouselScreen`, `SheetScreen`, `NumberTickerScreen`,
+  `ChartsScreen`, `SkeletonScreen`, `SuccessCheckScreen`, `ConfettiScreen`.
+- `Flows/` — the example flows (`OnboardingFlow`, `SettingsFlow`, `CheckoutFlow`)
+  and their full-screen stages. These files import only SwiftUI and VelvetUI, so
+  `swift scripts/velvet.swift add Checkout` can copy them into an app.
+- `Stages/` — recording stages: `Stage` enum + launch arguments, `StageContainer`
+  (chrome-free host, long-press the background to exit), `StageListView`, `StageView`
+  (one isolated view per component).
+- `Support/` — `GalleryScreen` + `LabeledExample` chrome, `Appearance` toggle.
+- `Theme/NeutralTheme.swift` — `DSThemeStyle.neutral`.
+
+## Recording
+
+The **Recording → Recording stages** list opens chrome-free, centered views of
+each component for clips and GIFs, and `scripts/record-stage.sh` records one
+end-to-end. Launch arguments: `-VelvetStage <ID>`, `-VelvetStageBackground
+neutral|sunset|aurora|lagoon`, `-VelvetStageAutoplay YES|NO`,
+`-VelvetAppearance light|dark|system`. See [`docs/RECORDING.md`](../../docs/RECORDING.md).
+
+## Design
+
+Neutral component screens: solid `DSColors.backgroundPrimary` background, no
+`.dsBackdrop()`, a local `DSThemeStyle.neutral` with a graphite accent. The
+Examples are the exception: they run on a built-in style with a backdrop, the way
+an app would ship. Semantic status colours
+(error / success / warning / info) are kept; decorative defaults are shown in
+neutral with one labelled colourful example each. Appearance (System / Light /
+Dark) is switchable from the toolbar and persisted.
+
+Rationale in `docs/engineering-notes.md` ("VelvetGallery example app").
