@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 /// Stand-in for a declined charge.
 private struct ChargeRefused: Error {}

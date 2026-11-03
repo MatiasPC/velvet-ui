@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct ThemeScreen: View {
     var body: some View {
@@ -28,19 +28,27 @@ struct ThemeScreen: View {
                 }
             }
 
-            LabeledExample("Built-in gradient themes (reference only)") {
+            LabeledExample("Built-in styles (reference only)") {
                 VStack(spacing: DSSpacing.sm) {
-                    ForEach(DSGradientTheme.all) { g in
+                    ForEach(DSThemeStyle.all) { style in
                         HStack(spacing: DSSpacing.sm) {
-                            RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
-                                .fill(g.linearGradient)
-                                .frame(width: 60, height: 44)
-                            Text(g.name).ds(.footnote)
+                            ZStack {
+                                HStack(spacing: 0) {
+                                    Rectangle().fill(style.background.light)
+                                    Rectangle().fill(style.background.dark)
+                                }
+                                Circle()
+                                    .fill(style.accent)
+                                    .frame(width: DSSpacing.sm, height: DSSpacing.sm)
+                            }
+                            .frame(width: 60, height: 44)
+                            .clipShape(RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous))
+                            Text(style.name).ds(.footnote)
                             Spacer()
                         }
                     }
                 }
-                Text("Not used in this gallery — the app is neutral-only. Shown so the themes are on camera once.")
+                Text("Each style is a flat page tone plus an accent — light on the left half, dark on the right. Not used in this gallery; the app is neutral-only.")
                     .ds(.footnote, color: DSColors.textTertiary)
             }
         }
