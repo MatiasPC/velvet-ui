@@ -40,6 +40,7 @@
 		A9367F1E12EFE69857EE8A71 /* StepperScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C54157D449912B0364C807 /* StepperScreen.swift */; };
 		B1CCE98D199E6C37CD770D10 /* SheetScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */; };
 		B76C2E76BF9616710DE63A2E /* CardsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E328F00376EC8C549740513E /* CardsScreen.swift */; };
+		BAE34B3B0ACD9CCD1B2BD33C /* TimelineScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7BB3B924F36A84ABB20C1C /* TimelineScreen.swift */; };
 		BEFFD9CE369EEB96948701A0 /* ProgressLoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */; };
 		C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F60FD1D436135BECE7C11C /* ListsScreen.swift */; };
 		CB8F7A87E639B8926DF98407 /* NeutralTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5782F9BF254DA5CE52B57A7F /* NeutralTheme.swift */; };
@@ -58,7 +59,6 @@
 		18F764E802EE484CCD96ADDF /* ChartsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsScreen.swift; sourceTree = "<group>"; };
 		1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetScreen.swift; sourceTree = "<group>"; };
-		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		2B6F0563E4BBB324996A851C /* ToastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastScreen.swift; sourceTree = "<group>"; };
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,9 +86,11 @@
 		98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessCheckScreen.swift; sourceTree = "<group>"; };
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
+		AC7BB3B924F36A84ABB20C1C /* TimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
 		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
 		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
+		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesAvatarsScreen.swift; sourceTree = "<group>"; };
 		E328F00376EC8C549740513E /* CardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScreen.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */,
 				5F06770FADF1115A1222AB96 /* ThemeScreen.swift */,
 				B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */,
+				AC7BB3B924F36A84ABB20C1C /* TimelineScreen.swift */,
 				2B6F0563E4BBB324996A851C /* ToastScreen.swift */,
 				60C3F5EBC1DA66C560962D1C /* ToggleScreen.swift */,
 				01D1AFC884CFBA3FE202ADEF /* TypewriterTextScreen.swift */,
@@ -320,6 +323,7 @@
 				17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */,
 				4849096CCD819E56769681C3 /* ThemeScreen.swift in Sources */,
 				792006BF73E9FAEFFD7CEBE8 /* ThinkingIndicatorScreen.swift in Sources */,
+				BAE34B3B0ACD9CCD1B2BD33C /* TimelineScreen.swift in Sources */,
 				1A9107756FFA38B7F26FD72F /* ToastScreen.swift in Sources */,
 				D6C1A13E07F8E43DA1E8F356 /* ToggleScreen.swift in Sources */,
 				8034B5A1DB2FF10A31851FCE /* TypewriterTextScreen.swift in Sources */,

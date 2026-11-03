@@ -349,38 +349,6 @@ private struct ListCellStage: View {
     }
 }
 
-private struct TimelineStage: View {
-    let autoplay: Bool
-    @State private var step = 1
-
-    private let steps = [
-        DSTimelineItem("Order placed", subtitle: "9:41 AM", icon: "bag"),
-        DSTimelineItem("Shipped", subtitle: "Picked up by courier", icon: "shippingbox"),
-        DSTimelineItem("Out for delivery", subtitle: "Arriving today", icon: "box.truck"),
-        DSTimelineItem("Delivered", icon: "house")
-    ]
-
-    var body: some View {
-        DSCard {
-            DSTimeline(steps, currentStep: step)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .task(id: autoplay) {
-            guard autoplay else { return }
-            await stageLoop {
-                step = 0
-                await stagePause(0.9)
-                for next in 1...steps.count {
-                    guard !Task.isCancelled else { return }
-                    step = next
-                    await stagePause(0.9)
-                }
-                await stagePause(1.6)
-            }
-        }
-    }
-}
-
 // MARK: - Feedback
 
 private struct ToastStage: View {
