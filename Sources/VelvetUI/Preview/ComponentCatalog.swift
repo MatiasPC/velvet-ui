@@ -232,9 +232,7 @@ struct ComponentCatalog: View {
                             }
                             HStack(spacing: DSSpacing.sm) {
                                 DSButton("Close rings", size: .small) {
-                                    withAnimation(DSAnimation.springSmooth) {
-                                        rings = rings.map { DSRing(progress: 1, color: $0.color, label: $0.label) }
-                                    }
+                                    rings = rings.map { DSRing(progress: 1, color: $0.color, label: $0.label) }
                                 }
                                 DSButton("Reset", variant: .ghost, size: .small) {
                                     rings = [

@@ -233,19 +233,20 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 
 ---
 
-## DSActivityRings  ✅ 🧪 (colors)
+## DSActivityRings  ✅
 
-`Components/DSActivityRings.swift`. Concentric progress rings — the Apple Fitness "close your rings" pattern on Velvet tokens. One ring is `DSCircularProgress`; the value here is the *set*.
+`Components/DSActivityRings.swift`. Concentric goal rings — the Apple Fitness "close your rings" pattern on Velvet tokens. One ring is `DSCircularProgress`; the value here is the *set*.
 
 ```swift
 DSRing(progress: Double, color: Color? = nil, label: String? = nil)   // color nil → theme.accent
 
 DSActivityRings(_ rings: [DSRing],
                 size: CGFloat = 160, lineWidth: CGFloat = 14, spacing: CGFloat = DSSpacing.xxs,
-                spring: Animation = DSAnimation.springSmooth) { center }   // center optional
+                spring: Animation = DSAnimation.springSmooth,
+                haptic: DSHapticStyle? = .success, accessibilityLabel: String = "Activity rings") { center }   // center optional
 ```
 
-Rings draw outermost first, each inset one lane (`lineWidth + spacing`) from the one outside it. Geometry is the proven `DSCircularProgress` recipe (`Circle().trim(…)`, round cap, rotated −90° to start at twelve o'clock), so there is no arc trigonometry. Each ring fills with `spring` on appear (from empty) and on change; the track is `palette.border`, matching the rest of the progress family. A ring flashes a `.glow` of its own colour and fires one `.success` haptic the instant it *transitions* to closed (progress ≥ 1) — never on first appearance, where a closed ring is a fact, not an achievement. The optional trailing closure nests content inside the innermost ring (a summary number, an icon). A no-centre convenience init exists (`Center == EmptyView`). Under Reduce Motion rings settle at their value instantly instead of sweeping. The whole set is one VoiceOver element labelled with each ring's name and percentage. Reusable well beyond fitness: budgets vs. limits, storage by category, completion across several goals.
+Rings draw outermost first, each one lane (`lineWidth + spacing`) inside the one outside it, and the whole set lives inside `size` (the arcs are inset by half the stroke). A ring that would leave no hole is not drawn. Geometry is the `DSCircularProgress` recipe (`Circle().trim(…)`, round cap, rotated −90°), so there is no arc trigonometry. Each ring fills with `spring` on appear (from empty) and on change; the track is `palette.border`, matching the progress family. **Closing:** when `progress` crosses 1 while the ring is on screen it lights up with a `.glow` of its own colour and fires `haptic`, both when the spring lands and only if the ring is still closed by then; rings closing together share one haptic (`DSRingMath.beatWindow`). A ring that appears closed glows but never buzzes. **Past the goal:** `progress` above 1 is clamped to a full ring (no wrap), VoiceOver still says the real percentage; negative and NaN count as 0. The optional trailing closure nests content inside the innermost ring; a no-centre convenience init exists (`Center == EmptyView`). Reduce Motion: rings jump to their value, the glow and haptic still mark a close. VoiceOver: one element (label + "Move 82 percent. Exercise 60 percent…" value), centre content stays separately reachable.
 
 ---
 

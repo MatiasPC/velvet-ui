@@ -112,6 +112,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
 | <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
 | <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |
+| — | [DSActivityRings](docs/components/DSActivityRings.md) | Concentric goal rings that fill with a spring and close with a glow and a haptic. |
 | <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts that VoiceOver announces. |
 | <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
 | <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, gradient and step progress, animated numbers, shimmer skeletons. |

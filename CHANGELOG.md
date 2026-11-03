@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSActivityRings` and `DSRing`: concentric goal rings (the "close your rings" pattern). Each ring fills with a spring, carries its own colour (theme accent by default) and lights up with a glow plus one haptic when it transitions to closed, never on first appearance; rings that close together share one haptic. Progress past the goal is clamped to a full ring. One VoiceOver element that reads every ring's name and percent. Optional centre content, `haptic:` and `accessibilityLabel:` parameters.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
