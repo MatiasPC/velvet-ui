@@ -36,7 +36,9 @@ struct ComponentListView: View {
             Section("Containers") {
                 row("Cards", "Glass containers") { CardsScreen() }
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
+                row("Tilt Card", "Tips toward the finger, sliding sheen") { TiltCardScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
+                row("Disclosure Group", "Glass accordion that springs open") { DisclosureGroupScreen() }
             }
             Section("Inputs") {
                 row("Text Field", "Inputs & validation") { TextFieldScreen() }
@@ -45,6 +47,7 @@ struct ComponentListView: View {
                 row("Checkbox", "Pick any, with a drawn tick") { CheckboxScreen() }
                 row("Segmented Control", "Pick one") { SegmentedControlScreen() }
                 row("Stepper", "Numeric input") { StepperScreen() }
+                row("Slider", "Continuous value, optional notches") { SliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
                 row("Like Button", "A pop and a halo on the way in") { LikeButtonScreen() }
                 row("Page Control", "Paged content") { PageControlScreen() }
@@ -52,7 +55,9 @@ struct ComponentListView: View {
             Section("Data Display") {
                 row("Badges & Avatars", "Status marks & identity") { BadgesAvatarsScreen() }
                 row("Lists", "Rows & sections") { ListsScreen() }
+                row("Expandable Text", "Long copy that springs open") { ExpandableTextScreen() }
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
+                row("Timeline", "Nodes and a connector that fills") { TimelineScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
             }
             Section("Feedback") {

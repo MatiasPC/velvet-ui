@@ -129,6 +129,20 @@
       "stage": "DSStepper"
     },
     {
+      "name": "DSSlider",
+      "category": "inputs",
+      "summary": "Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.",
+      "symbols": [
+        "DSSlider"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSlider.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSlider.md",
+      "stage": "DSSlider"
+    },
+    {
       "name": "DSRating",
       "category": "inputs",
       "summary": "Drag-to-rate stars, with half steps and a read-only mode.",
@@ -254,6 +268,20 @@
       "stage": "DSCard"
     },
     {
+      "name": "DSTiltCard",
+      "category": "containers",
+      "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
+      "symbols": [
+        "DSTiltCard"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTiltCard.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSTiltCard.md",
+      "stage": "DSTiltCard"
+    },
+    {
       "name": "DSListCell",
       "category": "containers",
       "summary": "List rows, section headers and dividers.",
@@ -298,6 +326,20 @@
       "stage": "DSSheet"
     },
     {
+      "name": "DSDisclosureGroup",
+      "category": "containers",
+      "summary": "Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.",
+      "symbols": [
+        "DSDisclosureGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSDisclosureGroup.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSDisclosureGroup.md",
+      "stage": "DSDisclosureGroup"
+    },
+    {
       "name": "DSBadge",
       "category": "display",
       "summary": "Status pills and count badges.",
@@ -340,6 +382,23 @@
       "dependencies": [],
       "docs": "docs/components/DSNumberTicker.md",
       "stage": "DSNumberTicker"
+    },
+    {
+      "name": "DSTimeline",
+      "category": "display",
+      "summary": "A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.",
+      "symbols": [
+        "DSTimeline",
+        "DSTimelineItem"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTimeline.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSTimeline.md",
+      "stage": "DSTimeline"
     },
     {
       "name": "Charts",
@@ -471,6 +530,20 @@
       ],
       "docs": "docs/components/DSTypewriterText.md",
       "stage": "DSTypewriterText"
+    },
+    {
+      "name": "DSExpandableText",
+      "category": "display",
+      "summary": "Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.",
+      "symbols": [
+        "DSExpandableText"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSExpandableText.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSExpandableText.md",
+      "stage": "DSExpandableText"
     },
     {
       "name": "Motion",
