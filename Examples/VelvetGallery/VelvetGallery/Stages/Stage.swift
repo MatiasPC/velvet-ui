@@ -11,6 +11,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTypewriterText, Progress, Motion
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSSuccessCheck, DSConfetti
+    case DSMarquee
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }
@@ -42,7 +43,7 @@ enum StageBackground: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var label: String { rawValue.capitalized }
 
-    var gradient: DSGradientTheme {
+    var style: DSThemeStyle {
         switch self {
         case .neutral: return .neutral
         case .sunset:  return .sunset

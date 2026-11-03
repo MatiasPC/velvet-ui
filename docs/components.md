@@ -222,7 +222,7 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 ```swift
 DSCircularProgress(progress:, lineWidth: 6, size: 80, primaryColor: Color? = nil, trackColor: Color? = nil)
 DSLinearProgress(progress:, height: 6, primaryColor:, trackColor:)
-DSGradientProgress(progress:, height: 8, colors: [Color]? = nil, trackColor:)   // colors default to theme.gradient.stops
+DSGradientProgress(progress:, height: 8, colors: [Color]? = nil, trackColor:)   // colors default to a single accent stop (solid)
 DSStepProgress(currentStep:, totalSteps:, activeColor:, inactiveColor:)
 DSAnimatedNumber(value:, format: "%.0f", style: .displayLarge)
 ```
@@ -245,7 +245,7 @@ DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel
 enum DSSlideFinish { case settle, morphAndVanish }
 ```
 
-A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter (paced by the drag — each letter waits its turn). The moment the confirmation commits, the label clears on a fast fade regardless of how far the letter-by-letter dissolve had got, so a quick flick past the threshold never leaves text hanging over the pill as it collapses. Tracking is pure 1:1 — no rubber-banding, no magnetic snap: physics tricks under a payment gesture read as the control second-guessing the user.
+A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, an accent trail reveals behind it and the label dissolves letter by letter (paced by the drag — each letter waits its turn). The moment the confirmation commits, the label clears on a fast fade regardless of how far the letter-by-letter dissolve had got, so a quick flick past the threshold never leaves text hanging over the pill as it collapses. Tracking is pure 1:1 — no rubber-banding, no magnetic snap: physics tricks under a payment gesture read as the control second-guessing the user.
 
 Threshold is 0.75 of available travel. The drag itself carries a detent texture — 8 `.soft` ticks across the full travel with intensity ramped 0.2 → 0.6 — and crossing the threshold fires `.rigid` once per drag. Releasing below it snaps the knob back with `springBouncy` and a `.light` haptic.
 
@@ -309,7 +309,7 @@ func dsHueDrift(isActive: Bool = true) -> some View
 DSMotion.loop(_ base: Animation, autoreverses: Bool = true, unless reduceMotion: Bool) -> Animation?
 ```
 
-Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a static gradient without leaving the theme. All five settle to a resting state under Reduce Motion (breathe at scale 1, drift at 0°) instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
+Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a solid fill without leaving the theme. All five settle to a resting state under Reduce Motion (breathe at scale 1, drift at 0°) instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
 
 ---
 
@@ -419,7 +419,7 @@ Ring strokes, disc fills, check draws (eased state), then one pop and a fading h
 .dsConfetti(trigger: some Equatable, origin: UnitPoint = .center, count: Int = 80, haptic: DSHapticStyle? = nil)
 ```
 
-Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-form physics (gravity + exponential drag, spin, flutter) from a seeded SplitMix64, so it's testable; count clamped to 150. Colors: accent, gradient stops, their light tints and the theme ink (for contrast on the backdrop). Draws inside the view it's attached to, so attach it to a container that covers the area. Removed under Reduce Motion; no haptic by default because the triggering action usually has one.
+Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-form physics (gravity + exponential drag, spin, flutter) from a seeded SplitMix64, so it's testable; count clamped to 150. Colors: the accent, the theme ink, a lighter tint of each and the ink again for weight (for contrast on every page tone). Draws inside the view it's attached to, so attach it to a container that covers the area. Removed under Reduce Motion; no haptic by default because the triggering action usually has one.
 
 ---
 
@@ -435,7 +435,7 @@ DSMarquee(velocity: CGFloat = 40,          // points/second; 0 disables scrollin
 }
 ```
 
-Generic over any single-line content. Scrolls only when the content overflows its width; otherwise static and left-aligned with no fade. The loop is two copies laid end to end with `spacing`, translated by one copy's width + gap and wrapped, so the seam never shows. Width is measured with `onGeometryChange` (iOS 18 / macOS 15); the scrolling layer carries a geometry-keyed `.id` so it remounts and restarts cleanly when the measurement changes. Edges are softened with a gradient `.mask` (never a border). No haptics (ambient, not interactive). Reduce Motion: shown static from the start with a trailing fade, not frozen mid-scroll. Accessibility: content exposed as one combined element; the looping and measuring copies are hidden.
+Generic over any single-line content. Scrolls only when the content overflows its width; otherwise static and left-aligned with no fade. The loop is two copies laid end to end with `spacing`, translated by one copy's width + gap and wrapped, so the seam never shows. Width is measured with `onGeometryChange` (iOS 18 / macOS 15); the scrolling layer samples its offset from a `TimelineView(.animation)` (pure `DSMarqueeMath.offset`), so it stops ticking off-screen and needs no remount when the measurement changes. Edges are softened with a gradient `.mask` (never a border). No haptics (ambient, not interactive). Reduce Motion: shown static from the start with a trailing fade, not frozen mid-scroll. Accessibility: content exposed as one combined element; the looping and measuring copies are hidden.
 
 ---
 

@@ -11,8 +11,8 @@ import SwiftUI
 // fades (a gradient mask, not a border) tell the eye the text runs past the edge.
 //
 // Pure SwiftUI, both platforms. It measures with `onGeometryChange` (iOS 18 /
-// macOS 15), scrolls with a linear `DSAnimation` rate and rests completely under
-// Reduce Motion, where the content is shown static with a trailing fade.
+// macOS 15), scrolls at a constant rate sampled from a `TimelineView` (it stops
+// ticking off-screen) and rests completely under Reduce Motion, where the content is shown static with a trailing fade.
 //
 // Inspiration: the duplicated-content loop is the common SwiftUI marquee recipe —
 // Canopas, "iOS — Infinite Marquee Animation with SwiftUI"
@@ -67,9 +67,6 @@ public struct DSMarquee<Content: View>: View {
         return Group {
             if animates {
                 DSMarqueeTrack(distance: distance, velocity: velocity, spacing: spacing, content: singleCopy)
-                    // Remount (and so restart at offset 0) whenever the measured
-                    // geometry or the configured rate changes.
-                    .id("\(Int(contentWidth.rounded()))·\(Int(containerWidth.rounded()))·\(Int(spacing))·\(Int(velocity))")
             } else {
                 singleCopy
             }
@@ -126,30 +123,45 @@ public struct DSMarquee<Content: View>: View {
     }
 }
 
+// MARK: - Math
+
+/// The marquee's motion as a pure function of time, so it can be tested.
+enum DSMarqueeMath {
+    /// Horizontal offset `elapsed` seconds into a loop: 0 at the start, drifting left
+    /// at `velocity` points per second and wrapping every `distance` points, so the
+    /// second copy lands exactly where the first began.
+    static func offset(elapsed: TimeInterval, distance: CGFloat, velocity: CGFloat) -> CGFloat {
+        guard distance > 0, velocity > 0, elapsed > 0 else { return 0 }
+        let travelled = CGFloat(elapsed) * velocity
+        return -travelled.truncatingRemainder(dividingBy: distance)
+    }
+}
+
 // MARK: - Track
 
 /// The scrolling layer: two copies end to end, translated by one copy's width plus
-/// the gap and looped forever. Kept as its own view so a changed `.id` remounts it
-/// and the animation restarts cleanly at offset 0.
+/// the gap. The offset is sampled from a `TimelineView(.animation)` rather than a
+/// `repeatForever` animation: the timeline only ticks while the view is on screen,
+/// so an off-screen marquee costs nothing, and it needs no remount to restart.
 private struct DSMarqueeTrack<Content: View>: View {
     let distance: CGFloat
     let velocity: CGFloat
     let spacing: CGFloat
     let content: Content
 
-    @State private var offset: CGFloat = 0
+    @State private var start = Date()
 
     var body: some View {
-        HStack(spacing: spacing) {
-            content
-            content.accessibilityHidden(true)
-        }
-        .offset(x: offset)
-        .onAppear {
-            let duration = Double(max(distance, 1) / max(velocity, 1))
-            withAnimation(.linear(duration: duration).repeatForever(autoreverses: false)) {
-                offset = -distance
+        TimelineView(.animation) { context in
+            HStack(spacing: spacing) {
+                content
+                content.accessibilityHidden(true)
             }
+            .offset(x: DSMarqueeMath.offset(
+                elapsed: context.date.timeIntervalSince(start),
+                distance: distance,
+                velocity: velocity
+            ))
         }
     }
 }

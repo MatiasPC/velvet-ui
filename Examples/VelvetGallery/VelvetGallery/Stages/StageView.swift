@@ -38,6 +38,7 @@ struct StageView: View {
         case .DSSkeleton:          SkeletonStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
+        case .DSMarquee:           MarqueeStage(autoplay: autoplay)
         case .OnboardingFlow:      OnboardingFlowStage()
         case .SettingsFlow:        SettingsFlowStage()
         case .CheckoutFlow:        CheckoutFlowStage()
@@ -413,7 +414,7 @@ private struct ThinkingIndicatorStage: View {
 private struct TypewriterTextStage: View {
     var body: some View {
         DSTypewriterText(
-            ["Design at the speed of thought.", "Glass over gradient.", "No borders. Ever."],
+            ["Design at the speed of thought.", "Glass over solid tone.", "No borders. Ever."],
             style: .title2
         )
         .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)

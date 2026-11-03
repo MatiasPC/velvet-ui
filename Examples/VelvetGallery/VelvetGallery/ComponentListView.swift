@@ -2,9 +2,9 @@ import SwiftUI
 import VelvetUI
 
 struct ComponentListView: View {
-    /// Examples show Velvet the way an app ships it: on a gradient theme, not the
+    /// Examples show Velvet the way an app ships it: on a built-in style, not the
     /// Gallery's neutral one.
-    @State private var exampleTheme = DSTheme(gradient: .sunset)
+    @State private var exampleTheme = DSTheme(style: .sunset)
 
     var body: some View {
         List {
@@ -61,6 +61,7 @@ struct ComponentListView: View {
                 row("Success Check", "Ring, check and a pop on the beat") { SuccessCheckScreen() }
                 row("Confetti", "A themed burst on any trigger") { ConfettiScreen() }
                 row("Thinking Indicator", "Ambient processing") { ThinkingIndicatorScreen() }
+                row("Marquee", "Overflowing content scrolls in a loop") { MarqueeScreen() }
                 row("Typewriter Text", "Typed reveal") { TypewriterTextScreen() }
             }
         }

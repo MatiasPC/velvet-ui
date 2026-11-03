@@ -2,7 +2,7 @@
 
 Content that scrolls horizontally in a seamless loop — but only when it is too wide to fit. A "now playing" line, a long title, a ticker of stats: text that would otherwise truncate keeps moving so all of it can be read. Content that already fits stays put.
 
-![DSMarquee](../media/DSMarquee.gif)
+<!-- GIF pending: ![DSMarquee](../media/DSMarquee.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMarquee.swift`](../../Sources/VelvetUI/Components/DSMarquee.swift)
 
@@ -15,7 +15,7 @@ Content that scrolls horizontally in a seamless loop — but only when it is too
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -60,7 +60,7 @@ Keep the content to a single line (text, a badge, a small row). The marquee meas
 ## Behavior
 
 - **Scrolls only on overflow.** If the content fits the available width it is shown static and left-aligned, with no motion and no fade.
-- **Seamless loop.** Two copies of the content are laid end to end with `spacing` between them, translated left by exactly one copy's width plus the gap, then wrapped — so the join never shows.
+- **Seamless loop.** The offset is sampled from a `TimelineView(.animation)`, which only ticks while the marquee is on screen, so an off-screen or scrolled-away marquee costs nothing. Two copies of the content are laid end to end with `spacing` between them, translated left by exactly one copy's width plus the gap, then wrapped — so the join never shows.
 - **Edge fades.** A gradient mask (not a border) softens both edges while scrolling, hinting that the line continues past them. A static overflow fades only the trailing edge.
 - **No haptics.** The marquee is ambient, not interactive.
 - **Reduce Motion:** no scrolling. The content is shown static from its start with a trailing fade, so it is clearly truncated rather than frozen mid-scroll.
