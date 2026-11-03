@@ -1,6 +1,8 @@
 # 0001 — Glass surface language and gradient themes
 
-**Status:** accepted and shipped in 0.2.0 · **Date:** 2026-09-05
+**Status:** accepted and shipped in 0.2.0; backgrounds superseded in Unreleased · **Date:** 2026-09-05
+
+> **Superseded:** the gradient backgrounds described here were replaced by solid `DSBackground` page tones. `DSGradientTheme` is now `DSThemeStyle`; the gradient stops, washes and dim layers no longer exist. This document is kept as the historical rationale for the glass surfaces.
 
 This RFC records why Velvet UI moved from "white cards with shadows" to frosted glass over a selectable gradient theme, and which tokens that change introduced. It is the rationale behind the values in [docs/tokens.md](../tokens.md). Scope: visual layer and tokens only. Public component APIs and structure stay as they were, apart from the additive change in §3.
 
