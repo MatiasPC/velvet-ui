@@ -4,7 +4,7 @@ import VelvetUI
 // MARK: - Settings flow
 // An example, not a component: a settings screen built from Velvet parts
 // (DSCard, DSAvatar, DSBadge, DSListCell, DSDivider, DSSectionHeader, DSToggle,
-// DSSegmentedControl, .dsSheet, DSSlideToConfirm, DSToast). Appearance really
+// DSSegmentedControl, .dsSheet, DSSlideToConfirm, .dsToast). Appearance really
 // drives the flow's color scheme, and the theme row really re-themes the screen.
 // It has no NavigationStack of its own (nested stacks are unsupported): the host
 // provides one, and the Theme detail pushes onto it. Wrap it in
@@ -14,8 +14,7 @@ import VelvetUI
 struct SettingsFlow: View {
     @State private var theme: DSTheme
     @State private var appearance = SettingsAppearance.system
-    @State private var toast: SettingsToast?
-    @State private var toastTask: Task<Void, Never>?
+    @State private var toast: DSToastValue?
 
     @MainActor init(theme: DSTheme? = nil) {
         _theme = State(initialValue: theme ?? DSTheme(gradient: .sunset))
@@ -23,14 +22,8 @@ struct SettingsFlow: View {
 
     var body: some View {
         SettingsList(theme: theme, appearance: $appearance, notify: show)
-        .overlay(alignment: .bottom) {
-            if let toast {
-                DSToast(toast.message, type: toast.type)
-                    .id(toast.id)
-                    .padding(.bottom, DSSpacing.xl)
-                    .transition(.dsSlideUp)
-            }
-        }
+        // The presenter owns the slide, the haptic, the timer and the flick away.
+        .dsToast($toast, edge: .bottom)
         // Injected above every view that reads it; the sheet inherits it too.
         .dsTheme(theme)
         .preferredColorScheme(appearance.colorScheme)
@@ -38,25 +31,11 @@ struct SettingsFlow: View {
 
     /// One toast at a time: a new one replaces the old and restarts the timer.
     private func show(_ message: String, _ type: DSToastType = .success) {
-        toastTask?.cancel()
-        withAnimation(DSAnimation.springSmooth) {
-            toast = SettingsToast(message: message, type: type)
-        }
-        toastTask = Task {
-            try? await Task.sleep(for: .seconds(1.6))
-            guard !Task.isCancelled else { return }
-            withAnimation(DSAnimation.springSmooth) { toast = nil }
-        }
+        toast = DSToastValue(message, type: type, duration: 1.6)
     }
 }
 
 // MARK: - Model
-
-private struct SettingsToast: Identifiable {
-    let id = UUID()
-    let message: String
-    let type: DSToastType
-}
 
 private enum SettingsAppearance: String, CaseIterable {
     case system = "System", light = "Light", dark = "Dark"
