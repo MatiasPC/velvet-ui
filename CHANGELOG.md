@@ -18,6 +18,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
 
 ### Added
+- `DSTimeline` — a vertical progress timeline with `DSTimelineItem`. Nodes joined by a connector that fills as `currentStep` advances; the live node glows and breathes, rows cascade in with `dsStaggerIn`, and a `.success` haptic fires on forward progress. The content-bearing, vertical complement to `DSStepProgress`. For order tracking, multi-step flows and activity histories.
 - `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 
 ## [0.2.0] — 2026-10-23

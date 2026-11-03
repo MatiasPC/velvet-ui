@@ -34,6 +34,7 @@ struct StageView: View {
         case .DSCarousel:          CarouselStage(autoplay: autoplay)
         case .DSSheet:             SheetStage(autoplay: autoplay)
         case .DSNumberTicker:      NumberTickerStage(autoplay: autoplay)
+        case .DSTimeline:          TimelineStage(autoplay: autoplay)
         case .Charts:              ChartsStage(autoplay: autoplay)
         case .DSSkeleton:          SkeletonStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)

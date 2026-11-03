@@ -54,6 +54,7 @@ struct ComponentListView: View {
                 row("Lists", "Rows & sections") { ListsScreen() }
                 row("Expandable Text", "Long copy that springs open") { ExpandableTextScreen() }
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
+                row("Timeline", "Nodes and a connector that fills") { TimelineScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
             }
             Section("Feedback") {
