@@ -52,6 +52,7 @@ struct ComponentListView: View {
                 row("Lists", "Rows & sections") { ListsScreen() }
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
+                row("Activity Rings", "Goals that fill, close and glow") { ActivityRingsScreen() }
             }
             Section("Feedback") {
                 row("Toast", "Transient feedback") { ToastScreen() }
