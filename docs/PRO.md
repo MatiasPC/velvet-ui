@@ -19,7 +19,7 @@ Velvet UI is, and stays, a free MIT library of components. **Velvet UI Pro** wou
 | **Screens** | 20–30 production screens grouped by domain: onboarding (3 variants), paywall (3), sign-in / sign-up / passwordless code, settings, profile, checkout and order confirmation, dashboard, activity feed, search with filters, detail page with hero, notifications, AI chat with streaming replies. | `PaywallScreen(plans:selection:onPurchase:)` |
 | **Flows** | Screens wired into journeys with navigation and state: onboarding → permissions → paywall; email → code → profile; cart → address → pay → success; subscription management; account deletion. | `CheckoutFlow(cart:onPlaceOrder:)` |
 | **App starter** | A ready Xcode project: tab shell, theme picker, onboarding, settings, a StoreKit 2 paywall stub, haptics and analytics hooks, App Store screenshot stages, and `AGENTS.md` / `CLAUDE.md` configured for agents. | `velvet-starter` template |
-| **Presets** | Additional gradient themes with tested AA contrast, matching palettes and documented pairings. | `DSGradientTheme.pro.ember` |
+| **Presets** | Additional theme styles and solid page tones with tested AA contrast, matching palettes and documented pairings. | `DSThemeStyle.pro.ember` |
 
 The free repo keeps three deliberately simple example flows (onboarding, settings, checkout) to show how components compose. Pro screens are richer, cover far more of an app, and are ready to drop in.
 
@@ -80,7 +80,7 @@ Start with **A**. Add **B** only if buyers ask for copy-in without GitHub.
 
 ## Readiness in the free core
 
-Already in place: the public `@DSThemed` / `DSResolvedTheme` API that screens paint with, `DSGradientTheme(id:name:stops:accent:onAccent:ink:inkDark:)` for presets, the `registry.json` schema and CLI, and Gallery recording stages.
+Already in place: the public `@DSThemed` / `DSResolvedTheme` API that screens paint with, `DSThemeStyle(id:name:background:accent:onAccent:ink:inkDark:)` and `DSBackground(id:name:light:dark:)` for presets, the `registry.json` schema and CLI, and Gallery recording stages.
 
 Open questions before Pro work starts:
 

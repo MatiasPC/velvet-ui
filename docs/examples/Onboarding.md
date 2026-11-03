@@ -19,7 +19,7 @@ A four-page onboarding: welcome, theme picker, notification preferences and a ce
 
 ## How it works
 
-- The flow owns a `DSTheme` in `@State` and injects it with `.dsTheme(theme)` at its root. The theme page sets `theme.gradient` inside `withAnimation(DSAnimation.normal)`, so the backdrop crossfades.
+- The flow owns a `DSTheme` in `@State` and injects it with `.dsTheme(theme)` at its root. The theme page sets `theme.style` inside `withAnimation(DSAnimation.normal)`, so the backdrop crossfades.
 - Pages are a paging `TabView` on iOS. On macOS the flow shows the current page only.
 - Each page builds its content only while it is the current page, so the pop-in stagger replays every visit.
 - Arriving on the last page flips `DSSuccessCheck(isComplete:)` and bumps the confetti trigger on the same beat. The confetti is attached to the full-screen container, because it draws inside the view it is attached to.

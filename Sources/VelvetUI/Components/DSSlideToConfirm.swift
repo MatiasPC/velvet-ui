@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Design System Slide To Confirm
 // "Slide to unlock" turned into a gate for actions a tap is too easy to trigger
 // by accident — delete an account, cancel a ride, send a payment. The knob
-// tracks the finger, a gradient trail reveals behind it, the label dissolves
+// tracks the finger, the accent trail reveals behind it, the label dissolves
 // letter by letter, and a cloud of light motes is born around the finger for as
 // long as the drag lasts. Crossing 75 % of the travel locks the action in;
 // letting go before that snaps the knob back.
@@ -55,7 +55,7 @@ private enum Metrics {
     // MARK: Choreography
 
     /// Beat after release: the knob reaches the end and the trail fills the
-    /// track edge to edge, so the whole control is one solid gradient before
+    /// track edge to edge, so the whole control is one solid accent before
     /// anything collapses.
     static let commitBeat: Duration = .milliseconds(100)
     /// Pill → circle.
@@ -192,7 +192,7 @@ public struct DSSlideToConfirm: View {
         let resolvedAccent = accent ?? theme.accent
 
         ZStack(alignment: .leading) {
-            theme.gradient.horizontalGradient
+            resolvedAccent
                 .mask(alignment: .leading) {
                     // Ends at the knob's centre: the opaque knob caps the trail,
                     // so its leading edge reads as the knob's own circle rather
@@ -223,7 +223,7 @@ public struct DSSlideToConfirm: View {
                 .offset(x: dragOffset)
         }
         // The collapse is a mask, not a resize. Nothing underneath reflows —
-        // which matters because at this point the control is one solid gradient
+        // which matters because at this point the control is one solid accent
         // and any reflow would be visible as the glyphs jumping. A capsule
         // inset from both sides until only `trackHeight` remains *is* a circle,
         // since the pill already carries the capsule radius.
@@ -320,7 +320,7 @@ public struct DSSlideToConfirm: View {
             .frame(width: Metrics.knobDiameter, height: Metrics.knobDiameter)
             .overlay {
                 // The glyph is dropped the moment the outcome takes over the
-                // centre, so the collapse closes on clean gradient instead of
+                // centre, so the collapse closes on clean accent instead of
                 // clipping a chevron in half.
                 Image(systemName: icon)
                     .dsTextStyle(.title3, color: theme.onAccent)
@@ -583,7 +583,7 @@ public struct DSSlideToConfirm: View {
         maxOffset > 0 ? Double(dragOffset / maxOffset) : 0
     }
 
-    /// Width of the revealed gradient trail. While dragging it stops at the knob's
+    /// Width of the revealed accent trail. While dragging it stops at the knob's
     /// centre — the opaque knob covers the straight edge and caps the trail with
     /// its own circle. Once committed it fills the whole track: the knob rests
     /// flush against the trailing end, so stopping at its centre would leave the

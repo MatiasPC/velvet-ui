@@ -15,7 +15,7 @@ An "the assistant is working" indicator: an animated SF Symbol next to a phrase 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -56,7 +56,7 @@ struct ThinkingDemo: View {
 | `phrases` | `[String]` | `["Thinking", "Weighing options", "Almost there"]` | Cycled in order, looping. A single phrase disables cycling but still assembles once on appear. |
 | `symbol` | `String` | `"sparkles"` | SF Symbol for the leading animated glyph. |
 | `interval` | `TimeInterval` | `2.6` | Seconds each phrase stays before the next one assembles. |
-| `tint` | `Color?` | `nil` | Letter color. Defaults to `theme.ink`. The symbol always uses the theme gradient. |
+| `tint` | `Color?` | `nil` | Letter color. Defaults to `theme.ink`. The symbol always uses the theme accent. |
 
 ## Variants
 
@@ -67,7 +67,7 @@ struct ThinkingDemo: View {
 
 ## Behavior
 
-- The symbol uses the system's `.breathe.byLayer` and `.variableColor.iterative` effects, filled with the theme gradient.
+- The symbol uses the system's `.breathe.byLayer` and `.variableColor.iterative` effects, filled with the theme accent.
 - The phrase follows a wall-clock schedule, so it never desyncs when the view is re-created, and assembles letter by letter using `DSAnimation.stagger(index:)`.
 - The row reserves the width of the widest phrase, so nothing around it shifts.
 - No haptics: it is a status indicator, not an interaction.
