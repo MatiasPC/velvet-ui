@@ -64,20 +64,24 @@ public struct DSMarquee<Content: View>: View {
 
     public var body: some View {
         let distance = contentWidth + spacing
-        return Group {
-            if animates {
-                DSMarqueeTrack(distance: distance, velocity: velocity, spacing: spacing, content: singleCopy)
-            } else {
-                singleCopy
+        // The hidden measuring copy is the layout's only contribution: it is squeezed
+        // to zero width (so the content's ideal width never reaches the parent) and
+        // keeps its height. The frame then takes whatever width it is offered, and the
+        // visible content is an overlay that may be wider than that and is clipped.
+        return measuringCopy
+            .frame(width: 0, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .overlay(alignment: .leading) {
+                if animates {
+                    DSMarqueeTrack(distance: distance, velocity: velocity, spacing: spacing, content: singleCopy)
+                } else {
+                    singleCopy
+                }
             }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .fixedSize(horizontal: false, vertical: true)
-        .background(alignment: .leading) { measuringCopy }
-        .clipped()
-        .mask { fadeMask }
-        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { containerWidth = $0 }
-        .accessibilityElement(children: .combine)
+            .clipped()
+            .mask { fadeMask }
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { containerWidth = $0 }
+            .accessibilityElement(children: .combine)
     }
 
     // MARK: - Copies
