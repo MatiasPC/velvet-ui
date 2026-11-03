@@ -11,6 +11,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTypewriterText, Progress, Motion
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSSuccessCheck, DSConfetti
+    case DSTiltCard
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }
@@ -30,6 +31,8 @@ enum Stage: String, CaseIterable, Identifiable {
              .DSTextField, .DSBadge, .DSAvatar, .DSListCell, .DSEmptyState,
              .OnboardingFlow, .SettingsFlow, .CheckoutFlow:
             return false
+        case .DSTiltCard:
+            return false   // drag it by hand
         default:
             return true
         }

@@ -36,6 +36,7 @@ struct ComponentListView: View {
             Section("Containers") {
                 row("Cards", "Glass containers") { CardsScreen() }
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
+                row("Tilt Card", "Tips toward the finger, sliding sheen") { TiltCardScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
             }
             Section("Inputs") {

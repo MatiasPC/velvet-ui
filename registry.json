@@ -234,7 +234,8 @@
         "Sources/VelvetUI/Components/DSTiltCard.swift"
       ],
       "dependencies": [],
-      "docs": "docs/components/DSTiltCard.md"
+      "docs": "docs/components/DSTiltCard.md",
+      "stage": "DSTiltCard"
     },
     {
       "name": "DSListCell",
