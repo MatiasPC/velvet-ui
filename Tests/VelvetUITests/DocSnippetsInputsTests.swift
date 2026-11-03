@@ -200,6 +200,44 @@ enum DocSnippetsInputs {
         }
     }
 
+    struct SliderDemo: View {
+        @State private var volume = 0.6
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    HStack {
+                        Text("Volume").ds(.title3)
+                        Spacer()
+                        Text("\(Int(volume * 100))%").ds(.numeric)
+                    }
+                    DSSlider(value: $volume)
+                        .accessibilityLabel("Volume")
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+
+    struct SliderVariantsDemo: View {
+        @State private var price = 150.0
+        @State private var temperature = -2.0
+        @State private var opacity = 0.8
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                // Notched: a selection tick on every 25.
+                DSSlider(value: $price, in: 0...500, step: 25)
+                // A range that crosses zero, in half-degree notches.
+                DSSlider(value: $temperature, in: -10...10, step: 0.5)
+                // Your own accent, and no haptics.
+                DSSlider(value: $opacity, accent: DSColors.secondary, haptics: false)
+                // Dimmed and inert.
+                DSSlider(value: $opacity).disabled(true)
+            }
+        }
+    }
+
     struct StepperDemo: View {
         @State private var guests = 2
 
@@ -276,6 +314,8 @@ final class DocSnippetsInputsTests: XCTestCase {
         _ = DocSnippetsInputs.SegmentedControlDemo()
         _ = DocSnippetsInputs.SlideToConfirmDemo()
         _ = DocSnippetsInputs.SlideToConfirmVanishDemo()
+        _ = DocSnippetsInputs.SliderDemo()
+        _ = DocSnippetsInputs.SliderVariantsDemo()
         _ = DocSnippetsInputs.StepperDemo()
         _ = DocSnippetsInputs.TextFieldDemo()
         _ = DocSnippetsInputs.ToggleDemo()

@@ -67,6 +67,21 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSTiltCard  ✅
+
+`Components/DSTiltCard.swift`. A glass card that tips in 3D toward the finger as you drag, with a specular sheen sliding across the surface, then springs back on release.
+
+```swift
+DSTiltCard(maxTilt: Angle? = nil,                // peak rotation at the edge of the drag; nil = 12°
+           padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card,
+           haptic: DSHapticStyle? = .soft) { content }
+```
+
+Drag tilts the card around both axes (clamped at `maxTilt` once the drag passes ~120 pt); the sheen fades in with the tilt and the shadow deepens from `.lg` to `.xl` while held. Tracking is un-animated (1:1 with the finger); release or a cancelled touch springs it flat with `DSAnimation.springGentle`. The gesture is `simultaneousGesture`, so the card never blocks an enclosing `ScrollView` and buttons inside keep their taps; a `@GestureState` flag catches the cancelled case that `onEnded` misses. A `.soft` haptic fires once as the touch begins (`nil` for none). Under Reduce Motion the card never rotates, the shadow does not lift and the sheen stays put, only fading in while held. Decoration only — for a tappable surface use `DSInteractiveCard`.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.
@@ -317,6 +332,22 @@ Types a phrase out character by character, holds it, erases it, then moves to th
 
 ---
 
+## DSExpandableText  ✅
+
+`Components/DSExpandableText.swift`. Clamp-and-reveal for long copy.
+
+```swift
+DSExpandableText(_ text: String, lineLimit: Int = 3, expandLabel: String = "Show more", collapseLabel: String = "Show less", style: DSTextStyle = .body, color: Color? = nil, haptic: DSHapticStyle = .light)
+```
+
+Collapses `text` to `lineLimit` lines and springs open on tap. Truncation is measured, not guessed: two hidden copies of the text (one clamped to `lineLimit`, one unbounded) sit in the copy's `.background` and report their height with `onGeometryChange` (iOS 18 / macOS 15); the toggle shows only when the unbounded copy is taller by more than half a point, so short copy has no affordance. Neither probe depends on the expanded state, so the toggle never flickers. The rules (`lines(for:)`, `isTruncated`, `revealHeight`) live in an internal `DSExpandableTextLayout` and are unit tested.
+
+The reveal animates a frame, not `lineLimit`: the visible `Text` is `fixedSize(vertical:)`, then `frame(height: revealHeight, alignment: .top)` and `.clipped()`, with `revealHeight` switching between the two measured heights under `DSAnimation.springSmooth`. Animating `lineLimit` directly re-wraps the text on the first frame and centres it in a frame that is still resizing, so lines jump. Two states keep it clean: `isExpanded` is the target (frame, chevron, label), `showsFullCopy` lays the text out without a limit and is set before an expand and cleared in the `withAnimation` completion of a collapse, so the ellipsis only changes while it is clipped away. Chevron rotates 180°, label crossfades (`.contentTransition(.opacity)`), the haptic fires on the tap. Copy color is `color ?? palette.textPrimary` via `.ds(_:)`, so it scales with Dynamic Type and re-measures; the toggle uses `theme.ink`. Reduce Motion skips the animation and sets both states directly. VoiceOver reads the full copy whether collapsed or expanded; the toggle is a button labelled with its visible text with the value Collapsed or Expanded, the chevron and the probes are hidden.
+
+Known gaps: the expansion state is internal (no `isExpanded` binding), so a list cannot expand or collapse rows for you or remember it across reloads; the label strings are English defaults you pass in to localize.
+
+---
+
 ## DSStepper  ✅
 
 `Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.
@@ -326,6 +357,22 @@ DSStepper(value: Binding<Int>, in range: ClosedRange<Int> = 0...99, step: Int = 
 ```
 
 Tapping either glyph steps the bound value, clamped into `range`. The number rolls with `.numericText`. Each successful step fires `.selection` haptic; at a bound the value does not move, the whole track fires one `.dsJiggle` refusal wiggle plus a `.warning` haptic. The buttons deliberately stay hit-testable at a bound (never `.disabled`) so refusal can actually be felt — they just dim. Stepping clamps into `range`, so a `step` that does not evenly divide the range lands on the bound instead of overshooting; a non-positive `step` is treated as `1`. Exposes `.accessibilityAdjustableAction` so VoiceOver gets native increment/decrement.
+
+---
+
+## DSSlider  ✅
+
+`Components/DSSlider.swift`. Continuous value control — the input Stepper/Rating/Toggle (all discrete) left uncovered.
+
+```swift
+DSSlider(value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double? = nil, accent: Color? = nil, haptics: Bool = true)
+```
+
+A slim track, an accent fill that trails to the knob's centre, and a white knob (`palette.textOnPrimary`, like DSToggle) that lifts `1.12×` and grows a diffuse accent halo (the focus-glow recipe) while grabbed. The track is `theme.subtleFill` on a `dsBackdrop()` screen and `palette.border` (DSToggle's off track) on a plain one, where `subtleFill` is near-white and the 8pt line would vanish. The knob follows the finger and a tap anywhere jumps to that spot (`minimumDistance: 0`); the touch travel is inset by the knob radius at each end so finger and knob centre agree.
+
+The value mapping is `DSSliderScale` (internal, unit-tested): `clamped` (NaN falls to the lower bound), `snapped` (notches at `lower + k × step`, plus the upper bound even when `step` doesn't divide the span, so the far end is always reachable, like DSStepper), `fraction`/`value(atFraction:)`, `value(atX:trackWidth:knobDiameter:)` (nil until the track is measured) and `adjusted` (VoiceOver: the next notch, or a tenth of the span). A non-positive `step` is continuous. The bound value is clamped and written back on appear and whenever it changes, so it never stays outside `in`.
+
+Haptics: a continuous slider is silent between the ends and fires one `.rigid` detent on *arriving* at either bound; a stepped one also fires `.selection` per notch crossed. Touching down on the notch or end the knob already rests on is silent (the feedback state is seeded from the current value at touch-down). `haptics: false` silences both. Reduce Motion pins the grab lift and drops the spring lag (the halo stays: it is opacity only). `.disabled(true)` dims to 0.5 and drops the gesture. Exposes `.accessibilityAdjustableAction` and a value ("60 percent" for the default `0...1`, otherwise the number, with only the decimals `step` needs). Show your own visible read-out alongside it, the way `DSRating`'s call sites do.
 
 ---
 
@@ -389,6 +436,21 @@ Detents + visible grabber. Background: `.regularMaterial` before iOS/macOS 26, t
 
 ---
 
+## DSDisclosureGroup  ✅
+
+`Components/DSDisclosureGroup.swift`. Glass accordion / FAQ row — a custom, themed replacement for the stock `DisclosureGroup` (whose open/close animation breaks inside a `ForEach` on iOS 17, whose chevron ignores the tint, and which has no haptics or glass).
+
+```swift
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  initiallyExpanded: Bool = false, haptic: DSHapticStyle = .light) { content }
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  isExpanded: Binding<Bool>, haptic: DSHapticStyle = .light) { content }
+```
+
+Two inits: self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`, for "one open at a time"). On a `.glass` surface at `DSRadius.card`. The body sits in a private `Layout` (`DSDisclosureReveal`) whose `animatableData` is the revealed fraction, so the card grows with the body on `springSmooth`, the body fades with it and the chevron rotates 180° on the same spring; the body is laid out at full height and clipped, so text never re-wraps mid-reveal. The animation hangs off the open state (`.animation(_, value:)`), so it plays for a bound `isExpanded` flipped from outside and retargets on rapid taps. A hairline `palette.divider` splits header from body; the header dips with `DSPress.scale`. `.light` haptic on each toggle. The body stays mounted while collapsed (keeps its state), hidden from touch and VoiceOver. Reduce Motion: a short `DSAnimation.fast` ease instead of the spring, haptic still fires. Reduce Transparency: solid elevated surface. Header is one combined button with value Expanded/Collapsed and a "Shows/Hides the details" hint; the icon and chevron are `accessibilityHidden`.
+
+---
+
 ## DSNumberTicker  ✅
 
 `Components/DSNumberTicker.swift`.
@@ -400,6 +462,24 @@ DSNumberTicker(_ value: Int, style: DSTextStyle = .displayMedium, color: Color? 
 ```
 
 Odometer digits: each digit is a 0–9 column in a private animatable `Layout` that rolls on `springSmooth`, staggered 0.03 s from the units digit. Slot ids count from the right (`slots(for:)`, tested), so 99 → 100 keeps its digits. The view is `fixedSize()`: it never compresses, because a squeezed static slot ("US$") would clip. Reduce Motion: crossfade. One accessibility element with the formatted string and `.updatesFrequently`. No haptics.
+
+---
+
+## DSTimeline  ✅
+
+`Components/DSTimeline.swift`. Vertical progress timeline — the content-bearing, vertical complement to `DSStepProgress`.
+
+```swift
+DSTimeline(_ items: [DSTimelineItem], currentStep: Int,
+           nodeSize: CGFloat = DSSpacing.xxl, lineWidth: CGFloat = DSSpacing.xxxs,
+           accent: Color? = nil, haptics: Bool = true)
+
+DSTimelineItem(_ title: String, subtitle: String? = nil, icon: String? = nil)
+```
+
+Steps are positional: identity is the enumerated index (`id: \.offset`), so rebuilding `items` keeps nodes animating in place. The rules live in an internal `DSTimelineProgress` (clamp, status, connector fill, `isAdvance`) so they are unit tested: `currentStep` clamps to `0...items.count`, steps before it are complete, the one at it is current, the rest upcoming. Each row is `HStack(alignment: .top)`: node, then a content column whose title is `frame(minHeight: nodeSize)` so it centres on the node at any text size (`nodeSize` is a `@ScaledMetric` relative to `.callout`). The connector is a track capsule with an accent capsule on top at `scaleEffect(y:)` anchored at the top, clipped to the track, and drawn as the row's `.background` offset below the node — not as a flexible child of the rail. The live node's glow sits on its own `dsBreathe(.medium)` layer behind the node and is inserted only while the step is current. The spring (`springSmooth`, or `fast` under Reduce Motion) and the single `.success` haptic are keyed on the clamped step through `animation(value:)` and `onChange` (no `initial:`), and the haptic additionally requires `isAdvance`. One accessibility element per step: title and subtitle as label, status as value.
+
+Known gaps: vertical only; no branching; a jump of several steps fills all connectors at once rather than in sequence.
 
 ---
 
@@ -442,6 +522,21 @@ DSSuccessCheck(isComplete: Bool, size: CGFloat = 64, color: Color? = nil,
 ```
 
 Ring strokes, disc fills, check draws (eased state), then one pop and a fading halo on a `keyframeAnimator` track (`SpringKeyframe` matching `springBouncy`). The haptic and the VoiceOver announcement land at the pop peak (0.65 s of 0.9 s). Fill is `palette.success`, check `palette.textOnPrimary`. Resets quietly; Reduce Motion crossfades the finished seal in.
+
+---
+
+## DSLikeButton  ✅
+
+`Components/DSLikeButton.swift`.
+
+```swift
+DSLikeButton(isLiked: Binding<Bool>, count: Int? = nil, size: CGFloat = DSSpacing.xl,
+             symbol: String = "heart.fill", emptySymbol: String = "heart",
+             tint: Color? = nil, haptic: DSHapticStyle = .soft,
+             accessibilityLabel: String = "Like")
+```
+
+Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track (`SpringKeyframe` matching `springBouncy`) and radiates one filled halo in the tint, the same halo mechanism as `DSSuccessCheck`, so there's no border. The haptic fires on the peak of the pop (0.13 s after the tap); unliking is quiet (no pop, no halo, haptic on the tap), and rapid taps restart the one track instead of stacking. The beat belongs to the tap: setting `isLiked` from code swaps the symbol without a pop or a haptic. An optional `count` rolls with `.numericText`. Tap target is at least 44 pt, press dips with `DSPress.iconScale`, disabled dims. Reduce Motion: no pop or halo, crossfades instead of morphs, haptic on the tap. Tint defaults to `theme.accent`, the rest color to `palette.textSecondary`. VoiceOver: toggle button, value "Liked, 129" / "Not liked".
 
 ---
 

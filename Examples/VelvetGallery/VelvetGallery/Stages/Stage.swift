@@ -11,7 +11,13 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTypewriterText, Progress, Motion
     case DSHoldToConfirm
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
+    case DSTimeline
     case DSSuccessCheck, DSConfetti
+    case DSSlider
+    case DSTiltCard
+    case DSDisclosureGroup
+    case DSExpandableText
+    case DSLikeButton
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }
@@ -33,6 +39,13 @@ enum Stage: String, CaseIterable, Identifiable {
             return false
         case .DSHoldToConfirm:
             return false   // the gesture is the demo
+        case .DSTiltCard:
+            return false   // drag it by hand
+        case .DSExpandableText:
+            // The expansion state is private to the component: tap Show more by hand.
+            return false
+        case .DSLikeButton:
+            return false   // the beat belongs to the tap: record it by hand
         default:
             return true
         }
