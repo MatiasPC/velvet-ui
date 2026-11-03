@@ -45,6 +45,10 @@ struct ComponentCatalog: View {
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
     @State private var faqOpen = true
+    @State private var liked = false
+    @State private var starred = false
+    @State private var postLiked = false
+    @State private var postLikes = 128
 
     var body: some View {
         NavigationStack {
@@ -411,6 +415,21 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Expandable Text
+                section("Expandable Text") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSExpandableText(
+                                "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a calm page tone, spring motion on everything you touch, and haptics that make the interface feel alive. Every component honors Reduce Motion, Reduce Transparency and Dynamic Type out of the box.",
+                                lineLimit: 2,
+                                expandLabel: "Read more",
+                                collapseLabel: "Read less"
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Slide to Confirm
                 section("Slide to Confirm") {
                     VStack(spacing: DSSpacing.md) {
@@ -569,6 +588,24 @@ struct ComponentCatalog: View {
                         DSButton(isPaymentDone ? "Reset" : "Complete", variant: .secondary, size: .small) {
                             isPaymentDone.toggle()
                         }
+                    }
+                }
+
+                // MARK: - Like Button
+                section("Like Button") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            HStack(spacing: DSSpacing.xl) {
+                                DSLikeButton(isLiked: $liked, accessibilityLabel: "Like")
+                                DSLikeButton(isLiked: $starred, symbol: "star.fill", emptySymbol: "star",
+                                             tint: DSColors.warning, accessibilityLabel: "Favorite")
+                                DSLikeButton(isLiked: $postLiked, count: postLikes, accessibilityLabel: "Like post")
+                                    .onChange(of: postLiked) { _, on in postLikes += on ? 1 : -1 }
+                            }
+                            Text("Pops and radiates a halo on the way in; quiet on the way out.")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
