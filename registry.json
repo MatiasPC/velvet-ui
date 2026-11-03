@@ -332,13 +332,17 @@
     {
       "name": "DSToast",
       "category": "feedback",
-      "summary": "Success, error, warning and info toasts that VoiceOver announces.",
+      "summary": "Success, error, warning and info toasts: present with .dsToast for auto-dismiss, replacement and flick-to-dismiss, announced by VoiceOver.",
       "symbols": [
         "DSToast",
-        "DSToastType"
+        "DSToastType",
+        "DSToastValue",
+        "DSToastEdge",
+        "dsToast"
       ],
       "files": [
-        "Sources/VelvetUI/Components/DSToast.swift"
+        "Sources/VelvetUI/Components/DSToast.swift",
+        "Sources/VelvetUI/Components/DSToastPresenter.swift"
       ],
       "dependencies": [
         "DSButton"

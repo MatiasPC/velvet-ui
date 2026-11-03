@@ -48,7 +48,7 @@ Velvet targets iOS 18+ and macOS 15+.
 4. **Tokens only.** Use `DSSpacing` for padding and gaps, `DSRadius` for corners, `.ds(_:)` for text, `DSShadow` for elevation and `DSAnimation` for motion. Never write literal numbers, fonts or colors.
 5. **Colors come from the theme.** In your own views, declare `@DSThemed private var theme` and paint with its roles (table below). Don't use `DSColors.x` inside a view body; those statics don't follow the injected theme.
 6. **No borders.** Separate surfaces with `.dsSurface(_:radius:)`, `DSCard`, `theme.subtleFill` or `.dsWashEdge(radius:)`. Never use `.border` or `.stroke`.
-7. **Haptics are built in.** `DSButton`, `DSToggle`, `DSStepper`, `DSTabBar` and the other controls already fire their haptic. Don't add a second one. Call `dsHaptic(_:)` only for your own custom controls.
+7. **Haptics are built in.** `DSButton`, `DSToggle`, `DSStepper`, `DSTabBar`, `.dsToast` and the other controls already fire their haptic. Don't add a second one. Call `dsHaptic(_:)` only for your own custom controls.
 8. **Springs for touch, eased curves for ambience.** Use `DSAnimation.springSnappy` / `.springSmooth` for state changes caused by a tap or drag, and `withAnimation(DSAnimation.normal)` for theme changes. Loop effects through `.dsBreathe`, `.dsShimmer` or `DSMotion.loop(_:unless:)`, which respect Reduce Motion.
 9. **Accessibility is part of the job.** Give icon-only buttons an `accessibilityLabel:`, give bare controls (`DSStepper`, `DSRating`) a `.accessibilityLabel("Guests")`, and keep text on `.ds(_:)` so it scales with Dynamic Type.
 10. **Async work goes into the component.** `DSSlideToConfirm`'s `onConfirm` is `async throws`. Await the payment inside it and throw to refuse; the control spins, then succeeds or re-opens by itself.
@@ -78,7 +78,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Rows in a group | `DSListCell(title:subtitle:leading:trailing:action:)` + `DSDivider` | Inside `DSCard(padding: 0)`. |
 | Status label / unread count | `DSBadge(_:variant:)`, `DSCountBadge(count:)` | |
 | Person | `DSAvatar(name:imageURL:size:)` | Falls back to initials. |
-| Transient message | `DSToast(_:type:)` | Present in an overlay; it announces itself. |
+| Transient message | `.dsToast($toast, edge:)` with `DSToastValue(_:type:duration:)` | Slides in, fires its haptic, auto-dismisses, flicks away, announces itself. `DSToast(_:type:)` is the bare banner. |
 | Nothing to show | `DSEmptyState(icon:title:message:actionTitle:action:)` | |
 | Loading layout | `.dsSkeleton(isLoading)` or `DSSkeleton` blocks | |
 | Progress | `DSCircularProgress`, `DSLinearProgress`, `DSGradientProgress`, `DSStepProgress` | |
@@ -276,26 +276,19 @@ struct AppShell: View {
 
 ```swift
 struct SaveButton: View {
-    @State private var showsToast = false
+    @State private var toast: DSToastValue?
 
     var body: some View {
         DSButton("Save") {
-            withAnimation(DSAnimation.springSmooth) { showsToast = true }
+            toast = DSToastValue("Saved to your library", type: .success)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(alignment: .bottom) {
-            if showsToast {
-                DSToast("Saved to your library", type: .success)
-                    .transition(.dsSlideUp)
-                    .task {
-                        try? await Task.sleep(for: .seconds(2))
-                        withAnimation(DSAnimation.springSmooth) { showsToast = false }
-                    }
-            }
-        }
+        .dsToast($toast, edge: .bottom)
     }
 }
 ```
+
+Assign a new value to replace the toast on screen (the timer restarts); assign `nil` to dismiss. `duration: 0` keeps it up until you clear it.
 
 **Your own view, on-system**
 
@@ -350,7 +343,7 @@ struct ThemePicker: View {
 | `withAnimation(.easeInOut)` after a tap | `withAnimation(DSAnimation.springSnappy)` | Touch gets springs. |
 | `.repeatForever()` on your own loop | `.dsBreathe()` or `DSMotion.loop(_:unless: reduceMotion)` | Loops must rest under Reduce Motion. |
 | `ScrollView { DSScreen { … } }` | `DSScreen(backdrop: true) { … }` alone | `DSScreen` already scrolls. |
-| Showing `DSToast` without removing it | Remove it after a delay (see the pattern) | It stays on screen otherwise. |
+| Overlaying a bare `DSToast` and timing it yourself | `.dsToast($toast)` with a `DSToastValue` | The presenter handles the timer, replacement, haptic and flick to dismiss. |
 | `Image(systemName: "trash")` as a button with no label | `DSIconButton(icon: "trash", accessibilityLabel: "Delete") { … }` | VoiceOver reads "trash" or nothing. |
 | A `DSStepper` with no label | `.accessibilityLabel("Guests")` | It reads "Stepper" otherwise. |
 | `DSListCell(title: "Wi-Fi") { Image(systemName: "wifi") }` | `DSListCell(title: "Wi-Fi", leading: { Image(systemName: "wifi") })` | A single trailing closure binds to `action`, so the icon never shows. |

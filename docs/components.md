@@ -7,7 +7,7 @@ One section per component: what it is for, the public API, variants and states, 
 Conventions that apply to every component:
 - Colors come from `@DSThemed`. Parameters typed `Color? = nil` follow the theme when nil.
 - Press states use `DSPress.scale` (0.96) or `DSPress.iconScale` (0.88) with `DSPress.animation`.
-- Haptics fire inside the component; don't add another on the call site. The exception is `DSToast`, which fires none: the caller does.
+- Haptics fire inside the component; don't add another on the call site. The exception is the bare `DSToast` view, which fires none; `.dsToast` fires it for you.
 - Status: ✅ complete · 🧪 v0.2 glass restyle applied · ⏳ restyle pending (works, still v0.1 look).
 
 ---
@@ -148,16 +148,32 @@ A cell with an `action` becomes a button with a chevron and a `.light` haptic. S
 
 ## DSToast / DSEmptyState  🧪 (colors) ⏳ (edge + radius 16)
 
-`Components/DSToast.swift`.
+`Components/DSToast.swift`, `Components/DSToastPresenter.swift`.
 
-**Accessibility:** One element reading "Success: <message>" (Success/Error/Warning/Info); icon hidden. The toast is announced on appear without moving focus. Override with `.accessibilityLabel(...)`.
+**Accessibility:** One element reading "Success: <message>" (Success/Error/Warning/Info); icon hidden. The toast is announced on appear without moving focus. Override with `.accessibilityLabel(...)`. The presenter adds a "Dismiss" action.
 
 ```swift
 DSToast(_ message: String, type: DSToastType = .info)   // .success .error .warning .info
 DSEmptyState(icon:, title:, message:, actionTitle: String? = nil, action: (() -> Void)? = nil)
+
+// Presenter: bind an optional value to the screen
+DSToastValue(_ message: String, type: DSToastType = .info, duration: Double = 2.5)  // duration <= 0 = sticky
+DSToastEdge { case top, bottom }
+func dsToast(_ toast: Binding<DSToastValue?>, edge: DSToastEdge = .top) -> some View
 ```
 
-Toast already sits on `.ultraThinMaterial` with `.lg` shadow; `DSToastType.haptic` is internal; callers fire the matching haptic themselves on presentation (mapping in [DSToast.md](components/DSToast.md)). Empty state uses a `DSButton` for the CTA.
+Toast already sits on `.ultraThinMaterial` (solid under Reduce Transparency) with `.lg` shadow. `DSToast` is just the banner; `.dsToast` is how you show one (below). `DSToastType.haptic` is internal: the presenter fires it, and a bare `DSToast` leaves it to the caller (mapping in [DSToast.md](components/DSToast.md)). Empty state uses a `DSButton` for the CTA.
+
+### Toast presenter  ✅
+
+`.dsToast($toast, edge:)` overlays the banner on the view it modifies, so apply it at the screen root.
+
+- **Present / replace / dismiss.** Assign a `DSToastValue` to show it, a new one to replace it, `nil` to dismiss. Each value has its own identity, so presenting the same text twice works. A replacement is a cut, never a cross-fade: the old banner is removed instantly (identity transition on the `.id`-keyed `DSToast`) and the animation is keyed on *presence*, so two glass banners never overlap.
+- **Auto-dismiss.** A `.task(id: toast?.id)` waits `duration` and clears the binding only if the same toast is still showing. A replacement restarts it, and a dismissal or flick cancels it. `duration <= 0` (or not finite) is sticky.
+- **Motion.** Slides from `edge` with `.move` + opacity on `springGentle`. Drag toward the edge to flick it away (past `DSSpacing.xl`, or a flick that projects past `DSSpacing.massive`); otherwise it springs back on `springSnappy`. Dragging inward resists at 0.2×. Under Reduce Motion the slide is a `DSAnimation.fast` fade.
+- **Haptics.** `DSToastType.haptic` fires when a toast appears (success/error/warning notification haptics, info `.light`).
+- **Accessibility.** The `.id` re-mounts `DSToast` per presentation, so VoiceOver announces replacements too. A "Dismiss" accessibility action clears it without a drag.
+- Stack two modifiers (one per edge, each with its own binding) to run a top and a bottom toast independently.
 
 ---
 

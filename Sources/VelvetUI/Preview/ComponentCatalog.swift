@@ -50,6 +50,7 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var presentedToast: DSToastValue?
     private let flowInterests = [
         "Design", "SwiftUI", "Motion", "Accessibility", "Haptics",
         "Typography", "Color", "Prototyping", "iOS", "Glass"
@@ -73,6 +74,7 @@ struct ComponentCatalog: View {
             }
             .navigationTitle("Velvet UI")
         }
+        .dsToast($presentedToast, edge: .bottom)
         .dsTheme(theme)
     }
 
@@ -465,6 +467,28 @@ struct ComponentCatalog: View {
                         DSToast("Action completed!", type: .success)
                         DSToast("Something went wrong", type: .error)
                         DSToast("Check your connection", type: .warning)
+                    }
+                }
+
+                // MARK: - Toast Presenter
+                section("Toast Presenter") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Text(".dsToast — replaces, auto-dismisses, flicks away")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Success", size: .small) {
+                                    presentedToast = DSToastValue("Saved to your library", type: .success)
+                                }
+                                DSButton("Error", variant: .secondary, size: .small) {
+                                    presentedToast = DSToastValue("Couldn't connect", type: .error)
+                                }
+                                DSButton("Sticky", variant: .ghost, size: .small) {
+                                    presentedToast = DSToastValue("Uploading…", type: .info, duration: 0)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
