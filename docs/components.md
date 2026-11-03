@@ -72,13 +72,13 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 `Components/DSTiltCard.swift`. A glass card that tips in 3D toward the finger as you drag, with a specular sheen sliding across the surface, then springs back on release.
 
 ```swift
-DSTiltCard(maxTilt: Angle = .degrees(12),       // peak rotation at the edge of the drag
+DSTiltCard(maxTilt: Angle? = nil,                // peak rotation at the edge of the drag; nil = 12°
            padding: CGFloat = DSSpacing.md,
            cornerRadius: CGFloat = DSRadius.card,
-           haptic: DSHapticStyle = .soft) { content }
+           haptic: DSHapticStyle? = .soft) { content }
 ```
 
-Drag tilts the card around both axes (clamped at `maxTilt`); the sheen fades in with the tilt and the shadow deepens from `.lg` to `.xl` while held; release springs it flat with `DSAnimation.springGentle`. A `.soft` haptic fires once as the drag begins. Under Reduce Motion the tilt and sheen switch off and it rests as a plain glass surface (the drag passes through to any controls inside). Decoration only — for a tappable surface use `DSInteractiveCard`.
+Drag tilts the card around both axes (clamped at `maxTilt` once the drag passes ~120 pt); the sheen fades in with the tilt and the shadow deepens from `.lg` to `.xl` while held. Tracking is un-animated (1:1 with the finger); release or a cancelled touch springs it flat with `DSAnimation.springGentle`. The gesture is `simultaneousGesture`, so the card never blocks an enclosing `ScrollView` and buttons inside keep their taps; a `@GestureState` flag catches the cancelled case that `onEnded` misses. A `.soft` haptic fires once as the touch begins (`nil` for none). Under Reduce Motion the card never rotates, the shadow does not lift and the sheen stays put, only fading in while held. Decoration only — for a tappable surface use `DSInteractiveCard`.
 
 ---
 

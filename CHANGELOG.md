@@ -5,7 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
-- `DSTiltCard` — a glass card that tips in 3D toward the finger as you drag, with a specular sheen that slides across the surface, a deepening shadow while held, and a `springGentle` snap-back on release. Rests flat under Reduce Motion. Pure SwiftUI, tokens-only, core dependencies only.
+- `DSTiltCard` — a glass card that tips in 3D toward the finger as you drag, with a specular sheen that slides across the surface, a deepening shadow while held, and a `springGentle` snap-back on release (also when a scroll cancels the touch). Never blocks an enclosing `ScrollView`. Stays flat under Reduce Motion, where only a still sheen fades in while held. Pure SwiftUI, tokens-only, core dependencies only.
 
 ## [0.2.0] — 2026-10-23
 
