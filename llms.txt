@@ -1,8 +1,8 @@
 # Velvet UI
 
-> Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.
+> Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over solid neutral page tones, no borders, VoiceOver and Reduce Motion built in. MIT.
 
-Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, product `VelvetUI`, from 0.2.0) and `import VelvetUI`, or copy a single component and the core it needs into your app with the CLI: download https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(gradient: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
+Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, product `VelvetUI`, from 0.2.0) and `import VelvetUI`, or copy a single component and the core it needs into your app with the CLI: download https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(style: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
 
 ## Start here
 
@@ -19,6 +19,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSToggle](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToggle.md): Switch with a spring knob and a rigid haptic.
 - [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
 - [DSRating](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRating.md): Drag-to-rate stars, with half steps and a read-only mode.
+- [DSLikeButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSLikeButton.md): A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.
 - [DSSegmentedControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSegmentedControl.md): Pill or underline picker with a sliding indicator.
 - [DSTextField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTextField.md): Text field with label, icon and validation states, plus DSSearchBar.
 - [DSCodeField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCodeField.md): One-time-code input with SMS autofill, a shake on error and success feedback.
@@ -34,7 +35,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [Charts](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Charts.md): Light animated charts: a sparkline that draws and morphs, and a bar chart you can scrub.
 - [DSToast](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToast.md): Success, error, warning and info toasts that VoiceOver announces.
 - [DSEmptyState](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSEmptyState.md): Icon, title, message and an optional call to action.
-- [Progress](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Progress.md): Circular, linear, gradient and step progress, animated numbers, shimmer skeletons.
+- [Progress](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Progress.md): Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons.
 - [DSThinkingIndicator](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSThinkingIndicator.md): Ambient "thinking" state for AI and background work.
 - [DSSkeleton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSkeleton.md): Loading placeholder blocks, plus .dsSkeleton(_:) to redact a real view in place.
 - [DSSuccessCheck](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSuccessCheck.md): An animated success seal: the ring draws, the check strokes in, one pop and a haptic on the beat.

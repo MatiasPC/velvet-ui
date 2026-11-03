@@ -7,7 +7,7 @@ struct VelvetGalleryApp: App {
     @AppStorage(StageDefaults.storedBackground) private var stageBackgroundRaw = StageBackground.neutral.rawValue
     @AppStorage(StageDefaults.storedAutoplay) private var stageAutoplay = false
     @State private var launchStage: Stage?
-    private let theme = DSTheme(gradient: .neutral)
+    private let theme = DSTheme(style: .neutral)
 
     init() {
         // Launch arguments (-VelvetStage, -VelvetStageBackground, ...) are copied
