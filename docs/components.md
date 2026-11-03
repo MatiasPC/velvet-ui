@@ -417,6 +417,24 @@ Odometer digits: each digit is a 0–9 column in a private animatable `Layout` t
 
 ---
 
+## DSTimeline  ✅
+
+`Components/DSTimeline.swift`. Vertical progress timeline — the content-bearing, vertical complement to `DSStepProgress`.
+
+```swift
+DSTimeline(_ items: [DSTimelineItem], currentStep: Int,
+           nodeSize: CGFloat = DSSpacing.xxl, lineWidth: CGFloat = DSSpacing.xxxs,
+           accent: Color? = nil, haptics: Bool = true)
+
+DSTimelineItem(_ title: String, subtitle: String? = nil, icon: String? = nil)
+```
+
+Steps are positional: identity is the enumerated index (`id: \.offset`), so rebuilding `items` keeps nodes animating in place. The rules live in an internal `DSTimelineProgress` (clamp, status, connector fill, `isAdvance`) so they are unit tested: `currentStep` clamps to `0...items.count`, steps before it are complete, the one at it is current, the rest upcoming. Each row is `HStack(alignment: .top)`: node, then a content column whose title is `frame(minHeight: nodeSize)` so it centres on the node at any text size (`nodeSize` is a `@ScaledMetric` relative to `.callout`). The connector is a track capsule with an accent capsule on top at `scaleEffect(y:)` anchored at the top, clipped to the track, and drawn as the row's `.background` offset below the node — not as a flexible child of the rail. The live node's glow sits on its own `dsBreathe(.medium)` layer behind the node and is inserted only while the step is current. The spring (`springSmooth`, or `fast` under Reduce Motion) and the single `.success` haptic are keyed on the clamped step through `animation(value:)` and `onChange` (no `initial:`), and the haptic additionally requires `isAdvance`. One accessibility element per step: title and subtitle as label, status as value.
+
+Known gaps: vertical only; no branching; a jump of several steps fills all connectors at once rather than in sequence.
+
+---
+
 ## Charts: DSSparkline / DSBarChart  ✅
 
 `Components/DSCharts.swift`. No Swift Charts dependency.

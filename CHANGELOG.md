@@ -4,6 +4,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Fixed
+- `DSSlideToConfirm` knob renders as a true circle at rest again. The `Capsule()` mask that drives the `.morphAndVanish` collapse was sized to the track, so its straight edges sat exactly on the idle knob's top and bottom and its antialiased edge shaved ~1pt off each (the knob measured 168×166 instead of 168×168 at @3×, and its shadow was cropped). The mask is now held clear of the knob until the collapse begins, then both axes ride the same spring so the morph still lands on a capsule exactly `trackHeight` square.
 ### Added
 - `DSRadioGroup` and `DSRadioOption`: single-select list for any `Hashable` value. A sibling of `DSCheckbox` (same 24 pt wash indicator, accent layer, `onAccent` dot and `.rigid` haptic): the dot grows as the layer pops in, and a frosted highlight slides between rows with `matchedGeometryEffect`. Rows are at least 44 pt tall; VoiceOver reads the title and subtitle, "N of M" and the selected trait, and announces the pick; Reduce Motion crossfades.
 - `DSDisclosureGroup`: a glass accordion / FAQ row, a themed replacement for the stock `DisclosureGroup`. The card grows with the body on `springSmooth` (a clipped reveal layout, so text never re-wraps mid-animation) while the chevron rotates on the same spring, with a hairline divider and a `.light` haptic; Reduce Motion swaps the spring for a short ease, Reduce Transparency gives a solid surface, and VoiceOver reads Expanded / Collapsed. Self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`) initializers. Gallery screen and recording stage included.
@@ -19,6 +21,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 - `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
 
 ### Added
+- `DSTimeline` — a vertical progress timeline with `DSTimelineItem`. Nodes joined by a connector that fills as `currentStep` advances; the live node glows and breathes, rows cascade in with `dsStaggerIn`, and a `.success` haptic fires on forward progress. The content-bearing, vertical complement to `DSStepProgress`. For order tracking, multi-step flows and activity histories.
 - `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 
 ## [0.2.0] — 2026-10-23

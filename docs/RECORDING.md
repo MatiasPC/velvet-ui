@@ -124,6 +124,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
 | `DSCarousel` | Autoplay: advances a page every 1.6 s and wraps. Swipe it by hand for the depth effect. |
 | `DSSheet` | Autoplay: presents the sheet, holds, dismisses. |
+| `DSTimeline` | Autoplay: an order moves through four steps (connector fills, node lights, haptic), then cuts back to the start. |
 | `DSNumberTicker` | Autoplay: rolls a balance through a sequence (including 99.99 → 100.05). |
 | `Charts` | Autoplay: shuffles the data every 2 s (line morph, bars regrow). Drag across the bars to scrub. |
 | `DSSkeleton` | Autoplay: loading → loaded → loading. |
