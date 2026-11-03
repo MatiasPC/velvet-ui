@@ -107,6 +107,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSCodeField` | Autoplay: types a 6-digit code, then shows success. |
 | `DSBadge` | Nothing moves; record a still moment or screenshot. |
 | `DSAvatar` | Nothing moves; record a still moment or screenshot. |
+| `DSAvatarGroup` | Autoplay: people join one at a time (pop-in, then the +N bubble), then leave. |
 | `DSListCell` | Click rows to show the press. Manual. |
 | `DSToast` | Autoplay: cycles success, error, warning, info. |
 | `DSEmptyState` | Click "Compose". Manual. |

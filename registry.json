@@ -327,6 +327,23 @@
       "stage": "DSAvatar"
     },
     {
+      "name": "DSAvatarGroup",
+      "category": "display",
+      "summary": "Overlapping facepile of DSAvatars with a +N overflow bubble, read by VoiceOver as one element.",
+      "symbols": [
+        "DSAvatarGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSAvatarGroup.swift"
+      ],
+      "dependencies": [
+        "DSAvatar",
+        "Motion"
+      ],
+      "docs": "docs/components/DSAvatarGroup.md",
+      "stage": "DSAvatarGroup"
+    },
+    {
       "name": "DSNumberTicker",
       "category": "display",
       "summary": "A number whose digits roll like an odometer, for any FormatStyle (currency, percent, grouping).",

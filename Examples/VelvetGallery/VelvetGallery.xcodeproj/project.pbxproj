@@ -79,7 +79,6 @@
 		60C54157D449912B0364C807 /* StepperScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperScreen.swift; sourceTree = "<group>"; };
 		6134837B127382EC53CC0104 /* ConfettiScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiScreen.swift; sourceTree = "<group>"; };
 		629C745CA3297503D924937D /* LayoutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutScreen.swift; sourceTree = "<group>"; };
-		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyScreen.swift; sourceTree = "<group>"; };
 		70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonScreen.swift; sourceTree = "<group>"; };
 		71A56C81679AE72BF06EA956 /* ExpandableTextScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableTextScreen.swift; sourceTree = "<group>"; };
@@ -89,6 +88,7 @@
 		931294FB9DE3CEC60EEB2738 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
 		93D000BBF8E60C773068243C /* CheckoutFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutFlow.swift; sourceTree = "<group>"; };
 		98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessCheckScreen.swift; sourceTree = "<group>"; };
+		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
 		AC7BB3B924F36A84ABB20C1C /* TimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineScreen.swift; sourceTree = "<group>"; };

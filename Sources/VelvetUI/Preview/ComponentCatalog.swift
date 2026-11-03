@@ -322,6 +322,24 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Avatar Group
+                section("Avatar Group") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSAvatarGroup(names: [
+                                "Ada Lovelace", "Grace Hopper", "Alan Turing",
+                                "Katherine Johnson", "Linus Torvalds", "Margaret Hamilton"
+                            ])
+                            DSAvatarGroup(
+                                names: ["Ada Lovelace", "Grace Hopper", "Alan Turing"],
+                                size: DSSpacing.xxl,
+                                overlap: 0.45
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Lists
                 section("Lists") {
                     DSCard(padding: 0) {
