@@ -5,7 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
-- `DSLikeButton`: a favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track, and radiates one filled halo in the tint (the same halo mechanism as `DSSuccessCheck`, so no border); unliking is quiet. Optional `count` rolls with `.numericText`. Haptic on every tap; pop and halo play on the way in only and never under Reduce Motion. Configurable `symbol`/`emptySymbol` for stars, bookmarks or any filled/outline SF Symbol pair. Docs page, `ComponentCatalog` section, light/dark previews on the backdrop.
+- `DSLikeButton`: a favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track and radiates one filled halo in the tint (the same halo mechanism as `DSSuccessCheck`, so no border), with the haptic on the peak of the pop; unliking is quiet and rapid taps never stack. Optional `count` rolls with `.numericText`. 44 pt tap target, press feel, Reduce Motion (no pop or halo, crossfades), VoiceOver toggle with a Liked / Not liked value. Configurable `symbol`/`emptySymbol` for stars, bookmarks or any filled/outline SF Symbol pair. Gallery screen and recording stage included.
 
 ## [0.2.0] — 2026-10-23
 

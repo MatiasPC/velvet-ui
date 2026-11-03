@@ -127,6 +127,20 @@
       "stage": "DSRating"
     },
     {
+      "name": "DSLikeButton",
+      "category": "inputs",
+      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
+      "symbols": [
+        "DSLikeButton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSLikeButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSLikeButton.md",
+      "stage": "DSLikeButton"
+    },
+    {
       "name": "DSSegmentedControl",
       "category": "inputs",
       "summary": "Pill or underline picker with a sliding indicator.",
@@ -425,20 +439,6 @@
       "dependencies": [],
       "docs": "docs/components/DSSuccessCheck.md",
       "stage": "DSSuccessCheck"
-    },
-    {
-      "name": "DSLikeButton",
-      "category": "feedback",
-      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
-      "symbols": [
-        "DSLikeButton"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSLikeButton.swift"
-      ],
-      "dependencies": [],
-      "docs": "docs/components/DSLikeButton.md",
-      "stage": null
     },
     {
       "name": "DSTypewriterText",
