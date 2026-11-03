@@ -118,6 +118,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSSlideToConfirm` | Drag the knob to the end, release. Manual. |
 | `DSThinkingIndicator` | Runs on its own. |
 | `DSTypewriterText` | Runs on its own. |
+| `DSExpandableText` | Tap Show more, then Show less. Manual. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
@@ -128,6 +129,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSSkeleton` | Autoplay: loading → loaded → loading. |
 | `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
+| `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |
 | `SettingsFlow` | Full screen. Flip a toggle (toast), open Delete account and slide. Manual. |
 | `CheckoutFlow` | Full screen. Step a quantity (total rolls), apply `VELVET`, slide to pay. Manual. |

@@ -45,7 +45,7 @@ public struct DSThinkingIndicator: View {
     ///   - symbol: SF Symbol name for the leading animated glyph.
     ///   - interval: Seconds each phrase stays on screen before the next one assembles.
     ///   - tint: Letter color. Defaults to `theme.ink`. The symbol always uses the
-    ///     theme gradient regardless of this value — it is decorative, not textual.
+    ///     theme accent regardless of this value — it is decorative, not textual.
     public init(
         phrases: [String] = ["Thinking", "Weighing options", "Almost there"],
         symbol: String = "sparkles",
@@ -89,7 +89,7 @@ public struct DSThinkingIndicator: View {
     private var symbolView: some View {
         Image(systemName: symbol)
             .dsFont(.footnote)
-            .foregroundStyle(theme.gradient.horizontalGradient)
+            .foregroundStyle(theme.accent)
             .symbolEffect(.breathe.byLayer, isActive: !reduceMotion)
             .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
             .accessibilityHidden(true)

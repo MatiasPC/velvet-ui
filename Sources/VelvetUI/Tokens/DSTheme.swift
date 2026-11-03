@@ -2,8 +2,8 @@ import SwiftUI
 import Observation
 
 // MARK: - Design System Theme
-// Central theme object: a light palette, a dark palette and the active gradient
-// theme. Inject once at the root with `.dsTheme(theme)`; every component reads
+// Central theme object: a light palette, a dark palette and the active theme
+// style. Inject once at the root with `.dsTheme(theme)`; every component reads
 // it through `@DSThemed` and re-renders when any part changes (Observation).
 //
 // `DSTheme` is `@Observable` *and* `ObservableObject` on purpose: `@Observable`
@@ -16,17 +16,17 @@ import Observation
 public final class DSTheme: ObservableObject {
     public var light: DSColorPalette
     public var dark: DSColorPalette
-    /// The active gradient theme. Change it at runtime to re-theme the whole tree.
-    public var gradient: DSGradientTheme
+    /// The active theme style. Change it at runtime to re-theme the whole tree.
+    public var style: DSThemeStyle
 
     public init(
         light: DSColorPalette = DSColors.defaultPalette,
         dark: DSColorPalette = DSColors.defaultDarkPalette,
-        gradient: DSGradientTheme = .sunset
+        style: DSThemeStyle = .sunset
     ) {
         self.light = light
         self.dark = dark
-        self.gradient = gradient
+        self.style = style
     }
 
     /// Resolve the correct palette for the current color scheme.
@@ -39,7 +39,7 @@ public final class DSTheme: ObservableObject {
     public func resolved(for colorScheme: ColorScheme, onBackdrop: Bool = false) -> DSResolvedTheme {
         DSResolvedTheme(
             palette: palette(for: colorScheme),
-            gradient: gradient,
+            style: style,
             colorScheme: colorScheme,
             onBackdrop: onBackdrop
         )
@@ -51,31 +51,33 @@ public final class DSTheme: ObservableObject {
 /// A snapshot of the theme for one color scheme. Value type, cheap to build.
 public struct DSResolvedTheme {
     public let palette: DSColorPalette
-    public let gradient: DSGradientTheme
+    public let style: DSThemeStyle
     public let colorScheme: ColorScheme
     /// True when the view sits on a `DSBackdrop` — washes make sense; otherwise solid fills do.
     public let onBackdrop: Bool
 
     public init(
         palette: DSColorPalette,
-        gradient: DSGradientTheme,
+        style: DSThemeStyle,
         colorScheme: ColorScheme,
         onBackdrop: Bool = false
     ) {
         self.palette = palette
-        self.gradient = gradient
+        self.style = style
         self.colorScheme = colorScheme
         self.onBackdrop = onBackdrop
     }
 
     public var isDark: Bool { colorScheme == .dark }
 
+    /// The flat page tone for the current scheme.
+    public var backgroundColor: Color { style.background.color(for: colorScheme) }
     /// Fill for primary CTAs, toggles on, active indicators.
-    public var accent: Color { gradient.accent }
+    public var accent: Color { style.accent }
     /// Text and icons on top of `accent`.
-    public var onAccent: Color { gradient.onAccent }
+    public var onAccent: Color { style.onAccent }
     /// Text, icons, links and focus glows on glass — already resolved for the scheme.
-    public var ink: Color { gradient.ink(for: colorScheme) }
+    public var ink: Color { style.ink(for: colorScheme) }
     /// Translucent flat fill used to separate a surface inside another.
     public var washSurface: Color { DSWash.surface(for: colorScheme) }
     /// Specular 1pt edge highlight for glass surfaces.
@@ -130,5 +132,48 @@ public extension View {
     func dsTheme(_ theme: DSTheme) -> some View {
         self.environment(\.dsTheme, theme)
             .environmentObject(theme)
+    }
+}
+
+// MARK: - Deprecated API
+
+public extension DSTheme {
+    /// The active theme style.
+    @available(*, deprecated, renamed: "style")
+    var gradient: DSThemeStyle {
+        get { style }
+        set { style = newValue }
+    }
+
+    /// Inject a theme by its style.
+    @available(*, deprecated, message: "Use init(light:dark:style:) instead.")
+    convenience init(
+        light: DSColorPalette = DSColors.defaultPalette,
+        dark: DSColorPalette = DSColors.defaultDarkPalette,
+        gradient: DSThemeStyle
+    ) {
+        self.init(light: light, dark: dark, style: gradient)
+    }
+}
+
+public extension DSResolvedTheme {
+    /// The resolved theme style.
+    @available(*, deprecated, renamed: "style")
+    var gradient: DSThemeStyle { style }
+
+    /// Build a snapshot from a gradient theme.
+    @available(*, deprecated, message: "Use init(palette:style:colorScheme:onBackdrop:) instead.")
+    init(
+        palette: DSColorPalette,
+        gradient: DSThemeStyle,
+        colorScheme: ColorScheme,
+        onBackdrop: Bool = false
+    ) {
+        self.init(
+            palette: palette,
+            style: gradient,
+            colorScheme: colorScheme,
+            onBackdrop: onBackdrop
+        )
     }
 }

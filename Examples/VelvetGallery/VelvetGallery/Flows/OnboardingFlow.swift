@@ -14,7 +14,7 @@ struct OnboardingFlow: View {
     @State private var theme: DSTheme
 
     @MainActor init(theme: DSTheme? = nil, onFinish: @escaping () -> Void = {}) {
-        _theme = State(initialValue: theme ?? DSTheme(gradient: .sunset))
+        _theme = State(initialValue: theme ?? DSTheme(style: .sunset))
         self.onFinish = onFinish
     }
 
@@ -143,9 +143,9 @@ private struct ThemePage: View {
                 .dsPopIn(delay: 0.1)
 
             HStack(spacing: DSSpacing.sm) {
-                ForEach(Array(DSGradientTheme.all.enumerated()), id: \.element.id) { index, option in
-                    ThemeTile(option: option, isSelected: theme.gradient == option) {
-                        withAnimation(DSAnimation.normal) { theme.gradient = option }
+                ForEach(Array(DSThemeStyle.all.enumerated()), id: \.element.id) { index, option in
+                    ThemeTile(option: option, isSelected: theme.style == option) {
+                        withAnimation(DSAnimation.normal) { theme.style = option }
                     }
                     .dsPopIn(delay: 0.2 + Double(index) * 0.08)
                 }
@@ -155,7 +155,7 @@ private struct ThemePage: View {
 }
 
 private struct ThemeTile: View {
-    let option: DSGradientTheme
+    let option: DSThemeStyle
     let isSelected: Bool
     let action: () -> Void
     @DSThemed private var theme
@@ -167,7 +167,12 @@ private struct ThemeTile: View {
         } label: {
             VStack(spacing: DSSpacing.xs) {
                 RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
-                    .fill(option.linearGradient)
+                    .fill(option.background.color(for: theme.colorScheme))
+                    .overlay {
+                        Circle()
+                            .fill(option.accent)
+                            .frame(width: DSSpacing.xl, height: DSSpacing.xl)
+                    }
                     .frame(height: DSSpacing.massive)
                 Text(option.name)
                     .ds(.buttonSmall, color: isSelected ? theme.ink : theme.palette.textSecondary)
@@ -250,11 +255,11 @@ private struct OnboardingPage<Content: View>: View {
 // MARK: - Previews
 
 #Preview("Onboarding — Light") {
-    OnboardingFlow(theme: DSTheme(gradient: .aurora))
+    OnboardingFlow(theme: DSTheme(style: .aurora))
         .preferredColorScheme(.light)
 }
 
 #Preview("Onboarding — Dark") {
-    OnboardingFlow(theme: DSTheme(gradient: .lagoon))
+    OnboardingFlow(theme: DSTheme(style: .lagoon))
         .preferredColorScheme(.dark)
 }

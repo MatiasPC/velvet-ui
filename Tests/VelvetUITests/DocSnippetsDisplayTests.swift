@@ -344,6 +344,51 @@ enum DocSnippetsDisplay {
     }
     // END TypewriterDemo
 
+    // BEGIN ExpandableTextDemo
+    struct ExpandableTextDemo: View {
+        var body: some View {
+            DSScreen(backdrop: true) {
+                DSCard {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("About").ds(.title3)
+                        DSExpandableText(
+                            "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a calm page tone, spring motion on everything you touch, and haptics that make the interface feel alive.",
+                            lineLimit: 3
+                        )
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+    // END ExpandableTextDemo
+
+    // BEGIN ExpandableTextVariantsDemo
+    struct ExpandableTextVariantsDemo: View {
+        @DSThemed private var theme
+        let longCopy: String
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                // Two lines, custom labels
+                DSExpandableText(
+                    longCopy,
+                    lineLimit: 2,
+                    expandLabel: "Read more",
+                    collapseLabel: "Read less"
+                )
+
+                // Secondary copy
+                DSExpandableText(longCopy, style: .callout, color: theme.palette.textSecondary)
+
+                // Fits on two lines, so no toggle appears
+                DSExpandableText("Short copy needs no toggle.")
+            }
+        }
+    }
+    // END ExpandableTextVariantsDemo
+
     // BEGIN MotionDemo
     struct MotionDemo: View {
         @State private var shakes = 0
@@ -401,6 +446,8 @@ final class DocSnippetsDisplayTests: XCTestCase {
         _ = DocSnippetsDisplay.ProgressDemo()
         _ = DocSnippetsDisplay.ThinkingDemo()
         _ = DocSnippetsDisplay.TypewriterDemo()
+        _ = DocSnippetsDisplay.ExpandableTextDemo()
+        _ = DocSnippetsDisplay.ExpandableTextVariantsDemo(longCopy: "Long copy")
         _ = DocSnippetsDisplay.MotionDemo()
     }
 }

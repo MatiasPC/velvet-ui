@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-8E8E93)](LICENSE)
 
 <p align="center">
-  <img src="docs/media/Hero.gif" alt="Velvet UI components: a glass card with a toggle, a stepper and a slide-to-pay control over a peach gradient" width="300">
+  <img src="docs/media/Hero.gif" alt="Velvet UI components: a glass card with a toggle, a stepper and a slide-to-pay control over a warm page tone" width="300">
 </p>
 
 <p align="center">
@@ -20,9 +20,9 @@
   <a href="#documentation"><b>Docs</b></a>
 </p>
 
-Frosted glass over a gradient theme you pick (Sunset, Aurora or Lagoon). Every control springs when you touch it and lands a haptic on the beat, and there are no borders anywhere.
+Frosted glass over a solid, neutral page tone you pick (Snow, Paper or Graphite). Every control springs when you touch it and lands a haptic on the beat, and there are no borders anywhere.
 
-- **One look, three themes.** Change `theme.gradient` and the whole app crossfades. Dark mode is the same gradient, dimmed.
+- **One look, three styles.** Change `theme.style` and the whole app crossfades. Each style pairs a flat page tone with an accent, and light and dark are two curated tones — never a gradient.
 - **Motion with intent.** Springs for touch, eased curves for ambience, and Reduce Motion treated as a resting state, never as a cut.
 - **Accessible by default.** VoiceOver labels, values and traits, Dynamic Type, Reduce Transparency, and AA contrast tested on every theme.
 - **Agent-ready.** [`AGENTS.md`](AGENTS.md), [`llms.txt`](llms.txt) and a [registry](registry.json) let Claude Code, Cursor and Codex use the library correctly on the first try.
@@ -63,7 +63,7 @@ Inject a theme once at the root:
 import VelvetUI
 
 @main struct MyApp: App {
-    @State private var theme = DSTheme(gradient: .sunset)
+    @State private var theme = DSTheme(style: .sunset)
     var body: some Scene { WindowGroup { ContentView().dsTheme(theme) } }
 }
 ```
@@ -73,7 +73,7 @@ Then use any component, anywhere below it:
 ```swift
 struct ContentView: View {
     var body: some View {
-        DSScreen(backdrop: true) {                  // the theme's gradient behind everything
+        DSScreen(backdrop: true) {                  // the theme's solid page tone behind everything
             DSCard {
                 DSSlideToConfirm("Slide to pay") {
                     try await checkout()             // throw to refuse; the control re-opens
@@ -89,7 +89,7 @@ struct ContentView: View {
 
 ## Components
 
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 28 components, every one with a Gallery stage.
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 29 components, every one with a Gallery stage.
 
 | Preview | Component | What it does |
 |:---:|---|---|
@@ -114,11 +114,13 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |
 | <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts. `.dsToast` presents them: auto-dismiss, replacement, flick away. |
 | <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
-| <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, gradient and step progress, animated numbers, shimmer skeletons. |
+| <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons. |
 | <img src="docs/media/DSSkeleton.gif" width="120" alt="DSSkeleton"> | [DSSkeleton](docs/components/DSSkeleton.md) | Loading placeholders, plus `.dsSkeleton(_:)` to redact a real view in place. |
 | <img src="docs/media/DSSuccessCheck.gif" width="120" alt="DSSuccessCheck"> | [DSSuccessCheck](docs/components/DSSuccessCheck.md) | A success seal that draws itself and pops, with a haptic on the beat. |
+| — | [DSLikeButton](docs/components/DSLikeButton.md) | Like / favorite / bookmark toggle that pops and radiates a halo, with a rolling count. |
 | <img src="docs/media/DSThinkingIndicator.gif" width="120" alt="DSThinkingIndicator"> | [DSThinkingIndicator](docs/components/DSThinkingIndicator.md) | Ambient "thinking" state for AI and background work. |
 | <img src="docs/media/DSTypewriterText.gif" width="120" alt="DSTypewriterText"> | [DSTypewriterText](docs/components/DSTypewriterText.md) | Types phrases out character by character, with a blinking caret. |
+| — | [DSExpandableText](docs/components/DSExpandableText.md) | Long copy that collapses to a few lines and springs open, with a Show more / Show less toggle. |
 | <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
 
@@ -152,21 +154,21 @@ Velvet is written to be used by coding agents as well as people.
 
 ## Theming
 
-A theme is a gradient plus four derived colors: `accent` for fills, `onAccent` for text on the accent, and `ink` / `inkDark` for text and icons on glass in light and dark mode. Three themes ship built in:
+A style is a flat page tone plus four derived colors: `accent` for fills, `onAccent` for text on the accent, and `ink` / `inkDark` for text and icons on glass in light and dark mode. Three styles ship built in, each on its own neutral background:
 
-| Theme | Gradient | Use it as |
-|---|---|---|
-| `.sunset` (default) | peach → coral | `DSTheme(gradient: .sunset)` |
-| `.aurora` | violet → fuchsia | `DSTheme(gradient: .aurora)` |
-| `.lagoon` | mint → cyan | `DSTheme(gradient: .lagoon)` |
+| Style | Background | Accent | Use it as |
+|---|---|---|---|
+| `.sunset` (default) | Paper: warm off-white / warm black | coral | `DSTheme(style: .sunset)` |
+| `.aurora` | Snow: white / true black | violet | `DSTheme(style: .aurora)` |
+| `.lagoon` | Graphite: cool grey / deep graphite | teal | `DSTheme(style: .lagoon)` |
 
 - **Backdrop.** Glass needs something to blur. Wrap a screen in `DSScreen(backdrop: true) { … }` or add `.dsBackdrop()`. Without a backdrop, components still work and read as plain surfaces.
 - **Switch at runtime.** Every component re-renders, and animating the change crossfades them:
   ```swift
-  withAnimation(DSAnimation.normal) { theme.gradient = .lagoon }
+  withAnimation(DSAnimation.normal) { theme.style = .lagoon }
   ```
-- **Light and dark** are automatic. Dark mode is the same gradient under a dim, so the hue is preserved.
-- **Your own theme.** `DSGradientTheme(id:name:stops:accent:onAccent:ink:inkDark:)`. The built-in themes pass a WCAG AA contrast test, and yours should too.
+- **Light and dark** are automatic. Every background carries one curated tone per scheme; there is no dim layer and no gradient to recolor.
+- **Your own style.** `DSThemeStyle(id:name:background:accent:onAccent:ink:inkDark:)`, with a background from `DSBackground.all` or your own `DSBackground(id:name:light:dark:)`. The built-in styles pass a WCAG AA contrast test, and yours should too.
 - **Your own views.** Read the resolved theme instead of hard-coding colors:
   ```swift
   struct PriceTag: View {
@@ -189,7 +191,7 @@ Under the components sit the tokens: glass surfaces (`DSSurface`), the wash that
 - **Dynamic Type.** Text styled with `.ds(_:)`, `.dsTextStyle(_:)` or `.dsFont(_:)` scales with the user's text size, and looks identical at the default size. Buttons, text field input, the segmented control and badges keep a fixed label size for now. The stepper, code field and slide-to-confirm scale their text inside a fixed-height control.
 - **Reduce Motion** puts ambient effects in a resting state instead of cutting them mid-animation. Gesture feedback stays, and decorative particles are removed.
 - **Reduce Transparency** swaps glass for solid surfaces.
-- **Contrast.** Each built-in theme is tested for WCAG AA (4.5:1) on its accent, on white and on dark glass.
+- **Contrast.** Each built-in style is tested for WCAG AA (4.5:1) on its accent and on both of its page tones.
 - **Haptics** support visual feedback and never replace it. They are a no-op on macOS.
 
 ## Requirements

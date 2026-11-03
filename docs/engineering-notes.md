@@ -10,15 +10,15 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 
 **`Color? = nil` defaults.** A public init can't read the environment, so the only way a default can "follow the theme" is to be nil and resolve in `body`. Keep labels and positions identical when converting a parameter; that keeps every existing call site compiling.
 
-**Accent vs palette.** The gradient theme owns `accent`, `onAccent`, `ink`, `inkDark`. `DSColorPalette` owns neutrals and status colors. The palette's `primary` mirrors the Sunset accent only so raw-token code lines up with the default theme; components must not use `palette.primary` for the accent role.
+**Accent vs palette.** The theme style owns `background`, `accent`, `onAccent`, `ink`, `inkDark`. `DSColorPalette` owns neutrals and status colors. The palette's `primary` mirrors the Sunset accent only so raw-token code lines up with the default theme; components must not use `palette.primary` for the accent role.
 
-**Dark mode is the same gradient plus a black dim (`darkDim`)**, not a second gradient palette. One number to tune, hue preserved, half the maintenance.
+**Dark mode is a second curated page tone, not a dim.** `DSBackground` carries `light` and `dark`; `DSBackdrop` draws one or the other. No overlay, no dim math, no gradient to recolor, and the dark tone can be tuned independently (true black for Snow, warm black for Paper, graphite for Graphite).
 
-**`DSColorPalette` is frozen at 19 slots.** Its memberwise init is public; adding a slot breaks every custom palette. Put new color concepts in a new type (that's why `DSGradientTheme` exists).
+**`DSColorPalette` is frozen at 19 slots.** Its memberwise init is public; adding a slot breaks every custom palette. Put new color concepts in a new type (that's why `DSThemeStyle` exists).
 
 **No borders.** Separation = material density + `DSWash.edge` + shadow. The `.outline` / `.outlined` variants stay in the API and will render as wash (pending restyle). `dsCornerRadius(_:strokeColor:)` is deprecated.
 
-**A capsule as wide as it is tall is a circle — so the morph is a mask, not a resize.** `DSSlideToConfirm(finish: .morphAndVanish)` collapses its pill into a circle by masking with a `Capsule()` inset from both ends until only `trackHeight` remains. The pill already carries `DSRadius.chip`, so no shape interpolation, no `matchedGeometryEffect` and no second view tree are needed. Masking rather than resizing also keeps the measured `trackWidth` stable through the whole collapse and stops the content underneath reflowing — which matters because at that point the control is one solid gradient and any reflow would show as glyphs jumping. The collapse can travel to the *centre* for the same reason: at 100% the trail fills edge to edge and the knob is filled with the same accent, so the knob is indistinguishable from the fill and never appears to walk backwards.
+**A capsule as wide as it is tall is a circle — so the morph is a mask, not a resize.** `DSSlideToConfirm(finish: .morphAndVanish)` collapses its pill into a circle by masking with a `Capsule()` inset from both ends until only `trackHeight` remains. The pill already carries `DSRadius.chip`, so no shape interpolation, no `matchedGeometryEffect` and no second view tree are needed. Masking rather than resizing also keeps the measured `trackWidth` stable through the whole collapse and stops the content underneath reflowing — which matters because at that point the control is one solid accent and any reflow would show as glyphs jumping. The collapse can travel to the *centre* for the same reason: at 100% the trail fills edge to edge and the knob is filled with the same accent, so the knob is indistinguishable from the fill and never appears to walk backwards.
 
 **Toast is a view; presentation is a modifier — so the banner is restyled once.** `DSToast` only draws the banner. `.dsToast($toast)` (`DSToastPresenter.swift`) is the presentation layer: it overlays the banner, owns the slide/flick motion, fires the haptic and runs auto-dismiss, but reuses the `DSToast` view unchanged, so a restyle or the Reduce Transparency fallback lives in one place. It ships in the `DSToast` registry entry (same stage and docs page) because there is no use for it without the banner, and every example that showed a toast by hand now uses it.
 
@@ -40,13 +40,13 @@ Four decisions are not obvious from the code. **A replacement must be a cut.** S
 | `ScaledMetric` in a modifier init | `@ScaledMetric` set via `ScaledMetric(wrappedValue:relativeTo:)` in `init` (see `DSTextStyleModifier`), because the base size depends on the style, which is only known at init. Fixed-height controls still use `DSTextStyle.font` (fixed): larger text would clip in their fixed frames. They need layout changes (min-height + scaled padding) before they can scale. |
 | Haptics are a no-op on macOS | `DSHapticEngine` is guarded with `#if canImport(UIKit)`. Fine, just don't expect feedback in macOS previews. |
 | `@DSThemed` is `@MainActor` | It works in any `View` / `ViewModifier` body. It cannot live in an enum or a non-view struct; pass `theme.palette` into helpers instead (see `DSToastType.color(in:)`). |
-| Material over a saturated gradient | `.ultraThinMaterial` lets too much color through and secondary text loses contrast. Cards use `.thinMaterial` (`.glass`); reserve `.glassThin` for small floating elements. |
+| Material over a bright page tone | `.ultraThinMaterial` lets too much of the background through and secondary text loses contrast. Cards use `.thinMaterial` (`.glass`); reserve `.glassThin` for small floating elements. |
 | Shadows show through glass | A shadow under a translucent view is visible through it as a darker rim. With the v0.2 opacities it reads as a soft halo. If a specific layout looks muddy, add `.compositingGroup()` before `.dsShadow`. |
 | `subtleFill` depends on the backdrop flag | `theme.subtleFill` is the wash only inside `.dsBackdrop()` / `DSScreen(backdrop: true)` (they set `dsOnBackdrop`). Elsewhere it's `backgroundSecondary`, otherwise the wash would be invisible on white. |
-| Theme crossfade | `DSBackdrop` animates the gradient swap with `DSAnimation.normal` keyed on the theme id. Change the theme inside `withAnimation(DSAnimation.normal)` so components crossfade too. |
+| Theme crossfade | `DSBackdrop` crossfades the solid page tone with `DSAnimation.normal` keyed on the style id. Change the style inside `withAnimation(DSAnimation.normal)` so components crossfade too. |
 | Reduce Transparency / Reduce Motion | `dsSurface` falls back to `.solid`; `dsStaggerIn` and `dsShimmer` skip their animation. Keep honoring both in new components. |
-| `Color` equality | `Color` is `Equatable`, so `DSGradientTheme` is `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
-| Contrast is tested | `VelvetUITests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
+| `Color` equality | `Color` is `Equatable`, so `DSThemeStyle` and `DSBackground` are `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
+| Contrast is tested | `VelvetUITests.testThemeStylesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/background.light and inkDark/background.dark. A new style or background that fails this is not shippable. |
 | Reduce Motion is a resting state, not a skip | `DSMotion.loop` returns `nil` when Reduce Motion is on, so `withAnimation(nil)` applies changes instantly and every ambient effect settles at its resting state. Never wrap an effect in a bare `guard !reduceMotion else { return }` that leaves it mid-transition. |
 | Decaying motion → `keyframeAnimator`, not `phaseAnimator` | `phaseAnimator` runs a fresh animation per phase and each one *settles* before the next fires, so a multi-swing shake reads as separate twitches. `dsJiggle` uses one `keyframeAnimator` track (`DSMotion.jiggleSwings`) whose Cubic keyframes carry velocity across the whole timeline. The `DSAnimation` springs are frozen and none is damped low enough to ring, so the decay is a hand-shaped envelope rather than an underdamped spring. |
 | `swift-tools-version: 6.0` does not mean Swift 6 | The tools version is pinned to 6.0 for iOS 18 / macOS 15 symbol access, but language mode is explicitly `.v5` via `swiftSettings`. Raising it to Swift 6 language mode is a separate migration. |
@@ -59,7 +59,12 @@ Four decisions are not obvious from the code. **A replacement must be a cut.** S
 | Don't stop a pulse with `repeatForever` | A `repeatForever` animation keyed on a value can keep running after the value flips back. `dsSkeleton` samples its pulse from `TimelineView(.animation(paused:))` instead, so it stops when loading ends. Prefer time sampling for any loop that has to stop on a state change. |
 | Text slots in a row compress unevenly | In `DSNumberTicker` the digit columns are a custom `Layout` with a fixed ideal width, while static `Text` slots ("US$") can be compressed. In a narrow container SwiftUI squeezed only the text, which clipped the glyphs. The ticker is `fixedSize()`, so it gets room or overflows but never garbles. |
 | `Canvas` effects draw inside their host | `dsConfetti` paints in an overlay the size of the view it's attached to. Attach it to a container that covers the area the burst should fill (often the screen root), and pick `origin` in that container's unit space. |
+| Don't animate `lineLimit` to expand text | Toggling `lineLimit` inside `withAnimation` re-wraps the text on the first frame and centres it in a frame that is still resizing, so the lines jump. `DSExpandableText` lays the full paragraph out, clips it with `frame(height:alignment: .top)` + `.clipped()` and animates that height between two measured values. The ellipsis (which needs `lineLimit`) is swapped only while it is clipped away: before an expand, and in the `withAnimation` completion of a collapse. Measure with hidden probe copies in `.background` (`onGeometryChange`), one clamped and one unbounded, so the result does not depend on the expanded state. |
 | `DSTheme()` can't be a default argument | `DSTheme` is `@MainActor`, so `theme: DSTheme = DSTheme(…)` fails in an init's default. Take `DSTheme? = nil` and build the fallback in a `@MainActor init` (see the Onboarding example). |
+| A radiating burst is a filled halo, not a stroked ring | `DSLikeButton`'s burst reuses `DSSuccessCheck`'s halo mechanism — a `Circle().fill(tint.opacity(max × (1 - halo)))` scaled up as `halo` runs 0→1 — so it stays within the no-borders rule (a stroked ring would read as a border). It's gated behind `if halo > 0` inside the `keyframeAnimator` content so nothing renders behind the glyph at rest, since the resting `halo` of 0 would otherwise leave the circle at full opacity. It deliberately does not use `DSParticleField` (an emitter for a drag: a `TimelineView(.animation)` that ticks for as long as it is mounted and draws nothing under Reduce Transparency) or `dsConfetti` (paper with gravity over the whole host): neither draws one disc behind a 24 pt glyph, and a frame loop per like button would cost a feed. |
+| A beat that belongs to the tap | `DSLikeButton` pops and buzzes from the tap handler, not from `onChange(of: isLiked)`. A feed that restores `isLiked = true` from the network would otherwise pop and buzz every liked row as it loads. The pop/halo track is fired by a `pulse` counter that only increments when a tap likes (off → on) outside Reduce Motion; the symbol swap and color ride a plain spring on `isLiked`, the same transient-vs-holding split as `DSSuccessCheck`. |
+| Haptic on the peak of a `keyframeAnimator` pop | `keyframeAnimator` has no completion or keyframe callback, so the haptic is scheduled from `.task(id: pulse)`: sleep for the pop's rise time (`DSLikeButtonTimeline.peak`), then fire if the task wasn't cancelled and the button is still liked. The task is replaced when `pulse` changes (a second like) and cancelled when the view goes away, and the `isLiked` check covers an unlike inside the 0.13 s window; an unlike fires its own haptic on the tap. The keyframe content closure is `@Sendable`, so it only captures plain values (`liked`, the tint) and constants, never `self`; reading a main-actor property or calling a method there is a Swift 6 isolation error. |
+| Rapid taps restart one track | Re-triggering a `keyframeAnimator` while it runs restarts it from the initial value, so a double-tap shows one pop and one halo, never two. The content is gated on `isLiked`, so an unlike mid-beat drops the pop and halo immediately instead of finishing them behind an outline symbol. |
 
 ## Known issues / backlog
 
@@ -78,12 +83,13 @@ Tracked here until they become issues or PRs.
 `Examples/VelvetGallery/` is a runnable iOS app for demoing components one per
 screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
 
-- **Neutral by design.** The design system is gradient-first; the gallery is not.
-  It injects a gallery-local `DSGradientTheme.neutral` (graphite accent via
-  `Color.dsDynamic`) and never calls `.dsBackdrop()`, so components are shown on
-  a plain `DSColors.backgroundPrimary`. Semantic status colours are kept;
-  decorative defaults (e.g. `DSRating` amber tint, `DSGradientProgress` stops)
-  are shown neutral with one labelled colourful example each.
+- **Neutral by design.** The design system pairs a solid neutral page tone with
+  one accent; the gallery goes further and uses a graphite accent on a plain
+  `DSColors.backgroundPrimary`. It injects a gallery-local `DSThemeStyle.neutral`
+  (graphite accent via `Color.dsDynamic`) and its component screens never call
+  `.dsBackdrop()`. Semantic status colours are kept; decorative defaults (e.g.
+  `DSRating` amber tint, the `DSGradientProgress` fill) are shown neutral with
+  one labelled colourful example each.
 - **Not in `swift build`.** It lives outside `Sources/`; `Package.swift` is
   untouched. `project.yml` is the source of truth (XcodeGen), but the generated
   `VelvetGallery.xcodeproj` **is committed** so the app opens and runs with no
@@ -93,7 +99,7 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
 - **Consumes the package** as a local SPM dependency at `../..`.
 - **Examples are the exception to "neutral".** The Examples section (Onboarding,
   Settings, Checkout in `Flows/`) shows Velvet the way an app ships it, on a
-  gradient theme with a backdrop. The flow files import only `SwiftUI` and
+  theme style with a solid backdrop. The flow files import only `SwiftUI` and
   `VelvetUI` and use no Gallery helpers, because the CLI copies them into apps.
   Their stages are full screen (`Stage.isFullScreen`): no side padding, and the
   exit long-press lives on a strip along the top edge.

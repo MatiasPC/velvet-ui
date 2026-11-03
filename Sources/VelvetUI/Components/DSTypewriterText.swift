@@ -297,7 +297,7 @@ private struct DSTypewriterTextPreviewHost: View {
                 VStack(alignment: .leading, spacing: DSSpacing.xs) {
                     Text("Looping, multi-phrase").ds(.overline, color: DSColors.textSecondary)
                     DSTypewriterText(
-                        ["Design at the speed of thought.", "Glass over gradient.", "No borders. Ever."],
+                        ["Design at the speed of thought.", "Glass over paper.", "No borders. Ever."],
                         style: .title1
                     )
                 }

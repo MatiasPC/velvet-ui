@@ -7,6 +7,19 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ### Added
 - `.dsToast(_:edge:)` (`DSToastPresenter.swift`) presents `DSToast`: bind a `DSToastValue?` and the banner slides in from the top (default) or bottom, fires the type's haptic, auto-dismisses after `duration`, and can be flicked away. Assigning a new value replaces the toast on screen without overlap and restarts the timer; `nil` dismisses; `duration <= 0` is sticky. Reduce Motion fades instead of sliding, VoiceOver announces every presentation and gets a "Dismiss" action. New public types `DSToastValue(_:type:duration:)` and `DSToastEdge`; part of the `DSToast` registry entry.
 - Gallery: the Toast screen and the Settings example present toasts with `.dsToast`; the DSToast stage shows the presenter.
+- `DSLikeButton`: a favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track and radiates one filled halo in the tint (the same halo mechanism as `DSSuccessCheck`, so no border), with the haptic on the peak of the pop; unliking is quiet and rapid taps never stack. Optional `count` rolls with `.numericText`. 44 pt tap target, press feel, Reduce Motion (no pop or halo, crossfades), VoiceOver toggle with a Liked / Not liked value. Configurable `symbol`/`emptySymbol` for stars, bookmarks or any filled/outline SF Symbol pair. Gallery screen and recording stage included.
+
+### Changed
+- **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
+- **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
+- Decorative fills that used the background gradient now use the solid accent: `DSThinkingIndicator`'s symbol, `DSSlideToConfirm`'s trail, `DSParticleField`, the `dsHueDrift` demo tiles and confetti. `DSGradientProgress` defaults to a solid accent fill; pass two or more `colors` to opt into a blend.
+- Gallery theme pickers now show each style as a page tone (light/dark halves) with an accent dot, instead of a gradient swatch.
+
+### Deprecated
+- `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
+### Added
+- `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 
 ## [0.2.0] — 2026-10-23
 
