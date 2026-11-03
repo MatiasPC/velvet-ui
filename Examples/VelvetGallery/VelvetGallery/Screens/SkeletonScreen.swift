@@ -20,7 +20,7 @@ private struct ProfileCard: View {
                 Text("The Analytical Engine weaves algebraic patterns just as the loom weaves flowers and leaves.")
                     .ds(.body)
                 RoundedRectangle(cornerRadius: DSRadius.surface, style: .continuous)
-                    .fill(isLoading ? AnyShapeStyle(theme.subtleFill) : AnyShapeStyle(theme.gradient.linearGradient))
+                    .fill(isLoading ? AnyShapeStyle(theme.subtleFill) : AnyShapeStyle(theme.accent))
                     .frame(height: 140)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

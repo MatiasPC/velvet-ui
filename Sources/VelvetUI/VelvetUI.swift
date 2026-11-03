@@ -1,14 +1,14 @@
 // MARK: - Velvet UI — Design System
 // A SwiftUI design system for iOS 18+ / macOS 15+: frosted glass over a
-// selectable gradient theme, spring motion, haptics, no borders.
+// selectable solid theme, spring motion, haptics, no borders.
 // Import this single module to access all tokens, components, and utilities.
 //
 // Usage:
 //   import VelvetUI
 //
 // Quick start:
-//   ContentView().dsTheme(DSTheme(gradient: .sunset))   // at the root
-//   DSScreen(backdrop: true) { ... }                     // themed gradient background
+//   ContentView().dsTheme(DSTheme(style: .sunset))      // at the root
+//   DSScreen(backdrop: true) { ... }                     // solid page background
 //   Text("Hello").ds(.title1)
 //   DSButton("Continue", variant: .primary) { }
 //   DSCard { Text("Content") }

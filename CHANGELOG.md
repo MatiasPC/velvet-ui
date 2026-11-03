@@ -7,6 +7,15 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ### Fixed
 - `DSSlideToConfirm` knob renders as a true circle at rest again. The `Capsule()` mask that drives the `.morphAndVanish` collapse was sized to the track, so its straight edges sat exactly on the idle knob's top and bottom and its antialiased edge shaved ~1pt off each (the knob measured 168×166 instead of 168×168 at @3×, and its shadow was cropped). The mask is now held clear of the knob until the collapse begins, then both axes ride the same spring so the morph still lands on a capsule exactly `trackHeight` square.
 
+### Changed
+- **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
+- **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
+- Decorative fills that used the background gradient now use the solid accent: `DSThinkingIndicator`'s symbol, `DSSlideToConfirm`'s trail, `DSParticleField`, the `dsHueDrift` demo tiles and confetti. `DSGradientProgress` defaults to a solid accent fill; pass two or more `colors` to opt into a blend.
+- Gallery theme pickers now show each style as a page tone (light/dark halves) with an accent dot, instead of a gradient swatch.
+
+### Deprecated
+- `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

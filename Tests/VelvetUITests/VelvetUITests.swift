@@ -59,7 +59,7 @@ final class VelvetUITests: XCTestCase {
         let theme = DSTheme()
         let _ = theme.light
         let _ = theme.dark
-        XCTAssertEqual(theme.gradient, .sunset, "Sunset is the default theme")
+        XCTAssertEqual(theme.style, .sunset, "Sunset is the default style")
     }
 
     func testThemeResolvesPaletteForScheme() {
@@ -71,8 +71,10 @@ final class VelvetUITests: XCTestCase {
         XCTAssertTrue(dark.isDark)
         XCTAssertEqual(light.palette.backgroundPrimary, DSColors.defaultPalette.backgroundPrimary)
         XCTAssertEqual(dark.palette.backgroundPrimary, DSColors.defaultDarkPalette.backgroundPrimary)
-        XCTAssertEqual(light.ink, theme.gradient.ink)
-        XCTAssertEqual(dark.ink, theme.gradient.inkDark)
+        XCTAssertEqual(light.ink, theme.style.ink)
+        XCTAssertEqual(dark.ink, theme.style.inkDark)
+        XCTAssertEqual(light.backgroundColor, theme.style.background.light)
+        XCTAssertEqual(dark.backgroundColor, theme.style.background.dark)
     }
 
     func testSubtleFillFollowsBackdropFlag() {
@@ -84,33 +86,35 @@ final class VelvetUITests: XCTestCase {
         XCTAssertEqual(onBackdrop.subtleFill, DSWash.surface(for: .light))
     }
 
-    func testGradientThemeSwitchIsObserved() {
+    func testThemeStyleSwitchIsObserved() {
         let theme = DSTheme()
-        theme.gradient = .lagoon
-        XCTAssertEqual(theme.resolved(for: .light).accent, DSGradientTheme.lagoon.accent)
+        theme.style = .lagoon
+        XCTAssertEqual(theme.resolved(for: .light).accent, DSThemeStyle.lagoon.accent)
     }
 
-    func testBuiltInThemesAreDistinct() {
-        let ids = DSGradientTheme.all.map(\.id)
+    func testBuiltInStylesAreDistinct() {
+        let ids = DSThemeStyle.all.map(\.id)
         XCTAssertEqual(ids.count, 3)
         XCTAssertEqual(Set(ids).count, 3)
-        for theme in DSGradientTheme.all {
-            XCTAssertEqual(theme.stops.count, 2, "\(theme.name) should have two stops")
+
+        // Every style sits on a shipped solid background, and the light and
+        // dark tones of each background are different surfaces.
+        for style in DSThemeStyle.all {
+            XCTAssertTrue(DSBackground.all.contains(style.background), "\(style.name) uses an unknown background")
+            XCTAssertNotEqual(style.background.light, style.background.dark)
         }
+        XCTAssertEqual(Set(DSThemeStyle.all.map(\.background.id)).count, 3, "Styles should not share a background tone")
     }
 
     // MARK: - Contrast (WCAG AA)
-    // Every built-in theme must keep text readable on the surfaces it is used on.
-    // A new theme that fails here is not shippable.
+    // Every built-in style must keep text readable on the surfaces it is used on.
+    // A new style that fails here is not shippable.
 
-    func testGradientThemesMeetAAContrast() {
-        let darkGlass = Color(hex: "1A1A2E")
-        let white = Color(hex: "FFFFFF")
-
-        for theme in DSGradientTheme.all {
-            assertContrast(theme.onAccent, on: theme.accent, atLeast: 4.5, "\(theme.name) onAccent on accent")
-            assertContrast(theme.ink, on: white, atLeast: 4.5, "\(theme.name) ink on white glass")
-            assertContrast(theme.inkDark, on: darkGlass, atLeast: 4.5, "\(theme.name) inkDark on dark glass")
+    func testThemeStylesMeetAAContrast() {
+        for style in DSThemeStyle.all {
+            assertContrast(style.onAccent, on: style.accent, atLeast: 4.5, "\(style.name) onAccent on accent")
+            assertContrast(style.ink, on: style.background.light, atLeast: 4.5, "\(style.name) ink on light page")
+            assertContrast(style.inkDark, on: style.background.dark, atLeast: 4.5, "\(style.name) inkDark on dark page")
         }
     }
 
