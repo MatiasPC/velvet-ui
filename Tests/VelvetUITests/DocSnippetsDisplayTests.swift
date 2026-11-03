@@ -162,44 +162,76 @@ enum DocSnippetsDisplay {
 
     // BEGIN ToastDemo
     struct ToastDemo: View {
-        @State private var toast: (message: String, type: DSToastType)?
+        @State private var toast: DSToastValue?
 
         var body: some View {
             DSScreen(backdrop: true) {
                 VStack(spacing: DSSpacing.sm) {
                     DSButton("Save", isFullWidth: true) {
-                        show("Saved to your library", type: .success)
+                        toast = DSToastValue("Saved to your library", type: .success)
                     }
                     DSButton("Simulate failure", variant: .secondary, isFullWidth: true) {
-                        show("Couldn't connect", type: .error)
+                        toast = DSToastValue("Couldn't connect", type: .error)
                     }
                 }
                 .dsScreenPadding()
             }
+            .dsToast($toast)
+        }
+    }
+    // END ToastDemo
+
+    // BEGIN ToastStickyDemo
+    struct ToastStickyDemo: View {
+        @State private var toast: DSToastValue?
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(spacing: DSSpacing.sm) {
+                    DSButton("Start upload", isFullWidth: true) {
+                        // duration: 0 keeps it up until you clear the binding
+                        toast = DSToastValue("Uploading…", type: .info, duration: 0)
+                    }
+                    DSButton("Finish", variant: .secondary, isFullWidth: true) {
+                        toast = DSToastValue("Upload complete", type: .success, duration: 4)
+                    }
+                    DSButton("Cancel", variant: .ghost, isFullWidth: true) {
+                        toast = nil
+                    }
+                }
+                .dsScreenPadding()
+            }
+            .dsToast($toast, edge: .bottom)
+        }
+    }
+    // END ToastStickyDemo
+
+    // BEGIN ToastManualDemo
+    struct ToastManualDemo: View {
+        @State private var showsToast = false
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                DSButton("Save", isFullWidth: true) {
+                    withAnimation(DSAnimation.springSmooth) { showsToast = true }
+                    DSHapticEngine.shared.fire(.success)
+                }
+                .dsScreenPadding()
+            }
             .overlay(alignment: .bottom) {
-                if let toast {
-                    DSToast(toast.message, type: toast.type)
+                if showsToast {
+                    DSToast("Saved to your library", type: .success)
                         .padding(.bottom, DSSpacing.md)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
-                        .task(id: toast.message) {
+                        .task {
                             try? await Task.sleep(for: .seconds(2.5))
-                            withAnimation(DSAnimation.springSmooth) { self.toast = nil }
+                            withAnimation(DSAnimation.springSmooth) { showsToast = false }
                         }
                 }
             }
         }
-
-        private func show(_ message: String, type: DSToastType) {
-            withAnimation(DSAnimation.springSmooth) { toast = (message, type) }
-            switch type {
-            case .success: DSHapticEngine.shared.fire(.success)
-            case .error:   DSHapticEngine.shared.fire(.error)
-            case .warning: DSHapticEngine.shared.fire(.warning)
-            case .info:    DSHapticEngine.shared.fire(.light)
-            }
-        }
     }
-    // END ToastDemo
+    // END ToastManualDemo
 
     // BEGIN EmptyStateDemo
     struct EmptyStateDemo: View {
@@ -312,6 +344,51 @@ enum DocSnippetsDisplay {
     }
     // END TypewriterDemo
 
+    // BEGIN ExpandableTextDemo
+    struct ExpandableTextDemo: View {
+        var body: some View {
+            DSScreen(backdrop: true) {
+                DSCard {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("About").ds(.title3)
+                        DSExpandableText(
+                            "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a calm page tone, spring motion on everything you touch, and haptics that make the interface feel alive.",
+                            lineLimit: 3
+                        )
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+    // END ExpandableTextDemo
+
+    // BEGIN ExpandableTextVariantsDemo
+    struct ExpandableTextVariantsDemo: View {
+        @DSThemed private var theme
+        let longCopy: String
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                // Two lines, custom labels
+                DSExpandableText(
+                    longCopy,
+                    lineLimit: 2,
+                    expandLabel: "Read more",
+                    collapseLabel: "Read less"
+                )
+
+                // Secondary copy
+                DSExpandableText(longCopy, style: .callout, color: theme.palette.textSecondary)
+
+                // Fits on two lines, so no toggle appears
+                DSExpandableText("Short copy needs no toggle.")
+            }
+        }
+    }
+    // END ExpandableTextVariantsDemo
+
     // BEGIN MotionDemo
     struct MotionDemo: View {
         @State private var shakes = 0
@@ -368,6 +445,23 @@ enum DocSnippetsDisplay {
                         }
                         .dsScrollReveal()
                     }
+    // BEGIN TimelineDemo
+    struct TimelineDemo: View {
+        @State private var step = 2
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                DSCard {
+                    DSTimeline(
+                        [
+                            DSTimelineItem("Order placed", subtitle: "March 3, 9:41 AM", icon: "bag"),
+                            DSTimelineItem("Shipped", subtitle: "Picked up by courier", icon: "shippingbox"),
+                            DSTimelineItem("Out for delivery", subtitle: "Arriving today", icon: "box.truck"),
+                            DSTimelineItem("Delivered", icon: "house")
+                        ],
+                        currentStep: step
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .dsScreenPadding()
             }
@@ -393,6 +487,7 @@ enum DocSnippetsDisplay {
         }
     }
     // END ScrollRevealCarouselDemo
+    // END TimelineDemo
 }
 
 @MainActor
@@ -404,12 +499,17 @@ final class DocSnippetsDisplayTests: XCTestCase {
         _ = DocSnippetsDisplay.AvatarDemo()
         _ = DocSnippetsDisplay.ListDemo()
         _ = DocSnippetsDisplay.ToastDemo()
+        _ = DocSnippetsDisplay.ToastStickyDemo()
+        _ = DocSnippetsDisplay.ToastManualDemo()
         _ = DocSnippetsDisplay.EmptyStateDemo()
         _ = DocSnippetsDisplay.ProgressDemo()
         _ = DocSnippetsDisplay.ThinkingDemo()
         _ = DocSnippetsDisplay.TypewriterDemo()
+        _ = DocSnippetsDisplay.ExpandableTextDemo()
+        _ = DocSnippetsDisplay.ExpandableTextVariantsDemo(longCopy: "Long copy")
         _ = DocSnippetsDisplay.MotionDemo()
         _ = DocSnippetsDisplay.ScrollRevealDemo()
         _ = DocSnippetsDisplay.ScrollRevealCarouselDemo()
+        _ = DocSnippetsDisplay.TimelineDemo()
     }
 }

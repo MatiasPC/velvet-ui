@@ -35,6 +35,26 @@ enum DocSnippetsInputs {
         }
     }
 
+    struct ChipDemo: View {
+        @State private var topics: Set<String> = ["Design"]
+        @State private var sort: String? = "Trending"
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                    // Multiple selection — tap to add or remove.
+                    DSChipGroup(
+                        ["Design", "Engineering", "Product", "Research", "Marketing"],
+                        selection: $topics
+                    )
+                    // Single selection — tap the selected chip again to clear it.
+                    DSChipGroup(["Trending", "Newest", "Top rated", "Nearby"], selection: $sort)
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+
     struct CodeFieldDemo: View {
         @State private var code = ""
         @State private var state = DSCodeFieldState.normal
@@ -48,6 +68,41 @@ enum DocSnippetsInputs {
                     }
                 }
                 .dsScreenPadding()
+            }
+        }
+    }
+
+    struct HoldToConfirmDemo: View {
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(spacing: DSSpacing.lg) {
+                    Text("Delete account").ds(.title2)
+                    DSHoldToConfirm(
+                        "Hold to delete",
+                        icon: "trash",
+                        confirmedLabel: "Deleted",
+                        accent: DSColors.error
+                    ) {
+                        try await deleteAccount()
+                    }
+                }
+                .dsScreenPadding()
+            }
+        }
+
+        // Stand-in for your call. Throwing re-opens the control for a retry.
+        private func deleteAccount() async throws {
+            try await Task.sleep(for: .seconds(1))
+        }
+    }
+
+    struct HoldToConfirmVariantsDemo: View {
+        var body: some View {
+            VStack(spacing: DSSpacing.md) {
+                // A quick, compact hold.
+                DSHoldToConfirm("Hold to send", icon: "paperplane.fill", confirmedLabel: "Sent", duration: 0.6, isFullWidth: false) { }
+                // A slow, deliberate one.
+                DSHoldToConfirm("Hold to power off", icon: "power", confirmedLabel: "Off", duration: 2.5) { }
             }
         }
     }
@@ -165,6 +220,44 @@ enum DocSnippetsInputs {
         }
     }
 
+    struct SliderDemo: View {
+        @State private var volume = 0.6
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    HStack {
+                        Text("Volume").ds(.title3)
+                        Spacer()
+                        Text("\(Int(volume * 100))%").ds(.numeric)
+                    }
+                    DSSlider(value: $volume)
+                        .accessibilityLabel("Volume")
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+
+    struct SliderVariantsDemo: View {
+        @State private var price = 150.0
+        @State private var temperature = -2.0
+        @State private var opacity = 0.8
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                // Notched: a selection tick on every 25.
+                DSSlider(value: $price, in: 0...500, step: 25)
+                // A range that crosses zero, in half-degree notches.
+                DSSlider(value: $temperature, in: -10...10, step: 0.5)
+                // Your own accent, and no haptics.
+                DSSlider(value: $opacity, accent: DSColors.secondary, haptics: false)
+                // Dimmed and inert.
+                DSSlider(value: $opacity).disabled(true)
+            }
+        }
+    }
+
     struct StepperDemo: View {
         @State private var guests = 2
 
@@ -232,13 +325,18 @@ final class DocSnippetsInputsTests: XCTestCase {
     func testSnippetsInstantiate() {
         _ = DocSnippetsInputs.ButtonDemo()
         _ = DocSnippetsInputs.ButtonVariantsDemo()
+        _ = DocSnippetsInputs.ChipDemo()
         _ = DocSnippetsInputs.CodeFieldDemo()
+        _ = DocSnippetsInputs.HoldToConfirmDemo()
+        _ = DocSnippetsInputs.HoldToConfirmVariantsDemo()
         _ = DocSnippetsInputs.IconButtonDemo()
         _ = DocSnippetsInputs.PageControlDemo()
         _ = DocSnippetsInputs.RatingDemo()
         _ = DocSnippetsInputs.SegmentedControlDemo()
         _ = DocSnippetsInputs.SlideToConfirmDemo()
         _ = DocSnippetsInputs.SlideToConfirmVanishDemo()
+        _ = DocSnippetsInputs.SliderDemo()
+        _ = DocSnippetsInputs.SliderVariantsDemo()
         _ = DocSnippetsInputs.StepperDemo()
         _ = DocSnippetsInputs.TextFieldDemo()
         _ = DocSnippetsInputs.ToggleDemo()

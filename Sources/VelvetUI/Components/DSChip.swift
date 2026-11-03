@@ -1,0 +1,323 @@
+import SwiftUI
+
+// MARK: - Design System Chip
+// A compact, tappable pill for filters, tags, categories and interest pickers.
+// Unlike `DSBadge` (a static status label), a chip is interactive: tapping it
+// springs the fill from the subtle surface into the accent and ticks a selection
+// haptic. Group chips with `DSChipGroup`, which wraps them onto as many lines as
+// it needs with `DSFlowLayout` and manages single- or multi-selection.
+//
+// No borders: an unselected chip reads through the `theme.subtleFill` surface and
+// a selected one through the accent fill and a soft lift, so the two states
+// crossfade cleanly under `DSAnimation.springSnappy` (a quick fade under Reduce
+// Motion).
+
+private enum Metrics {
+    /// Opacity of a chip that is disabled (matches `DSToggle`).
+    static let disabledOpacity: Double = 0.5
+}
+
+public struct DSChip: View {
+    private let title: String
+    private let icon: String?
+    private let isSelected: Bool
+    private let accent: Color?
+    private let haptic: DSHapticStyle
+    private let action: () -> Void
+
+    @DSThemed private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isEnabled) private var isEnabled
+
+    /// - Parameters:
+    ///   - title: The chip's label. Also its VoiceOver label.
+    ///   - icon: Optional leading SF Symbol. Decorative — hidden from VoiceOver.
+    ///   - isSelected: Whether the chip is currently selected.
+    ///   - accent: Fill when selected. Defaults to the theme accent.
+    ///   - haptic: Fired on tap. Defaults to `.selection` (a selection tick).
+    ///   - action: Called on tap. In a `DSChipGroup` this toggles selection.
+    public init(
+        _ title: String,
+        icon: String? = nil,
+        isSelected: Bool = false,
+        accent: Color? = nil,
+        haptic: DSHapticStyle = .selection,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.icon = icon
+        self.isSelected = isSelected
+        self.accent = accent
+        self.haptic = haptic
+        self.action = action
+    }
+
+    public var body: some View {
+        Button {
+            DSHapticEngine.shared.fire(haptic)
+            action()
+        } label: {
+            HStack(spacing: DSSpacing.xs) {
+                if let icon {
+                    Image(systemName: icon)
+                        .accessibilityHidden(true)
+                }
+                Text(title)
+            }
+            .dsTextStyle(.buttonSmall, color: foreground)
+            .padding(.horizontal, DSSpacing.md)
+            .padding(.vertical, DSSpacing.xs)
+            .background {
+                Capsule(style: .continuous)
+                    .fill(isSelected ? (accent ?? theme.accent) : theme.subtleFill)
+            }
+            .dsShadow(isSelected ? .sm : .none)
+            .contentShape(Capsule(style: .continuous))
+            .opacity(isEnabled ? 1 : Metrics.disabledOpacity)
+            .animation(reduceMotion ? DSAnimation.fast : DSAnimation.springSnappy, value: isSelected)
+        }
+        .buttonStyle(DSChipButtonStyle())
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+    }
+
+    private var foreground: Color {
+        guard isSelected else { return theme.palette.textPrimary }
+        // Mirror DSBadge: the theme accent carries its own on-accent color; a
+        // custom accent falls back to the palette's text-on-primary (white).
+        return accent == nil ? theme.onAccent : theme.palette.textOnPrimary
+    }
+}
+
+// MARK: - Chip Item
+
+/// One option in a `DSChipGroup`, identified by its `value`.
+public struct DSChipItem<Value: Hashable>: Identifiable {
+    public var id: Value { value }
+    public let value: Value
+    public let title: String
+    public let icon: String?
+
+    public init(_ title: String, value: Value, icon: String? = nil) {
+        self.title = title
+        self.value = value
+        self.icon = icon
+    }
+}
+
+// MARK: - Chip Group
+
+/// A wrapping group of selectable `DSChip`s. Generic over any `Hashable` value,
+/// so it drives filters, tag editors and multi-select pickers in any app. The
+/// chips flow onto as many lines as the width needs; selection is single
+/// (`Binding<Value?>`) or multiple (`Binding<Set<Value>>`).
+public struct DSChipGroup<Value: Hashable>: View {
+
+    private enum SelectionMode {
+        case single(Binding<Value?>)
+        case multiple(Binding<Set<Value>>)
+    }
+
+    private let items: [DSChipItem<Value>]
+    private let mode: SelectionMode
+    private let spacing: CGFloat
+    private let accent: Color?
+
+    /// Multiple selection: tapping a chip inserts or removes its value.
+    /// - Parameters:
+    ///   - items: The chips to show, in order.
+    ///   - selection: The set of selected values.
+    ///   - spacing: Gap between chips and between lines. Defaults to `DSSpacing.xs`.
+    ///   - accent: Fill for selected chips. Defaults to the theme accent.
+    public init(
+        _ items: [DSChipItem<Value>],
+        selection: Binding<Set<Value>>,
+        spacing: CGFloat = DSSpacing.xs,
+        accent: Color? = nil
+    ) {
+        self.items = items
+        self.mode = .multiple(selection)
+        self.spacing = spacing
+        self.accent = accent
+    }
+
+    /// Single selection: tapping a chip selects it; tapping the selected chip
+    /// clears the selection (`nil`).
+    /// - Parameters:
+    ///   - items: The chips to show, in order.
+    ///   - selection: The selected value, or `nil` for none.
+    ///   - spacing: Gap between chips and between lines. Defaults to `DSSpacing.xs`.
+    ///   - accent: Fill for the selected chip. Defaults to the theme accent.
+    public init(
+        _ items: [DSChipItem<Value>],
+        selection: Binding<Value?>,
+        spacing: CGFloat = DSSpacing.xs,
+        accent: Color? = nil
+    ) {
+        self.items = items
+        self.mode = .single(selection)
+        self.spacing = spacing
+        self.accent = accent
+    }
+
+    public var body: some View {
+        DSFlowLayout(spacing: spacing, lineSpacing: spacing) {
+            ForEach(items) { item in
+                DSChip(
+                    item.title,
+                    icon: item.icon,
+                    isSelected: isSelected(item.value),
+                    accent: accent
+                ) {
+                    toggle(item.value)
+                }
+            }
+        }
+        .accessibilityElement(children: .contain)
+    }
+
+    // MARK: - Selection
+
+    private func isSelected(_ value: Value) -> Bool {
+        switch mode {
+        case .single(let binding):   return binding.wrappedValue == value
+        case .multiple(let binding): return binding.wrappedValue.contains(value)
+        }
+    }
+
+    private func toggle(_ value: Value) {
+        switch mode {
+        case .single(let binding):
+            binding.wrappedValue = Self.toggled(value, from: binding.wrappedValue)
+        case .multiple(let binding):
+            binding.wrappedValue = Self.toggled(value, in: binding.wrappedValue)
+        }
+    }
+
+    /// Single selection after tapping `value`: it becomes the selection, unless it
+    /// already was, in which case the selection clears.
+    static func toggled(_ value: Value, from current: Value?) -> Value? {
+        current == value ? nil : value
+    }
+
+    /// Multiple selection after tapping `value`: inserted, or removed if present.
+    static func toggled(_ value: Value, in selection: Set<Value>) -> Set<Value> {
+        var result = selection
+        if !result.insert(value).inserted { result.remove(value) }
+        return result
+    }
+}
+
+// MARK: - String Convenience
+
+public extension DSChipGroup where Value == String {
+    /// Multiple selection from plain string options (each option is its own value).
+    init(
+        _ options: [String],
+        selection: Binding<Set<String>>,
+        spacing: CGFloat = DSSpacing.xs,
+        accent: Color? = nil
+    ) {
+        self.init(
+            options.map { DSChipItem($0, value: $0) },
+            selection: selection,
+            spacing: spacing,
+            accent: accent
+        )
+    }
+
+    /// Single selection from plain string options (each option is its own value).
+    init(
+        _ options: [String],
+        selection: Binding<String?>,
+        spacing: CGFloat = DSSpacing.xs,
+        accent: Color? = nil
+    ) {
+        self.init(
+            options.map { DSChipItem($0, value: $0) },
+            selection: selection,
+            spacing: spacing,
+            accent: accent
+        )
+    }
+}
+
+// MARK: - Button Style
+
+/// Press feedback as a `ButtonStyle`, so a touch that turns into a scroll inside
+/// a `ScrollView` releases the chip instead of leaving it scaled down.
+private struct DSChipButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? DSPress.scale : 1)
+            .animation(DSPress.animation, value: configuration.isPressed)
+    }
+}
+
+// MARK: - Preview
+
+#if DEBUG
+private struct DSChipPreviewHost: View {
+    @State private var theme = DSTheme()
+    @State private var filters: Set<String> = ["Design"]
+    @State private var sort: String? = "Trending"
+    @State private var tags: Set<String> = []
+
+    private let topics = [
+        "Design", "Engineering", "Marketing", "Product", "Research",
+        "Operations", "Finance", "People", "Legal"
+    ]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DSSpacing.xl) {
+                DSPreviewThemeDots(theme: theme)
+
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    Text("Filter — multiple").ds(.overline, color: DSColors.textSecondary)
+                    DSChipGroup(topics, selection: $filters)
+                }
+
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    Text("Sort — single").ds(.overline, color: DSColors.textSecondary)
+                    DSChipGroup(["Trending", "Newest", "Top rated", "Nearby"], selection: $sort)
+                }
+
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    Text("With icons").ds(.overline, color: DSColors.textSecondary)
+                    DSChipGroup(
+                        [
+                            DSChipItem("Photos", value: "photos", icon: "photo"),
+                            DSChipItem("Videos", value: "videos", icon: "video"),
+                            DSChipItem("Audio", value: "audio", icon: "waveform"),
+                            DSChipItem("Docs", value: "docs", icon: "doc")
+                        ],
+                        selection: $tags,
+                        accent: DSColors.secondary
+                    )
+                }
+
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    Text("Standalone").ds(.overline, color: DSColors.textSecondary)
+                    HStack(spacing: DSSpacing.xs) {
+                        DSChip("Add tag", icon: "plus") {}
+                        DSChip("Selected", isSelected: true) {}
+                    }
+                }
+            }
+            .dsScreenPadding()
+            .padding(.vertical, DSSpacing.xl)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .dsBackdrop()
+        .dsTheme(theme)
+    }
+}
+
+#Preview("Chip — Light") {
+    DSChipPreviewHost().preferredColorScheme(.light)
+}
+
+#Preview("Chip — Dark") {
+    DSChipPreviewHost().preferredColorScheme(.dark)
+}
+#endif

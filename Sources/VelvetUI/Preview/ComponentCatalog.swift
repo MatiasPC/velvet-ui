@@ -23,6 +23,8 @@ struct ComponentCatalog: View {
     @State private var progress: Double = 0.65
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
+    @State private var chipFilters: Set<String> = ["Design"]
+    @State private var chipSort: String? = "Trending"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
     @State private var rating: Double = 4
@@ -32,6 +34,10 @@ struct ComponentCatalog: View {
     @State private var sweepOn = true
     @State private var quantity = 2
     @State private var bulk = 25
+    @State private var holdAttempt = 0
+    @State private var holdDeleteAttempt = 0
+    @State private var volume: Double = 0.6
+    @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
     @State private var tabbarSelection = "home"
@@ -44,6 +50,18 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var presentedToast: DSToastValue?
+    private let flowInterests = [
+        "Design", "SwiftUI", "Motion", "Accessibility", "Haptics",
+        "Typography", "Color", "Prototyping", "iOS", "Glass"
+    ]
+    @State private var flowSelected: Set<String> = ["SwiftUI", "Motion", "Haptics"]
+    @State private var timelineStep = 2
+    @State private var faqOpen = true
+    @State private var liked = false
+    @State private var starred = false
+    @State private var postLiked = false
+    @State private var postLikes = 128
 
     var body: some View {
         NavigationStack {
@@ -56,6 +74,7 @@ struct ComponentCatalog: View {
             }
             .navigationTitle("Velvet UI")
         }
+        .dsToast($presentedToast, edge: .bottom)
         .dsTheme(theme)
     }
 
@@ -173,6 +192,21 @@ struct ComponentCatalog: View {
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
                 }
 
+                // MARK: - Tilt Card
+                section("Tilt Card") {
+                    DSTiltCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Image(systemName: "creditcard.fill")
+                                .font(.title2)
+                                .foregroundStyle(theme.style.accent)
+                            Text("Drag to tilt").ds(.title3)
+                            Text("3D tilt with a sheen that slides across the glass, then springs back.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Text Fields
                 section("Text Fields") {
                     DSCard {
@@ -250,6 +284,23 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Chips
+                section("Chips") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                ["Design", "Engineering", "Product", "Research", "Marketing", "Finance"],
+                                selection: $chipFilters
+                            )
+                            DSChipGroup(
+                                ["Trending", "Newest", "Top rated", "Nearby"],
+                                selection: $chipSort
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Code Field
                 section("Code Field (OTP)") {
                     DSCard {
@@ -304,6 +355,32 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Flow Layout
+                section("Flow Layout") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            Text("Tap to toggle — wraps and reflows")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            DSFlowLayout {
+                                ForEach(flowInterests, id: \.self) { interest in
+                                    catalogChip(interest, isSelected: flowSelected.contains(interest)) {
+                                        DSHapticEngine.shared.fire(.selection)
+                                        withAnimation(DSAnimation.springSnappy) {
+                                            if flowSelected.contains(interest) {
+                                                flowSelected.remove(interest)
+                                            } else {
+                                                flowSelected.insert(interest)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Avatars
                 section("Avatars") {
                     DSCard {
@@ -335,12 +412,83 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Timeline
+                section("Timeline") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSTimeline(
+                                [
+                                    DSTimelineItem("Order placed", subtitle: "9:41 AM", icon: "bag"),
+                                    DSTimelineItem("Shipped", subtitle: "Picked up by courier", icon: "shippingbox"),
+                                    DSTimelineItem("Out for delivery", subtitle: "Arriving today", icon: "box.truck"),
+                                    DSTimelineItem("Delivered", icon: "house")
+                                ],
+                                currentStep: timelineStep
+                            )
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Back", variant: .ghost, size: .small) {
+                                    timelineStep = max(timelineStep - 1, 0)
+                                }
+                                DSButton("Advance", size: .small) {
+                                    timelineStep = min(timelineStep + 1, 4)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // MARK: - Disclosure Group
+                section("Disclosure Group") {
+                    VStack(spacing: DSSpacing.sm) {
+                        DSDisclosureGroup(
+                            "What's included",
+                            subtitle: "3 items",
+                            icon: "shippingbox",
+                            isExpanded: $faqOpen
+                        ) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("• Unlimited projects").ds(.callout)
+                                Text("• Priority support").ds(.callout)
+                                Text("• Early access to betas").ds(.callout)
+                            }
+                        }
+                        DSDisclosureGroup("Can I cancel anytime?") {
+                            Text("Yes — cancel from Settings and keep access until the end of the period.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                        }
+                    }
+                }
+
                 // MARK: - Toast
                 section("Toasts") {
                     VStack(spacing: DSSpacing.sm) {
                         DSToast("Action completed!", type: .success)
                         DSToast("Something went wrong", type: .error)
                         DSToast("Check your connection", type: .warning)
+                    }
+                }
+
+                // MARK: - Toast Presenter
+                section("Toast Presenter") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Text(".dsToast — replaces, auto-dismisses, flicks away")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Success", size: .small) {
+                                    presentedToast = DSToastValue("Saved to your library", type: .success)
+                                }
+                                DSButton("Error", variant: .secondary, size: .small) {
+                                    presentedToast = DSToastValue("Couldn't connect", type: .error)
+                                }
+                                DSButton("Sticky", variant: .ghost, size: .small) {
+                                    presentedToast = DSToastValue("Uploading…", type: .info, duration: 0)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
@@ -388,6 +536,44 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Marquee
+                section("Marquee") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSMarquee {
+                                Text("Now playing — Midnight City · M83 · Hurry Up, We're Dreaming")
+                                    .ds(.callout)
+                            }
+                            DSMarquee(velocity: 28) {
+                                HStack(spacing: DSSpacing.xs) {
+                                    DSBadge("LIVE", color: DSColors.error, variant: .filled)
+                                    Text("Breaking: a seamless marquee with glass edge fades")
+                                        .ds(.footnote)
+                                }
+                            }
+                            DSMarquee {
+                                Text("Short label — stays put").ds(.callout)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Expandable Text
+                section("Expandable Text") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSExpandableText(
+                                "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a calm page tone, spring motion on everything you touch, and haptics that make the interface feel alive. Every component honors Reduce Motion, Reduce Transparency and Dynamic Type out of the box.",
+                                lineLimit: 2,
+                                expandLabel: "Read more",
+                                collapseLabel: "Read less"
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Slide to Confirm
                 section("Slide to Confirm") {
                     VStack(spacing: DSSpacing.md) {
@@ -426,6 +612,26 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Hold to Confirm
+                section("Hold to Confirm") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSHoldToConfirm("Hold to confirm", icon: "hand.tap") { }
+                            .id(holdAttempt)
+                        DSHoldToConfirm(
+                            "Hold to delete",
+                            icon: "trash",
+                            confirmedLabel: "Deleted",
+                            accent: DSColors.error
+                        ) { }
+                        .id(holdDeleteAttempt)
+
+                        DSButton("Reset holds", variant: .ghost, size: .small) {
+                            holdAttempt += 1
+                            holdDeleteAttempt += 1
+                        }
+                    }
+                }
+
                 // MARK: - Thinking Indicator
                 section("Thinking Indicator") {
                     DSCard {
@@ -447,6 +653,36 @@ struct ComponentCatalog: View {
                         VStack(alignment: .leading, spacing: DSSpacing.md) {
                             DSStepper(value: $quantity)
                             DSStepper(value: $bulk, in: 0...100, step: 5)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Slider
+                section("Slider") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                HStack {
+                                    Text("Volume").ds(.footnote, color: DSColors.textSecondary)
+                                    Spacer()
+                                    Text("\(Int(volume * 100))%").ds(.numeric)
+                                }
+                                DSSlider(value: $volume)
+                            }
+
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                HStack {
+                                    Text("Max price — snaps in 25s")
+                                        .ds(.footnote, color: DSColors.textSecondary)
+                                    Spacer()
+                                    Text("$\(Int(priceLimit))").ds(.numeric)
+                                }
+                                DSSlider(value: $priceLimit, in: 0...500, step: 25)
+                            }
+
+                            DSSlider(value: .constant(0.5), accent: DSColors.secondary)
+                                .disabled(true)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -546,6 +782,24 @@ struct ComponentCatalog: View {
                         DSButton(isPaymentDone ? "Reset" : "Complete", variant: .secondary, size: .small) {
                             isPaymentDone.toggle()
                         }
+                    }
+                }
+
+                // MARK: - Like Button
+                section("Like Button") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            HStack(spacing: DSSpacing.xl) {
+                                DSLikeButton(isLiked: $liked, accessibilityLabel: "Like")
+                                DSLikeButton(isLiked: $starred, symbol: "star.fill", emptySymbol: "star",
+                                             tint: DSColors.warning, accessibilityLabel: "Favorite")
+                                DSLikeButton(isLiked: $postLiked, count: postLikes, accessibilityLabel: "Like post")
+                                    .onChange(of: postLiked) { _, on in postLikes += on ? 1 : -1 }
+                            }
+                            Text("Pops and radiates a halo on the way in; quiet on the way out.")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
@@ -669,6 +923,20 @@ struct ComponentCatalog: View {
                 .dsBreathe(intensity)
             Text(label).ds(.caption1, color: DSColors.textTertiary)
         }
+    }
+
+    private func catalogChip(_ label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .ds(.buttonSmall, color: isSelected ? theme.style.onAccent : DSColors.textPrimary)
+                .padding(.horizontal, DSSpacing.sm)
+                .padding(.vertical, DSSpacing.xs)
+                .background {
+                    Capsule().fill(isSelected ? theme.style.accent : DSColors.backgroundSecondary)
+                }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
     }
 
     private func surfaceRow(_ name: String, _ level: DSSurface) -> some View {
