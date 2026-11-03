@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06494224219DB9D25367D567 /* SliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EC5F26F46CC0F01AB48C05 /* SliderScreen.swift */; };
 		082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */; };
 		17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */; };
 		1A9107756FFA38B7F26FD72F /* ToastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6F0563E4BBB324996A851C /* ToastScreen.swift */; };
@@ -68,6 +69,7 @@
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33B172A6E35E9B09EE2507CF /* StageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageContainer.swift; sourceTree = "<group>"; };
+		35EC5F26F46CC0F01AB48C05 /* SliderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderScreen.swift; sourceTree = "<group>"; };
 		36781F6D81C2396DB54B944F /* GalleryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryScreen.swift; sourceTree = "<group>"; };
 		380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateScreen.swift; sourceTree = "<group>"; };
 		3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLoadingScreen.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */,
 				24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */,
 				70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */,
+				35EC5F26F46CC0F01AB48C05 /* SliderScreen.swift */,
 				9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */,
 				60C54157D449912B0364C807 /* StepperScreen.swift */,
 				98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */,
@@ -328,6 +331,7 @@
 				B1CCE98D199E6C37CD770D10 /* SheetScreen.swift in Sources */,
 				98F1401DE187A997E091F1C4 /* SkeletonScreen.swift in Sources */,
 				F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */,
+				06494224219DB9D25367D567 /* SliderScreen.swift in Sources */,
 				7C8799E4A4CBFD7A15829475 /* Stage.swift in Sources */,
 				9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */,
 				A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */,

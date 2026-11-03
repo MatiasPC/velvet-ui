@@ -12,6 +12,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSTimeline
     case DSSuccessCheck, DSConfetti
+    case DSSlider
     case DSTiltCard
     case DSDisclosureGroup
     case DSExpandableText
