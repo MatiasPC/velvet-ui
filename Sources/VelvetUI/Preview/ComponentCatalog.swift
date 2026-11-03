@@ -622,7 +622,7 @@ struct ComponentCatalog: View {
                 // MARK: - Scroll Reveal
                 section("Scroll Reveal") {
                     VStack(alignment: .leading, spacing: DSSpacing.sm) {
-                        Text("Scroll the row — cards swell at the centre, recede at the edges")
+                        Text("dsScrollReveal — neighbours recede at the edges")
                             .ds(.footnote, color: DSColors.textSecondary)
                         ScrollView(.horizontal) {
                             HStack(spacing: DSSpacing.md) {
@@ -630,15 +630,17 @@ struct ComponentCatalog: View {
                                     DSCard {
                                         VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                             Text("Card \(index + 1)").ds(.title3)
-                                            Text("Centre me").ds(.callout, color: DSColors.textSecondary)
+                                            Text("Swipe me").ds(.callout, color: DSColors.textSecondary)
                                         }
-                                        .frame(width: 160, alignment: .leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                     }
+                                    .containerRelativeFrame(.horizontal)
                                     .dsScrollReveal(.strong)
                                 }
                             }
                             .scrollTargetLayout()
                         }
+                        .contentMargins(.horizontal, DSSpacing.xxxl, for: .scrollContent)
                         .scrollTargetBehavior(.viewAligned)
                         .scrollIndicators(.hidden)
                     }

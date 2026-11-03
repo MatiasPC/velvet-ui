@@ -8,73 +8,95 @@ import SwiftUI
 //
 // `dsStaggerIn` / `dsPopIn` fire once when a view mounts and never look back.
 // `.dsScrollReveal()` is different in kind: it ties a view's prominence to where
-// it sits in the scroll viewport, so a card swells to full presence as it
-// reaches the centre and recedes as it leaves — and does it again, in reverse,
-// when the user scrolls back. That bidirectional, reversible coupling is what
-// `onAppear` entrances cannot express, and it is exactly what iOS 17's
+// it sits in the scroll view's visible area. A view is at full presence while it
+// is inside, recedes as it crosses the leading or trailing edge, and does it
+// again, in reverse, when the user scrolls back. That bidirectional, reversible
+// coupling is what `onAppear` entrances cannot express, and it is exactly what
 // `scrollTransition` was built for.
 //
 // Works on any axis: drop it on the rows of a vertical `ScrollView` for a gentle
-// settle, or on the cards of a horizontal, `.viewAligned` carousel for the
-// centre-emphasis feel. The axis is inferred from the enclosing scroll view.
+// settle at the top and bottom, or on the cards of a horizontal, `.viewAligned`
+// carousel with peeking neighbours for centre emphasis. The axis is inferred from
+// the enclosing scroll view.
 //
-// Technique inspired by the iOS 17 `scrollTransition` carousel pattern
-// (AppCoda, Hacking with Swift, Create with Swift). Rewritten on Velvet tokens;
-// no upstream code is reproduced.
+// Technique inspired by the `scrollTransition` carousel pattern (AppCoda, Hacking
+// with Swift, Create with Swift). Rewritten on Velvet tokens; no upstream code is
+// reproduced.
 
 // MARK: - Intensity
 
-/// How far an off-centre view recedes. Each case is the resting state at the
-/// edge of the viewport; `.interactive` interpolates from here back to full
-/// presence (scale 1, opacity 1) as the view travels toward the centre.
+/// How far a view recedes once it is fully past the edge of the scroll view. The
+/// values are tokens on `DSMotion` (`scrollReveal…Scale` / `…Opacity`);
+/// `.interactive` interpolates from here back to full presence (scale 1,
+/// opacity 1) as the view travels into the visible area.
 public enum DSScrollRevealIntensity: Sendable {
-    /// Scale 0.96 · opacity 0.65 — a whisper of depth for text rows and list cells.
+    /// A whisper of depth for text rows and list cells.
     case subtle
-    /// Scale 0.90 · opacity 0.40 — the default: cards in a feed settling into place.
+    /// The default: cards in a feed settling into place.
     case medium
-    /// Scale 0.80 · opacity 0.15 — carousel cards; the off-centre ones clearly stand back.
+    /// Carousel cards; the ones at the edge clearly stand back.
     case strong
 
-    /// Scale applied at the furthest-from-centre phase.
+    /// Scale applied at the furthest-from-visible phase.
     var minScale: CGFloat {
         switch self {
-        case .subtle: return 0.96
-        case .medium: return 0.90
-        case .strong: return 0.80
+        case .subtle: return DSMotion.scrollRevealSubtleScale
+        case .medium: return DSMotion.scrollRevealMediumScale
+        case .strong: return DSMotion.scrollRevealStrongScale
         }
     }
 
-    /// Opacity applied at the furthest-from-centre phase.
+    /// Opacity applied at the furthest-from-visible phase.
     var minOpacity: Double {
         switch self {
-        case .subtle: return 0.65
-        case .medium: return 0.40
-        case .strong: return 0.15
+        case .subtle: return DSMotion.scrollRevealSubtleOpacity
+        case .medium: return DSMotion.scrollRevealMediumOpacity
+        case .strong: return DSMotion.scrollRevealStrongOpacity
         }
+    }
+}
+
+// MARK: - Maths
+
+/// The pure maths behind `dsScrollReveal`, kept out of the modifier so it can be tested directly.
+enum DSScrollRevealMath {
+    /// Scale and opacity for a scroll-transition phase value: 0 while the view is in
+    /// the visible area, ±1 once it is fully past an edge (anything beyond is
+    /// clamped). Reduce Motion pins the result at full presence: scale 1, opacity 1.
+    static func effect(
+        for intensity: DSScrollRevealIntensity,
+        phaseValue: Double,
+        reduceMotion: Bool
+    ) -> (scale: CGFloat, opacity: Double) {
+        let t = reduceMotion ? 0 : min(max(abs(phaseValue), 0), 1)
+        return (
+            scale: 1 - (1 - intensity.minScale) * CGFloat(t),
+            opacity: 1 - (1 - intensity.minOpacity) * t
+        )
     }
 }
 
 // MARK: - Modifier
 
-/// Emphasises a view as it reaches the centre of its scroll viewport and lets it
-/// recede toward the edges. Scale and opacity are the only channels — both are
+/// Emphasises a view while it is inside its scroll view and lets it recede as it
+/// crosses an edge. Scale and opacity are the only channels — both are
 /// render-only transforms, so nothing reflows and neighbours never shift.
-public struct DSScrollRevealModifier: ViewModifier {
+private struct DSScrollRevealModifier: ViewModifier {
     let intensity: DSScrollRevealIntensity
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content.scrollTransition(.interactive) { view, phase in
             // Reduce Motion settles at the resting state — full presence — rather
-            // than dimming and shrinking everything off-centre, which would lower
+            // than dimming and shrinking everything near the edges, which would lower
             // contrast for exactly the people the setting is meant to help.
             // (Mirrors `DSMotion.loop(_:unless:)` returning `nil`: the effect is
             // not skipped, it rests.)
-            let recede = !reduceMotion && !phase.isIdentity
+            let reveal = DSScrollRevealMath.effect(for: intensity, phaseValue: phase.value, reduceMotion: reduceMotion)
             return view
-                .opacity(recede ? intensity.minOpacity : 1)
-                .scaleEffect(recede ? intensity.minScale : 1)
+                .opacity(reveal.opacity)
+                .scaleEffect(reveal.scale)
         }
     }
 }
@@ -83,10 +105,10 @@ public struct DSScrollRevealModifier: ViewModifier {
 
 public extension View {
     /// Couple this view's prominence to its position in the enclosing
-    /// `ScrollView`: it swells to full presence at the centre and recedes toward
-    /// the edges, reversing as the user scrolls back. Put it on each repeated
-    /// item (feed rows, carousel cards). Settles at full presence under Reduce
-    /// Motion. Ambient, like the rest of `DSMotion` — no haptics.
+    /// `ScrollView`: full presence while it is inside the visible area, receding as
+    /// it crosses an edge, and reversing as the user scrolls back. Put it on each
+    /// repeated item (feed rows, carousel cards). Settles at full presence under
+    /// Reduce Motion. Ambient, like the rest of `DSMotion` — no haptics.
     func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View {
         modifier(DSScrollRevealModifier(intensity: intensity))
     }
@@ -110,8 +132,6 @@ private struct DSScrollRevealPreviewHost: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DSSpacing.lg) {
-                DSPreviewThemeDots(theme: theme)
-
                 Text("Horizontal — carousel").ds(.overline, color: DSColors.textSecondary)
                 ScrollView(.horizontal) {
                     HStack(spacing: DSSpacing.md) {
@@ -119,16 +139,17 @@ private struct DSScrollRevealPreviewHost: View {
                             DSCard {
                                 VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     Text("Card \(index + 1)").ds(.title3)
-                                    Text("Centre me").ds(.callout, color: DSColors.textSecondary)
+                                    Text("Peeking neighbours recede").ds(.callout, color: DSColors.textSecondary)
                                 }
-                                .frame(width: 180, alignment: .leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
+                            .containerRelativeFrame(.horizontal)
                             .dsScrollReveal(.strong)
                         }
                     }
                     .scrollTargetLayout()
-                    .padding(.horizontal, DSSpacing.screenHorizontal)
                 }
+                .contentMargins(.horizontal, DSSpacing.xxxl, for: .scrollContent)
                 .scrollTargetBehavior(.viewAligned)
                 .scrollIndicators(.hidden)
 

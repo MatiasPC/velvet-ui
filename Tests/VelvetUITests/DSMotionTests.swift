@@ -111,4 +111,48 @@ final class DSMotionTests: XCTestCase {
         XCTAssertLessThan(opacities[0], 1, "an off-centre item dims below full presence")
         XCTAssertGreaterThan(opacities[2], 0, "even the strongest reveal never fully hides a card")
     }
+
+    /// The intensities read their numbers from the `DSMotion` tokens, not literals.
+    func testScrollRevealIntensitiesComeFromTokens() {
+        XCTAssertEqual(DSScrollRevealIntensity.subtle.minScale, DSMotion.scrollRevealSubtleScale)
+        XCTAssertEqual(DSScrollRevealIntensity.medium.minScale, DSMotion.scrollRevealMediumScale)
+        XCTAssertEqual(DSScrollRevealIntensity.strong.minScale, DSMotion.scrollRevealStrongScale)
+        XCTAssertEqual(DSScrollRevealIntensity.subtle.minOpacity, DSMotion.scrollRevealSubtleOpacity)
+        XCTAssertEqual(DSScrollRevealIntensity.medium.minOpacity, DSMotion.scrollRevealMediumOpacity)
+        XCTAssertEqual(DSScrollRevealIntensity.strong.minOpacity, DSMotion.scrollRevealStrongOpacity)
+    }
+
+    func testScrollRevealIsFullPresenceInsideTheVisibleArea() {
+        for intensity in [DSScrollRevealIntensity.subtle, .medium, .strong] {
+            let e = DSScrollRevealMath.effect(for: intensity, phaseValue: 0, reduceMotion: false)
+            XCTAssertEqual(e.scale, 1)
+            XCTAssertEqual(e.opacity, 1)
+        }
+    }
+
+    func testScrollRevealReachesTheIntensityAtTheEdgeOnBothSides() {
+        for sign in [-1.0, 1.0] {
+            let e = DSScrollRevealMath.effect(for: .medium, phaseValue: sign, reduceMotion: false)
+            XCTAssertEqual(e.scale, DSScrollRevealIntensity.medium.minScale, accuracy: 1e-9)
+            XCTAssertEqual(e.opacity, DSScrollRevealIntensity.medium.minOpacity, accuracy: 1e-9)
+        }
+    }
+
+    func testScrollRevealInterpolatesAndClamps() {
+        let half = DSScrollRevealMath.effect(for: .strong, phaseValue: 0.5, reduceMotion: false)
+        XCTAssertEqual(half.scale, (1 + DSScrollRevealIntensity.strong.minScale) / 2, accuracy: 1e-9)
+        let beyond = DSScrollRevealMath.effect(for: .strong, phaseValue: 3, reduceMotion: false)
+        XCTAssertEqual(beyond.scale, DSScrollRevealIntensity.strong.minScale, accuracy: 1e-9)
+    }
+
+    /// Reduce Motion rests at full presence for every phase: no movement, no dimming.
+    func testScrollRevealRestsUnderReduceMotion() {
+        for intensity in [DSScrollRevealIntensity.subtle, .medium, .strong] {
+            for phase in [-1.0, -0.4, 0, 0.7, 1] {
+                let e = DSScrollRevealMath.effect(for: intensity, phaseValue: phase, reduceMotion: true)
+                XCTAssertEqual(e.scale, 1)
+                XCTAssertEqual(e.opacity, 1)
+            }
+        }
+    }
 }
