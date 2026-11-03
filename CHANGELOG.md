@@ -5,7 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
-- `DSFlowLayout` — a pure SwiftUI `Layout` that wraps its subviews to new rows when they overflow the available width, for tag clouds, filter chips and keyword lists. Greedy first-fit packing; `spacing`, `lineSpacing` and `alignment` (`.leading`/`.center`/`.trailing`); an over-wide item lands on its own row rather than clipping. No color or haptics of its own (a layout positions, it never paints) — reflow animates on-system when the caller wraps content changes in `withAnimation`. Docs: [docs/components/DSFlowLayout.md](docs/components/DSFlowLayout.md).
+- `DSFlowLayout` — a pure SwiftUI `Layout` that wraps its subviews to new rows when they overflow the available width, for tag clouds, filter chips and keyword lists. Greedy first-fit packing; `spacing`, `lineSpacing` and `alignment` (`.leading`/`.center`/`.trailing`, mirrored in right-to-left). An over-wide item gets its own row and is measured again at the container width so text wraps instead of overflowing; shorter items centre in their row; an unbounded width proposal falls back to the widest row. No color or haptics of its own (a layout positions, it never paints) — reflow animates on-system when the caller wraps content changes in `withAnimation`. Gallery screen and recording stage included. Docs: [docs/components/DSFlowLayout.md](docs/components/DSFlowLayout.md).
 
 ## [0.2.0] — 2026-10-23
 

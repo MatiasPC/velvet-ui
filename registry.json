@@ -278,7 +278,8 @@
         "Sources/VelvetUI/Layout/DSFlowLayout.swift"
       ],
       "dependencies": [],
-      "docs": "docs/components/DSFlowLayout.md"
+      "docs": "docs/components/DSFlowLayout.md",
+      "stage": "DSFlowLayout"
     },
     {
       "name": "DSBadge",

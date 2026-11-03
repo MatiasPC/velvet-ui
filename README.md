@@ -89,7 +89,7 @@ struct ContentView: View {
 
 ## Components
 
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 28 components, every one with a Gallery stage.
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes, and every one has a Gallery stage.
 
 | Preview | Component | What it does |
 |:---:|---|---|
@@ -108,6 +108,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSListCell.gif" width="120" alt="DSListCell"> | [DSListCell](docs/components/DSListCell.md) | List rows, section headers and dividers. |
 | <img src="docs/media/DSCarousel.gif" width="120" alt="DSCarousel"> | [DSCarousel](docs/components/DSCarousel.md) | Snapping carousel with peeking neighbors and depth; pairs with `DSPageControl`. |
 | <img src="docs/media/DSSheet.gif" width="120" alt="dsSheet"> | [dsSheet](docs/components/DSSheet.md) | Native sheet with Velvet chrome: detents, a grabber, a glass background, the theme carried in. |
+| — | [DSFlowLayout](docs/components/DSFlowLayout.md) | Wrapping layout that flows chips and tags onto new rows, and reflows with a spring. |
 | <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
 | <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
@@ -122,7 +123,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
 
-Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`, [`DSFlowLayout`](docs/components/DSFlowLayout.md) (wrapping layout for tags and filter chips). The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
+Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`. The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
 
 ## Examples
 
