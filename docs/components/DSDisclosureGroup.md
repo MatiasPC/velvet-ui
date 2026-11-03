@@ -2,7 +2,7 @@
 
 A glass "show more" section. Tap the header and the body springs open while the chevron rotates and a light haptic fires — the Velvet reading of an accordion / FAQ row, for settings detail, filters, long descriptions, anything that should stay out of the way until asked for.
 
-![DSDisclosureGroup](../media/DSDisclosureGroup.gif)
+<!-- GIF pending: ![DSDisclosureGroup](../media/DSDisclosureGroup.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSDisclosureGroup.swift`](../../Sources/VelvetUI/Components/DSDisclosureGroup.swift)
 
@@ -61,31 +61,43 @@ There are two initializers: one that tracks its own state (`initiallyExpanded:`)
 ## Variants
 
 ```swift
-// Self-contained, starts open
-DSDisclosureGroup("Details", initiallyExpanded: true) { … }
+// Self-contained, starts open, softer haptic
+DSDisclosureGroup("Details", initiallyExpanded: true, haptic: .soft) {
+    Text("Open on first appearance, with a softer tap.").ds(.callout)
+}
 
-// Controlled — one open at a time
+// Controlled: one open at a time
 @State private var open: Int? = 0
-DSDisclosureGroup("Section A", isExpanded: Binding(
-    get: { open == 0 },
-    set: { open = $0 ? 0 : nil }
-)) { … }
+
+ForEach(0..<3, id: \.self) { index in
+    DSDisclosureGroup("Section \(index + 1)", isExpanded: Binding(
+        get: { open == index },
+        set: { open = $0 ? index : nil }
+    )) {
+        Text("Only one section is open at a time.").ds(.callout)
+    }
+}
 ```
 
 ## Behavior
 
-- Toggling springs the body open/closed with `DSAnimation.springSmooth`; the chevron rotates 180°.
+- Toggling springs the body open and closed with `DSAnimation.springSmooth`. The card grows with the body instead of the body popping in, the body fades with it, and the chevron rotates 180° on the same spring.
+- The body is always laid out at its full height and clipped to the revealed part, so text never re-wraps or jumps while it opens.
+- The motion is driven by the open state itself, so it also plays when you flip a bound `isExpanded` from outside (a toggle, a "collapse all" button) and when taps arrive in quick succession: the spring retargets instead of restarting.
 - A `.light` haptic fires on every toggle (configurable via `haptic:`).
 - A hairline `theme.palette.divider` separates the header from the body when open.
-- Reduce Motion: the open/close is applied instantly (no spring, no chevron sweep); the haptic still fires.
+- The header dips with `DSPress.scale` while pressed.
+- The body stays in the view tree while collapsed, so it keeps its `@State`. It is hidden from touch and VoiceOver, but it is still built: keep it light, or gate expensive content on your own state.
+- Reduce Motion: the spring is replaced by a short ease (`DSAnimation.fast`), so the body reaches the same state without bounce. The haptic still fires.
 - Reduce Transparency: the glass surface becomes a solid elevated background.
 
 ## Accessibility
 
-- The header is one combined button element; VoiceOver reads the title (and subtitle), the trait "Button", and the value "Expanded" / "Collapsed".
-- A hint ("Double tap to expand/collapse") describes the action.
-- The leading icon is decorative and hidden from VoiceOver.
-- Dynamic Type: the title uses `.ds(.title3)` and the subtitle `.ds(.footnote)`, both scaling; body text scales with whatever `.ds(_:)` style you pass.
+- The header is one combined button element: VoiceOver reads the title (and subtitle), the trait "Button", and the value "Expanded" or "Collapsed". It updates when the state changes.
+- The hint says what activating the header does: "Shows the details" or "Hides the details".
+- The leading icon and the chevron are decorative and hidden from VoiceOver.
+- While collapsed, the body is hidden from VoiceOver and cannot be tapped.
+- Dynamic Type: the title uses `.ds(.title3)` and the subtitle `.ds(.footnote)`, the icon and chevron scale with them; body text scales with whatever `.ds(_:)` style you pass.
 
 ## See also
 

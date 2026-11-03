@@ -5,7 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
-- `DSDisclosureGroup`: a glass accordion / FAQ row — a themed replacement for the stock `DisclosureGroup`. Springs open on `springSmooth` with a rotating chevron, a hairline divider and a `.light` haptic; honors Reduce Motion and Reduce Transparency. Self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`) initializers.
+- `DSDisclosureGroup`: a glass accordion / FAQ row, a themed replacement for the stock `DisclosureGroup`. The card grows with the body on `springSmooth` (a clipped reveal layout, so text never re-wraps mid-animation) while the chevron rotates on the same spring, with a hairline divider and a `.light` haptic; Reduce Motion swaps the spring for a short ease, Reduce Transparency gives a solid surface, and VoiceOver reads Expanded / Collapsed. Self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`) initializers. Gallery screen and recording stage included.
 
 ## [0.2.0] — 2026-10-23
 

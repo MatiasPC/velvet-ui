@@ -15,6 +15,45 @@ import SwiftUI
 // sarunw.com/posts/swiftui-animation) and the `withAnimation { isExpanded.toggle() }`
 // idiom from the Apple Developer Forums (thread 655302). No upstream code reproduced.
 
+// MARK: - Reveal layout
+
+/// Hosts one child and reports `progress` (0...1) of its natural height, so the
+/// card grows and shrinks smoothly around the body. The child is always laid out
+/// at its full height (anchored to the top and clipped by the host), so text never
+/// re-wraps and nothing jumps while the spring runs. `progress` is the layout's
+/// `animatableData`: the spring interpolates it and every frame is a real layout.
+struct DSDisclosureReveal: Layout {
+    var progress: Double
+
+    nonisolated var animatableData: Double {
+        get { progress }
+        set { progress = newValue }
+    }
+
+    /// The height reported for a body of `natural` height. A spring overshoots 0 and
+    /// 1; a negative height is nonsense, so the low end is clamped. The high end is
+    /// left alone on purpose: the small overshoot past full height is the bounce.
+    static func height(natural: CGFloat, progress: Double) -> CGFloat {
+        max(0, natural * CGFloat(progress))
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard let body = subviews.first else { return .zero }
+        let natural = body.sizeThatFits(ProposedViewSize(width: proposal.width, height: nil))
+        return CGSize(width: natural.width, height: Self.height(natural: natural.height, progress: progress))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        subviews.first?.place(
+            at: CGPoint(x: bounds.minX, y: bounds.minY),
+            anchor: .topLeading,
+            proposal: ProposedViewSize(width: bounds.width, height: nil)
+        )
+    }
+}
+
+// MARK: - DSDisclosureGroup
+
 public struct DSDisclosureGroup<Content: View>: View {
     private let title: String
     private let subtitle: String?
@@ -37,7 +76,8 @@ public struct DSDisclosureGroup<Content: View>: View {
     ///   - icon: Optional SF Symbol shown before the title, tinted with the accent.
     ///   - initiallyExpanded: Whether the body is open on first appearance.
     ///   - haptic: Feedback fired on each toggle. Defaults to `.light`.
-    ///   - content: The body revealed when expanded.
+    ///   - content: The body revealed when expanded. It stays in the view tree
+    ///     while collapsed (hidden from touch and VoiceOver), so it keeps its state.
     public init(
         _ title: String,
         subtitle: String? = nil,
@@ -82,11 +122,17 @@ public struct DSDisclosureGroup<Content: View>: View {
 
     private var isExpanded: Bool { expanded.wrappedValue }
 
+    /// The motion for every part of the reveal (body height, fade, chevron). Driven
+    /// by the state itself rather than by `withAnimation`, so it also plays when the
+    /// owner flips a bound `isExpanded` from outside. Reduce Motion swaps the spring
+    /// for a short ease: the same end state, without the bounce.
+    private var animation: Animation {
+        reduceMotion ? DSAnimation.fast : DSAnimation.springSmooth
+    }
+
     private func toggle() {
         DSHapticEngine.shared.fire(haptic)
-        withAnimation(reduceMotion ? nil : DSAnimation.springSmooth) {
-            expanded.wrappedValue.toggle()
-        }
+        expanded.wrappedValue.toggle()
     }
 
     // MARK: - Body
@@ -95,17 +141,24 @@ public struct DSDisclosureGroup<Content: View>: View {
         VStack(alignment: .leading, spacing: 0) {
             header
 
-            if isExpanded {
-                Rectangle()
-                    .fill(theme.palette.divider)
-                    .frame(height: 1)
-                    .padding(.vertical, DSSpacing.sm)
+            DSDisclosureReveal(progress: isExpanded ? 1 : 0) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Rectangle()
+                        .fill(theme.palette.divider)
+                        .frame(height: 1)
+                        .padding(.vertical, DSSpacing.sm)
+                        .accessibilityHidden(true)
 
-                content()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .transition(.opacity)
+                    content()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .opacity(isExpanded ? 1 : 0)
+                .allowsHitTesting(isExpanded)
+                .accessibilityHidden(!isExpanded)
             }
+            .clipped()
         }
+        .animation(animation, value: isExpanded)
         .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .dsSurface(.glass, radius: DSRadius.card)
@@ -118,9 +171,9 @@ public struct DSDisclosureGroup<Content: View>: View {
             HStack(spacing: DSSpacing.sm) {
                 if let icon {
                     Image(systemName: icon)
-                        .font(.system(size: 17, weight: .semibold))
+                        .dsFont(.title3)
                         .foregroundStyle(theme.accent)
-                        .frame(width: DSSpacing.lg)
+                        .frame(minWidth: DSSpacing.lg)
                         .accessibilityHidden(true)
                 }
 
@@ -134,17 +187,40 @@ public struct DSDisclosureGroup<Content: View>: View {
                 Spacer(minLength: DSSpacing.sm)
 
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 15, weight: .semibold))
+                    .dsFont(.button)
                     .foregroundStyle(theme.palette.textTertiary)
                     .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                    .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(DSDisclosureHeaderStyle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
-        .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
-        .accessibilityHint(isExpanded ? "Double tap to collapse" : "Double tap to expand")
+        .accessibilityValue(Self.accessibilityValue(isExpanded: isExpanded))
+        .accessibilityHint(Self.accessibilityHint(isExpanded: isExpanded))
+    }
+
+    // MARK: - Accessibility
+
+    /// VoiceOver value of the header: "Expanded" or "Collapsed".
+    static func accessibilityValue(isExpanded: Bool) -> String {
+        isExpanded ? "Expanded" : "Collapsed"
+    }
+
+    /// VoiceOver hint of the header: what activating it does.
+    static func accessibilityHint(isExpanded: Bool) -> String {
+        isExpanded ? "Hides the details" : "Shows the details"
+    }
+}
+
+// MARK: - Header button style
+
+private struct DSDisclosureHeaderStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? DSPress.scale : 1.0)
+            .animation(DSPress.animation, value: configuration.isPressed)
     }
 }
 
