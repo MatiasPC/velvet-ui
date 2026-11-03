@@ -19,7 +19,6 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSToggle](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToggle.md): Switch with a spring knob and a rigid haptic.
 - [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
 - [DSRating](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRating.md): Drag-to-rate stars, with half steps and a read-only mode.
-- [DSLikeButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSLikeButton.md): A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.
 - [DSSegmentedControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSegmentedControl.md): Pill or underline picker with a sliding indicator.
 - [DSTextField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTextField.md): Text field with label, icon and validation states, plus DSSearchBar.
 - [DSCodeField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCodeField.md): One-time-code input with SMS autofill, a shake on error and success feedback.
@@ -40,9 +39,18 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSSkeleton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSkeleton.md): Loading placeholder blocks, plus .dsSkeleton(_:) to redact a real view in place.
 - [DSSuccessCheck](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSuccessCheck.md): An animated success seal: the ring draws, the check strokes in, one pop and a haptic on the beat.
 - [DSTypewriterText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTypewriterText.md): Types phrases out character by character, with a blinking caret.
-- [DSExpandableText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSExpandableText.md): Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.
 - [Motion](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Motion.md): dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.
 - [DSConfetti](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSConfetti.md): A themed confetti burst from any point, fired whenever a trigger value changes.
+- [DSMarquee](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSMarquee.md): Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.
+- [DSChipGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSChip.md): Selectable pill chips for filters and tags, on a wrapping flow layout, with single or multiple selection.
+- [DSFlowLayout](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSFlowLayout.md): Wrapping layout that flows items onto new rows when they overflow the width — tag clouds, filter chips, keyword lists.
+- [DSHoldToConfirm](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSHoldToConfirm.md): Press-and-hold confirmation: a ring charges while you hold, with the same async result as slide-to-confirm.
+- [DSSlider](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSlider.md): Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.
+- [DSLikeButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSLikeButton.md): A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.
+- [DSTiltCard](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTiltCard.md): A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.
+- [DSDisclosureGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSDisclosureGroup.md): Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.
+- [DSTimeline](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTimeline.md): A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.
+- [DSExpandableText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSExpandableText.md): Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.
 
 ## Examples
 

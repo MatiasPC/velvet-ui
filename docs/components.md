@@ -67,6 +67,21 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSTiltCard  ✅
+
+`Components/DSTiltCard.swift`. A glass card that tips in 3D toward the finger as you drag, with a specular sheen sliding across the surface, then springs back on release.
+
+```swift
+DSTiltCard(maxTilt: Angle? = nil,                // peak rotation at the edge of the drag; nil = 12°
+           padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card,
+           haptic: DSHapticStyle? = .soft) { content }
+```
+
+Drag tilts the card around both axes (clamped at `maxTilt` once the drag passes ~120 pt); the sheen fades in with the tilt and the shadow deepens from `.lg` to `.xl` while held. Tracking is un-animated (1:1 with the finger); release or a cancelled touch springs it flat with `DSAnimation.springGentle`. The gesture is `simultaneousGesture`, so the card never blocks an enclosing `ScrollView` and buttons inside keep their taps; a `@GestureState` flag catches the cancelled case that `onEnded` misses. A `.soft` haptic fires once as the touch begins (`nil` for none). Under Reduce Motion the card never rotates, the shadow does not lift and the sheen stays put, only fading in while held. Decoration only — for a tappable surface use `DSInteractiveCard`.
+
+---
+
 ## DSTextField / DSSearchBar  🧪 (colors) ⏳ (wash + focus glow)
 
 `Components/DSTextField.swift`.
@@ -180,6 +195,26 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ---
 
+## DSChip / DSChipGroup  ✅ 🧪
+
+`Components/DSChip.swift`. `DSChipGroup` is generic over `Hashable`: selectable pill chips on [`DSFlowLayout`](#dsflowlayout), single or multiple selection. Built glass-native for v0.2. Depends on `DSFlowLayout`.
+
+**Accessibility:** Container of buttons, each labelled with its title and `selected` when active; a leading icon is decorative and hidden from VoiceOver. Labels use the `buttonSmall` text style (`dsTextStyle`) and scale with Dynamic Type.
+
+```swift
+DSChip(_ title: String, icon: String? = nil, isSelected: Bool = false,
+       accent: Color? = nil, haptic: DSHapticStyle = .selection, action: () -> Void)
+DSChipGroup(_ items: [DSChipItem<Value>], selection: Binding<Set<Value>>,   // multiple
+            spacing: CGFloat = DSSpacing.xs, accent: Color? = nil)
+DSChipGroup(_ items: [DSChipItem<Value>], selection: Binding<Value?>, ...)  // single: tap selected to clear
+DSChipGroup(_ options: [String], selection: Binding<Set<String>>, ...)      // String shortcut (also Binding<String?>)
+DSChipItem(_ title: String, value: Value, icon: String? = nil)
+```
+
+Selected chips crossfade `theme.subtleFill` → `accent ?? theme.accent` with `springSnappy` (a quick `fast` fade under Reduce Motion) and a `.sm` lift; selecting ticks `.selection`. `DSFlowLayout` wraps chips onto new lines — no borders, no horizontal scroll. Press feedback is a `ButtonStyle` (`DSPress.scale`), not a `DragGesture`, so a touch that turns into a scroll releases the chip. Disabled chips dim to half opacity. The selection toggling is pure and unit-tested (`DSChipGroup.toggled`).
+
+---
+
 ## DSToggle  🧪 (colors) ⏳ (wash track + glow)
 
 `Components/DSToggle.swift`.
@@ -275,6 +310,40 @@ Under Reduce Motion the knob and trail still move, but the per-letter label stag
 
 ---
 
+## DSHoldToConfirm  ✅
+
+`Components/DSHoldToConfirm.swift`. Press-and-hold confirmation control — the companion to `DSSlideToConfirm`. Where a slide gates an action behind a deliberate *gesture*, a hold gates it behind deliberate *time*.
+
+```swift
+DSHoldToConfirm(_ label: String, icon: String? = nil, confirmedLabel: String = "Confirmed", duration: Double = 1.2, accent: Color? = nil, isFullWidth: Bool = true, onConfirm: @escaping () -> Void)
+```
+
+A glass pill (`glassThin`, `DSRadius.chip`). While a finger is down, a progress ring charges around the pill over `duration`, drawn as a `trim` of the capsule — so at rest (`progress == 0`) it draws nothing and there is no border. The ring is the theme gradient by default, or a solid `accent` when one is passed. The moment the ring closes, the whole pill fills `accent ?? theme.accent`, the label swaps to a checkmark and `confirmedLabel`, and the action runs. Lifting before the ring closes cancels: the ring springs back and `onConfirm` never runs.
+
+The charge clock is a cancellable `Task`, not the ring animation — a lifted finger cancels it so the confirmation can't slip through on a fractional-second overshoot. A `.soft` detent fires on touch-down and at each of 6 steps, ramped 0.2 → 0.6 so the ring feels like it is tightening; completing fires `.success`, cancelling fires `.light`. The press dips the pill with `DSPress.scale`.
+
+Per the accent-role rules, the filled label uses `theme.onAccent` when the fill is the theme accent and `palette.textOnPrimary` (white) when the caller overrode `accent` with a status color; at rest the label is `theme.ink` on glass. There is no ambient loop to suppress for Reduce Motion — the ring is essential progress feedback — but the spring-back and fill collapse to `DSAnimation.fast` under it. VoiceOver gets an `.accessibilityAction` so a single activation confirms without a timed hold. No reset API — re-mount with `.id(attempt)` to run it again.
+
+Pick a slide when the risk is an accidental touch (a payment, a destructive button a thumb could brush); pick a hold when the risk is sustained intent (power off, hold-to-record) or when one hand is all the user has.
+
+---
+
+## DSHoldToConfirm  ✅
+
+`Components/DSHoldToConfirm.swift`. Press-and-hold confirmation, the companion to `DSSlideToConfirm`: a slide gates an action behind a deliberate *gesture*, a hold behind deliberate *time*. It shares the slide's vocabulary on purpose.
+
+```swift
+DSHoldToConfirm(_ label: String, icon: String? = nil, confirmedLabel: String = "Confirmed", duration: Double = 1.2, accent: Color? = nil, isFullWidth: Bool = true, onConfirm: @escaping () async throws -> Void)
+```
+
+A glass pill (`glassThin`, `DSRadius.chip`). While a finger is down a ring in `accent ?? theme.accent` charges around it over `duration`, a `trim` of the pill's capsule, so at rest it draws nothing (no border). When it closes the pill fills with the accent, a spinner shows while `onConfirm` runs (500ms floor, applied after the closure returns, as in the slide), then `.success`, a check and `confirmedLabel`. A throw is a refusal: `.error`, a 220ms beat, and the control re-opens. No reset API; re-mount with `.id`. Lifting early cancels: `.light` and the ring springs back, `onConfirm` never runs.
+
+The charge clock is a cancellable `Task` (`chargeSchedule`: six equal steps summing to `duration`), not the ring animation, so a lift can never leak a confirm. The action itself runs in a separate task so a disappearing view cancels the hold but never a payment already in flight. A `.soft` detent fires on touch-down and at each step, ramped 0.2 to 0.6 like the slide's; the press dips with `DSPress.scale`. All labels are stacked in a `ZStack` so the pill doesn't resize between states. Filled label color follows the accent roles: `onAccent` on the theme accent, `textOnPrimary` on a status color. The ring is essential feedback, so Reduce Motion keeps it and only swaps the bounces for `DSAnimation.fast`. VoiceOver gets the slide's hint and value words and a plain activation (`accessibilityAction`) that confirms without holding. `.disabled(true)` dims to 0.5.
+
+Pick a slide when the risk is an accidental touch (a payment, a destructive button a thumb could brush); pick a hold when the risk is sustained intent (power off, hold-to-record) or when one hand is all the user has.
+
+---
+
 ## DSThinkingIndicator  ✅
 
 `Components/DSThinkingIndicator.swift`. Ambient indicator for AI and background processing states.
@@ -324,6 +393,22 @@ DSStepper(value: Binding<Int>, in range: ClosedRange<Int> = 0...99, step: Int = 
 ```
 
 Tapping either glyph steps the bound value, clamped into `range`. The number rolls with `.numericText`. Each successful step fires `.selection` haptic; at a bound the value does not move, the whole track fires one `.dsJiggle` refusal wiggle plus a `.warning` haptic. The buttons deliberately stay hit-testable at a bound (never `.disabled`) so refusal can actually be felt — they just dim. Stepping clamps into `range`, so a `step` that does not evenly divide the range lands on the bound instead of overshooting; a non-positive `step` is treated as `1`. Exposes `.accessibilityAdjustableAction` so VoiceOver gets native increment/decrement.
+
+---
+
+## DSSlider  ✅
+
+`Components/DSSlider.swift`. Continuous value control — the input Stepper/Rating/Toggle (all discrete) left uncovered.
+
+```swift
+DSSlider(value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double? = nil, accent: Color? = nil, haptics: Bool = true)
+```
+
+A slim track, an accent fill that trails to the knob's centre, and a white knob (`palette.textOnPrimary`, like DSToggle) that lifts `1.12×` and grows a diffuse accent halo (the focus-glow recipe) while grabbed. The track is `theme.subtleFill` on a `dsBackdrop()` screen and `palette.border` (DSToggle's off track) on a plain one, where `subtleFill` is near-white and the 8pt line would vanish. The knob follows the finger and a tap anywhere jumps to that spot (`minimumDistance: 0`); the touch travel is inset by the knob radius at each end so finger and knob centre agree.
+
+The value mapping is `DSSliderScale` (internal, unit-tested): `clamped` (NaN falls to the lower bound), `snapped` (notches at `lower + k × step`, plus the upper bound even when `step` doesn't divide the span, so the far end is always reachable, like DSStepper), `fraction`/`value(atFraction:)`, `value(atX:trackWidth:knobDiameter:)` (nil until the track is measured) and `adjusted` (VoiceOver: the next notch, or a tenth of the span). A non-positive `step` is continuous. The bound value is clamped and written back on appear and whenever it changes, so it never stays outside `in`.
+
+Haptics: a continuous slider is silent between the ends and fires one `.rigid` detent on *arriving* at either bound; a stepped one also fires `.selection` per notch crossed. Touching down on the notch or end the knob already rests on is silent (the feedback state is seeded from the current value at touch-down). `haptics: false` silences both. Reduce Motion pins the grab lift and drops the spring lag (the halo stays: it is opacity only). `.disabled(true)` dims to 0.5 and drops the gesture. Exposes `.accessibilityAdjustableAction` and a value ("60 percent" for the default `0...1`, otherwise the number, with only the decimals `step` needs). Show your own visible read-out alongside it, the way `DSRating`'s call sites do.
 
 ---
 
@@ -387,6 +472,21 @@ Detents + visible grabber. Background: `.regularMaterial` before iOS/macOS 26, t
 
 ---
 
+## DSDisclosureGroup  ✅
+
+`Components/DSDisclosureGroup.swift`. Glass accordion / FAQ row — a custom, themed replacement for the stock `DisclosureGroup` (whose open/close animation breaks inside a `ForEach` on iOS 17, whose chevron ignores the tint, and which has no haptics or glass).
+
+```swift
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  initiallyExpanded: Bool = false, haptic: DSHapticStyle = .light) { content }
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  isExpanded: Binding<Bool>, haptic: DSHapticStyle = .light) { content }
+```
+
+Two inits: self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`, for "one open at a time"). On a `.glass` surface at `DSRadius.card`. The body sits in a private `Layout` (`DSDisclosureReveal`) whose `animatableData` is the revealed fraction, so the card grows with the body on `springSmooth`, the body fades with it and the chevron rotates 180° on the same spring; the body is laid out at full height and clipped, so text never re-wraps mid-reveal. The animation hangs off the open state (`.animation(_, value:)`), so it plays for a bound `isExpanded` flipped from outside and retargets on rapid taps. A hairline `palette.divider` splits header from body; the header dips with `DSPress.scale`. `.light` haptic on each toggle. The body stays mounted while collapsed (keeps its state), hidden from touch and VoiceOver. Reduce Motion: a short `DSAnimation.fast` ease instead of the spring, haptic still fires. Reduce Transparency: solid elevated surface. Header is one combined button with value Expanded/Collapsed and a "Shows/Hides the details" hint; the icon and chevron are `accessibilityHidden`.
+
+---
+
 ## DSNumberTicker  ✅
 
 `Components/DSNumberTicker.swift`.
@@ -398,6 +498,24 @@ DSNumberTicker(_ value: Int, style: DSTextStyle = .displayMedium, color: Color? 
 ```
 
 Odometer digits: each digit is a 0–9 column in a private animatable `Layout` that rolls on `springSmooth`, staggered 0.03 s from the units digit. Slot ids count from the right (`slots(for:)`, tested), so 99 → 100 keeps its digits. The view is `fixedSize()`: it never compresses, because a squeezed static slot ("US$") would clip. Reduce Motion: crossfade. One accessibility element with the formatted string and `.updatesFrequently`. No haptics.
+
+---
+
+## DSTimeline  ✅
+
+`Components/DSTimeline.swift`. Vertical progress timeline — the content-bearing, vertical complement to `DSStepProgress`.
+
+```swift
+DSTimeline(_ items: [DSTimelineItem], currentStep: Int,
+           nodeSize: CGFloat = DSSpacing.xxl, lineWidth: CGFloat = DSSpacing.xxxs,
+           accent: Color? = nil, haptics: Bool = true)
+
+DSTimelineItem(_ title: String, subtitle: String? = nil, icon: String? = nil)
+```
+
+Steps are positional: identity is the enumerated index (`id: \.offset`), so rebuilding `items` keeps nodes animating in place. The rules live in an internal `DSTimelineProgress` (clamp, status, connector fill, `isAdvance`) so they are unit tested: `currentStep` clamps to `0...items.count`, steps before it are complete, the one at it is current, the rest upcoming. Each row is `HStack(alignment: .top)`: node, then a content column whose title is `frame(minHeight: nodeSize)` so it centres on the node at any text size (`nodeSize` is a `@ScaledMetric` relative to `.callout`). The connector is a track capsule with an accent capsule on top at `scaleEffect(y:)` anchored at the top, clipped to the track, and drawn as the row's `.background` offset below the node — not as a flexible child of the rail. The live node's glow sits on its own `dsBreathe(.medium)` layer behind the node and is inserted only while the step is current. The spring (`springSmooth`, or `fast` under Reduce Motion) and the single `.success` haptic are keyed on the clamped step through `animation(value:)` and `onChange` (no `initial:`), and the haptic additionally requires `isAdvance`. One accessibility element per step: title and subtitle as label, status as value.
+
+Known gaps: vertical only; no branching; a jump of several steps fills all connectors at once rather than in sequence.
 
 ---
 
@@ -470,9 +588,35 @@ Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-f
 
 ---
 
+## DSMarquee  ✅
+
+`Components/DSMarquee.swift`.
+
+```swift
+DSMarquee(velocity: CGFloat = 40,          // points/second; 0 disables scrolling
+          spacing: CGFloat = DSSpacing.xxxl, // gap between the looping copies
+          fade: CGFloat = DSSpacing.lg) {    // edge-fade width per side; 0 = hard edges
+    content
+}
+```
+
+Generic over any single-line content. Scrolls only when the content overflows its width; otherwise static and left-aligned with no fade. The loop is two copies laid end to end with `spacing`, translated by one copy's width + gap and wrapped, so the seam never shows. Width is measured with `onGeometryChange` (iOS 18 / macOS 15); the scrolling layer samples its offset from a `TimelineView(.animation)` (pure `DSMarqueeMath.offset`), so it stops ticking off-screen and needs no remount when the measurement changes. Edges are softened with a gradient `.mask` (never a border). No haptics (ambient, not interactive). Reduce Motion: shown static from the start with a trailing fade, not frozen mid-scroll. Accessibility: content exposed as one combined element; the looping and measuring copies are hidden.
+## DSFlowLayout  ✅
+
+`Layout/DSFlowLayout.swift`. A `Layout`, not a container view, so it is called like a stack: `DSFlowLayout { … }`.
+
+```swift
+DSFlowLayout(spacing: CGFloat = DSSpacing.xs, lineSpacing: CGFloat = DSSpacing.xs,
+             alignment: HorizontalAlignment = .leading) { content }
+```
+
+Greedy first-fit row packing for tag clouds, filter chips and keyword lists: items fill a row until the next would overflow the proposed width, then wrap. It fills a finite proposed width (so `.center` / `.trailing` have room) and shrinks to its widest row when offered none; an infinite proposal is never echoed back as its size. An item wider than the container is measured again at the container width, so text wraps instead of overflowing. Shorter items sit centred in their row, and right-to-left mirrors the rows. Pure SwiftUI: no `GeometryReader`, no preference keys. No color, fill or haptics of its own (a layout positions, it never paints); style the chips inside it. Reflow animates on-system when the caller wraps content changes in `withAnimation`, which SwiftUI does not turn off under Reduce Motion, so pass `nil` there (the docs snippet does). The packing is pure and unit-tested (`DSFlowLayout.pack`), plus a test that runs it through SwiftUI's own sizing. Full page: [docs/components/DSFlowLayout.md](components/DSFlowLayout.md).
+
+---
+
 ## Layout  ✅
 
-`DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
+`DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`. For wrapping rows of chips and tags, see [DSFlowLayout](#dsflowlayout).
 
 ---
 
