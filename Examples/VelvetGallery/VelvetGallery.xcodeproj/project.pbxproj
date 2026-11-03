@@ -40,6 +40,7 @@
 		98F1401DE187A997E091F1C4 /* SkeletonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */; };
 		9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B172A6E35E9B09EE2507CF /* StageContainer.swift */; };
 		A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629C745CA3297503D924937D /* LayoutScreen.swift */; };
+		A351225411F705BCF869E981 /* MarqueeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89D5079C9C5EA4834D8F5BD /* MarqueeScreen.swift */; };
 		A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70D448B6642D640F23AFC4 /* StageListView.swift */; };
 		A6DEFEDDD886C10265B0FF20 /* CheckoutFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D000BBF8E60C773068243C /* CheckoutFlow.swift */; };
 		A9367F1E12EFE69857EE8A71 /* StepperScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C54157D449912B0364C807 /* StepperScreen.swift */; };
@@ -113,6 +114,7 @@
 		F4A58BF4F0ACB59CB636CB48 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
 		F7FC668E35B60F699D3690AA /* MotionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionScreen.swift; sourceTree = "<group>"; };
 		F88C16EA4FAB1FBD60ACA1D2 /* SettingsFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFlow.swift; sourceTree = "<group>"; };
+		F89D5079C9C5EA4834D8F5BD /* MarqueeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeScreen.swift; sourceTree = "<group>"; };
 		F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlScreen.swift; sourceTree = "<group>"; };
 		FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberTickerScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -212,6 +214,7 @@
 				629C745CA3297503D924937D /* LayoutScreen.swift */,
 				AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */,
 				54F60FD1D436135BECE7C11C /* ListsScreen.swift */,
+				F89D5079C9C5EA4834D8F5BD /* MarqueeScreen.swift */,
 				F7FC668E35B60F699D3690AA /* MotionScreen.swift */,
 				FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */,
 				316D05380CECE2E8681282F6 /* PageControlScreen.swift */,
@@ -331,6 +334,7 @@
 				A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */,
 				082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */,
 				C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */,
+				A351225411F705BCF869E981 /* MarqueeScreen.swift in Sources */,
 				38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */,
 				CB8F7A87E639B8926DF98407 /* NeutralTheme.swift in Sources */,
 				24571EF6E1B3534C30DE94D3 /* NumberTickerScreen.swift in Sources */,

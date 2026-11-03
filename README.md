@@ -131,6 +131,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | — | [DSExpandableText](docs/components/DSExpandableText.md) | Long copy that collapses to a few lines and springs open, with a Show more / Show less toggle. |
 | <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
+| — | [DSMarquee](docs/components/DSMarquee.md) | Scrolls overflowing content in a seamless loop, with soft edge fades; static when it fits. |
 
 Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`. The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
 

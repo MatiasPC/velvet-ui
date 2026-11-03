@@ -1243,146 +1243,6 @@ struct SegmentedControlDemo: View {
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
-<!-- source: docs/components/DSChip.md -->
-
-# DSChip / DSChipGroup
-
-Selectable pill chips for filters, tags, categories and interest pickers. `DSChipGroup` lays them out with [`DSFlowLayout`](DSFlowLayout.md), which breaks onto as many lines as the width needs, and manages single or multiple selection. Selecting a chip springs its fill into the accent and ticks a selection haptic.
-
-<!-- GIF pending: ![DSChip](../media/DSChip.gif) -->
-
-**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSChip.swift`](../../Sources/VelvetUI/Components/DSChip.swift)
-
-## Install
-
-```swift
-// Package.swift
-.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-// target dependencies
-.product(name: "VelvetUI", package: "velvet-ui")
-```
-
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
-
-## Usage
-
-```swift
-import VelvetUI
-
-struct ChipDemo: View {
-    @State private var topics: Set<String> = ["Design"]
-    @State private var sort: String? = "Trending"
-
-    var body: some View {
-        DSScreen(backdrop: true) {
-            VStack(alignment: .leading, spacing: DSSpacing.lg) {
-                // Multiple selection — tap to add or remove.
-                DSChipGroup(
-                    ["Design", "Engineering", "Product", "Research", "Marketing"],
-                    selection: $topics
-                )
-                // Single selection — tap the selected chip again to clear it.
-                DSChipGroup(["Trending", "Newest", "Top rated", "Nearby"], selection: $sort)
-            }
-            .dsScreenPadding()
-        }
-    }
-}
-```
-
-## Parameters
-
-### DSChipGroup
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `items` | `[DSChipItem<Value>]` | required | The chips, in order. Build each with `DSChipItem(_ title: String, value: Value, icon: String? = nil)` (`Value: Hashable`). |
-| `selection` | `Binding<Set<Value>>` | required | Multiple selection: tapping a chip inserts or removes its value. |
-| `selection` | `Binding<Value?>` | required | Single selection: tapping a chip selects it; tapping the selected chip clears it (`nil`). |
-| `spacing` | `CGFloat` | `DSSpacing.xs` | Gap between chips and between lines. |
-| `accent` | `Color?` | `nil` | Fill for selected chips. Defaults to the theme accent. |
-
-**String shortcut:** `DSChipGroup(_ options: [String], selection: Binding<Set<String>>, …)` and `DSChipGroup(_ options: [String], selection: Binding<String?>, …)`, available when `Value` is `String` — each option is its own value.
-
-### DSChip
-
-A single chip you can place on its own (a filter outside a group, an "Add tag" affordance):
-
-```swift
-DSChip("Add tag", icon: "plus") { addTag() }
-DSChip("Design", isSelected: isOn) { isOn.toggle() }
-```
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `title` | `String` | required | The chip's label, and its VoiceOver label. |
-| `icon` | `String?` | `nil` | Optional leading SF Symbol. Decorative — hidden from VoiceOver. |
-| `isSelected` | `Bool` | `false` | Whether the chip reads as selected. |
-| `accent` | `Color?` | `nil` | Fill when selected. Defaults to the theme accent. |
-| `haptic` | `DSHapticStyle` | `.selection` | Fired on tap. |
-| `action` | `() -> Void` | required | Called on tap. In a `DSChipGroup` this toggles selection. |
-
-## Variants
-
-```swift
-enum Sort: Hashable { case trending, newest, topRated }
-
-struct ChipVariantsDemo: View {
-    @State private var media: Set<String> = ["photos"]
-    @State private var sort: Sort? = .trending
-    @DSThemed private var theme
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DSSpacing.lg) {
-            // Leading icons and a custom accent for the selected fill
-            DSChipGroup(
-                [
-                    DSChipItem("Photos", value: "photos", icon: "photo"),
-                    DSChipItem("Videos", value: "videos", icon: "video"),
-                    DSChipItem("Audio", value: "audio", icon: "waveform")
-                ],
-                selection: $media,
-                accent: theme.palette.success
-            )
-
-            // Any Hashable value, not just strings
-            DSChipGroup(
-                [
-                    DSChipItem("Trending", value: Sort.trending),
-                    DSChipItem("Newest", value: Sort.newest),
-                    DSChipItem("Top rated", value: Sort.topRated)
-                ],
-                selection: $sort,
-                spacing: DSSpacing.sm
-            )
-        }
-    }
-}
-```
-
-## Behavior
-
-- Chips flow left to right and wrap onto a new line whenever the next one would overflow the available width, using [`DSFlowLayout`](DSFlowLayout.md) — no horizontal scrolling. `DSChipGroup` depends on it, so copying `DSChip` into an app with the CLI brings it along.
-- Selecting a chip crossfades its fill from `theme.subtleFill` to the accent with a snappy spring, lifts it with a soft shadow, and ticks a selection haptic.
-- Pressing scales the chip to `DSPress.scale`. The press is a `ButtonStyle`, so a touch that becomes a scroll releases the chip instead of leaving it shrunk.
-- No borders: an unselected chip reads through the subtle surface, a selected one through the accent fill.
-- Reduce Motion: the fill changes with a quick fade instead of a spring.
-
-## Accessibility
-
-- Each chip is a button labelled with its title, and marked selected when active. A leading icon is decorative and hidden from VoiceOver.
-- Chip labels use the `buttonSmall` text style, so they scale with Dynamic Type alongside the rest of your screen.
-- A chip is as tall as its label plus `DSSpacing.xs` above and below, a little under the 44 pt minimum target. Keep `spacing` generous (`DSSpacing.sm`) where chips sit close together.
-
-## See also
-
-- [DSFlowLayout](DSFlowLayout.md)
-- [DSSegmentedControl](DSSegmentedControl.md)
-- [DSBadge](DSBadge.md)
-- [DSButton](DSButton.md)
-- [All components](../../README.md#components) · [Theming](../../README.md#theming)
-
----
 <!-- source: docs/components/DSTextField.md -->
 
 # DSTextField
@@ -2246,124 +2106,6 @@ Item-driven: the sheet shows while the item is non-nil.
 - [DSListCell](DSListCell.md)
 - [DSToast](DSToast.md)
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
-
----
-<!-- source: docs/components/DSFlowLayout.md -->
-
-# DSFlowLayout
-
-A wrapping layout: it lays its subviews out left-to-right and drops to a new line the moment the next one won't fit. The missing primitive behind tag clouds, filter chips, keyword lists and any set of pill-shaped items whose count you don't control — the one case a `VStack`/`HStack` can't handle and `DSGrid` gets wrong (chips aren't a grid; they're different widths).
-
-<!-- GIF pending: ![DSFlowLayout](../media/DSFlowLayout.gif) -->
-
-**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlowLayout.swift`](../../Sources/VelvetUI/Layout/DSFlowLayout.swift)
-
-## Install
-
-```swift
-// Package.swift
-.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-// target dependencies
-.product(name: "VelvetUI", package: "velvet-ui")
-```
-
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
-
-## Usage
-
-```swift
-import VelvetUI
-
-struct InterestsPicker: View {
-    private let interests = ["Design", "SwiftUI", "Motion", "Accessibility",
-                             "Haptics", "Typography", "Color", "Prototyping"]
-    @State private var selected: Set<String> = ["SwiftUI", "Motion"]
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @DSThemed private var theme
-
-    var body: some View {
-        DSFlowLayout {
-            ForEach(interests, id: \.self) { interest in
-                let isSelected = selected.contains(interest)
-                Button {
-                    dsHaptic(.selection)
-                    withAnimation(reduceMotion ? nil : DSAnimation.springSnappy) {
-                        selected.formSymmetricDifference([interest])
-                    }
-                } label: {
-                    Text(interest)
-                        .ds(.buttonSmall, color: isSelected ? theme.onAccent : theme.ink)
-                        .padding(.horizontal, DSSpacing.sm)
-                        .padding(.vertical, DSSpacing.xs)
-                        .background(isSelected ? theme.accent : theme.subtleFill, in: Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(isSelected ? .isSelected : [])
-            }
-        }
-    }
-}
-```
-
-`DSFlowLayout` is a `Layout`, not a container view: you use it exactly like a `VStack`, and it works with `ForEach`, conditional subviews and `withAnimation`. For ready-made selectable pills, see the chips in the Gallery's Flow Layout screen; the layout itself never draws anything.
-
-## Parameters
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `spacing` | `CGFloat` | `DSSpacing.xs` | Horizontal gap between items on the same row. |
-| `lineSpacing` | `CGFloat` | `DSSpacing.xs` | Vertical gap between rows. |
-| `alignment` | `HorizontalAlignment` | `.leading` | How a row narrower than the container sits within it: `.leading`, `.center` or `.trailing`. |
-
-## Variants
-
-```swift
-VStack(alignment: .leading, spacing: DSSpacing.lg) {
-    // Tighter rows, centred inside a card
-    DSCard {
-        DSFlowLayout(spacing: DSSpacing.xxs, lineSpacing: DSSpacing.xxs, alignment: .center) {
-            ForEach(sizes, id: \.self) { size in
-                DSBadge(size)
-            }
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    // Right-aligned rows
-    DSFlowLayout(alignment: .trailing) {
-        ForEach(sizes, id: \.self) { size in
-            DSBadge(size, variant: .soft)
-        }
-    }
-}
-```
-`sizes` is any `[String]`. Alignment only has room to work when the layout is wider than its rows, which is why the centred example is stretched with `.frame(maxWidth: .infinity)`.
-
-## Behavior
-
-- Greedy first-fit packing: items fill a row until the next one would overflow the proposed width, then wrap.
-- It fills the width it is offered, so alignment has room to work. Offered no width (or an unbounded one, as in a horizontal `ScrollView`) it shrinks to its widest row.
-- An item wider than the whole container gets a row to itself. It is measured again at the container width, so text wraps or truncates instead of running off the edge.
-- Items shorter than their row sit vertically centred in it, like an `HStack`.
-- Right-to-left languages mirror the layout: rows start on the right, and `.leading` / `.trailing` follow.
-- Because it's a real `Layout`, motion is free and on-system: wrap a change to the content in `withAnimation(DSAnimation.springSmooth)` and items added, removed or resized glide to their new positions along the Velvet spring instead of snapping.
-- Reports its true wrapped height, so it composes inside a `VStack`, a `DSCard` or a `ScrollView` with no fixed-height guesswork.
-
-## Theming
-
-A layout positions, it never paints — `DSFlowLayout` has no colors, fills or borders of its own and adds no haptics. Style the items you put inside it (a glass chip, a `DSBadge`, a `Button`) with the usual theme roles; selection feedback and haptics belong on those items, not on the layout.
-
-## Accessibility
-
-- Transparent to assistive tech: each subview keeps its own accessibility element, label, value and traits. VoiceOver reads the items in order. Mark a selected chip with `.accessibilityAddTraits(.isSelected)`.
-- Dynamic Type: rows re-pack automatically as item widths grow with larger text, so nothing is clipped. Keep item labels on `.ds(_:)` so they scale.
-- Reduce Motion: the layout has no motion of its own, and reflow animates only when you wrap the change in `withAnimation`. SwiftUI does not switch that off for you, so pass `nil` when `@Environment(\.accessibilityReduceMotion)` is on (the Usage snippet does) and items jump to their new places at rest.
-
-## See also
-
-- [DSBadge](DSBadge.md)
-- [DSSegmentedControl](DSSegmentedControl.md)
-- [Layout helpers](../components.md#layout) · [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
 <!-- source: docs/components/DSBadge.md -->
@@ -3696,6 +3438,347 @@ Attach it to a container that covers the area the paper should fall through, suc
 - [DSSlideToConfirm](DSSlideToConfirm.md)
 - [DSToast](DSToast.md)
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSMarquee.md -->
+
+# DSMarquee
+
+Content that scrolls horizontally in a seamless loop — but only when it is too wide to fit. A "now playing" line, a long title, a ticker of stats: text that would otherwise truncate keeps moving so all of it can be read. Content that already fits stays put.
+
+<!-- GIF pending: ![DSMarquee](../media/DSMarquee.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMarquee.swift`](../../Sources/VelvetUI/Components/DSMarquee.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct NowPlaying: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                Text("Now playing").ds(.overline, color: DSColors.textSecondary)
+
+                DSMarquee {
+                    Text("Midnight City · M83 · Hurry Up, We're Dreaming").ds(.callout)
+                }
+
+                // Any content, not just text — it scrolls as one line.
+                DSMarquee(velocity: 28) {
+                    HStack(spacing: DSSpacing.xs) {
+                        DSBadge("LIVE", variant: .filled)
+                        Text("Breaking news scrolls by, in full").ds(.footnote)
+                    }
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+Keep the content to a single line (text, a badge, a small row). The marquee measures that line and scrolls it only when it is wider than the space it has.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `velocity` | `CGFloat` | `40` | Scroll speed in points per second. Linear, so the pace reads constant for any length. `0` disables scrolling. |
+| `spacing` | `CGFloat` | `DSSpacing.xxxl` (40) | Gap between the end of one copy and the start of the next in the loop. |
+| `fade` | `CGFloat` | `DSSpacing.lg` (20) | Width of the soft edge fade on each side. Pass `0` for hard edges. |
+| `content` | `() -> Content` | required | The content to scroll, as a trailing `@ViewBuilder` closure. |
+
+## Behavior
+
+- **Scrolls only on overflow.** If the content fits the available width it is shown static and left-aligned, with no motion and no fade.
+- **Seamless loop.** The offset is sampled from a `TimelineView(.animation)`, which only ticks while the marquee is on screen, so an off-screen or scrolled-away marquee costs nothing. Two copies of the content are laid end to end with `spacing` between them, translated left by exactly one copy's width plus the gap, then wrapped — so the join never shows.
+- **Edge fades.** A gradient mask (not a border) softens both edges while scrolling, hinting that the line continues past them. A static overflow fades only the trailing edge.
+- **No haptics.** The marquee is ambient, not interactive.
+- **Reduce Motion:** no scrolling. The content is shown static from its start with a trailing fade, so it is clearly truncated rather than frozen mid-scroll.
+
+## Accessibility
+
+- The content is exposed as a single combined element, so VoiceOver reads the whole line at once regardless of where the scroll happens to be. The second, looping copy and the hidden measuring copy are excluded from accessibility.
+- Text styled with `.ds(_:)` scales with Dynamic Type; the line simply grows wider and scrolls further.
+- Prefer a marquee for supplementary, glanceable copy (a track title, a status line). Don't put text a user must act on only inside a moving line.
+
+## See also
+
+- [DSTypewriterText](DSTypewriterText.md)
+- [DSNumberTicker](DSNumberTicker.md)
+- [Motion](Motion.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSChip.md -->
+
+# DSChip / DSChipGroup
+
+Selectable pill chips for filters, tags, categories and interest pickers. `DSChipGroup` lays them out with [`DSFlowLayout`](DSFlowLayout.md), which breaks onto as many lines as the width needs, and manages single or multiple selection. Selecting a chip springs its fill into the accent and ticks a selection haptic.
+
+<!-- GIF pending: ![DSChip](../media/DSChip.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSChip.swift`](../../Sources/VelvetUI/Components/DSChip.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ChipDemo: View {
+    @State private var topics: Set<String> = ["Design"]
+    @State private var sort: String? = "Trending"
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                // Multiple selection — tap to add or remove.
+                DSChipGroup(
+                    ["Design", "Engineering", "Product", "Research", "Marketing"],
+                    selection: $topics
+                )
+                // Single selection — tap the selected chip again to clear it.
+                DSChipGroup(["Trending", "Newest", "Top rated", "Nearby"], selection: $sort)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+### DSChipGroup
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `items` | `[DSChipItem<Value>]` | required | The chips, in order. Build each with `DSChipItem(_ title: String, value: Value, icon: String? = nil)` (`Value: Hashable`). |
+| `selection` | `Binding<Set<Value>>` | required | Multiple selection: tapping a chip inserts or removes its value. |
+| `selection` | `Binding<Value?>` | required | Single selection: tapping a chip selects it; tapping the selected chip clears it (`nil`). |
+| `spacing` | `CGFloat` | `DSSpacing.xs` | Gap between chips and between lines. |
+| `accent` | `Color?` | `nil` | Fill for selected chips. Defaults to the theme accent. |
+
+**String shortcut:** `DSChipGroup(_ options: [String], selection: Binding<Set<String>>, …)` and `DSChipGroup(_ options: [String], selection: Binding<String?>, …)`, available when `Value` is `String` — each option is its own value.
+
+### DSChip
+
+A single chip you can place on its own (a filter outside a group, an "Add tag" affordance):
+
+```swift
+DSChip("Add tag", icon: "plus") { addTag() }
+DSChip("Design", isSelected: isOn) { isOn.toggle() }
+```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `title` | `String` | required | The chip's label, and its VoiceOver label. |
+| `icon` | `String?` | `nil` | Optional leading SF Symbol. Decorative — hidden from VoiceOver. |
+| `isSelected` | `Bool` | `false` | Whether the chip reads as selected. |
+| `accent` | `Color?` | `nil` | Fill when selected. Defaults to the theme accent. |
+| `haptic` | `DSHapticStyle` | `.selection` | Fired on tap. |
+| `action` | `() -> Void` | required | Called on tap. In a `DSChipGroup` this toggles selection. |
+
+## Variants
+
+```swift
+enum Sort: Hashable { case trending, newest, topRated }
+
+struct ChipVariantsDemo: View {
+    @State private var media: Set<String> = ["photos"]
+    @State private var sort: Sort? = .trending
+    @DSThemed private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+            // Leading icons and a custom accent for the selected fill
+            DSChipGroup(
+                [
+                    DSChipItem("Photos", value: "photos", icon: "photo"),
+                    DSChipItem("Videos", value: "videos", icon: "video"),
+                    DSChipItem("Audio", value: "audio", icon: "waveform")
+                ],
+                selection: $media,
+                accent: theme.palette.success
+            )
+
+            // Any Hashable value, not just strings
+            DSChipGroup(
+                [
+                    DSChipItem("Trending", value: Sort.trending),
+                    DSChipItem("Newest", value: Sort.newest),
+                    DSChipItem("Top rated", value: Sort.topRated)
+                ],
+                selection: $sort,
+                spacing: DSSpacing.sm
+            )
+        }
+    }
+}
+```
+
+## Behavior
+
+- Chips flow left to right and wrap onto a new line whenever the next one would overflow the available width, using [`DSFlowLayout`](DSFlowLayout.md) — no horizontal scrolling. `DSChipGroup` depends on it, so copying `DSChip` into an app with the CLI brings it along.
+- Selecting a chip crossfades its fill from `theme.subtleFill` to the accent with a snappy spring, lifts it with a soft shadow, and ticks a selection haptic.
+- Pressing scales the chip to `DSPress.scale`. The press is a `ButtonStyle`, so a touch that becomes a scroll releases the chip instead of leaving it shrunk.
+- No borders: an unselected chip reads through the subtle surface, a selected one through the accent fill.
+- Reduce Motion: the fill changes with a quick fade instead of a spring.
+
+## Accessibility
+
+- Each chip is a button labelled with its title, and marked selected when active. A leading icon is decorative and hidden from VoiceOver.
+- Chip labels use the `buttonSmall` text style, so they scale with Dynamic Type alongside the rest of your screen.
+- A chip is as tall as its label plus `DSSpacing.xs` above and below, a little under the 44 pt minimum target. Keep `spacing` generous (`DSSpacing.sm`) where chips sit close together.
+
+## See also
+
+- [DSFlowLayout](DSFlowLayout.md)
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [DSBadge](DSBadge.md)
+- [DSButton](DSButton.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSFlowLayout.md -->
+
+# DSFlowLayout
+
+A wrapping layout: it lays its subviews out left-to-right and drops to a new line the moment the next one won't fit. The missing primitive behind tag clouds, filter chips, keyword lists and any set of pill-shaped items whose count you don't control — the one case a `VStack`/`HStack` can't handle and `DSGrid` gets wrong (chips aren't a grid; they're different widths).
+
+<!-- GIF pending: ![DSFlowLayout](../media/DSFlowLayout.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlowLayout.swift`](../../Sources/VelvetUI/Layout/DSFlowLayout.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct InterestsPicker: View {
+    private let interests = ["Design", "SwiftUI", "Motion", "Accessibility",
+                             "Haptics", "Typography", "Color", "Prototyping"]
+    @State private var selected: Set<String> = ["SwiftUI", "Motion"]
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @DSThemed private var theme
+
+    var body: some View {
+        DSFlowLayout {
+            ForEach(interests, id: \.self) { interest in
+                let isSelected = selected.contains(interest)
+                Button {
+                    dsHaptic(.selection)
+                    withAnimation(reduceMotion ? nil : DSAnimation.springSnappy) {
+                        selected.formSymmetricDifference([interest])
+                    }
+                } label: {
+                    Text(interest)
+                        .ds(.buttonSmall, color: isSelected ? theme.onAccent : theme.ink)
+                        .padding(.horizontal, DSSpacing.sm)
+                        .padding(.vertical, DSSpacing.xs)
+                        .background(isSelected ? theme.accent : theme.subtleFill, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
+        }
+    }
+}
+```
+
+`DSFlowLayout` is a `Layout`, not a container view: you use it exactly like a `VStack`, and it works with `ForEach`, conditional subviews and `withAnimation`. For ready-made selectable pills, see the chips in the Gallery's Flow Layout screen; the layout itself never draws anything.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `spacing` | `CGFloat` | `DSSpacing.xs` | Horizontal gap between items on the same row. |
+| `lineSpacing` | `CGFloat` | `DSSpacing.xs` | Vertical gap between rows. |
+| `alignment` | `HorizontalAlignment` | `.leading` | How a row narrower than the container sits within it: `.leading`, `.center` or `.trailing`. |
+
+## Variants
+
+```swift
+VStack(alignment: .leading, spacing: DSSpacing.lg) {
+    // Tighter rows, centred inside a card
+    DSCard {
+        DSFlowLayout(spacing: DSSpacing.xxs, lineSpacing: DSSpacing.xxs, alignment: .center) {
+            ForEach(sizes, id: \.self) { size in
+                DSBadge(size)
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    // Right-aligned rows
+    DSFlowLayout(alignment: .trailing) {
+        ForEach(sizes, id: \.self) { size in
+            DSBadge(size, variant: .soft)
+        }
+    }
+}
+```
+`sizes` is any `[String]`. Alignment only has room to work when the layout is wider than its rows, which is why the centred example is stretched with `.frame(maxWidth: .infinity)`.
+
+## Behavior
+
+- Greedy first-fit packing: items fill a row until the next one would overflow the proposed width, then wrap.
+- It fills the width it is offered, so alignment has room to work. Offered no width (or an unbounded one, as in a horizontal `ScrollView`) it shrinks to its widest row.
+- An item wider than the whole container gets a row to itself. It is measured again at the container width, so text wraps or truncates instead of running off the edge.
+- Items shorter than their row sit vertically centred in it, like an `HStack`.
+- Right-to-left languages mirror the layout: rows start on the right, and `.leading` / `.trailing` follow.
+- Because it's a real `Layout`, motion is free and on-system: wrap a change to the content in `withAnimation(DSAnimation.springSmooth)` and items added, removed or resized glide to their new positions along the Velvet spring instead of snapping.
+- Reports its true wrapped height, so it composes inside a `VStack`, a `DSCard` or a `ScrollView` with no fixed-height guesswork.
+
+## Theming
+
+A layout positions, it never paints — `DSFlowLayout` has no colors, fills or borders of its own and adds no haptics. Style the items you put inside it (a glass chip, a `DSBadge`, a `Button`) with the usual theme roles; selection feedback and haptics belong on those items, not on the layout.
+
+## Accessibility
+
+- Transparent to assistive tech: each subview keeps its own accessibility element, label, value and traits. VoiceOver reads the items in order. Mark a selected chip with `.accessibilityAddTraits(.isSelected)`.
+- Dynamic Type: rows re-pack automatically as item widths grow with larger text, so nothing is clipped. Keep item labels on `.ds(_:)` so they scale.
+- Reduce Motion: the layout has no motion of its own, and reflow animates only when you wrap the change in `withAnimation`. SwiftUI does not switch that off for you, so pass `nil` when `@Environment(\.accessibilityReduceMotion)` is on (the Usage snippet does) and items jump to their new places at rest.
+
+## See also
+
+- [DSBadge](DSBadge.md)
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [Layout helpers](../components.md#layout) · [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
 <!-- source: docs/components/DSHoldToConfirm.md -->

@@ -70,6 +70,7 @@ struct ComponentListView: View {
                 row("Success Check", "Ring, check and a pop on the beat") { SuccessCheckScreen() }
                 row("Confetti", "A themed burst on any trigger") { ConfettiScreen() }
                 row("Thinking Indicator", "Ambient processing") { ThinkingIndicatorScreen() }
+                row("Marquee", "Overflowing content scrolls in a loop") { MarqueeScreen() }
                 row("Typewriter Text", "Typed reveal") { TypewriterTextScreen() }
             }
         }

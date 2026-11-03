@@ -512,6 +512,29 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Marquee
+                section("Marquee") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSMarquee {
+                                Text("Now playing — Midnight City · M83 · Hurry Up, We're Dreaming")
+                                    .ds(.callout)
+                            }
+                            DSMarquee(velocity: 28) {
+                                HStack(spacing: DSSpacing.xs) {
+                                    DSBadge("LIVE", color: DSColors.error, variant: .filled)
+                                    Text("Breaking: a seamless marquee with glass edge fades")
+                                        .ds(.footnote)
+                                }
+                            }
+                            DSMarquee {
+                                Text("Short label — stays put").ds(.callout)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Expandable Text
                 section("Expandable Text") {
                     DSCard {

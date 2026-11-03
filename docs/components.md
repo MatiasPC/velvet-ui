@@ -572,6 +572,19 @@ Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-f
 
 ---
 
+## DSMarquee  ✅
+
+`Components/DSMarquee.swift`.
+
+```swift
+DSMarquee(velocity: CGFloat = 40,          // points/second; 0 disables scrolling
+          spacing: CGFloat = DSSpacing.xxxl, // gap between the looping copies
+          fade: CGFloat = DSSpacing.lg) {    // edge-fade width per side; 0 = hard edges
+    content
+}
+```
+
+Generic over any single-line content. Scrolls only when the content overflows its width; otherwise static and left-aligned with no fade. The loop is two copies laid end to end with `spacing`, translated by one copy's width + gap and wrapped, so the seam never shows. Width is measured with `onGeometryChange` (iOS 18 / macOS 15); the scrolling layer samples its offset from a `TimelineView(.animation)` (pure `DSMarqueeMath.offset`), so it stops ticking off-screen and needs no remount when the measurement changes. Edges are softened with a gradient `.mask` (never a border). No haptics (ambient, not interactive). Reduce Motion: shown static from the start with a trailing fade, not frozen mid-scroll. Accessibility: content exposed as one combined element; the looping and measuring copies are hidden.
 ## DSFlowLayout  ✅
 
 `Layout/DSFlowLayout.swift`. A `Layout`, not a container view, so it is called like a stack: `DSFlowLayout { … }`.
