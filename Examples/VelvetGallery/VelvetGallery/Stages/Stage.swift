@@ -12,6 +12,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSTimeline
     case DSSuccessCheck, DSConfetti
+    case DSTiltCard
     case DSDisclosureGroup
     case DSExpandableText
     case DSLikeButton
@@ -34,6 +35,8 @@ enum Stage: String, CaseIterable, Identifiable {
              .DSTextField, .DSBadge, .DSAvatar, .DSListCell, .DSEmptyState,
              .OnboardingFlow, .SettingsFlow, .CheckoutFlow:
             return false
+        case .DSTiltCard:
+            return false   // drag it by hand
         case .DSExpandableText:
             // The expansion state is private to the component: tap Show more by hand.
             return false

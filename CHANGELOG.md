@@ -4,6 +4,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSTiltCard` — a glass card that tips in 3D toward the finger as you drag, with a specular sheen that slides across the surface, a deepening shadow while held, and a `springGentle` snap-back on release (also when a scroll cancels the touch). Never blocks an enclosing `ScrollView`. Stays flat under Reduce Motion, where only a still sheen fades in while held. Pure SwiftUI, tokens-only, core dependencies only.
 ### Fixed
 - `DSSlideToConfirm` knob renders as a true circle at rest again. The `Capsule()` mask that drives the `.morphAndVanish` collapse was sized to the track, so its straight edges sat exactly on the idle knob's top and bottom and its antialiased edge shaved ~1pt off each (the knob measured 168×166 instead of 168×168 at @3×, and its shadow was cropped). The mask is now held clear of the knob until the collapse begins, then both axes ride the same spring so the morph still lands on a capsule exactly `trackHeight` square.
 ### Added

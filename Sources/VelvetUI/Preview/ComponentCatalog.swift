@@ -179,6 +179,21 @@ struct ComponentCatalog: View {
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
                 }
 
+                // MARK: - Tilt Card
+                section("Tilt Card") {
+                    DSTiltCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Image(systemName: "creditcard.fill")
+                                .font(.title2)
+                                .foregroundStyle(theme.style.accent)
+                            Text("Drag to tilt").ds(.title3)
+                            Text("3D tilt with a sheen that slides across the glass, then springs back.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Text Fields
                 section("Text Fields") {
                     DSCard {
