@@ -234,12 +234,11 @@ private struct DSConfettiModifier<T: Equatable>: ViewModifier {
         generation += 1
     }
 
-    /// Theme accent, gradient stops and lighter tints of each, plus the theme ink:
-    /// pieces in the gradient's own colors vanish against the backdrop, the ink
-    /// gives the burst contrast on every theme.
+    /// Theme accent plus the theme ink, each with a lighter tint: the accent
+    /// carries the brand, the ink gives the burst contrast on every page tone.
     private func palette() -> [Color] {
-        let base = [theme.accent] + theme.gradient.stops
-        return base + [theme.ink, theme.ink] + base.map { $0.mix(with: .white, by: Metrics.tintAmount) }
+        let base = [theme.accent, theme.ink]
+        return base + [theme.ink] + base.map { $0.mix(with: .white, by: Metrics.tintAmount) }
     }
 
     private func draw(

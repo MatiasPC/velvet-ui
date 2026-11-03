@@ -15,7 +15,7 @@ A Velvet-styled native sheet: detents, a visible grabber, a glass background, an
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -95,7 +95,7 @@ Item-driven: the sheet shows while the item is non-nil.
 - Applies `.presentationDetents` and a visible drag indicator.
 - On iOS 26 and macOS 26 the system background (Liquid Glass) is left alone. On earlier systems the background is `.regularMaterial`.
 - Reduce Transparency: the background is the solid elevated surface color on every system.
-- The content gets the presenter's theme and is marked as not on the gradient backdrop.
+- The content gets the presenter's theme and is marked as not on the page backdrop.
 - No haptic: presenting a sheet is not an action.
 
 ## Accessibility

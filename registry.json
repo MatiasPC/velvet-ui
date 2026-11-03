@@ -1,6 +1,6 @@
 {
   "name": "Velvet UI",
-  "summary": "Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.",
+  "summary": "Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over solid neutral page tones, no borders, VoiceOver and Reduce Motion built in. MIT.",
   "repository": "https://github.com/MatiasPC/velvet-ui",
   "raw": "https://raw.githubusercontent.com/MatiasPC/velvet-ui",
   "package": {
@@ -16,8 +16,9 @@
   "core": {
     "summary": "Tokens, theme, glass surfaces, typography, spacing, radius, shadows, springs, haptics and layout helpers. Every component needs it; the CLI adds it once.",
     "files": [
+      "Sources/VelvetUI/Tokens/DSBackground.swift",
       "Sources/VelvetUI/Tokens/DSColors.swift",
-      "Sources/VelvetUI/Tokens/DSGradientTheme.swift",
+      "Sources/VelvetUI/Tokens/DSThemeStyle.swift",
       "Sources/VelvetUI/Tokens/DSRadius.swift",
       "Sources/VelvetUI/Tokens/DSShadow.swift",
       "Sources/VelvetUI/Tokens/DSSpacing.swift",
@@ -125,6 +126,20 @@
       "dependencies": [],
       "docs": "docs/components/DSRating.md",
       "stage": "DSRating"
+    },
+    {
+      "name": "DSLikeButton",
+      "category": "inputs",
+      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
+      "symbols": [
+        "DSLikeButton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSLikeButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSLikeButton.md",
+      "stage": "DSLikeButton"
     },
     {
       "name": "DSSegmentedControl",
@@ -268,6 +283,20 @@
       "stage": "DSSheet"
     },
     {
+      "name": "DSDisclosureGroup",
+      "category": "containers",
+      "summary": "Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.",
+      "symbols": [
+        "DSDisclosureGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSDisclosureGroup.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSDisclosureGroup.md",
+      "stage": "DSDisclosureGroup"
+    },
+    {
       "name": "DSBadge",
       "category": "display",
       "summary": "Status pills and count badges.",
@@ -379,7 +408,7 @@
     {
       "name": "Progress",
       "category": "feedback",
-      "summary": "Circular, linear, gradient and step progress, animated numbers, shimmer skeletons.",
+      "summary": "Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons.",
       "symbols": [
         "DSCircularProgress",
         "DSLinearProgress",
@@ -456,6 +485,20 @@
       ],
       "docs": "docs/components/DSTypewriterText.md",
       "stage": "DSTypewriterText"
+    },
+    {
+      "name": "DSExpandableText",
+      "category": "display",
+      "summary": "Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.",
+      "symbols": [
+        "DSExpandableText"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSExpandableText.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSExpandableText.md",
+      "stage": "DSExpandableText"
     },
     {
       "name": "Motion",

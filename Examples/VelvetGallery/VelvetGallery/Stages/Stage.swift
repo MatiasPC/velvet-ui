@@ -12,6 +12,9 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSActivityRings
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSSuccessCheck, DSConfetti
+    case DSDisclosureGroup
+    case DSExpandableText
+    case DSLikeButton
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }
@@ -31,6 +34,11 @@ enum Stage: String, CaseIterable, Identifiable {
              .DSTextField, .DSBadge, .DSAvatar, .DSListCell, .DSEmptyState,
              .OnboardingFlow, .SettingsFlow, .CheckoutFlow:
             return false
+        case .DSExpandableText:
+            // The expansion state is private to the component: tap Show more by hand.
+            return false
+        case .DSLikeButton:
+            return false   // the beat belongs to the tap: record it by hand
         default:
             return true
         }
@@ -43,7 +51,7 @@ enum StageBackground: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var label: String { rawValue.capitalized }
 
-    var gradient: DSGradientTheme {
+    var style: DSThemeStyle {
         switch self {
         case .neutral: return .neutral
         case .sunset:  return .sunset

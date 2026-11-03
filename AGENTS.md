@@ -33,7 +33,7 @@ Copied files compile in Swift 5 and Swift 6 language mode and need no `import`. 
 import VelvetUI
 
 @main struct MyApp: App {
-    @State private var theme = DSTheme(gradient: .sunset)   // .sunset, .aurora, .lagoon
+    @State private var theme = DSTheme(style: .sunset)   // .sunset, .aurora, .lagoon
     var body: some Scene { WindowGroup { RootView().dsTheme(theme) } }
 }
 ```
@@ -43,7 +43,7 @@ Velvet targets iOS 18+ and macOS 15+.
 ## The rules
 
 1. **Inject one `DSTheme` with `.dsTheme(_:)` at the root.** Without it every view silently uses a shared default, and changing "your" theme does nothing.
-2. **Put screens on the backdrop.** Write `DSScreen(backdrop: true) { … }` (it scrolls) or add `.dsBackdrop()` to a container. Glass needs a gradient behind it to read as glass.
+2. **Put screens on the backdrop.** Write `DSScreen(backdrop: true) { … }` (it scrolls) or add `.dsBackdrop()` to a container. Glass needs a page tone behind it to read as glass; each style draws a flat neutral background, never a gradient.
 3. **Reach for a component before building one.** See [the component chooser](#component-chooser). Velvet components already handle press feel, haptics, VoiceOver and Reduce Motion.
 4. **Tokens only.** Use `DSSpacing` for padding and gaps, `DSRadius` for corners, `.ds(_:)` for text, `DSShadow` for elevation and `DSAnimation` for motion. Never write literal numbers, fonts or colors.
 5. **Colors come from the theme.** In your own views, declare `@DSThemed private var theme` and paint with its roles (table below). Don't use `DSColors.x` inside a view body; those statics don't follow the injected theme.
@@ -64,6 +64,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
+| Like / favorite / bookmark toggle | `DSLikeButton(isLiked:count:symbol:emptySymbol:accessibilityLabel:)` | Pops and radiates a halo when a tap likes. Pass `accessibilityLabel:` that matches a swapped symbol (default "Like"); `count` is display-only, so update it in `.onChange(of: isLiked)`. |
 | Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |
 | One-time code | `DSCodeField(code:state:onComplete:)` | SMS autofill on iOS. |
 | App sections at the bottom | `DSTabBar(selection:items:)` | Place with `.safeAreaInset(edge: .bottom)`. |
@@ -71,6 +72,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Page dots | `DSPageControl(currentPage:numberOfPages:)` | |
 | Modal panel | `.dsSheet(isPresented:detents:content:)` | Native sheet with Velvet chrome. |
 | A surface to group content | `DSCard { … }` | `DSInteractiveCard(action:)` when tappable. |
+| Expandable section, FAQ row | `DSDisclosureGroup(_:subtitle:icon:initiallyExpanded:content:)` | Use this, not the stock `DisclosureGroup`. `isExpanded:` instead of `initiallyExpanded:` for state you own (accordion). |
 | Rows in a group | `DSListCell(title:subtitle:leading:trailing:action:)` + `DSDivider` | Inside `DSCard(padding: 0)`. |
 | Status label / unread count | `DSBadge(_:variant:)`, `DSCountBadge(count:)` | |
 | Person | `DSAvatar(name:imageURL:size:)` | Falls back to initials. |
@@ -102,7 +104,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | `theme.palette.textPrimary` / `.textSecondary` / `.textTertiary` | Body copy hierarchy |
 | `theme.palette.success` / `.warning` / `.error` / `.info` | Status; `theme.palette.textOnPrimary` for text on them |
 | `theme.subtleFill` | Flat fill for a surface nested in another |
-| `theme.gradient.stops`, `.linearGradient`, `.horizontalGradient` | Decoration |
+| `theme.backgroundColor` / `theme.style.background` | The flat page tone behind a screen |
 
 **Spacing** (`DSSpacing`, 4 pt grid): `xxxs` 2 · `xxs` 4 · `xs` 8 · `sm` 12 · `md` 16 · `lg` 20 · `xl` 24 · `xxl` 32 · `xxxl` 40 · `huge` 48 · `massive` 64. Screen margin: `.dsScreenPadding()` (20).
 
@@ -319,14 +321,14 @@ struct ThemePicker: View {
     var body: some View {
         DSSegmentedControl(
             selection: Binding(
-                get: { theme.gradient.id },
+                get: { theme.style.id },
                 set: { id in
                     withAnimation(DSAnimation.normal) {
-                        theme.gradient = DSGradientTheme.all.first { $0.id == id } ?? .sunset
+                        theme.style = DSThemeStyle.all.first { $0.id == id } ?? .sunset
                     }
                 }
             ),
-            segments: DSGradientTheme.all.map { DSSegment($0.name, value: $0.id) }
+            segments: DSThemeStyle.all.map { DSSegment($0.name, value: $0.id) }
         )
     }
 }
