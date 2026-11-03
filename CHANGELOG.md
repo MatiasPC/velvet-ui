@@ -5,7 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
-- `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap, with a measured truncation check (`onGeometryChange`), a rotating chevron, a crossfading Show more / Show less toggle, a haptic and full Reduce Motion / VoiceOver / Dynamic Type support.
+- `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 
 ## [0.2.0] — 2026-10-23
 

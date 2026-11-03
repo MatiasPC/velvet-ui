@@ -118,6 +118,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSSlideToConfirm` | Drag the knob to the end, release. Manual. |
 | `DSThinkingIndicator` | Runs on its own. |
 | `DSTypewriterText` | Runs on its own. |
+| `DSExpandableText` | Tap Show more, then Show less. Manual. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
