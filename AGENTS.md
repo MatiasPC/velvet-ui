@@ -60,10 +60,13 @@ Velvet targets iOS 18+ and macOS 15+.
 | Primary / secondary action | `DSButton(_:variant:size:icon:isLoading:action:)` | `.primary` is the accent fill; one per screen. |
 | Icon-only action | `DSIconButton(icon:accessibilityLabel:action:)` | Always pass `accessibilityLabel`. |
 | Confirm a payment or a destructive action | `DSSlideToConfirm(_:confirmedLabel:finish:onConfirm:)` | `onConfirm` is `async throws`. |
+| Confirm by holding (power off, send, one-handed) | `DSHoldToConfirm(_:icon:confirmedLabel:duration:accent:onConfirm:)` | Same `async throws` `onConfirm`; VoiceOver double-taps instead of holding. |
 | On/off setting | `DSToggle(_:isOn:)` | |
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
+| Continuous value (volume, price, opacity) | `DSSlider(value:in:step:)` | `Double` binding, default `0...1`; pass `step` for notches. It draws no value: show your own read-out. Add `.accessibilityLabel(…)`. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
+| Like / favorite / bookmark toggle | `DSLikeButton(isLiked:count:symbol:emptySymbol:accessibilityLabel:)` | Pops and radiates a halo when a tap likes. Pass `accessibilityLabel:` that matches a swapped symbol (default "Like"); `count` is display-only, so update it in `.onChange(of: isLiked)`. |
 | Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |
 | One-time code | `DSCodeField(code:state:onComplete:)` | SMS autofill on iOS. |
 | App sections at the bottom | `DSTabBar(selection:items:)` | Place with `.safeAreaInset(edge: .bottom)`. |
@@ -71,6 +74,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Page dots | `DSPageControl(currentPage:numberOfPages:)` | |
 | Modal panel | `.dsSheet(isPresented:detents:content:)` | Native sheet with Velvet chrome. |
 | A surface to group content | `DSCard { … }` | `DSInteractiveCard(action:)` when tappable. |
+| Expandable section, FAQ row | `DSDisclosureGroup(_:subtitle:icon:initiallyExpanded:content:)` | Use this, not the stock `DisclosureGroup`. `isExpanded:` instead of `initiallyExpanded:` for state you own (accordion). |
 | Rows in a group | `DSListCell(title:subtitle:leading:trailing:action:)` + `DSDivider` | Inside `DSCard(padding: 0)`. |
 | Status label / unread count | `DSBadge(_:variant:)`, `DSCountBadge(count:)` | |
 | Person | `DSAvatar(name:imageURL:size:)` | Falls back to initials. |
