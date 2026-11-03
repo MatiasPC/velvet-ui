@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct ToastScreen: View {
     @State private var active: DSToastType?
