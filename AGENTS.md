@@ -87,6 +87,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Success moment | `DSSuccessCheck(isComplete:)`, `.dsConfetti(trigger:)` | Confetti is decorative; pair it with a real result. |
 | AI / background work | `DSThinkingIndicator(phrases:)` | |
 | Typed headline | `DSTypewriterText(_:style:)` | |
+| Rows or cards that recede at the scroll edge | `.dsScrollReveal(_:)` | On each repeated item inside a `ScrollView`; rests under Reduce Motion. |
 | Ambient motion on any view | `.dsBreathe()`, `.dsJiggle(trigger:)`, `.dsPopIn(delay:)`, `.dsEdgeSweep()`, `.dsHueDrift()` | |
 | Menu, context menu | SwiftUI `Menu`, `.contextMenu` | Native is right; it inherits the tint. |
 | Pull to refresh | `.refreshable { await … }` | Native. |

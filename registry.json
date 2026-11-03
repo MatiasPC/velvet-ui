@@ -482,6 +482,23 @@
       "stage": "DSConfetti"
     },
     {
+      "name": "DSScrollReveal",
+      "category": "motion",
+      "summary": "A scroll-coupled reveal: rows and carousel cards recede as they cross the edge of the scroll view, reversibly.",
+      "symbols": [
+        "DSScrollRevealIntensity",
+        "dsScrollReveal"
+      ],
+      "files": [
+        "Sources/VelvetUI/Animation/DSScrollEffects.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSScrollReveal.md",
+      "stage": "DSScrollReveal"
+    },
+    {
       "name": "DSMarquee",
       "category": "display",
       "summary": "Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.",

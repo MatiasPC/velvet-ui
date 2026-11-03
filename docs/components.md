@@ -588,6 +588,16 @@ Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-f
 
 ---
 
+## dsScrollReveal  ✅
+
+`Animation/DSScrollEffects.swift`. The scroll-coupled member of the motion vocabulary, built on `scrollTransition(.interactive)`: a view is at full presence inside the scroll view's visible area and recedes (scale + opacity) as it crosses the leading or trailing edge, and returns when the user scrolls back. Unlike `dsPopIn` / `dsStaggerIn` (one-shot, `onAppear`) it is bidirectional and reversible.
+
+```swift
+func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View
+// .subtle / .medium / .strong -> DSMotion.scrollReveal{Subtle,Medium,Strong}{Scale,Opacity}
+```
+
+The edge values are `DSMotion` tokens (0.96/0.65, 0.90/0.40, 0.80/0.15 for scale/opacity). The amount is `DSScrollRevealMath.effect(for:phaseValue:reduceMotion:)` (interpolated by `|phase.value|`, clamped, unit-tested). Axis is inferred from the scroll view. Only render transforms are touched, so nothing reflows. Centre emphasis needs a peeking carousel (`contentMargins` + `containerRelativeFrame`), because the effect keys off the visible-area edge. No haptics. Under Reduce Motion every item rests at scale 1 / opacity 1. Docs: [DSScrollReveal.md](components/DSScrollReveal.md).
 ## DSMarquee  ✅
 
 `Components/DSMarquee.swift`.

@@ -41,6 +41,7 @@ struct StageView: View {
         case .DSSkeleton:          SkeletonStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
+        case .DSScrollReveal:      ScrollRevealStage(autoplay: autoplay)
         case .DSMarquee:           MarqueeStage(autoplay: autoplay)
         case .DSFlowLayout:        FlowLayoutStage(autoplay: autoplay)
         case .DSChip:              ChipStage(autoplay: autoplay)

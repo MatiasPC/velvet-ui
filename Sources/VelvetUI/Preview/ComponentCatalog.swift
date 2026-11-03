@@ -872,6 +872,33 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("dsScrollReveal — neighbours recede at the edges")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ScrollView(.horizontal) {
+                            HStack(spacing: DSSpacing.md) {
+                                ForEach(0..<5, id: \.self) { index in
+                                    DSCard {
+                                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                            Text("Card \(index + 1)").ds(.title3)
+                                            Text("Swipe me").ds(.callout, color: DSColors.textSecondary)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .containerRelativeFrame(.horizontal)
+                                    .dsScrollReveal(.strong)
+                                }
+                            }
+                            .scrollTargetLayout()
+                        }
+                        .contentMargins(.horizontal, DSSpacing.xxxl, for: .scrollContent)
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollIndicators(.hidden)
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)

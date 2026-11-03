@@ -44,6 +44,24 @@ public enum DSMotion {
         0
     ]
 
+    // MARK: - Scroll Reveal
+
+    /// Scale a `.subtle` scroll reveal settles at once the view is fully past the
+    /// edge of the scroll view. 1 is no change; each step down recedes further.
+    public static let scrollRevealSubtleScale: CGFloat = 0.96
+    /// Scale of a `.medium` scroll reveal at the edge — the default.
+    public static let scrollRevealMediumScale: CGFloat = 0.90
+    /// Scale of a `.strong` scroll reveal at the edge. Never below 0.8: a card has to
+    /// stay a card.
+    public static let scrollRevealStrongScale: CGFloat = 0.80
+    /// Opacity of a `.subtle` scroll reveal at the edge. A whisper, so text stays legible.
+    public static let scrollRevealSubtleOpacity: Double = 0.65
+    /// Opacity of a `.medium` scroll reveal at the edge.
+    public static let scrollRevealMediumOpacity: Double = 0.40
+    /// Opacity of a `.strong` scroll reveal at the edge. Never fully clear, so a
+    /// neighbour is still seen to be there.
+    public static let scrollRevealStrongOpacity: Double = 0.15
+
     // MARK: - Reduce Motion
 
     /// Wrap an animation in `repeatForever`, or return `nil` when Reduce Motion is on.
