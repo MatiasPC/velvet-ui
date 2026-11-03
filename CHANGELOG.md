@@ -6,6 +6,8 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ### Added
 - `DSRadioGroup` and `DSRadioOption`: single-select list for any `Hashable` value. A sibling of `DSCheckbox` (same 24 pt wash indicator, accent layer, `onAccent` dot and `.rigid` haptic): the dot grows as the layer pops in, and a frosted highlight slides between rows with `matchedGeometryEffect`. Rows are at least 44 pt tall; VoiceOver reads the title and subtitle, "N of M" and the selected trait, and announces the pick; Reduce Motion crossfades.
+- `DSDisclosureGroup`: a glass accordion / FAQ row, a themed replacement for the stock `DisclosureGroup`. The card grows with the body on `springSmooth` (a clipped reveal layout, so text never re-wraps mid-animation) while the chevron rotates on the same spring, with a hairline divider and a `.light` haptic; Reduce Motion swaps the spring for a short ease, Reduce Transparency gives a solid surface, and VoiceOver reads Expanded / Collapsed. Self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`) initializers. Gallery screen and recording stage included.
+- `DSLikeButton`: a favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track and radiates one filled halo in the tint (the same halo mechanism as `DSSuccessCheck`, so no border), with the haptic on the peak of the pop; unliking is quiet and rapid taps never stack. Optional `count` rolls with `.numericText`. 44 pt tap target, press feel, Reduce Motion (no pop or halo, crossfades), VoiceOver toggle with a Liked / Not liked value. Configurable `symbol`/`emptySymbol` for stars, bookmarks or any filled/outline SF Symbol pair. Gallery screen and recording stage included.
 
 ### Changed
 - **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
@@ -15,6 +17,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ### Deprecated
 - `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
+### Added
+- `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 
 ## [0.2.0] — 2026-10-23
 
