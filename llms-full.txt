@@ -1833,7 +1833,7 @@ VStack(spacing: DSSpacing.lg) {
 ## Behavior
 
 - Dragging tips the card in 3D: horizontal drag rotates it around the vertical axis, vertical drag around the horizontal one, so the surface leans toward the finger. The tilt clamps at `maxTilt` once the drag passes ~120 pt from where it started.
-- A specular sheen fades in with the tilt and slides across the glass, reading as light catching the surface rather than as a fill. It rides the same white highlight language as `DSWash.edge` and `dsEdgeSweep`, a little stronger on light themes.
+- A specular sheen fades in with the tilt and slides across the glass, reading as light catching the glass rather than as a fill. It sits between the glass and the content, so text and icons keep full contrast. It rides the same white highlight language as `DSWash.edge` and `dsEdgeSweep`, a little stronger on light themes.
 - The shadow deepens from `.lg` to `.xl` while the card is held.
 - Release (or a cancelled touch) springs the card flat with `DSAnimation.springGentle`. While the finger is down the tilt follows it 1:1 with no animation, so it never lags.
 - A `.soft` haptic fires once when the touch begins.

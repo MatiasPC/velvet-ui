@@ -39,9 +39,9 @@ enum DSTiltMetrics {
     /// so the distortion stays subtle instead of fish-eyed.
     static let perspective: CGFloat = 0.7
     /// Peak opacity of the specular sheen at full tilt, on light and dark themes.
-    /// Light glass needs a stronger highlight to read; on dark it blooms quickly.
-    static let sheenPeakLight: Double = 0.55
-    static let sheenPeakDark: Double = 0.4
+    /// Drawn between the glass and the content, so it can stay subtle without fogging text.
+    static let sheenPeakLight: Double = 0.35
+    static let sheenPeakDark: Double = 0.3
     /// Oversize factor for the sheen band so it can travel without its edges showing.
     static let sheenScale: CGFloat = 1.6
     /// How far, in points, the sheen band slides across the surface at full tilt.
@@ -125,9 +125,12 @@ public struct DSTiltCard<Content: View>: View {
 
         content()
             .padding(padding)
-            .dsSurface(.glass, radius: cornerRadius)
-            .overlay {
-                sheen(normalized: normalized).clipShape(shape)
+            // The sheen is part of the glass layer: surface, then light, then content on top,
+            // so text and icons keep full contrast while the highlight moves.
+            .background {
+                Color.clear
+                    .dsSurface(.glass, radius: cornerRadius)
+                    .overlay { sheen(normalized: normalized).clipShape(shape) }
             }
             .dsShadow(isLifted && !reduceMotion ? .xl : .lg)
             // Horizontal drag rotates around the vertical axis, vertical drag around the
