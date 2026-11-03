@@ -1,13 +1,14 @@
 import SwiftUI
 import VelvetUI
 
-extension DSGradientTheme {
-    /// Gallery-only theme: no gradient, graphite accent that adapts to light/dark.
-    /// `stops` is never drawn because the gallery never uses `.dsBackdrop()`.
-    static let neutral = DSGradientTheme(
+extension DSThemeStyle {
+    /// Gallery-only style: graphite accent that adapts to light/dark, on the
+    /// plain snow page tone. The gallery itself paints `backgroundPrimary`;
+    /// stages use the style's solid background.
+    static let neutral = DSThemeStyle(
         id: "neutral",
         name: "Neutral",
-        stops: [Color(hex: "9AA0A6"), Color(hex: "6B7178")],
+        background: .snow,
         accent: .dsDynamic(light: Color(hex: "1F2225"), dark: Color(hex: "EDEEF0")),
         onAccent: .dsDynamic(light: Color(hex: "FFFFFF"), dark: Color(hex: "16181A")),
         ink: Color(hex: "2A2D30"),
