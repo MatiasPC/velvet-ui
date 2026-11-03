@@ -89,7 +89,7 @@ struct FlowLayoutScreen: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let words = [
-        "Design", "Code", "Ship", "SwiftUI", "Glass", "Gradient", "Haptics", "Motion",
+        "Design", "Code", "Ship", "SwiftUI", "Glass", "Surface", "Haptics", "Motion",
         "Type", "Color", "Spacing", "Radius", "Springs", "Tokens", "Themes", "Cards"
     ]
 

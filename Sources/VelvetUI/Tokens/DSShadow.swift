@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Design System Shadows & Elevation
 // Soft, ambient shadows: large radius, low opacity. Depth without "windows".
 // `.glow(tint)` is a colored shadow reserved for the primary CTA and toggles on —
-// it makes the control feel like it emits light over the gradient backdrop.
+// it makes the control feel like it emits light over the page tone.
 
 public enum DSShadow: Equatable {
     case none

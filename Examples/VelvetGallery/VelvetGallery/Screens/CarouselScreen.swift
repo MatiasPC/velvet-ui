@@ -6,18 +6,17 @@ private struct Destination: Identifiable {
     let title: String
     let subtitle: String
     let price: String
-    let gradientIndex: Int
 }
 
 private let destinations = [
-    Destination(id: 0, title: "Lisbon", subtitle: "3 nights, tram 28", price: "$480", gradientIndex: 0),
-    Destination(id: 1, title: "Kyoto", subtitle: "5 nights, temples", price: "$1,240", gradientIndex: 1),
-    Destination(id: 2, title: "Oaxaca", subtitle: "4 nights, mezcal", price: "$620", gradientIndex: 2),
-    Destination(id: 3, title: "Reykjavik", subtitle: "2 nights, aurora", price: "$870", gradientIndex: 0),
-    Destination(id: 4, title: "Marrakesh", subtitle: "4 nights, medina", price: "$540", gradientIndex: 1)
+    Destination(id: 0, title: "Lisbon", subtitle: "3 nights, tram 28", price: "$480"),
+    Destination(id: 1, title: "Kyoto", subtitle: "5 nights, temples", price: "$1,240"),
+    Destination(id: 2, title: "Oaxaca", subtitle: "4 nights, mezcal", price: "$620"),
+    Destination(id: 3, title: "Reykjavik", subtitle: "2 nights, aurora", price: "$870"),
+    Destination(id: 4, title: "Marrakesh", subtitle: "4 nights, medina", price: "$540")
 ]
 
-/// A destination card: gradient fill from the theme with title, subtitle and price.
+/// A destination card: solid accent fill with title, subtitle and price.
 private struct DestinationCard: View {
     let destination: Destination
     var height: CGFloat = 200
@@ -25,10 +24,8 @@ private struct DestinationCard: View {
     @DSThemed private var theme
 
     var body: some View {
-        let stops = theme.gradient.stops
-        let tint = stops[destination.gradientIndex % stops.count]
         RoundedRectangle(cornerRadius: DSRadius.card, style: .continuous)
-            .fill(LinearGradient(colors: [tint, theme.accent], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .fill(theme.accent)
             .overlay(alignment: .bottomLeading) {
                 VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                     Text(destination.title).ds(.title2, color: theme.onAccent)
