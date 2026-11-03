@@ -12,6 +12,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSSuccessCheck, DSConfetti
     case DSFlowLayout
+    case DSChip
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }

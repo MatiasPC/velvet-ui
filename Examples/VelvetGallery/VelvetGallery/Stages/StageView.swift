@@ -39,6 +39,7 @@ struct StageView: View {
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
         case .DSFlowLayout:        FlowLayoutStage(autoplay: autoplay)
+        case .DSChip:              ChipStage(autoplay: autoplay)
         case .OnboardingFlow:      OnboardingFlowStage()
         case .SettingsFlow:        SettingsFlowStage()
         case .CheckoutFlow:        CheckoutFlowStage()
