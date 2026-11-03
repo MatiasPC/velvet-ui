@@ -98,6 +98,21 @@
       "stage": "DSToggle"
     },
     {
+      "name": "DSRadioGroup",
+      "category": "inputs",
+      "summary": "Single-select list whose indicator pops to the accent and whose highlight slides between rows.",
+      "symbols": [
+        "DSRadioGroup",
+        "DSRadioOption"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSRadioGroup.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSRadioGroup.md",
+      "stage": "DSRadioGroup"
+    },
+    {
       "name": "DSStepper",
       "category": "inputs",
       "summary": "Minus/plus stepper that ticks on every step and jiggles at its bounds.",

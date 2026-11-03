@@ -62,6 +62,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Confirm a payment or a destructive action | `DSSlideToConfirm(_:confirmedLabel:finish:onConfirm:)` | `onConfirm` is `async throws`. |
 | On/off setting | `DSToggle(_:isOn:)` | |
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
+| Pick one from a list of options (plan, payment) | `DSRadioGroup(selection:options:)` | Any `Hashable` value; wrap in `DSCard`; `.accessibilityLabel("…")` on the group. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
 | Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |

@@ -89,7 +89,7 @@ struct ContentView: View {
 
 ## Components
 
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 28 components, every one with a Gallery stage.
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 29 components, every one with a Gallery stage.
 
 | Preview | Component | What it does |
 |:---:|---|---|
@@ -100,6 +100,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSStepper.gif" width="120" alt="DSStepper"> | [DSStepper](docs/components/DSStepper.md) | −/+ stepper that ticks on every step and jiggles at its bounds. |
 | <img src="docs/media/DSRating.gif" width="120" alt="DSRating"> | [DSRating](docs/components/DSRating.md) | Drag-to-rate stars, with half steps and a read-only mode. |
 | <img src="docs/media/DSSegmentedControl.gif" width="120" alt="DSSegmentedControl"> | [DSSegmentedControl](docs/components/DSSegmentedControl.md) | Pill or underline picker with a sliding indicator. |
+| — | [DSRadioGroup](docs/components/DSRadioGroup.md) | Single-select list: the indicator pops to the accent and a highlight slides between rows. |
 | <img src="docs/media/DSTextField.gif" width="120" alt="DSTextField"> | [DSTextField](docs/components/DSTextField.md) | Text field with label, icon and validation states, plus `DSSearchBar`. |
 | <img src="docs/media/DSCodeField.gif" width="120" alt="DSCodeField"> | [DSCodeField](docs/components/DSCodeField.md) | One-time-code input with SMS autofill, a shake on error and success feedback. |
 | <img src="docs/media/DSPageControl.gif" width="120" alt="DSPageControl"> | [DSPageControl](docs/components/DSPageControl.md) | Page dots whose active dot stretches into a capsule. |

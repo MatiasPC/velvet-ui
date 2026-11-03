@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0994C9F56092856763C3D6B6 /* RadioGroupScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */; };
 		17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */; };
 		1A9107756FFA38B7F26FD72F /* ToastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6F0563E4BBB324996A851C /* ToastScreen.swift */; };
 		1AEC99C7B4DD64853B18865E /* TypographyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */; };
@@ -58,7 +59,6 @@
 		18F764E802EE484CCD96ADDF /* ChartsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsScreen.swift; sourceTree = "<group>"; };
 		1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetScreen.swift; sourceTree = "<group>"; };
-		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		2B6F0563E4BBB324996A851C /* ToastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastScreen.swift; sourceTree = "<group>"; };
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +79,7 @@
 		6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyScreen.swift; sourceTree = "<group>"; };
 		70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonScreen.swift; sourceTree = "<group>"; };
 		7719CDE3248D798BF625C212 /* RatingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingScreen.swift; sourceTree = "<group>"; };
+		7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioGroupScreen.swift; sourceTree = "<group>"; };
 		881BF062001690F173C72A36 /* CarouselScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselScreen.swift; sourceTree = "<group>"; };
 		8F832409543665FBF97B12CD /* CodeFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeFieldScreen.swift; sourceTree = "<group>"; };
 		931294FB9DE3CEC60EEB2738 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
@@ -86,6 +87,7 @@
 		98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessCheckScreen.swift; sourceTree = "<group>"; };
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
+		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
 		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
 		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */,
 				316D05380CECE2E8681282F6 /* PageControlScreen.swift */,
 				3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */,
+				7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */,
 				7719CDE3248D798BF625C212 /* RatingScreen.swift */,
 				F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */,
 				24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */,
@@ -304,6 +307,7 @@
 				EFF9FCAD32DBAB9F8F0E08BA /* OnboardingFlow.swift in Sources */,
 				37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */,
 				BEFFD9CE369EEB96948701A0 /* ProgressLoadingScreen.swift in Sources */,
+				0994C9F56092856763C3D6B6 /* RadioGroupScreen.swift in Sources */,
 				2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */,
 				2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */,
 				D631D0C5204131B963AB76F7 /* SettingsFlow.swift in Sources */,

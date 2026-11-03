@@ -166,20 +166,18 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ## DSRadioGroup  ✅
 
-`Components/DSRadioGroup.swift`. Single-select from a vertical list of options. Generic over any `Hashable` value.
+`Components/DSRadioGroup.swift`. Single-select from a vertical list of options, generic over any `Hashable` value. Fills the gap between `DSSegmentedControl` (one of a few side-by-side modes) and `DSCheckbox` (many independent flags): "choose exactly one of several".
+
+**Accessibility:** Each row is a button labelled "Title, subtitle" with value "N of M" and the selected trait while chosen; picking a row posts an announcement ("Pro, selected"). The group is a container: label it with `.accessibilityLabel("Plan")`.
 
 ```swift
 DSRadioGroup(selection: Binding<Value>, options: [DSRadioOption<Value>],
-             accent: Color? = nil, haptic: DSHapticStyle = .selection)
+             accent: Color? = nil, haptic: DSHapticStyle = .rigid)
 DSRadioGroup(selection: Binding<String>, options: [String], accent:, haptic:)   // value == label
 DSRadioOption(_ title: String, value: Value, subtitle: String? = nil, icon: String? = nil)
 ```
 
-Fills the gap between `DSSegmentedControl` (one of a few side-by-side modes) and a checkbox (many independent flags): "choose exactly one of several" — a plan, a payment method, a shipping speed, a survey answer. Each row is a button with an optional leading `icon` and `subtitle`.
-
-Two motions run together on a change of selection: the indicator swaps `circle` → `circle.inset.filled` via `.contentTransition(.symbolEffect(.replace))`, tinting to `accent ?? theme.accent`; and a `theme.subtleFill` highlight slides from the old row to the new one with `matchedGeometryEffect` + `springSmooth`, resizing between rows with and without a subtitle. `.selection` haptic fires on change only — reselecting the current value does nothing. No borders: the selected row is a frosted wash, the ring is an SF Symbol glyph. Highlight radius is `DSRadius.control`.
-
-Honors `.disabled()` (0.5 opacity, selection blocked) and Reduce Motion (the symbol cuts instead of morphing and the highlight jumps instead of sliding). Each row exposes `.isButton` + `.isSelected` traits with the subtitle as its accessibility value. Wrap the group in a `DSCard` for the glass container look.
+The indicator is `DSCheckbox`'s sibling: a 24 pt `theme.subtleFill` circle with `dsWashEdge`, an accent layer that pops in (`springBouncy`, fade on `fast`) and an inner `onAccent` dot that grows a beat later (`textOnPrimary` on a custom `accent`). A `theme.subtleFill` highlight (`DSRadius.control`, with `dsWashEdge`) slides to the chosen row with `matchedGeometryEffect` + `springSmooth`, resizing between rows with and without a subtitle. All of it follows `selection`, so a change from outside animates too. The haptic (`.rigid`, same as the checkbox) fires on a change only; reselecting does nothing. Rows are at least 44 pt tall and fully tappable; press dips the row with `DSPress.scale`. Disabled: 0.5 opacity. Reduce Motion: no pop, growth or slide; indicators and highlight crossfade in place (the rows are not matched).
 
 ---
 

@@ -17,6 +17,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSIconButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSIconButton.md): Icon-only button with press scale, a haptic and a VoiceOver label.
 - [DSSlideToConfirm](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSlideToConfirm.md): Slide-to-confirm for payments and destructive actions, with an async result.
 - [DSToggle](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToggle.md): Switch with a spring knob and a rigid haptic.
+- [DSRadioGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRadioGroup.md): Single-select list whose indicator pops to the accent and whose highlight slides between rows.
 - [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
 - [DSRating](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRating.md): Drag-to-rate stars, with half steps and a read-only mode.
 - [DSSegmentedControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSegmentedControl.md): Pill or underline picker with a sliding indicator.

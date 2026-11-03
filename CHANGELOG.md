@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSRadioGroup` and `DSRadioOption`: single-select list for any `Hashable` value. A sibling of `DSCheckbox` (same 24 pt wash indicator, accent layer, `onAccent` dot and `.rigid` haptic): the dot grows as the layer pops in, and a frosted highlight slides between rows with `matchedGeometryEffect`. Rows are at least 44 pt tall; VoiceOver reads the title and subtitle, "N of M" and the selected trait, and announces the pick; Reduce Motion crossfades.
+
 ### Changed
 - **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
 - **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
