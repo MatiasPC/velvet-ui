@@ -55,7 +55,7 @@ After changing the file list or target settings, re-run `xcodegen generate` and
   (chrome-free host, long-press the background to exit), `StageListView`, `StageView`
   (one isolated view per component).
 - `Support/` — `GalleryScreen` + `LabeledExample` chrome, `Appearance` toggle.
-- `Theme/NeutralTheme.swift` — `DSGradientTheme.neutral`.
+- `Theme/NeutralTheme.swift` — `DSThemeStyle.neutral`.
 
 ## Recording
 
@@ -68,8 +68,8 @@ neutral|sunset|aurora|lagoon`, `-VelvetStageAutoplay YES|NO`,
 ## Design
 
 Neutral component screens: solid `DSColors.backgroundPrimary` background, no
-`.dsBackdrop()`, a local `DSGradientTheme.neutral` with a graphite accent. The
-Examples are the exception: they run on a gradient theme with a backdrop, the way
+`.dsBackdrop()`, a local `DSThemeStyle.neutral` with a graphite accent. The
+Examples are the exception: they run on a built-in style with a backdrop, the way
 an app would ship. Semantic status colours
 (error / success / warning / info) are kept; decorative defaults are shown in
 neutral with one labelled colourful example each. Appearance (System / Light /

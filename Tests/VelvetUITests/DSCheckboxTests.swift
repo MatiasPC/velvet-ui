@@ -85,8 +85,10 @@ final class DSCheckboxTests: XCTestCase {
     }
 
     func testTickIsDrawnOnlyWhileChecked() {
-        XCTAssertEqual(DSCheckbox.markProgress(isOn: true), 1)
-        XCTAssertEqual(DSCheckbox.markProgress(isOn: false), 0)
+        XCTAssertEqual(DSCheckbox.markProgress(isOn: true, reduceMotion: false), 1)
+        XCTAssertEqual(DSCheckbox.markProgress(isOn: false, reduceMotion: false), 0)
+        // Reduce Motion: the tick stays whole and only the layer fades.
+        XCTAssertEqual(DSCheckbox.markProgress(isOn: false, reduceMotion: true), 1)
     }
 
     func testReduceMotionRestsAtFullSizeInsteadOfPopping() {

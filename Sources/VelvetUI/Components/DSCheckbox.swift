@@ -186,7 +186,7 @@ public struct DSCheckbox: View {
             .fill(fill)
             .overlay {
                 DSCheckmarkShape()
-                    .trim(from: 0, to: Self.markProgress(isOn: isOn))
+                    .trim(from: 0, to: Self.markProgress(isOn: isOn, reduceMotion: reduceMotion))
                     .stroke(
                         markColor,
                         style: StrokeStyle(lineWidth: size.markWidth, lineCap: .round, lineJoin: .round)
@@ -224,7 +224,9 @@ public struct DSCheckbox: View {
     }
 
     /// How much of the tick is drawn: all of it while checked, none otherwise.
-    static func markProgress(isOn: Bool) -> CGFloat { isOn ? 1 : 0 }
+    /// Under Reduce Motion it is always whole, so the layer's fade carries the
+    /// change and the tick never vanishes before the fill does.
+    static func markProgress(isOn: Bool, reduceMotion: Bool) -> CGFloat { isOn || reduceMotion ? 1 : 0 }
 
     // MARK: - Layout & accessibility
 

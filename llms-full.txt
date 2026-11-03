@@ -1,8 +1,8 @@
 # Velvet UI
 
-> Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.
+> Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over solid neutral page tones, no borders, VoiceOver and Reduce Motion built in. MIT.
 
-Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, product `VelvetUI`, from 0.2.0) and `import VelvetUI`, or copy a single component and the core it needs into your app with the CLI: download https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(gradient: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
+Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, product `VelvetUI`, from 0.2.0) and `import VelvetUI`, or copy a single component and the core it needs into your app with the CLI: download https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(style: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
 
 ---
 <!-- source: AGENTS.md -->
@@ -42,7 +42,7 @@ Copied files compile in Swift 5 and Swift 6 language mode and need no `import`. 
 import VelvetUI
 
 @main struct MyApp: App {
-    @State private var theme = DSTheme(gradient: .sunset)   // .sunset, .aurora, .lagoon
+    @State private var theme = DSTheme(style: .sunset)   // .sunset, .aurora, .lagoon
     var body: some Scene { WindowGroup { RootView().dsTheme(theme) } }
 }
 ```
@@ -52,7 +52,7 @@ Velvet targets iOS 18+ and macOS 15+.
 ## The rules
 
 1. **Inject one `DSTheme` with `.dsTheme(_:)` at the root.** Without it every view silently uses a shared default, and changing "your" theme does nothing.
-2. **Put screens on the backdrop.** Write `DSScreen(backdrop: true) { … }` (it scrolls) or add `.dsBackdrop()` to a container. Glass needs a gradient behind it to read as glass.
+2. **Put screens on the backdrop.** Write `DSScreen(backdrop: true) { … }` (it scrolls) or add `.dsBackdrop()` to a container. Glass needs a page tone behind it to read as glass; each style draws a flat neutral background, never a gradient.
 3. **Reach for a component before building one.** See [the component chooser](#component-chooser). Velvet components already handle press feel, haptics, VoiceOver and Reduce Motion.
 4. **Tokens only.** Use `DSSpacing` for padding and gaps, `DSRadius` for corners, `.ds(_:)` for text, `DSShadow` for elevation and `DSAnimation` for motion. Never write literal numbers, fonts or colors.
 5. **Colors come from the theme.** In your own views, declare `@DSThemed private var theme` and paint with its roles (table below). Don't use `DSColors.x` inside a view body; those statics don't follow the injected theme.
@@ -112,7 +112,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | `theme.palette.textPrimary` / `.textSecondary` / `.textTertiary` | Body copy hierarchy |
 | `theme.palette.success` / `.warning` / `.error` / `.info` | Status; `theme.palette.textOnPrimary` for text on them |
 | `theme.subtleFill` | Flat fill for a surface nested in another |
-| `theme.gradient.stops`, `.linearGradient`, `.horizontalGradient` | Decoration |
+| `theme.backgroundColor` / `theme.style.background` | The flat page tone behind a screen |
 
 **Spacing** (`DSSpacing`, 4 pt grid): `xxxs` 2 · `xxs` 4 · `xs` 8 · `sm` 12 · `md` 16 · `lg` 20 · `xl` 24 · `xxl` 32 · `xxxl` 40 · `huge` 48 · `massive` 64. Screen margin: `.dsScreenPadding()` (20).
 
@@ -329,14 +329,14 @@ struct ThemePicker: View {
     var body: some View {
         DSSegmentedControl(
             selection: Binding(
-                get: { theme.gradient.id },
+                get: { theme.style.id },
                 set: { id in
                     withAnimation(DSAnimation.normal) {
-                        theme.gradient = DSGradientTheme.all.first { $0.id == id } ?? .sunset
+                        theme.style = DSThemeStyle.all.first { $0.id == id } ?? .sunset
                     }
                 }
             ),
-            segments: DSGradientTheme.all.map { DSSegment($0.name, value: $0.id) }
+            segments: DSThemeStyle.all.map { DSSegment($0.name, value: $0.id) }
         )
     }
 }
@@ -390,7 +390,7 @@ Every value a component is allowed to use. If you need something that isn't here
 
 ## Theme
 
-`DSTheme` (`Tokens/DSTheme.swift`) is an `@Observable` class holding `light`, `dark` (`DSColorPalette`) and `gradient` (`DSGradientTheme`). Inject once with `.dsTheme(theme)`. When nothing is injected, a shared default (Sunset) is used.
+`DSTheme` (`Tokens/DSTheme.swift`) is an `@Observable` class holding `light`, `dark` (`DSColorPalette`) and `style` (`DSThemeStyle`). Inject once with `.dsTheme(theme)`. When nothing is injected, a shared default (Sunset) is used.
 
 Inside views, read it with the property wrapper:
 
@@ -399,6 +399,7 @@ Inside views, read it with the property wrapper:
 theme.palette.textPrimary          // neutrals & status colors
 theme.accent / theme.onAccent      // fills and their text
 theme.ink                          // text / icons / focus on glass, resolved light/dark
+theme.backgroundColor              // the flat page tone for the current scheme
 theme.subtleFill                   // wash on a backdrop, backgroundSecondary otherwise
 theme.washSurface / theme.washEdge // raw wash values
 theme.isDark / theme.onBackdrop
@@ -406,27 +407,37 @@ theme.isDark / theme.onBackdrop
 
 `DSResolvedTheme` is a value type; `DSTheme.resolved(for:onBackdrop:)` builds one without a view.
 
-## Gradient themes
+## Theme styles
 
-`DSGradientTheme` (`Tokens/DSGradientTheme.swift`). Four derived colors, each with one job. Contrast is verified by `VelvetUITests.testGradientThemesMeetAAContrast`.
+`DSThemeStyle` (`Tokens/DSThemeStyle.swift`). A style is a solid page background (`DSBackground`) plus four derived colors, each with one job. Contrast is verified by `VelvetUITests.testThemeStylesMeetAAContrast`.
 
-| Theme | Stops | `accent` | `onAccent` | `ink` | `inkDark` |
+| Style | Background | `accent` | `onAccent` | `ink` | `inkDark` |
 |---|---|---|---|---|---|
-| `.sunset` (default) | `#FF7E5F → #FEB47B` | `#FF7E5F` | `#2B1510` | `#C2361A` | `#FFA98F` |
-| `.aurora` | `#7F5AF0 → #E84393` | `#7F5AF0` | `#FFFFFF` | `#6D47E6` | `#B9A3FF` |
-| `.lagoon` | `#16F2B3 → #0DB4F7` | `#16F2B3` | `#06231D` | `#0B7D8C` | `#5EF5CB` |
+| `.sunset` (default) | Paper `#FAF8F4` / `#121110` | `#FF7E5F` | `#2B1510` | `#C2361A` | `#FFA98F` |
+| `.aurora` | Snow `#FFFFFF` / `#000000` | `#7F5AF0` | `#FFFFFF` | `#6D47E6` | `#B9A3FF` |
+| `.lagoon` | Graphite `#F0F0F2` / `#1B1C1E` | `#16F2B3` | `#06231D` | `#0A7382` | `#5EF5CB` |
 
 | Slot | Use it for | Contrast rule |
 |---|---|---|
-| `stops` | `DSBackdrop`, `DSGradientProgress`, decorative fills | — |
+| `background` | The flat page tone drawn by `DSBackdrop` | — |
 | `accent` | Primary CTA fill, toggle on, active page dot, filled badge, progress fills | — |
 | `onAccent` | Text and icons on `accent` | ≥ 4.5:1 on accent |
-| `ink` | Text, icons, links, focus glow on light glass | ≥ 4.5:1 on white |
-| `inkDark` | Same, on dark glass | ≥ 4.5:1 on `#1A1A2E` |
-| `lightWash` (0.08) | White overlay on the gradient in light mode | — |
-| `darkDim` (0.58) | Black overlay on the gradient in dark mode | — |
+| `ink` | Text, icons, links, focus glow on light glass | ≥ 4.5:1 on the light page tone |
+| `inkDark` | Same, on dark glass | ≥ 4.5:1 on the dark page tone |
 
-Custom themes: `DSGradientTheme(id:name:stops:accent:onAccent:ink:inkDark:)`. Keep the contrast rules or text on glass becomes unreadable. `DSGradientTheme.all` lists the built-ins for pickers.
+Custom styles: `DSThemeStyle(id:name:background:accent:onAccent:ink:inkDark:)`. Keep the contrast rules or text on glass becomes unreadable. `DSThemeStyle.all` lists the built-ins for pickers.
+
+## Backgrounds
+
+`DSBackground` (`Tokens/DSBackground.swift`). Velvet ships **no background gradients**: a page is one flat tone per scheme. The built-in tones are deliberately neutral so the accent is the only color on screen.
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `.snow` | `#FFFFFF` | `#000000` | True monochrome; maximum contrast, OLED-friendly dark |
+| `.paper` | `#FAF8F4` | `#121110` | Warm off-white and warm black; pairs with coral and amber |
+| `.graphite` | `#F0F0F2` | `#1B1C1E` | Cool light grey and graphite; pairs with violet and teal |
+
+Custom backgrounds: `DSBackground(id:name:light:dark:)`. `DSBackground.all` lists the built-ins. Every style must point at a shipped background so `VelvetUITests.testBuiltInStylesAreDistinct` can check it.
 
 ## Colors
 
@@ -472,7 +483,7 @@ The modifier fills, clips to a continuous rounded rect and draws `DSWash.edge` i
 
 ## Backdrop
 
-`DSBackdrop` (`Layout/DSBackdrop.swift`) draws the active gradient topLeading → bottomTrailing, a radial white light (0.18) at the top-leading corner, the `lightWash` in light mode and `darkDim` in dark mode. Wrap theme changes in `withAnimation(DSAnimation.normal)` for a crossfade.
+`DSBackdrop` (`Layout/DSBackdrop.swift`) fills the screen with the active style's solid page tone — no gradient, no radial light, no dim layer. Wrap style changes in `withAnimation(DSAnimation.normal)` for a crossfade.
 
 `.dsBackdrop()` puts it behind a view **and** sets `EnvironmentValues.dsOnBackdrop = true`, which is how `theme.subtleFill` knows to use the wash. `DSScreen(backdrop: true)` does this for a whole screen.
 
@@ -568,7 +579,7 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 | `.dsJiggle(trigger:)` | One decaying shake on trigger change — a continuous keyframe track through `jiggleSwings`, ending at rest | Not applied at all |
 | `.dsPopIn(delay:)` | Entrance with springBouncy overshoot and fade | Fades only, no scale |
 | `.dsEdgeSweep(radius:isActive:)` | Specular highlight travelling the surface edge | Highlight stays static |
-| `.dsHueDrift(isActive:)` | Slow, bounded hue rotation over the gradient (decorative) | Stays at 0° |
+| `.dsHueDrift(isActive:)` | Slow, bounded hue rotation over the accent (decorative) | Stays at 0° |
 
 `DSMotion.loop(_:autoreverses:unless:)` wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on. Passing nil to `.animation(_:value:)` applies the change instantly, so every ambient effect settles at its resting state instead of being skipped.
 
@@ -577,7 +588,7 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 | `breatheDuration` | 2.4s | Breathing swell. Slow enough to read as alive, not as a spinner. |
 | `sweepDuration` | 2.0s | One full trip of the edge sweep. |
 | `driftDuration` | 8.0s | Hue drift. Deliberately slow: notice it only on a second look. |
-| `driftDegrees` | 12 | Maximum hue rotation. Small to keep the gradient recognisable. |
+| `driftDegrees` | 12 | Maximum hue rotation. Small to keep the accent recognisable. |
 | `jiggleDegrees` | 7 | Peak rotation of the first jiggle swing; later swings shrink from here. |
 | `jiggleDuration` | 0.45s | Total length of one jiggle — a quick "no" shake. |
 | `jiggleSwings` | `[7, -4.34, 2.66, -1.26, 0]` | The decay envelope in degrees; Cubic keyframes interpolate between the points. |
@@ -610,7 +621,7 @@ A themed text button with optional icon and loading state. It presses down with 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -717,7 +728,7 @@ An icon-only button, with no background, that shrinks under your thumb and ticks
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -796,7 +807,7 @@ A slide-to-confirm gate for irreversible actions like payments. The label dissol
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -830,7 +841,7 @@ struct SlideToConfirmDemo: View {
 | `label` | `String` | required | Text on the track (unlabeled first argument). |
 | `icon` | `String` | `"chevron.right"` | SF Symbol on the knob. |
 | `confirmedLabel` | `String` | `"Confirmed"` | Text shown once the action succeeds. |
-| `accent` | `Color?` | `nil` | Knob fill. Defaults to the theme accent. The trail is always the theme gradient. |
+| `accent` | `Color?` | `nil` | Knob fill. Defaults to the theme accent. The trail is always the accent. |
 | `finish` | `DSSlideFinish` | `.settle` | What happens after success: `.settle` or `.morphAndVanish`. |
 | `onConfirm` | `() async throws -> Void` | required | Runs when the slide commits. Throwing counts as a refusal. |
 
@@ -906,7 +917,7 @@ A themed on/off switch whose knob springs across a pill track and snaps with a r
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1081,7 +1092,7 @@ A minus / number / plus stepper on a glass track. The number rolls, and hitting 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1164,7 +1175,7 @@ A star rating you can drag or tap, with a selection tick per star and a pop on t
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1249,7 +1260,7 @@ A generic segmented control where a filled pill (or an accent underline) slides 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1340,7 +1351,7 @@ A labelled text input with leading icon, secure mode and validation states, plus
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1435,7 +1446,7 @@ A one-time-code input of separate digit boxes with a blinking caret, a springy a
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1517,7 +1528,7 @@ An animated page indicator where the active dot springs open into a capsule. A d
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1601,7 +1612,7 @@ A floating glass tab bar. The selected tab sits on an accent capsule that slides
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1703,7 +1714,7 @@ A glass surface for grouping content: thin material, a 1pt specular edge and a s
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1857,7 +1868,7 @@ A consistent list row with leading and trailing slots, an optional tap action, a
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1974,7 +1985,7 @@ A snapping carousel where the neighbouring items peek in at the edges and lean a
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2089,7 +2100,7 @@ A Velvet-styled native sheet: detents, a visible grabber, a glass background, an
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2169,7 +2180,7 @@ Item-driven: the sheet shows while the item is non-nil.
 - Applies `.presentationDetents` and a visible drag indicator.
 - On iOS 26 and macOS 26 the system background (Liquid Glass) is left alone. On earlier systems the background is `.regularMaterial`.
 - Reduce Transparency: the background is the solid elevated surface color on every system.
-- The content gets the presenter's theme and is marked as not on the gradient backdrop.
+- The content gets the presenter's theme and is marked as not on the page backdrop.
 - No haptic: presenting a sheet is not an action.
 
 ## Accessibility
@@ -2205,7 +2216,7 @@ Compact pill labels for status and categories, plus a notification count badge t
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2306,7 +2317,7 @@ A circular avatar that loads a remote photo and falls back to tinted initials, s
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2354,7 +2365,7 @@ struct AvatarDemo: View {
 ## Behavior
 
 - No motion and no haptics. Add `.dsPopIn()` for an entrance or `.dsBreathe()` for a "waiting" avatar (see [Motion](Motion.md)).
-- Everything is derived from the theme, so the tint follows the active gradient.
+- Everything is derived from the theme, so the tint follows the active style.
 
 ## Accessibility
 
@@ -2388,7 +2399,7 @@ A number whose digits roll like an odometer. Each digit slides to its new value,
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2473,7 +2484,7 @@ Two light charts with no Swift Charts dependency: `DSSparkline`, a trend line th
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2595,7 +2606,7 @@ A transient, glass-backed message with a status icon for success, error, warning
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2701,7 +2712,7 @@ A centered empty-list or no-results placeholder: a light icon, a title, a short 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2773,7 +2784,7 @@ struct EmptyStateDemo: View {
 
 # Progress
 
-Progress indicators that animate to their value instead of jumping: ring, bar, gradient bar, step dots, a counting number and a skeleton shimmer.
+Progress indicators that animate to their value instead of jumping: ring, bar, multi-color bar, step dots, a counting number and a skeleton shimmer.
 
 ![Progress](../media/Progress.gif)
 
@@ -2788,7 +2799,7 @@ Progress indicators that animate to their value instead of jumping: ring, bar, g
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2857,7 +2868,7 @@ struct ProgressDemo: View {
 |---|---|---|---|
 | `progress` | `Double` | required | 0 to 1, clamped. |
 | `height` | `CGFloat` | `8` | Bar height. |
-| `colors` | `[Color]?` | `nil` | Gradient stops, left to right. Defaults to the theme gradient's stops. |
+| `colors` | `[Color]?` | `nil` | Fill stops, left to right. Defaults to a single accent stop, i.e. a solid fill; pass two or more for a blend. |
 | `trackColor` | `Color?` | `nil` | Track color. Defaults to the palette border color. |
 
 ### DSStepProgress
@@ -2883,7 +2894,7 @@ struct ProgressDemo: View {
 
 ## Variants
 
-- **Determinate**: ring, bar and gradient bar for a known fraction. `DSStepProgress` for a wizard or onboarding (4pt segments).
+- **Determinate**: ring, bar and multi-color bar for a known fraction. `DSStepProgress` for a wizard or onboarding (4pt segments).
 - **Counting**: `DSAnimatedNumber` with `.numericText` content transition for scores and totals.
 - **Skeleton**: `.dsShimmer()` over placeholder shapes while content loads. `DSImageCard` uses it for its image placeholder.
 - For indeterminate work with no fraction, use [DSThinkingIndicator](DSThinkingIndicator.md).
@@ -2928,7 +2939,7 @@ An "the assistant is working" indicator: an animated SF Symbol next to a phrase 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -2969,7 +2980,7 @@ struct ThinkingDemo: View {
 | `phrases` | `[String]` | `["Thinking", "Weighing options", "Almost there"]` | Cycled in order, looping. A single phrase disables cycling but still assembles once on appear. |
 | `symbol` | `String` | `"sparkles"` | SF Symbol for the leading animated glyph. |
 | `interval` | `TimeInterval` | `2.6` | Seconds each phrase stays before the next one assembles. |
-| `tint` | `Color?` | `nil` | Letter color. Defaults to `theme.ink`. The symbol always uses the theme gradient. |
+| `tint` | `Color?` | `nil` | Letter color. Defaults to `theme.ink`. The symbol always uses the theme accent. |
 
 ## Variants
 
@@ -2980,7 +2991,7 @@ struct ThinkingDemo: View {
 
 ## Behavior
 
-- The symbol uses the system's `.breathe.byLayer` and `.variableColor.iterative` effects, filled with the theme gradient.
+- The symbol uses the system's `.breathe.byLayer` and `.variableColor.iterative` effects, filled with the theme accent.
 - The phrase follows a wall-clock schedule, so it never desyncs when the view is re-created, and assembles letter by letter using `DSAnimation.stagger(index:)`.
 - The row reserves the width of the widest phrase, so nothing around it shifts.
 - No haptics: it is a status indicator, not an interaction.
@@ -3020,7 +3031,7 @@ Loading placeholders: a shimmering block you compose by hand, and a `.dsSkeleton
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -3124,7 +3135,7 @@ An animated success seal: the ring strokes itself, the disc fills, the checkmark
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -3211,7 +3222,7 @@ Text that types a phrase out character by character, holds it, erases it and mov
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -3297,7 +3308,7 @@ Five composable view modifiers for ambient motion: breathe, jiggle, pop in, edge
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -3399,7 +3410,7 @@ For your own ambient effects: `DSMotion.loop(_ base: Animation, autoreverses: Bo
 | `.dsJiggle` | a rejected input, an item that needs noticing | 0.45s, peak 7 degrees, decaying counter-swings |
 | `.dsPopIn` | entrances and staggered rows | `springBouncy` overshoot from 0.8 scale |
 | `.dsEdgeSweep` | processing, recording, "AI is working" | 2.0s linear loop of a specular highlight on the 1pt glass edge |
-| `.dsHueDrift` | decorative life on a static gradient | 8.0s loop, at most 12 degrees of hue rotation |
+| `.dsHueDrift` | decorative life on a solid fill | 8.0s loop, at most 12 degrees of hue rotation |
 
 The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDuration`, `driftDegrees`, `jiggleDegrees`, `jiggleDuration`).
 
@@ -3444,7 +3455,7 @@ A one-shot burst of confetti from any point of a view, fired whenever a trigger 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -3500,7 +3511,7 @@ Attach it to a container that covers the area the paper should fall through, suc
 
 - Pieces fan upward and outward, slow down from air drag, then drift down under gravity while spinning and tumbling.
 - Each piece lives 1.6 to 2.4 s and fades out over the last 30%.
-- Colors come from the theme: the accent, the gradient stops, lighter tints of each, and the theme ink, which keeps the burst visible against the backdrop.
+- Colors come from the theme: the accent, the theme ink, a lighter tint of each, and the ink again for weight, which keeps the burst visible against every page tone.
 - Several triggers in a row overlap; earlier pieces finish their fall.
 - Nothing runs while idle: the animation stops once the last piece is gone.
 - `haptic` is `nil` by default because the action that triggers confetti (a button press, a confirmed slide) usually has its own haptic. Set it when the trigger is a state change with no haptic of its own.
@@ -3541,7 +3552,7 @@ A four-page onboarding: welcome, theme picker, notification preferences and a ce
 
 ## How it works
 
-- The flow owns a `DSTheme` in `@State` and injects it with `.dsTheme(theme)` at its root. The theme page sets `theme.gradient` inside `withAnimation(DSAnimation.normal)`, so the backdrop crossfades.
+- The flow owns a `DSTheme` in `@State` and injects it with `.dsTheme(theme)` at its root. The theme page sets `theme.style` inside `withAnimation(DSAnimation.normal)`, so the backdrop crossfades.
 - Pages are a paging `TabView` on iOS. On macOS the flow shows the current page only.
 - Each page builds its content only while it is the current page, so the pop-in stagger replays every visit.
 - Arriving on the last page flips `DSSuccessCheck(isComplete:)` and bumps the confetti trigger on the same beat. The confetti is attached to the full-screen container, because it draws inside the view it is attached to.
@@ -3582,7 +3593,7 @@ A settings screen with a profile header, preference toggles, a theme detail scre
 
 - `SettingsFlow` has no `NavigationStack` of its own, because nested stacks are unsupported. The host provides one (the Gallery pushes it inside its list's stack); wrap it in `NavigationStack { SettingsFlow() }` to show it standalone.
 - Appearance (System, Light, Dark) really drives `.preferredColorScheme` on the flow.
-- The Theme row pushes a detail screen. Choosing a theme sets `theme.gradient` in `withAnimation`, so the backdrop crossfades behind the navigation bar.
+- The Theme row pushes a detail screen. Choosing a theme sets `theme.style` in `withAnimation`, so the backdrop crossfades behind the navigation bar.
 - Changing any toggle, the appearance or the theme shows a "Saved" toast for about 1.6 s. There is one toast at a time: a new one replaces the old and restarts the timer.
 - "Delete account" opens a sheet. The slide awaits a fake service, shows "Deleted", then the sheet closes and a toast confirms.
 - Email and Password rows are navigation rows that show an info toast, to keep the example short.
