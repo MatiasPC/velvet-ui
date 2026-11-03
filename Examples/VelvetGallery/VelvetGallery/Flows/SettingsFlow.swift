@@ -18,7 +18,7 @@ struct SettingsFlow: View {
     @State private var toastTask: Task<Void, Never>?
 
     @MainActor init(theme: DSTheme? = nil) {
-        _theme = State(initialValue: theme ?? DSTheme(gradient: .sunset))
+        _theme = State(initialValue: theme ?? DSTheme(style: .sunset))
     }
 
     var body: some View {
@@ -162,7 +162,7 @@ private struct SettingsList: View {
                         SettingsIcon("paintpalette")
                     } trailing: {
                         HStack(spacing: DSSpacing.xs) {
-                            Text(theme.gradient.name)
+                            Text(theme.style.name)
                                 .ds(.callout, color: resolved.palette.textSecondary)
                             Image(systemName: "chevron.right")
                                 .dsFont(.caption1)
@@ -240,19 +240,24 @@ private struct SettingsThemeDetail: View {
         DSScreen(backdrop: true) {
             DSCard(padding: 0) {
                 VStack(spacing: 0) {
-                    ForEach(Array(DSGradientTheme.all.enumerated()), id: \.element.id) { index, option in
+                    ForEach(Array(DSThemeStyle.all.enumerated()), id: \.element.id) { index, option in
                         if index > 0 { DSDivider(inset: DSSpacing.md) }
                         Button {
                             dsHaptic(.selection)
-                            withAnimation(DSAnimation.normal) { theme.gradient = option }
+                            withAnimation(DSAnimation.normal) { theme.style = option }
                             notify("Saved", .success)
                         } label: {
                             DSListCell(title: option.name) {
                                 Circle()
-                                    .fill(option.linearGradient)
+                                    .fill(option.background.color(for: resolved.colorScheme))
                                     .frame(width: DSSpacing.xl, height: DSSpacing.xl)
+                                    .overlay {
+                                        Circle()
+                                            .fill(option.accent)
+                                            .frame(width: DSSpacing.xs, height: DSSpacing.xs)
+                                    }
                             } trailing: {
-                                if theme.gradient == option {
+                                if theme.style == option {
                                     Image(systemName: "checkmark")
                                         .dsFont(.callout)
                                         .foregroundStyle(resolved.ink)
@@ -261,7 +266,7 @@ private struct SettingsThemeDetail: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel("\(option.name) theme")
-                        .accessibilityAddTraits(theme.gradient == option ? .isSelected : [])
+                        .accessibilityAddTraits(theme.style == option ? .isSelected : [])
                     }
                 }
             }
@@ -307,11 +312,11 @@ private struct DeleteAccountSheet: View {
 // MARK: - Previews
 
 #Preview("Settings — Light") {
-    NavigationStack { SettingsFlow(theme: DSTheme(gradient: .aurora)) }
+    NavigationStack { SettingsFlow(theme: DSTheme(style: .aurora)) }
         .preferredColorScheme(.light)
 }
 
 #Preview("Settings — Dark") {
-    NavigationStack { SettingsFlow(theme: DSTheme(gradient: .lagoon)) }
+    NavigationStack { SettingsFlow(theme: DSTheme(style: .lagoon)) }
         .preferredColorScheme(.dark)
 }

@@ -17,7 +17,7 @@ struct StageContainer: View {
         self.background = background
         self.autoplay = autoplay
         self.onExit = onExit
-        _theme = State(initialValue: DSTheme(gradient: background.gradient))
+        _theme = State(initialValue: DSTheme(style: background.style))
     }
 
     var body: some View {

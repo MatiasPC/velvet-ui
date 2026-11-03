@@ -10,7 +10,7 @@ enum DocSnippetsAgents {
     struct RootView: View { var body: some View { Text("Root") } }
 
     struct MyApp: App {
-        @State private var theme = DSTheme(gradient: .sunset)   // .sunset, .aurora, .lagoon
+        @State private var theme = DSTheme(style: .sunset)   // .sunset, .aurora, .lagoon
         var body: some Scene { WindowGroup { RootView().dsTheme(theme) } }
     }
 
@@ -172,14 +172,14 @@ enum DocSnippetsAgents {
         var body: some View {
             DSSegmentedControl(
                 selection: Binding(
-                    get: { theme.gradient.id },
+                    get: { theme.style.id },
                     set: { id in
                         withAnimation(DSAnimation.normal) {
-                            theme.gradient = DSGradientTheme.all.first { $0.id == id } ?? .sunset
+                            theme.style = DSThemeStyle.all.first { $0.id == id } ?? .sunset
                         }
                     }
                 ),
-                segments: DSGradientTheme.all.map { DSSegment($0.name, value: $0.id) }
+                segments: DSThemeStyle.all.map { DSSegment($0.name, value: $0.id) }
             )
         }
     }

@@ -6,13 +6,13 @@ import XCTest
 // the API. `MyApp` drops `@main` (a test target can't have an entry point).
 enum DocSnippetsReadme {
     struct MyApp: App {
-        @State private var theme = DSTheme(gradient: .sunset)
+        @State private var theme = DSTheme(style: .sunset)
         var body: some Scene { WindowGroup { ContentView().dsTheme(theme) } }
     }
 
     struct ContentView: View {
         var body: some View {
-            DSScreen(backdrop: true) {                  // the theme's gradient behind everything
+            DSScreen(backdrop: true) {                  // the theme's solid page tone behind everything
                 DSCard {
                     DSSlideToConfirm("Slide to pay") {
                         try await checkout()             // throw to refuse; the control re-opens
@@ -38,7 +38,7 @@ enum DocSnippetsReadme {
 
     @MainActor
     static func switchTheme(_ theme: DSTheme) {
-        withAnimation(DSAnimation.normal) { theme.gradient = .lagoon }
+        withAnimation(DSAnimation.normal) { theme.style = .lagoon }
     }
 }
 
@@ -49,6 +49,6 @@ final class DocSnippetsReadmeTests: XCTestCase {
         _ = DocSnippetsReadme.PriceTag()
         let theme = DSTheme()
         DocSnippetsReadme.switchTheme(theme)
-        XCTAssertEqual(theme.gradient.id, DSGradientTheme.lagoon.id)
+        XCTAssertEqual(theme.style.id, DSThemeStyle.lagoon.id)
     }
 }

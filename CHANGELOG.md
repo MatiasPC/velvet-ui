@@ -7,6 +7,15 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ### Added
 - `DSSlider(value:in:step:accent:haptics:)`: a continuous value slider on a slim track, the input `DSStepper`, `DSRating` and `DSToggle` (all discrete) left uncovered. An accent fill trails a white knob that lifts and grows a soft halo while grabbed; drag it or tap the track to jump. Works on any finite range (`-10...10`, `0...500`), clamps the bound value, and with `step` snaps to notches and always reaches the upper bound. A `.selection` tick per notch and one `.rigid` detent on arriving at either end; a continuous slider is silent in between. VoiceOver adjusts it by swipe (a notch, or a tenth of the range) and reads the value. Reduce Motion pins the lift. Docs page, Gallery screen and recording stage, registry entry, tests for the value mapping and the knob position.
 
+### Changed
+- **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
+- **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
+- Decorative fills that used the background gradient now use the solid accent: `DSThinkingIndicator`'s symbol, `DSSlideToConfirm`'s trail, `DSParticleField`, the `dsHueDrift` demo tiles and confetti. `DSGradientProgress` defaults to a solid accent fill; pass two or more `colors` to opt into a blend.
+- Gallery theme pickers now show each style as a page tone (light/dark halves) with an accent dot, instead of a gradient swatch.
+
+### Deprecated
+- `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.
