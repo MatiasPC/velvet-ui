@@ -453,7 +453,8 @@
         "Sources/VelvetUI/Components/DSExpandableText.swift"
       ],
       "dependencies": [],
-      "docs": "docs/components/DSExpandableText.md"
+      "docs": "docs/components/DSExpandableText.md",
+      "stage": "DSExpandableText"
     },
     {
       "name": "Motion",
