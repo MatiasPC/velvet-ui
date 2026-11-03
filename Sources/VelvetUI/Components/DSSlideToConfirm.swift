@@ -234,16 +234,18 @@ public struct DSSlideToConfirm: View {
         // inset from both sides until only `trackHeight` remains *is* a circle,
         // since the pill already carries the capsule radius.
         //
-        // `maskOutset` holds that capsule clear of the knob until the collapse
-        // actually begins: at rest the knob is exactly `trackHeight` tall, and a
-        // capsule sized to the track would shave its top and bottom edges so it
-        // no longer reads as a true circle. The outset closes to 0 on the same
-        // spring as `collapseInset`, so the morph still lands on a capsule
-        // exactly `trackHeight` square.
+        //
+        // The capsule is held clear of the knob until the collapse actually
+        // begins (`collapseMaskPadding`): at rest the knob is exactly
+        // `trackHeight` tall, and a capsule sized to the track would shave its
+        // top and bottom edges so it no longer reads as a true circle. Both axes
+        // ride the collapse spring together, so the morph still lands on a
+        // capsule exactly `trackHeight` square.
         .mask {
+            let padding = Self.collapseMaskPadding(trackWidth: trackWidth, isCollapsed: isCollapsed)
             Capsule()
-                .padding(.vertical, -maskOutset)
-                .padding(.horizontal, collapseInset - maskOutset)
+                .padding(.vertical, padding.vertical)
+                .padding(.horizontal, padding.horizontal)
         }
         .overlay {
             resolution
@@ -544,19 +546,30 @@ public struct DSSlideToConfirm: View {
         }
     }
 
-    /// Inset applied to both ends of the mask. At `(trackWidth - trackHeight)/2`
-    /// exactly `trackHeight` remains — a capsule as wide as it is tall.
-    private var collapseInset: CGFloat {
-        guard isCollapsed, trackWidth > Metrics.trackHeight else { return 0 }
-        return (trackWidth - Metrics.trackHeight) / 2
+    /// Padding for the capsule that masks the control, per axis. Negative grows
+    /// the capsule past the track (SwiftUI offers a negatively padded child more
+    /// room than the parent has); positive closes it in.
+    ///
+    /// - Before the collapse the capsule is `collapseMaskOutset` larger than the
+    ///   track on every side, so the mask crops nothing — in particular not the
+    ///   top and bottom of the knob, which is exactly `trackHeight` tall, nor
+    ///   its shadow.
+    /// - Collapsed, the vertical padding is 0 and each end is inset by
+    ///   `(trackWidth - trackHeight) / 2`, leaving a capsule exactly
+    ///   `trackHeight` wide and tall: a circle.
+    ///
+    /// Both values are linear in the same animated `isCollapsed`, so the mask
+    /// shrinks monotonically on one spring and never overshoots into a pop.
+    static func collapseMaskPadding(trackWidth: CGFloat, isCollapsed: Bool) -> (vertical: CGFloat, horizontal: CGFloat) {
+        guard isCollapsed else {
+            return (-Metrics.collapseMaskOutset, -Metrics.collapseMaskOutset)
+        }
+        let inset = trackWidth > Metrics.trackHeight ? (trackWidth - Metrics.trackHeight) / 2 : 0
+        return (0, inset)
     }
 
-    /// Slack between the collapse mask and the knob before the morph starts;
-    /// see `Metrics.collapseMaskOutset`. Falls to 0 with `collapseInset`, so the
-    /// two animate together and the collapsed circle stays `trackHeight` square.
-    private var maskOutset: CGFloat {
-        isCollapsed ? 0 : Metrics.collapseMaskOutset
-    }
+    /// The track height, exposed to tests that check the collapsed mask.
+    static let trackHeight: CGFloat = Metrics.trackHeight
 
     /// The instruction label lives in the pre-commit phases only. Its per-letter
     /// dissolve is paced by the drag and only converges on an unhurried one, so
