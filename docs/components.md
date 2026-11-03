@@ -552,9 +552,22 @@ Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-f
 
 ---
 
+## DSFlowLayout  ✅
+
+`Layout/DSFlowLayout.swift`. A `Layout`, not a container view, so it is called like a stack: `DSFlowLayout { … }`.
+
+```swift
+DSFlowLayout(spacing: CGFloat = DSSpacing.xs, lineSpacing: CGFloat = DSSpacing.xs,
+             alignment: HorizontalAlignment = .leading) { content }
+```
+
+Greedy first-fit row packing for tag clouds, filter chips and keyword lists: items fill a row until the next would overflow the proposed width, then wrap. It fills a finite proposed width (so `.center` / `.trailing` have room) and shrinks to its widest row when offered none; an infinite proposal is never echoed back as its size. An item wider than the container is measured again at the container width, so text wraps instead of overflowing. Shorter items sit centred in their row, and right-to-left mirrors the rows. Pure SwiftUI: no `GeometryReader`, no preference keys. No color, fill or haptics of its own (a layout positions, it never paints); style the chips inside it. Reflow animates on-system when the caller wraps content changes in `withAnimation`, which SwiftUI does not turn off under Reduce Motion, so pass `nil` there (the docs snippet does). The packing is pure and unit-tested (`DSFlowLayout.pack`), plus a test that runs it through SwiftUI's own sizing. Full page: [docs/components/DSFlowLayout.md](components/DSFlowLayout.md).
+
+---
+
 ## Layout  ✅
 
-`DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`.
+`DSScreen(backgroundColor: Color? = nil, backdrop: Bool = false) { }` · `DSHorizontalScroll(spacing:)` · `DSVStack(spacing: .md, alignment: .leading)` · `DSHStack(spacing: .sm, alignment: .center)` · `DSGrid(minItemWidth: 160, spacing: .md)`. For wrapping rows of chips and tags, see [DSFlowLayout](#dsflowlayout).
 
 ---
 

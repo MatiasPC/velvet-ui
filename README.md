@@ -89,6 +89,7 @@ struct ContentView: View {
 
 ## Components
 
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes, and every one has a Gallery stage.
 Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 29 components, every one with a Gallery stage.
 
 | Preview | Component | What it does |
@@ -111,6 +112,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSListCell.gif" width="120" alt="DSListCell"> | [DSListCell](docs/components/DSListCell.md) | List rows, section headers and dividers. |
 | <img src="docs/media/DSCarousel.gif" width="120" alt="DSCarousel"> | [DSCarousel](docs/components/DSCarousel.md) | Snapping carousel with peeking neighbors and depth; pairs with `DSPageControl`. |
 | <img src="docs/media/DSSheet.gif" width="120" alt="dsSheet"> | [dsSheet](docs/components/DSSheet.md) | Native sheet with Velvet chrome: detents, a grabber, a glass background, the theme carried in. |
+| — | [DSFlowLayout](docs/components/DSFlowLayout.md) | Wrapping layout that flows chips and tags onto new rows, and reflows with a spring. |
 | — | [DSDisclosureGroup](docs/components/DSDisclosureGroup.md) | Glass "show more" section that springs open with a rotating chevron and a haptic — accordion, FAQ, settings detail. |
 | <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |

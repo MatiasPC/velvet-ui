@@ -39,6 +39,7 @@ struct ComponentListView: View {
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
                 row("Tilt Card", "Tips toward the finger, sliding sheen") { TiltCardScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
+                row("Flow Layout", "Wraps to new rows, reflows with a spring") { FlowLayoutScreen() }
                 row("Disclosure Group", "Glass accordion that springs open") { DisclosureGroupScreen() }
             }
             Section("Inputs") {
