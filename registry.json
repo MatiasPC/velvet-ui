@@ -157,7 +157,8 @@
       "dependencies": [
         "DSFlowLayout"
       ],
-      "docs": "docs/components/DSChip.md"
+      "docs": "docs/components/DSChip.md",
+      "stage": "DSChip"
     },
     {
       "name": "DSTextField",

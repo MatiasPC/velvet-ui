@@ -166,9 +166,9 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ## DSChip / DSChipGroup  ✅ 🧪
 
-`Components/DSChip.swift`. `DSChipGroup` is generic over `Hashable`: selectable pill chips on a wrapping flow `Layout`, single or multiple selection. Built glass-native for v0.2.
+`Components/DSChip.swift`. `DSChipGroup` is generic over `Hashable`: selectable pill chips on [`DSFlowLayout`](#dsflowlayout), single or multiple selection. Built glass-native for v0.2. Depends on `DSFlowLayout`.
 
-**Accessibility:** Container of buttons, each labelled with its title and `selected` when active; a leading icon is decorative and hidden from VoiceOver. Labels use the rounded button text style and scale with Dynamic Type.
+**Accessibility:** Container of buttons, each labelled with its title and `selected` when active; a leading icon is decorative and hidden from VoiceOver. Labels use the `buttonSmall` text style (`dsTextStyle`) and scale with Dynamic Type.
 
 ```swift
 DSChip(_ title: String, icon: String? = nil, isSelected: Bool = false,
@@ -180,7 +180,7 @@ DSChipGroup(_ options: [String], selection: Binding<Set<String>>, ...)      // S
 DSChipItem(_ title: String, value: Value, icon: String? = nil)
 ```
 
-Selected chips crossfade `theme.subtleFill` → `accent ?? theme.accent` with `springSnappy` and a `.sm` lift; selecting ticks `.selection`. A private `Layout` wraps chips onto new lines — no borders, no horizontal scroll.
+Selected chips crossfade `theme.subtleFill` → `accent ?? theme.accent` with `springSnappy` (a quick `fast` fade under Reduce Motion) and a `.sm` lift; selecting ticks `.selection`. `DSFlowLayout` wraps chips onto new lines — no borders, no horizontal scroll. Press feedback is a `ButtonStyle` (`DSPress.scale`), not a `DragGesture`, so a touch that turns into a scroll releases the chip. Disabled chips dim to half opacity. The selection toggling is pure and unit-tested (`DSChipGroup.toggled`).
 
 ---
 
