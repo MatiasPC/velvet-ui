@@ -9,8 +9,8 @@ import SwiftUI
 //
 // Idiomatic, like `.alert(item:)`: no `withAnimation` at the call site (the
 // modifier owns its motion) and no presentation controller to wire up. The
-// banner itself is unchanged — this reuses `DSToast`, so the glass restyle lands
-// in one place when it comes.
+// banner itself is unchanged — this reuses `DSToast`, so any restyle of the
+// banner lands in one place.
 
 // MARK: - Value
 
@@ -34,6 +34,9 @@ public struct DSToastValue: Identifiable, Equatable {
     public static func == (lhs: DSToastValue, rhs: DSToastValue) -> Bool {
         lhs.id == rhs.id
     }
+
+    /// False for a sticky toast (`duration` of zero or less, or not finite).
+    var autoDismisses: Bool { duration > 0 && duration.isFinite }
 }
 
 // MARK: - Edge
@@ -50,80 +53,136 @@ public enum DSToastEdge: Sendable {
     var padEdge: Edge.Set { self == .top ? .top : .bottom }
 }
 
+// MARK: - Logic (internal, unit-tested)
+
+/// The drag maths and the auto-dismiss wait, kept out of the modifier so they
+/// can be tested without a view hierarchy.
+enum DSToastLogic {
+    /// Travel toward the edge past this and the toast flicks away on release.
+    static let dismissDistance: CGFloat = DSSpacing.xl
+    /// A flick whose *projected* end passes this also dismisses, however short
+    /// the finger travelled.
+    static let projectedDismissDistance: CGFloat = DSSpacing.massive
+    /// How much the toast resists being dragged *into* the screen (it should only
+    /// want to leave). Dimensionless, like the motion envelopes in `DSMotion`.
+    static let inwardResistance: CGFloat = 0.2
+
+    /// Positive when the translation heads toward `edge` (the way the toast leaves).
+    static func outward(_ translation: CGFloat, edge: DSToastEdge) -> CGFloat {
+        edge == .top ? -translation : translation
+    }
+
+    /// Where the toast sits while the finger is down: it follows freely toward
+    /// its edge and pulls back against the finger when dragged inward.
+    static func dragOffset(translation: CGFloat, edge: DSToastEdge) -> CGFloat {
+        outward(translation, edge: edge) >= 0 ? translation : translation * inwardResistance
+    }
+
+    /// Whether releasing at `translation` (with the gesture's projected end) flicks the toast away.
+    static func shouldDismiss(translation: CGFloat, predictedEnd: CGFloat, edge: DSToastEdge) -> Bool {
+        outward(translation, edge: edge) > dismissDistance
+            || outward(predictedEnd, edge: edge) > projectedDismissDistance
+    }
+
+    /// Waits `seconds`. True when the full wait elapsed; false when the task was
+    /// cancelled first (a replacement or a dismissal owns the slot now), in which
+    /// case the caller must not clear anything.
+    static func wait(_ seconds: Double) async -> Bool {
+        do {
+            try await Task.sleep(for: .seconds(seconds))
+            return !Task.isCancelled
+        } catch {
+            return false
+        }
+    }
+}
+
 // MARK: - Modifier
 
-public struct DSToastModifier: ViewModifier {
+private struct DSToastModifier: ViewModifier {
     @Binding var toast: DSToastValue?
     let edge: DSToastEdge
 
     @State private var dragOffset: CGFloat = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    /// Travel past this, in the dismiss direction, to flick the toast away.
-    private var dismissThreshold: CGFloat { DSSpacing.xl }
-    /// How much the toast resists being dragged *into* the screen (it should only
-    /// want to leave). Dimensionless, like the motion envelopes in `DSMotion`.
-    private let inwardResistance: CGFloat = 0.2
-
-    public func body(content: Content) -> some View {
-        content.overlay(alignment: edge.alignment) {
-            ZStack {
-                if let current = toast {
-                    DSToast(current.message, type: current.type)
-                        .offset(y: dragOffset)
-                        .gesture(dismissGesture)
-                        .padding(edge.padEdge, DSSpacing.xs)
-                        .id(current.id)
-                        .transition(transition)
+    func body(content: Content) -> some View {
+        content
+            .overlay(alignment: edge.alignment) {
+                ZStack {
+                    if let current = toast {
+                        banner(current)
+                            .offset(y: dragOffset)
+                            .gesture(dismissGesture)
+                            .padding(edge.padEdge, DSSpacing.xs)
+                            .transition(presenceTransition)
+                    }
                 }
+                // The modifier owns the present/dismiss animation so callers don't
+                // wrap the binding mutation in `withAnimation`. It is keyed on
+                // *presence*, not identity: swapping one toast for another is a cut.
+                .animation(presenceAnimation, value: toast != nil)
             }
-            // The modifier owns the present/dismiss animation so callers don't
-            // have to wrap the binding mutation in `withAnimation`.
-            .animation(reduceMotion ? nil : DSAnimation.springGentle, value: toast?.id)
-        }
-        .onChange(of: toast?.id) { _, _ in
-            // A fresh toast starts flush and taps out its kind. (Firing here, in a
-            // main-actor closure, keeps the haptic off the `.task` concurrency path.)
-            dragOffset = 0
-            if let current = toast {
+            .onChange(of: toast?.id) { _, newID in
+                // A fresh toast starts flush and taps out its kind. (Fired from this
+                // main-actor closure, not the `.task`, to keep haptics off the
+                // concurrency path.)
+                guard newID != nil, let current = toast else { return }
+                dragOffset = 0
                 DSHapticEngine.shared.fire(current.type.haptic)
             }
-        }
-        .task(id: toast?.id) {
-            // Auto-cancels and restarts whenever the toast changes, so a replacement
-            // or an early dismiss stops the pending timer cleanly.
-            guard let duration = toast?.duration, duration > 0 else { return }
-            do {
-                try await Task.sleep(for: .seconds(duration))
-            } catch {
-                return // cancelled — a newer toast (or a dismiss) owns the slot now
+            .task(id: toast?.id) {
+                // Restarts on every change of identity, so a replacement gets a full
+                // fresh duration, and is cancelled by a dismissal (manual, flick or
+                // `nil`) before it can fire.
+                guard let current = toast, current.autoDismisses else { return }
+                let id = current.id
+                guard await DSToastLogic.wait(current.duration), toast?.id == id else { return }
+                toast = nil
             }
-            toast = nil
-        }
     }
 
-    private var transition: AnyTransition {
+    /// The banner for one presentation. The `.id` re-mounts `DSToast` per
+    /// presentation (so VoiceOver announces a replacement too) and the identity
+    /// transition makes that swap a cut: the old banner never fades out beneath
+    /// the new one.
+    private func banner(_ current: DSToastValue) -> some View {
+        DSToast(current.message, type: current.type)
+            .id(current.id)
+            .transition(.identity)
+            .accessibilityAction(named: "Dismiss") { toast = nil }
+    }
+
+    // MARK: Motion
+
+    /// Slides from the edge, or just fades under Reduce Motion.
+    private var presenceTransition: AnyTransition {
         reduceMotion
             ? .opacity
             : .move(edge: edge.transitionEdge).combined(with: .opacity)
     }
 
+    /// A spring for the slide; a short fade curve (never "no animation", which
+    /// would make the fade a pop) under Reduce Motion.
+    private var presenceAnimation: Animation {
+        reduceMotion ? DSAnimation.fast : DSAnimation.springGentle
+    }
+
     private var dismissGesture: some Gesture {
         DragGesture()
             .onChanged { value in
-                let raw = value.translation.height
-                switch edge {
-                case .top:    dragOffset = raw < 0 ? raw : raw * inwardResistance
-                case .bottom: dragOffset = raw > 0 ? raw : raw * inwardResistance
-                }
+                dragOffset = DSToastLogic.dragOffset(translation: value.translation.height, edge: edge)
             }
             .onEnded { value in
-                let raw = value.translation.height
-                let dismissed = edge == .top ? raw < -dismissThreshold : raw > dismissThreshold
-                if dismissed {
-                    toast = nil
+                let flicked = DSToastLogic.shouldDismiss(
+                    translation: value.translation.height,
+                    predictedEnd: value.predictedEndTranslation.height,
+                    edge: edge
+                )
+                if flicked {
+                    toast = nil   // leaves from where it was dragged, via the presence transition
                 } else {
-                    withAnimation(DSAnimation.springSnappy) { dragOffset = 0 }
+                    withAnimation(reduceMotion ? DSAnimation.fast : DSAnimation.springSnappy) { dragOffset = 0 }
                 }
             }
     }
@@ -136,7 +195,8 @@ public extension View {
     ///
     /// Set the binding to a `DSToastValue` to show it; it auto-dismisses after
     /// its `duration` (unless `duration <= 0`), or the user can flick it toward
-    /// `edge`. Assigning a new value replaces the current toast; `nil` dismisses.
+    /// `edge`. Assigning a new value replaces the current toast and restarts the
+    /// timer; `nil` dismisses.
     ///
     ///     @State private var toast: DSToastValue?
     ///     // ...
