@@ -427,6 +427,20 @@
       "stage": "DSSuccessCheck"
     },
     {
+      "name": "DSLikeButton",
+      "category": "feedback",
+      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
+      "symbols": [
+        "DSLikeButton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSLikeButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSLikeButton.md",
+      "stage": null
+    },
+    {
       "name": "DSTypewriterText",
       "category": "motion",
       "summary": "Types phrases out character by character, with a blinking caret.",

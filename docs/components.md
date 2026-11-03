@@ -411,6 +411,21 @@ Ring strokes, disc fills, check draws (eased state), then one pop and a fading h
 
 ---
 
+## DSLikeButton  ✅
+
+`Components/DSLikeButton.swift`.
+
+```swift
+DSLikeButton(isLiked: Binding<Bool>, count: Int? = nil, size: CGFloat = 24,
+             symbol: String = "heart.fill", emptySymbol: String = "heart",
+             tint: Color? = nil, haptic: DSHapticStyle = .soft,
+             accessibilityLabel: String = "Like")
+```
+
+Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track (`SpringKeyframe` matching `springBouncy`) and radiates one filled halo in the tint — the same halo mechanism as `DSSuccessCheck`, so there's no border. Unliking is quiet. An optional `count` rolls with `.numericText`. Haptic fires on every tap; the pop and halo play on the way in only and never under Reduce Motion. Tint defaults to `theme.accent`, the rest color to `palette.textSecondary`.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.
