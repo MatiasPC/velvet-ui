@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct CodeFieldScreen: View {
     @State private var code = ""

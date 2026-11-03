@@ -26,11 +26,16 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 
 **`Canvas` cannot animate a colour, so blend it by hand.** A `Color` passed into a draw closure snaps. `DSParticleField` conforms to `Animatable` over a `tintMix: Double`, resolves both endpoint colours against the environment with `Color.resolve(in:)` and interpolates the components itself. That is what lets one animated step sweep every live mote at once rather than recolouring them individually.
 
+**Copy-in distribution is a registry, not single-file pieces.** Velvet's value is the shared token and theme layer, so a component can't be one self-contained file without duplicating that layer (and two such files would then clash). `registry.json` lists a `core` (tokens, theme, haptics, layout, `DSAnimation`, preview helpers) plus, per component, its files and the other components it needs. `scripts/velvet.swift add` copies the transitive closure; `verify` proves every closure typechecks on its own, in Swift 5 and Swift 6 language mode, for macOS and the iOS Simulator. A new component isn't done until it has a registry entry (`RegistryTests` fails otherwise).
+
+**Sources must compile in Swift 6 language mode.** The package builds in Swift 5 mode, but copied files land in app targets that may use Swift 6. Keep `animatableData` on views `nonisolated`, and preference or environment defaults `static let`. `velvet.swift verify` catches regressions.
+
 ## Gotchas
 
 | Topic | What to know |
 |---|---|
-| `swift build` only builds macOS | The package targets iOS 18 + macOS 15. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme DesignSystem -destination 'generic/platform=iOS Simulator'`. |
+| `swift build` only builds macOS | The package targets iOS 18 + macOS 15. `swift build` / `swift test` compile the macOS slice. iOS-only modifiers (`keyboardType`, `textContentType`, `navigationBarTitleDisplayMode`, …) must be inside `#if os(iOS)`. Always also run `xcodebuild build -scheme VelvetUI -destination 'generic/platform=iOS Simulator'`. |
+| `ScaledMetric` in a modifier init | `@ScaledMetric` set via `ScaledMetric(wrappedValue:relativeTo:)` in `init` (see `DSTextStyleModifier`), because the base size depends on the style, which is only known at init. Fixed-height controls still use `DSTextStyle.font` (fixed): larger text would clip in their fixed frames. They need layout changes (min-height + scaled padding) before they can scale. |
 | Haptics are a no-op on macOS | `DSHapticEngine` is guarded with `#if canImport(UIKit)`. Fine, just don't expect feedback in macOS previews. |
 | `@DSThemed` is `@MainActor` | It works in any `View` / `ViewModifier` body. It cannot live in an enum or a non-view struct; pass `theme.palette` into helpers instead (see `DSToastType.color(in:)`). |
 | Material over a saturated gradient | `.ultraThinMaterial` lets too much color through and secondary text loses contrast. Cards use `.thinMaterial` (`.glass`); reserve `.glassThin` for small floating elements. |
@@ -39,8 +44,7 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | Theme crossfade | `DSBackdrop` animates the gradient swap with `DSAnimation.normal` keyed on the theme id. Change the theme inside `withAnimation(DSAnimation.normal)` so components crossfade too. |
 | Reduce Transparency / Reduce Motion | `dsSurface` falls back to `.solid`; `dsStaggerIn` and `dsShimmer` skip their animation. Keep honoring both in new components. |
 | `Color` equality | `Color` is `Equatable`, so `DSGradientTheme` is `Equatable`/`Sendable` for free. Compare themes by `id` when you only care about identity (cheaper, and what `DSBackdrop` does). |
-| Contrast is tested | `DesignSystemTests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
-| One checkout only: `~/Documents/velvet-ui` | The stale `~/Documents/DesignSystem` clone was removed on 2026-09-06. Global CLAUDE.md and the `design-system` skill now point here. Apps add the package as `relativePath = ../velvet-ui`; the SwiftPM product stays named `DesignSystem`. Apps created before that date still reference `../DesignSystem` and must be repointed to `../velvet-ui` when next opened (MindBite, Tic-tac-toe, AquaSync, Tetris-Silver, Tetris-game, PowderRush, snake). |
+| Contrast is tested | `VelvetUITests.testGradientThemesMeetAAContrast` resolves colors via `NSColor`/`UIColor` and asserts ≥ 4.5:1 for onAccent/accent, ink/white, inkDark/`#1A1A2E`. A new theme that fails this is not shippable. |
 | Reduce Motion is a resting state, not a skip | `DSMotion.loop` returns `nil` when Reduce Motion is on, so `withAnimation(nil)` applies changes instantly and every ambient effect settles at its resting state. Never wrap an effect in a bare `guard !reduceMotion else { return }` that leaves it mid-transition. |
 | Decaying motion → `keyframeAnimator`, not `phaseAnimator` | `phaseAnimator` runs a fresh animation per phase and each one *settles* before the next fires, so a multi-swing shake reads as separate twitches. `dsJiggle` uses one `keyframeAnimator` track (`DSMotion.jiggleSwings`) whose Cubic keyframes carry velocity across the whole timeline. The `DSAnimation` springs are frozen and none is damped low enough to ring, so the decay is a hand-shaped envelope rather than an underdamped spring. |
 | `swift-tools-version: 6.0` does not mean Swift 6 | The tools version is pinned to 6.0 for iOS 18 / macOS 15 symbol access, but language mode is explicitly `.v5` via `swiftSettings`. Raising it to Swift 6 language mode is a separate migration. |
@@ -48,6 +52,12 @@ Decisions, gotchas and open issues that aren't obvious from the code. Read befor
 | `dsEdgeSweep` animates a Double that builds an AngularGradient | The view body re-evaluates per frame while the sweep runs. Keep it on small, leaf-ish surfaces; on a large subtree, put the sweep on a thin overlay shape rather than on the container itself. |
 | A knob that fills a `dsSurface` track must be an overlay, not a child | `dsSurface` ends in `.clipShape`, so anything inside it (including a `.dsShadow`) is cropped to the pill. `DSSlideToConfirm` draws its knob in an `.overlay(alignment: .leading)` applied *after* `.dsSurface`: the circle is exactly `trackHeight` tall, nests into the pill's rounded ends, and its shadow renders outside the clip. Travel and the trail width then measure from a flush leading edge (no inset term). |
 | A drag-paced dissolve still needs a phase gate | `DSSlideToConfirm`'s label fades letter by letter as a function of `progress`, with `DSAnimation.stagger` delays up to `count × 0.05s` and a `letterOpacity` curve that only reaches 0 when the drag is taken slowly to the end. On a fast flick past the 0.75 threshold the commit fires with letters still lit and the stagger outlasts the ~350ms collapse to a circle. Fix: gate the label on `phase` (`showsInstructionLabel` — `.idle`/`.dragging` only) exactly like `showsKnobGlyph` and `resolution`, so it clears on `DSAnimation.fast` the instant the choreography starts. Any progress-driven reveal that a commit can interrupt needs the same gate. |
+| A single trailing closure on `DSListCell` binds to `action` | `DSListCell(title:subtitle:leading:trailing:action:)` ends with an optional `action`, so `DSListCell(title: "X") { Image(…) }` makes the image builder the tap action (the compiler only warns about backward matching) and no icon shows. Label it: `leading: { … }`. Two or more closures (`{ … } trailing: { … }`) match correctly. |
+| Carousel depth must scale toward the centre | `DSCarousel` items are `viewport - 2 × peek` wide (`containerRelativeFrame` already subtracts `contentMargins`), so `peek - spacing` of each neighbor shows. Scaling a neighbor from its own centre moves its near edge out of view and the peek disappears; anchor the scale on the edge that faces the centre item. Items must fit the carousel's height: the scroll view clips. |
+| Don't stop a pulse with `repeatForever` | A `repeatForever` animation keyed on a value can keep running after the value flips back. `dsSkeleton` samples its pulse from `TimelineView(.animation(paused:))` instead, so it stops when loading ends. Prefer time sampling for any loop that has to stop on a state change. |
+| Text slots in a row compress unevenly | In `DSNumberTicker` the digit columns are a custom `Layout` with a fixed ideal width, while static `Text` slots ("US$") can be compressed. In a narrow container SwiftUI squeezed only the text, which clipped the glyphs. The ticker is `fixedSize()`, so it gets room or overflows but never garbles. |
+| `Canvas` effects draw inside their host | `dsConfetti` paints in an overlay the size of the view it's attached to. Attach it to a container that covers the area the burst should fill (often the screen root), and pick `origin` in that container's unit space. |
+| `DSTheme()` can't be a default argument | `DSTheme` is `@MainActor`, so `theme: DSTheme = DSTheme(…)` fails in an init's default. Take `DSTheme? = nil` and build the fallback in a `@MainActor init` (see the Onboarding example). |
 
 ## Known issues / backlog
 
@@ -79,28 +89,34 @@ screen (the internal `ComponentCatalog` `#Preview` stays for quick dev checks).
   this one path. Re-run `xcodegen generate` and commit the result only after
   changing the file list or target settings. `xcuserdata/` stays ignored.
 - **Consumes the package** as a local SPM dependency at `../..`.
+- **Examples are the exception to "neutral".** The Examples section (Onboarding,
+  Settings, Checkout in `Flows/`) shows Velvet the way an app ships it, on a
+  gradient theme with a backdrop. The flow files import only `SwiftUI` and
+  `VelvetUI` and use no Gallery helpers, because the CLI copies them into apps.
+  Their stages are full screen (`Stage.isFullScreen`): no side padding, and the
+  exit long-press lives on a strip along the top edge.
 - **Covers every component**, motion included: `MotionScreen` (the five
   `DSMotion` primitives), `SlideToConfirmScreen` (with the async slide-to-pay
   and a "next charge fails" toggle), `StepperScreen`, `ThinkingIndicatorScreen`,
   `TypewriterTextScreen`. The Simulator shows the animation; haptics need a
   device (Signing & Capabilities → set your Team, then run on the phone).
-- Spec: `docs/superpowers/specs/2026-09-08-velvet-gallery-app-design.md`.
 
 ## Roadmap
 
 1. ✅ v0.2 foundations: tokens, theme plumbing, DSCard as the glass reference.
-2. Manual walkthrough of every component and variant in the catalog (owner: Mati).
+2. Manual walkthrough of every component and variant in the catalog.
 3. Apply the glass restyle to the remaining components, one PR each, with before/after previews.
 4. ✅ **Velvet UI Showcase** app — see "VelvetGallery example app" above (`Examples/VelvetGallery/`, neutral theme, one screen per component). Does not modify the package.
-5. New components on top of the base: carousels, sheets, animated transitions.
+5. ✅ New components on top of the base: tab bar, carousel, sheet, number ticker, charts, skeleton, success check, confetti.
 
 ## How to add a component (checklist)
 
 1. Build it in a real app first; only reusable, polished, non-duplicate work gets in.
-2. `Sources/DesignSystem/Components/DS<Name>.swift`, types prefixed `DS`, public with a minimal API.
+2. `Sources/VelvetUI/Components/DS<Name>.swift`, types prefixed `DS`, public with a minimal API.
 3. Tokens only. `@DSThemed` for colors, `Color? = nil` for overridable ones, `DSPress` for press, `DSAnimation` springs, `DSHapticEngine` on primary actions, `#if os(iOS)` around iOS-only modifiers.
 4. `#Preview` in light and dark, on `.dsBackdrop()`.
 5. Section in `ComponentCatalog`.
 6. Entry in `docs/components.md`, line in `CHANGELOG.md` under Unreleased.
-7. `swift build`, `swift test`, iOS `xcodebuild`.
-8. Commit `add: DS<Name> — one line`, PR, update the `design-system` skill references.
+7. Entry in `registry.json`, then `swift scripts/velvet.swift verify --only <Name>` and `swift scripts/velvet.swift llms`.
+8. `swift build`, `swift test`, iOS `xcodebuild`.
+9. Commit `add: DS<Name> — one line` and open a PR. See [CONTRIBUTING.md](../CONTRIBUTING.md).
