@@ -211,4 +211,64 @@ final class DSFlowLayoutTests: XCTestCase {
         let size = fittingSize(flow, width: 200)
         XCTAssertEqual(size.height, 0, accuracy: 0.5)
     }
+
+    // MARK: - Placement (frames read back from a live layout)
+
+    private struct Tagged: View {
+        let index: Int
+        let width: CGFloat
+        let record: (Int, CGRect) -> Void
+
+        var body: some View {
+            Color.clear
+                .frame(width: width, height: 20)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("flow")) } action: { record(index, $0) }
+        }
+    }
+
+    /// Lays out five 80 pt items in a 200 pt container and returns each item's frame.
+    private func frames(direction: LayoutDirection, alignment: HorizontalAlignment = .leading) -> [Int: CGRect] {
+        var result: [Int: CGRect] = [:]
+        let flow = DSFlowLayout(spacing: 8, lineSpacing: 8, alignment: alignment) {
+            ForEach(0..<5, id: \.self) { Tagged(index: $0, width: 80) { result[$0] = $1 } }
+        }
+        .frame(width: 200)
+        .coordinateSpace(name: "flow")
+        .environment(\.layoutDirection, direction)
+        #if canImport(AppKit)
+        let host = NSHostingView(rootView: flow)
+        host.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        let window = NSWindow(contentRect: host.frame, styleMask: [], backing: .buffered, defer: false)
+        window.contentView = host
+        host.layoutSubtreeIfNeeded()
+        RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+        host.layoutSubtreeIfNeeded()
+        RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        #endif
+        return result
+    }
+
+    #if canImport(AppKit)
+    func testLeftToRightRowsStartAtTheLeadingEdge() {
+        let f = frames(direction: .leftToRight)
+        XCTAssertEqual(f.count, 5)
+        XCTAssertEqual(f[0]?.minX ?? -1, 0, accuracy: 0.5)
+        XCTAssertEqual(f[1]?.minX ?? -1, 88, accuracy: 0.5)
+        XCTAssertEqual(f[2]?.minX ?? -1, 0, accuracy: 0.5)
+        XCTAssertGreaterThan(f[2]?.minY ?? 0, f[0]?.minY ?? 0)
+    }
+
+    func testRightToLeftRowsStartAtTheTrailingEdge() {
+        let f = frames(direction: .rightToLeft)
+        XCTAssertEqual(f.count, 5)
+        XCTAssertEqual(f[0]?.maxX ?? -1, 200, accuracy: 0.5)
+        XCTAssertEqual(f[1]?.maxX ?? -1, 112, accuracy: 0.5)
+        XCTAssertEqual(f[2]?.maxX ?? -1, 200, accuracy: 0.5)
+    }
+
+    func testRightToLeftTrailingAlignmentHugsTheLeftEdge() {
+        let f = frames(direction: .rightToLeft, alignment: .trailing)
+        XCTAssertEqual(f[4]?.minX ?? -1, 0, accuracy: 0.5)
+    }
+    #endif
 }

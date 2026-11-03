@@ -78,18 +78,17 @@ public struct DSFlowLayout: Layout {
         guard !subviews.isEmpty else { return }
 
         let rows = Self.pack(measure(subviews, maxWidth: bounds.width), maxWidth: bounds.width, spacing: spacing)
-        let isRightToLeft = subviews.layoutDirection == .rightToLeft
         var y = bounds.minY
 
         for row in rows {
-            // Lay the row out left-to-right, then mirror it for right-to-left.
+            // Always laid out left-to-right: SwiftUI mirrors a custom Layout's placements
+            // itself in a right-to-left environment, so mirroring here would cancel it out.
             var x = bounds.minX + Self.leadingOffset(rowWidth: row.width, boundsWidth: bounds.width, alignment: alignment)
             for item in row.items {
-                let originX = isRightToLeft ? bounds.minX + bounds.maxX - (x + item.size.width) : x
                 // Shorter items sit centred in their row, like an HStack.
                 let originY = y + (row.height - item.size.height) / 2
                 subviews[item.index].place(
-                    at: CGPoint(x: originX, y: originY),
+                    at: CGPoint(x: x, y: originY),
                     anchor: .topLeading,
                     proposal: ProposedViewSize(item.size)
                 )
