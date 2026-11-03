@@ -128,6 +128,20 @@
       "stage": "DSRating"
     },
     {
+      "name": "DSLikeButton",
+      "category": "inputs",
+      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
+      "symbols": [
+        "DSLikeButton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSLikeButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSLikeButton.md",
+      "stage": "DSLikeButton"
+    },
+    {
       "name": "DSSegmentedControl",
       "category": "inputs",
       "summary": "Pill or underline picker with a sliding indicator.",
@@ -267,6 +281,20 @@
       "dependencies": [],
       "docs": "docs/components/DSSheet.md",
       "stage": "DSSheet"
+    },
+    {
+      "name": "DSDisclosureGroup",
+      "category": "containers",
+      "summary": "Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.",
+      "symbols": [
+        "DSDisclosureGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSDisclosureGroup.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSDisclosureGroup.md",
+      "stage": "DSDisclosureGroup"
     },
     {
       "name": "DSBadge",
@@ -459,6 +487,20 @@
       ],
       "docs": "docs/components/DSTypewriterText.md",
       "stage": "DSTypewriterText"
+    },
+    {
+      "name": "DSExpandableText",
+      "category": "display",
+      "summary": "Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.",
+      "symbols": [
+        "DSExpandableText"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSExpandableText.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSExpandableText.md",
+      "stage": "DSExpandableText"
     },
     {
       "name": "Motion",

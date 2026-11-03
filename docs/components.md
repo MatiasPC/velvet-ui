@@ -283,6 +283,22 @@ Types a phrase out character by character, holds it, erases it, then moves to th
 
 ---
 
+## DSExpandableText  ✅
+
+`Components/DSExpandableText.swift`. Clamp-and-reveal for long copy.
+
+```swift
+DSExpandableText(_ text: String, lineLimit: Int = 3, expandLabel: String = "Show more", collapseLabel: String = "Show less", style: DSTextStyle = .body, color: Color? = nil, haptic: DSHapticStyle = .light)
+```
+
+Collapses `text` to `lineLimit` lines and springs open on tap. Truncation is measured, not guessed: two hidden copies of the text (one clamped to `lineLimit`, one unbounded) sit in the copy's `.background` and report their height with `onGeometryChange` (iOS 18 / macOS 15); the toggle shows only when the unbounded copy is taller by more than half a point, so short copy has no affordance. Neither probe depends on the expanded state, so the toggle never flickers. The rules (`lines(for:)`, `isTruncated`, `revealHeight`) live in an internal `DSExpandableTextLayout` and are unit tested.
+
+The reveal animates a frame, not `lineLimit`: the visible `Text` is `fixedSize(vertical:)`, then `frame(height: revealHeight, alignment: .top)` and `.clipped()`, with `revealHeight` switching between the two measured heights under `DSAnimation.springSmooth`. Animating `lineLimit` directly re-wraps the text on the first frame and centres it in a frame that is still resizing, so lines jump. Two states keep it clean: `isExpanded` is the target (frame, chevron, label), `showsFullCopy` lays the text out without a limit and is set before an expand and cleared in the `withAnimation` completion of a collapse, so the ellipsis only changes while it is clipped away. Chevron rotates 180°, label crossfades (`.contentTransition(.opacity)`), the haptic fires on the tap. Copy color is `color ?? palette.textPrimary` via `.ds(_:)`, so it scales with Dynamic Type and re-measures; the toggle uses `theme.ink`. Reduce Motion skips the animation and sets both states directly. VoiceOver reads the full copy whether collapsed or expanded; the toggle is a button labelled with its visible text with the value Collapsed or Expanded, the chevron and the probes are hidden.
+
+Known gaps: the expansion state is internal (no `isExpanded` binding), so a list cannot expand or collapse rows for you or remember it across reloads; the label strings are English defaults you pass in to localize.
+
+---
+
 ## DSStepper  ✅
 
 `Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.
@@ -352,6 +368,21 @@ DSCarousel(_ data: Data, currentPage: Binding<Int>,      // or omit currentPage 
 ```
 
 Detents + visible grabber. Background: `.regularMaterial` before iOS/macOS 26, the system Liquid Glass sheet from 26 on, solid `backgroundElevated` under Reduce Transparency. Re-injects the presenter's `DSTheme` and sets `dsOnBackdrop` to false inside. No haptic.
+
+---
+
+## DSDisclosureGroup  ✅
+
+`Components/DSDisclosureGroup.swift`. Glass accordion / FAQ row — a custom, themed replacement for the stock `DisclosureGroup` (whose open/close animation breaks inside a `ForEach` on iOS 17, whose chevron ignores the tint, and which has no haptics or glass).
+
+```swift
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  initiallyExpanded: Bool = false, haptic: DSHapticStyle = .light) { content }
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  isExpanded: Binding<Bool>, haptic: DSHapticStyle = .light) { content }
+```
+
+Two inits: self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`, for "one open at a time"). On a `.glass` surface at `DSRadius.card`. The body sits in a private `Layout` (`DSDisclosureReveal`) whose `animatableData` is the revealed fraction, so the card grows with the body on `springSmooth`, the body fades with it and the chevron rotates 180° on the same spring; the body is laid out at full height and clipped, so text never re-wraps mid-reveal. The animation hangs off the open state (`.animation(_, value:)`), so it plays for a bound `isExpanded` flipped from outside and retargets on rapid taps. A hairline `palette.divider` splits header from body; the header dips with `DSPress.scale`. `.light` haptic on each toggle. The body stays mounted while collapsed (keeps its state), hidden from touch and VoiceOver. Reduce Motion: a short `DSAnimation.fast` ease instead of the spring, haptic still fires. Reduce Transparency: solid elevated surface. Header is one combined button with value Expanded/Collapsed and a "Shows/Hides the details" hint; the icon and chevron are `accessibilityHidden`.
 
 ---
 
@@ -426,6 +457,21 @@ DSSuccessCheck(isComplete: Bool, size: CGFloat = 64, color: Color? = nil,
 ```
 
 Ring strokes, disc fills, check draws (eased state), then one pop and a fading halo on a `keyframeAnimator` track (`SpringKeyframe` matching `springBouncy`). The haptic and the VoiceOver announcement land at the pop peak (0.65 s of 0.9 s). Fill is `palette.success`, check `palette.textOnPrimary`. Resets quietly; Reduce Motion crossfades the finished seal in.
+
+---
+
+## DSLikeButton  ✅
+
+`Components/DSLikeButton.swift`.
+
+```swift
+DSLikeButton(isLiked: Binding<Bool>, count: Int? = nil, size: CGFloat = DSSpacing.xl,
+             symbol: String = "heart.fill", emptySymbol: String = "heart",
+             tint: Color? = nil, haptic: DSHapticStyle = .soft,
+             accessibilityLabel: String = "Like")
+```
+
+Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track (`SpringKeyframe` matching `springBouncy`) and radiates one filled halo in the tint, the same halo mechanism as `DSSuccessCheck`, so there's no border. The haptic fires on the peak of the pop (0.13 s after the tap); unliking is quiet (no pop, no halo, haptic on the tap), and rapid taps restart the one track instead of stacking. The beat belongs to the tap: setting `isLiked` from code swaps the symbol without a pop or a haptic. An optional `count` rolls with `.numericText`. Tap target is at least 44 pt, press dips with `DSPress.iconScale`, disabled dims. Reduce Motion: no pop or halo, crossfades instead of morphs, haptic on the tap. Tint defaults to `theme.accent`, the rest color to `palette.textSecondary`. VoiceOver: toggle button, value "Liked, 129" / "Not liked".
 
 ---
 
