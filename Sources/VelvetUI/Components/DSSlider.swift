@@ -37,8 +37,135 @@ private enum Metrics {
     static let haloScale: CGFloat = 1.3
     /// Knob lift while the finger owns it.
     static let grabScale: CGFloat = 1.12
-    /// Slack for the floating-point bound comparison that arms the end detent.
-    static let boundEpsilon: Double = 0.0001
+    /// Same dim `DSToggle` uses when disabled.
+    static let disabledOpacity: Double = 0.5
+}
+
+// MARK: - Scale
+
+/// The value mapping behind `DSSlider`: a range, an optional step, and the
+/// conversions between a value, its position along the track and a touch.
+/// Pure and free of view state, so the clamping, snapping and travel maths can
+/// be unit-tested without rendering anything.
+struct DSSliderScale: Equatable {
+    let bounds: ClosedRange<Double>
+    /// Notch spacing, or `nil` for a continuous slider. Normalised at init: a
+    /// non-positive or non-finite step means "continuous".
+    let step: Double?
+
+    init(bounds: ClosedRange<Double>, step: Double? = nil) {
+        self.bounds = bounds
+        if let step, step.isFinite, step > 0 {
+            self.step = step
+        } else {
+            self.step = nil
+        }
+    }
+
+    var lower: Double { bounds.lowerBound }
+    var upper: Double { bounds.upperBound }
+
+    /// Width of the range. 0 for a single-value range (and for an unbounded one,
+    /// which the slider can't draw).
+    var span: Double {
+        let width = upper - lower
+        return width.isFinite && width > 0 ? width : 0
+    }
+
+    /// Slack for float comparisons, relative to the range so tiny ranges work.
+    private var tolerance: Double { (span > 0 ? span : 1) * 1e-9 }
+
+    // MARK: Value
+
+    /// `value` limited to `bounds`. NaN falls back to the lower bound.
+    func clamped(_ value: Double) -> Double {
+        guard !value.isNaN else { return lower }
+        return min(max(value, lower), upper)
+    }
+
+    /// The nearest notch to `value`, clamped into `bounds`. Notches sit at
+    /// `lower + k × step`, and the upper bound is always one more, even when
+    /// `step` doesn't divide the span (`0...10` by `3`: 0 3 6 9 10) — so the far
+    /// end of the track is always reachable, as with `DSStepper`.
+    /// Continuous scales only clamp.
+    func snapped(_ value: Double) -> Double {
+        let value = clamped(value)
+        guard let step else { return value }
+        let notch = lower + ((value - lower) / step).rounded() * step
+        guard notch < upper - tolerance else { return upper }
+        return abs(upper - value) < abs(notch - value) ? upper : notch
+    }
+
+    /// The next value after `value` in `direction` (+1 up, −1 down): the next
+    /// notch for a stepped scale, a tenth of the span for a continuous one.
+    /// Always lands in `bounds`; at a bound it stays put.
+    func adjusted(_ value: Double, direction: Int) -> Double {
+        let value = clamped(value)
+        let sign: Double = direction >= 0 ? 1 : -1
+        guard let step else { return clamped(value + sign * span / 10) }
+        let position = (value - lower) / step
+        // `±tolerance` so a value already on a notch moves to the *next* one.
+        let index = sign > 0 ? (position + 1e-9).rounded(.down) + 1 : (position - 1e-9).rounded(.up) - 1
+        return snapped(lower + index * step)
+    }
+
+    func isAtBound(_ value: Double) -> Bool {
+        value <= lower + tolerance || value >= upper - tolerance
+    }
+
+    /// Whether two values are the same notch/position for feedback purposes.
+    func isSame(_ a: Double, _ b: Double) -> Bool {
+        abs(a - b) <= tolerance
+    }
+
+    // MARK: Position
+
+    /// Where `value` sits along the range, `0...1`. 0 for a single-value range.
+    func fraction(of value: Double) -> Double {
+        guard span > 0 else { return 0 }
+        return (clamped(value) - lower) / span
+    }
+
+    /// The (snapped, clamped) value `fraction` of the way along the range.
+    func value(atFraction fraction: Double) -> Double {
+        let fraction = fraction.isNaN ? 0 : min(max(fraction, 0), 1)
+        return snapped(lower + fraction * span)
+    }
+
+    /// The value under a touch at `x`. The knob's centre travels the track
+    /// *inset* by the knob radius at both ends, so the same inset is removed
+    /// here and finger and knob centre agree at 0 and at 1. `nil` while the
+    /// track is too narrow (or not measured yet) to map anything.
+    func value(atX x: CGFloat, trackWidth: CGFloat, knobDiameter: CGFloat) -> Double? {
+        let travel = trackWidth - knobDiameter
+        guard travel > 0 else { return nil }
+        return value(atFraction: Double((x - knobDiameter / 2) / travel))
+    }
+
+    // MARK: VoiceOver
+
+    /// What VoiceOver reads: a percentage for the default `0...1` continuous
+    /// slider, otherwise the value itself, with just as many decimals as the
+    /// step needs (two for a continuous slider).
+    func accessibilityValue(_ value: Double, locale: Locale = .current) -> String {
+        let value = clamped(value)
+        if bounds == 0...1, step == nil {
+            return "\(Int((value * 100).rounded())) percent"
+        }
+        return value.formatted(
+            .number.precision(.fractionLength(0...fractionDigits)).locale(locale)
+        )
+    }
+
+    private var fractionDigits: Int {
+        guard var remainder = step else { return 2 }
+        var digits = 0
+        while digits < 6, abs(remainder - remainder.rounded()) > 1e-9 {
+            remainder *= 10
+            digits += 1
+        }
+        return digits
+    }
 }
 
 // MARK: - DSSlider
@@ -50,16 +177,16 @@ private enum Metrics {
 ///     DSSlider(value: $opacity, in: 0...1, accent: DSColors.secondary)
 ///
 /// Pass `step` for a notched slider (each notch fires a `.selection` tick) or
-/// leave it `nil` for a smooth value. The control draws its own value label
-/// only through VoiceOver — show a visible read-out alongside it when you need
-/// one, the way `DSRating`'s call sites do.
+/// leave it `nil` for a smooth value. The control draws no value label of its
+/// own — show a visible read-out alongside it when you need one, the way
+/// `DSRating`'s call sites do. VoiceOver reads the value and adjusts it with
+/// swipe up and down.
 public struct DSSlider: View {
 
     // MARK: Configuration
 
     @Binding private var value: Double
-    private let bounds: ClosedRange<Double>
-    private let step: Double?
+    private let scale: DSSliderScale
     private let accent: Color?
     private let haptics: Bool
 
@@ -68,11 +195,14 @@ public struct DSSlider: View {
     /// Measured track width, used to map between touch position and value.
     @State private var trackWidth: CGFloat = 0
     /// Whether the finger currently owns the knob (drives the lift + halo).
-    @State private var isDragging = false
+    /// A `GestureState` so it also clears when the system cancels the touch.
+    @GestureState private var isDragging = false
+    /// Whether this drag's feedback bookkeeping has been set up.
+    @State private var isTracking = false
     /// Whether the value is resting against a bound, so the end detent fires once.
     @State private var atBound = false
-    /// Last notch index felt, so a stepped slider ticks once per notch crossed.
-    @State private var lastStepIndex: Int?
+    /// The last notch felt, so a stepped slider ticks once per notch crossed.
+    @State private var lastNotch: Double?
 
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -81,10 +211,12 @@ public struct DSSlider: View {
     // MARK: Init
 
     /// - Parameters:
-    ///   - value: The bound value, kept clamped into `bounds`.
+    ///   - value: The bound value. It is kept inside `bounds`: an out-of-range
+    ///     value is clamped (and written back) as soon as the slider sees it.
     ///   - bounds: The allowed range. Defaults to `0...1`.
-    ///   - step: Snap increment. `nil` (default) is continuous; a non-positive
-    ///     value is treated as continuous.
+    ///   - step: Snap increment, measured from the lower bound. `nil` (default)
+    ///     is continuous; a non-positive value is treated as continuous. The upper
+    ///     bound is always reachable, even when `step` doesn't divide the range.
     ///   - accent: Fill colour of the trailed track. Defaults to the theme accent.
     ///   - haptics: Whether to fire tactile feedback while sliding. Defaults to `true`.
     public init(
@@ -95,12 +227,7 @@ public struct DSSlider: View {
         haptics: Bool = true
     ) {
         self._value = value
-        self.bounds = bounds
-        if let step, step > 0 {
-            self.step = step
-        } else {
-            self.step = nil
-        }
+        self.scale = DSSliderScale(bounds: bounds, step: step)
         self.accent = accent
         self.haptics = haptics
     }
@@ -112,7 +239,7 @@ public struct DSSlider: View {
 
         ZStack(alignment: .leading) {
             Capsule(style: .continuous)
-                .fill(theme.subtleFill)
+                .fill(trackFill)
                 .frame(height: Metrics.trackHeight)
 
             Capsule(style: .continuous)
@@ -135,18 +262,21 @@ public struct DSSlider: View {
         }
         .contentShape(Rectangle())
         .gesture(dragGesture, including: isEnabled ? .all : .none)
-        .opacity(isEnabled ? 1 : 0.5)
-        .animation(DSAnimation.interactive, value: value)
+        .opacity(isEnabled ? 1 : Metrics.disabledOpacity)
+        .onAppear { normalize() }
+        .onChange(of: value) { normalize() }
+        .onChange(of: scale) { normalize() }
+        .onChange(of: isDragging) { _, dragging in
+            if !dragging { endTracking() }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Slider")
-        .accessibilityValue(Text(accessibilityValueText))
-        .accessibilityAddTraits(.isButton)
+        .accessibilityValue(scale.accessibilityValue(value))
         .accessibilityAdjustableAction { direction in
             guard isEnabled else { return }
-            let delta = step ?? max(span / 10, 0)
             switch direction {
-            case .increment: commit(value + delta)
-            case .decrement: commit(value - delta)
+            case .increment: commit(scale.adjusted(value, direction: 1))
+            case .decrement: commit(scale.adjusted(value, direction: -1))
             @unknown default: break
             }
         }
@@ -175,7 +305,15 @@ public struct DSSlider: View {
             }
             .scaleEffect(knobScale)
             .dsShadow(.sm)
-            .animation(DSAnimation.springSnappy, value: isDragging)
+            .animation(motion(DSAnimation.springSnappy), value: isDragging)
+    }
+
+    /// The unfilled track. On a backdrop it is the glass wash, which reads as a
+    /// frosted channel. On a plain screen `subtleFill` is `backgroundSecondary`,
+    /// close to white and almost invisible as an 8pt line, so it takes the same
+    /// neutral `DSToggle`'s off track and `DSLinearProgress` use.
+    private var trackFill: Color {
+        theme.onBackdrop ? theme.subtleFill : theme.palette.border
     }
 
     /// The grab lift is decorative — pinned at rest under Reduce Motion.
@@ -183,124 +321,99 @@ public struct DSSlider: View {
         isDragging && !reduceMotion ? Metrics.grabScale : 1
     }
 
+    /// `animation`, or none under Reduce Motion: the value still moves, it just
+    /// moves exactly with the finger instead of springing after it.
+    private func motion(_ animation: Animation) -> Animation? {
+        reduceMotion ? nil : animation
+    }
+
     // MARK: Gesture
 
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
+            .updating($isDragging) { _, state, _ in state = true }
             .onChanged { gesture in
                 guard isEnabled else { return }
-                if !isDragging {
-                    withAnimation(DSAnimation.springSnappy) { isDragging = true }
-                }
+                if !isTracking { beginTracking() }
                 update(toX: gesture.location.x)
             }
-            .onEnded { _ in
-                guard isEnabled else { return }
-                withAnimation(DSAnimation.springSnappy) { isDragging = false }
-                atBound = false
-                lastStepIndex = nil
-            }
+            .onEnded { _ in endTracking() }
+    }
+
+    /// Seeds the feedback state from where the knob is *now*, so touching down
+    /// on the notch (or the end) it already rests on doesn't tick.
+    private func beginTracking() {
+        isTracking = true
+        let current = scale.clamped(value)
+        atBound = scale.isAtBound(current)
+        lastNotch = scale.snapped(current)
+    }
+
+    private func endTracking() {
+        isTracking = false
+        atBound = false
+        lastNotch = nil
     }
 
     /// Map a touch position to a (snapped, clamped) value, move there, and fire
     /// whatever tactile feedback the move earned.
     private func update(toX x: CGFloat) {
-        let newValue = clamp(snapped(rawValue(atX: x)))
+        guard let newValue = scale.value(atX: x, trackWidth: trackWidth, knobDiameter: Metrics.knobDiameter) else {
+            return
+        }
         if newValue != value {
-            withAnimation(DSAnimation.interactive) { value = newValue }
+            withAnimation(motion(DSAnimation.interactive)) { value = newValue }
         }
         fireHaptics(for: newValue)
     }
 
-    /// One `.rigid` detent on first contact with either bound, and — for a
-    /// stepped slider only — a `.selection` tick each time a new notch is
-    /// reached. Continuous sliders stay silent between the two ends.
+    /// One `.rigid` detent on arriving at either bound, and — for a stepped
+    /// slider only — a `.selection` tick each time a new notch is reached.
+    /// Continuous sliders stay silent between the two ends.
     private func fireHaptics(for newValue: Double) {
         guard haptics else { return }
 
-        let nowAtBound = newValue <= lower + Metrics.boundEpsilon
-            || newValue >= upper - Metrics.boundEpsilon
+        let nowAtBound = scale.isAtBound(newValue)
         if nowAtBound, !atBound {
             DSHapticEngine.shared.fire(.rigid)
         }
         atBound = nowAtBound
 
-        if let step {
-            let index = Int(((newValue - lower) / step).rounded())
-            if index != lastStepIndex {
-                lastStepIndex = index
-                // The bound already fired its firmer detent this frame; don't
-                // stack a selection tick on top of it.
-                if !nowAtBound {
-                    DSHapticEngine.shared.fire(.selection)
-                }
-            }
+        guard scale.step != nil else { return }
+        if let lastNotch, scale.isSame(lastNotch, newValue) { return }
+        lastNotch = newValue
+        // The bound already fired its firmer detent this frame; don't stack a
+        // selection tick on top of it.
+        if !nowAtBound {
+            DSHapticEngine.shared.fire(.selection)
         }
     }
 
-    /// Used by the VoiceOver adjustable action — snaps, clamps and ticks.
-    private func commit(_ raw: Double) {
-        let newValue = clamp(snapped(raw))
+    /// The VoiceOver adjustable action: already snapped and clamped by the scale.
+    private func commit(_ newValue: Double) {
         guard newValue != value else { return }
-        withAnimation(DSAnimation.springSnappy) { value = newValue }
+        withAnimation(motion(DSAnimation.springSnappy)) { value = newValue }
         if haptics { DSHapticEngine.shared.fire(.selection) }
+    }
+
+    /// Keeps the bound value inside `bounds`, whoever changed it.
+    private func normalize() {
+        let clamped = scale.clamped(value)
+        if clamped != value { value = clamped }
     }
 
     // MARK: Derived Geometry
 
-    private var lower: Double { bounds.lowerBound }
-    private var upper: Double { bounds.upperBound }
-    private var span: Double { max(upper - lower, 0) }
-
-    /// Value position in `0...1`, clamped — the single source for both the fill
-    /// width and the knob offset, so they can never disagree.
-    private var fraction: Double {
-        span > 0 ? min(max((value - lower) / span, 0), 1) : 0
-    }
-
     /// Knob travel from the leading edge: from flush-leading to flush-trailing.
     private var knobOffset: CGFloat {
         guard trackWidth > Metrics.knobDiameter else { return 0 }
-        return CGFloat(fraction) * (trackWidth - Metrics.knobDiameter)
+        return CGFloat(scale.fraction(of: value)) * (trackWidth - Metrics.knobDiameter)
     }
 
     /// Accent fill ends at the knob's centre, so the opaque knob caps it.
     private var fillWidth: CGFloat {
         guard trackWidth > 0 else { return 0 }
         return min(trackWidth, knobOffset + Metrics.knobDiameter / 2)
-    }
-
-    /// Touch x → raw (unsnapped) value, clamped into bounds. The usable travel is
-    /// inset by the knob radius at each end so the finger and the knob centre agree.
-    private func rawValue(atX x: CGFloat) -> Double {
-        let usable = trackWidth - Metrics.knobDiameter
-        guard usable > 0, span > 0 else { return lower }
-        let frac = Double((x - Metrics.knobDiameter / 2) / usable)
-        return lower + min(max(frac, 0), 1) * span
-    }
-
-    private func snapped(_ raw: Double) -> Double {
-        guard let step else { return raw }
-        return lower + (((raw - lower) / step).rounded() * step)
-    }
-
-    private func clamp(_ newValue: Double) -> Double {
-        min(max(newValue, lower), upper)
-    }
-
-    // MARK: Accessibility
-
-    /// A percentage reads naturally for the default continuous `0...1`; any other
-    /// configuration reads the raw value.
-    private var accessibilityValueText: String {
-        if bounds == 0...1, step == nil {
-            return "\(Int((value * 100).rounded())) percent"
-        }
-        return formatted(value)
-    }
-
-    private func formatted(_ newValue: Double) -> String {
-        newValue == newValue.rounded() ? String(Int(newValue)) : String(format: "%.2f", newValue)
     }
 }
 
@@ -312,6 +425,7 @@ private struct DSSliderPreviewHost: View {
     @State private var volume: Double = 0.6
     @State private var brightness: Double = 0.35
     @State private var price: Double = 150
+    @State private var temperature: Double = -2
     @State private var opacity: Double = 0.8
     @State private var locked: Double = 0.5
 
@@ -342,6 +456,9 @@ private struct DSSliderPreviewHost: View {
                     VStack(alignment: .leading, spacing: DSSpacing.lg) {
                         row("Max price — snaps in 25s", value: "$\(Int(price))") {
                             DSSlider(value: $price, in: 0...500, step: 25)
+                        }
+                        row("Temperature — -10...10 by 0.5", value: String(format: "%.1f°", temperature)) {
+                            DSSlider(value: $temperature, in: -10...10, step: 0.5)
                         }
                         row("Opacity — custom accent", value: String(format: "%.2f", opacity)) {
                             DSSlider(value: $opacity, accent: DSColors.secondary)

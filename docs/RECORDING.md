@@ -115,6 +115,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSRating` | Autoplay: fills the five stars. |
 | `DSPageControl` | Autoplay: advances the pages. |
 | `DSStepper` | Autoplay: steps up, then down. |
+| `DSSlider` | Autoplay: the volume and price knobs glide to new values, the price one stepping through its notches. Drag either by hand. |
 | `DSSlideToConfirm` | Drag the knob to the end, release. Manual. |
 | `DSThinkingIndicator` | Runs on its own. |
 | `DSTypewriterText` | Runs on its own. |

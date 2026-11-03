@@ -44,6 +44,7 @@ struct ComponentListView: View {
                 row("Toggle", "Switches") { ToggleScreen() }
                 row("Segmented Control", "Pick one") { SegmentedControlScreen() }
                 row("Stepper", "Numeric input") { StepperScreen() }
+                row("Slider", "Continuous value, optional notches") { SliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
                 row("Page Control", "Paged content") { PageControlScreen() }
             }

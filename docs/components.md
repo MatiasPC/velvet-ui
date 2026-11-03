@@ -297,13 +297,17 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ## DSSlider  ✅
 
-`Components/DSSlider.swift`. Continuous value control on a glass track — the input Stepper/Rating/Toggle (all discrete) left uncovered.
+`Components/DSSlider.swift`. Continuous value control — the input Stepper/Rating/Toggle (all discrete) left uncovered.
 
 ```swift
 DSSlider(value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double? = nil, accent: Color? = nil, haptics: Bool = true)
 ```
 
-A slim `theme.subtleFill` track, an accent fill that trails to the knob's centre, and a white knob (`palette.textOnPrimary`, like DSToggle) that lifts `1.12×` and grows a diffuse accent halo (the focus-glow recipe) while grabbed. The knob tracks the finger 1:1 and a tap anywhere jumps to that spot (`minimumDistance: 0`); the touch travel is inset by the knob radius at each end so finger and knob centre agree. `step` nil is continuous; a positive `step` snaps and fires a `.selection` ratchet tick per notch. Either way a single `.rigid` detent fires the moment travel reaches a bound (re-arms when it leaves), so a continuous drag never spams haptics. The grab lift is gated on Reduce Motion (the knob still follows the finger — that *is* the interaction); `.disabled(true)` dims to 0.5 and drops the gesture. Exposes `.accessibilityAdjustableAction` (step, or `span/10` when continuous) and reads back a percentage for the default `0...1` or the raw value otherwise. Show your own visible read-out alongside it, the way `DSRating`'s call sites do.
+A slim track, an accent fill that trails to the knob's centre, and a white knob (`palette.textOnPrimary`, like DSToggle) that lifts `1.12×` and grows a diffuse accent halo (the focus-glow recipe) while grabbed. The track is `theme.subtleFill` on a `dsBackdrop()` screen and `palette.border` (DSToggle's off track) on a plain one, where `subtleFill` is near-white and the 8pt line would vanish. The knob follows the finger and a tap anywhere jumps to that spot (`minimumDistance: 0`); the touch travel is inset by the knob radius at each end so finger and knob centre agree.
+
+The value mapping is `DSSliderScale` (internal, unit-tested): `clamped` (NaN falls to the lower bound), `snapped` (notches at `lower + k × step`, plus the upper bound even when `step` doesn't divide the span, so the far end is always reachable, like DSStepper), `fraction`/`value(atFraction:)`, `value(atX:trackWidth:knobDiameter:)` (nil until the track is measured) and `adjusted` (VoiceOver: the next notch, or a tenth of the span). A non-positive `step` is continuous. The bound value is clamped and written back on appear and whenever it changes, so it never stays outside `in`.
+
+Haptics: a continuous slider is silent between the ends and fires one `.rigid` detent on *arriving* at either bound; a stepped one also fires `.selection` per notch crossed. Touching down on the notch or end the knob already rests on is silent (the feedback state is seeded from the current value at touch-down). `haptics: false` silences both. Reduce Motion pins the grab lift and drops the spring lag (the halo stays: it is opacity only). `.disabled(true)` dims to 0.5 and drops the gesture. Exposes `.accessibilityAdjustableAction` and a value ("60 percent" for the default `0...1`, otherwise the number, with only the decimals `step` needs). Show your own visible read-out alongside it, the way `DSRating`'s call sites do.
 
 ---
 

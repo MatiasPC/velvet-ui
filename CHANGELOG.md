@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSSlider(value:in:step:accent:haptics:)`: a continuous value slider on a slim track, the input `DSStepper`, `DSRating` and `DSToggle` (all discrete) left uncovered. An accent fill trails a white knob that lifts and grows a soft halo while grabbed; drag it or tap the track to jump. Works on any finite range (`-10...10`, `0...500`), clamps the bound value, and with `step` snaps to notches and always reaches the upper bound. A `.selection` tick per notch and one `.rigid` detent on arriving at either end; a continuous slider is silent in between. VoiceOver adjusts it by swipe (a notch, or a tenth of the range) and reads the value. Reduce Motion pins the lift. Docs page, Gallery screen and recording stage, registry entry, tests for the value mapping and the knob position.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

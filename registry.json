@@ -113,6 +113,20 @@
       "stage": "DSStepper"
     },
     {
+      "name": "DSSlider",
+      "category": "inputs",
+      "summary": "Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.",
+      "symbols": [
+        "DSSlider"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSlider.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSlider.md",
+      "stage": "DSSlider"
+    },
+    {
       "name": "DSRating",
       "category": "inputs",
       "summary": "Drag-to-rate stars, with half steps and a read-only mode.",
