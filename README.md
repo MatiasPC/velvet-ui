@@ -106,20 +106,25 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSPageControl.gif" width="120" alt="DSPageControl"> | [DSPageControl](docs/components/DSPageControl.md) | Page dots whose active dot stretches into a capsule. |
 | <img src="docs/media/DSTabBar.gif" width="120" alt="DSTabBar"> | [DSTabBar](docs/components/DSTabBar.md) | Floating glass tab bar with a sliding accent capsule, a symbol swap and count badges. |
 | <img src="docs/media/DSCard.gif" width="120" alt="DSCard"> | [DSCard](docs/components/DSCard.md) | The glass surface everything sits on: elevated, outlined, flat, tappable or with an image. |
+| — | [DSTiltCard](docs/components/DSTiltCard.md) | A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back. |
 | <img src="docs/media/DSListCell.gif" width="120" alt="DSListCell"> | [DSListCell](docs/components/DSListCell.md) | List rows, section headers and dividers. |
 | <img src="docs/media/DSCarousel.gif" width="120" alt="DSCarousel"> | [DSCarousel](docs/components/DSCarousel.md) | Snapping carousel with peeking neighbors and depth; pairs with `DSPageControl`. |
 | <img src="docs/media/DSSheet.gif" width="120" alt="dsSheet"> | [dsSheet](docs/components/DSSheet.md) | Native sheet with Velvet chrome: detents, a grabber, a glass background, the theme carried in. |
+| — | [DSDisclosureGroup](docs/components/DSDisclosureGroup.md) | Glass "show more" section that springs open with a rotating chevron and a haptic — accordion, FAQ, settings detail. |
 | <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
 | <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
+| — | [DSTimeline](docs/components/DSTimeline.md) | Vertical progress timeline: nodes joined by a connector that fills as the flow advances. |
 | <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |
 | <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts that VoiceOver announces. |
 | <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
 | <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons. |
 | <img src="docs/media/DSSkeleton.gif" width="120" alt="DSSkeleton"> | [DSSkeleton](docs/components/DSSkeleton.md) | Loading placeholders, plus `.dsSkeleton(_:)` to redact a real view in place. |
 | <img src="docs/media/DSSuccessCheck.gif" width="120" alt="DSSuccessCheck"> | [DSSuccessCheck](docs/components/DSSuccessCheck.md) | A success seal that draws itself and pops, with a haptic on the beat. |
+| — | [DSLikeButton](docs/components/DSLikeButton.md) | Like / favorite / bookmark toggle that pops and radiates a halo, with a rolling count. |
 | <img src="docs/media/DSThinkingIndicator.gif" width="120" alt="DSThinkingIndicator"> | [DSThinkingIndicator](docs/components/DSThinkingIndicator.md) | Ambient "thinking" state for AI and background work. |
 | <img src="docs/media/DSTypewriterText.gif" width="120" alt="DSTypewriterText"> | [DSTypewriterText](docs/components/DSTypewriterText.md) | Types phrases out character by character, with a blinking caret. |
+| — | [DSExpandableText](docs/components/DSExpandableText.md) | Long copy that collapses to a few lines and springs open, with a Show more / Show less toggle. |
 | <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
 

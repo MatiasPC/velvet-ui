@@ -103,6 +103,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSButton` | Click each button (press feedback). Manual. |
 | `DSIconButton` | Click the three icon buttons in turn. Manual. |
 | `DSCard` | Click the card to show its press. Manual. |
+| `DSTiltCard` | Click and drag across the card, then release (tilt, sheen, spring back). Manual. |
 | `DSTextField` | Click a field and type an email; type a password. Manual. |
 | `DSCodeField` | Autoplay: types a 6-digit code, then shows success. |
 | `DSBadge` | Nothing moves; record a still moment or screenshot. |
@@ -119,16 +120,20 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSSlideToConfirm` | Drag the knob to the end, release. Manual. |
 | `DSThinkingIndicator` | Runs on its own. |
 | `DSTypewriterText` | Runs on its own. |
+| `DSExpandableText` | Tap Show more, then Show less. Manual. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
 | `DSCarousel` | Autoplay: advances a page every 1.6 s and wraps. Swipe it by hand for the depth effect. |
 | `DSSheet` | Autoplay: presents the sheet, holds, dismisses. |
+| `DSTimeline` | Autoplay: an order moves through four steps (connector fills, node lights, haptic), then cuts back to the start. |
 | `DSNumberTicker` | Autoplay: rolls a balance through a sequence (including 99.99 → 100.05). |
 | `Charts` | Autoplay: shuffles the data every 2 s (line morph, bars regrow). Drag across the bars to scrub. |
 | `DSSkeleton` | Autoplay: loading → loaded → loading. |
 | `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
+| `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |
+| `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |
 | `SettingsFlow` | Full screen. Flip a toggle (toast), open Delete account and slide. Manual. |
 | `CheckoutFlow` | Full screen. Step a quantity (total rolls), apply `VELVET`, slide to pay. Manual. |
