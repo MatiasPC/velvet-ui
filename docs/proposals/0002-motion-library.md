@@ -1,6 +1,6 @@
 # 0002 — Motion library: adapting open-swiftui-animations to Velvet UI
 
-**Status:** proposed · **Date:** 2026-09-05 · **Depends on:** [0001 — Arc tokens](0001-arc-tokens.md)
+**Status:** proposed · **Date:** 2026-09-05 · **Depends on:** [0001 — Glass surface language](0001-glass-tokens.md)
 
 ## Why
 
@@ -63,7 +63,7 @@ Our version of any of them must satisfy all six:
 
 ## Proposed additions
 
-### A. Motion primitives → `Sources/DesignSystem/Animation/DSMotion.swift`
+### A. Motion primitives → `Sources/VelvetUI/Animation/DSMotion.swift`
 
 Composable modifiers, each honoring Reduce Motion, each tokenised.
 
