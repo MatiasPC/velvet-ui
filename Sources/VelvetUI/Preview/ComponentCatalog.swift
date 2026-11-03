@@ -2,9 +2,9 @@ import SwiftUI
 
 // MARK: - Component Catalog
 // A browsable preview of all Design System components, on the themed backdrop.
-// Use it during development and for the manual walkthrough: switch the gradient
-// theme with the dots, toggle the backdrop off to see the solid fallback, and
-// flip the preview between light and dark.
+// Use it during development and for the manual walkthrough: switch the theme
+// with the dots, toggle the backdrop off to see the plain page tone, and flip
+// the preview between light and dark.
 
 /// Stand-in for a declined charge, so the catalog can show the refusal path.
 private struct CatalogRefusal: Error {}
@@ -68,7 +68,7 @@ struct ComponentCatalog: View {
                     DSCard {
                         VStack(alignment: .leading, spacing: DSSpacing.md) {
                             DSPreviewThemeDots(theme: theme)
-                            Text(theme.gradient.name).ds(.title3)
+                            Text(theme.style.name).ds(.title3)
                             DSToggle("Backdrop", isOn: $useBackdrop)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -179,7 +179,7 @@ struct ComponentCatalog: View {
                         VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             Image(systemName: "creditcard.fill")
                                 .font(.title2)
-                                .foregroundStyle(theme.gradient.accent)
+                                .foregroundStyle(theme.style.accent)
                             Text("Drag to tilt").ds(.title3)
                             Text("3D tilt with a sheen that slides across the glass, then springs back.")
                                 .ds(.callout, color: DSColors.textSecondary)
@@ -394,7 +394,7 @@ struct ComponentCatalog: View {
                     DSCard {
                         VStack(alignment: .leading, spacing: DSSpacing.md) {
                             DSTypewriterText(
-                                ["Glass over gradient.", "No borders. Ever.", "Springs, not ramps."],
+                                ["Glass over paper.", "No borders. Ever.", "Springs, not ramps."],
                                 style: .title2
                             )
                             DSTypewriterText(["Types once, then stops."], style: .body, loops: false)
@@ -596,7 +596,7 @@ struct ComponentCatalog: View {
                                 HStack(spacing: DSSpacing.md) {
                                     Image(systemName: "bell.fill")
                                         .font(.title2)
-                                        .foregroundStyle(theme.gradient.accent)
+                                        .foregroundStyle(theme.style.accent)
                                         .dsJiggle(trigger: jiggleTrigger)
                                     Spacer()
                                     DSButton("Shake", size: .small) { jiggleTrigger += 1 }
@@ -622,7 +622,7 @@ struct ComponentCatalog: View {
                                 HStack(spacing: DSSpacing.sm) {
                                     ForEach(0..<4, id: \.self) { index in
                                         RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
-                                            .fill(theme.gradient.horizontalGradient)
+                                            .fill(theme.style.accent)
                                             .frame(height: DSSpacing.xxl)
                                             .dsHueDrift()
                                             .dsPopIn(delay: Double(index) * 0.08)
@@ -652,7 +652,7 @@ struct ComponentCatalog: View {
     private func breatheDot(_ label: String, _ intensity: DSBreatheIntensity) -> some View {
         VStack(spacing: DSSpacing.xs) {
             Circle()
-                .fill(theme.gradient.accent)
+                .fill(theme.style.accent)
                 .frame(width: DSSpacing.xxl, height: DSSpacing.xxl)
                 .dsBreathe(intensity)
             Text(label).ds(.caption1, color: DSColors.textTertiary)

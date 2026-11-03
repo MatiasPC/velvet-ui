@@ -25,8 +25,8 @@ private struct MemberCard: View {
     }
 }
 
-/// A glass panel on a gradient backdrop, so the card reads as glass over colour.
-private struct GradientPanel<Content: View>: View {
+/// A glass panel on a themed backdrop, so the card reads as glass.
+private struct BackdropPanel<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
     var body: some View {
@@ -41,7 +41,7 @@ private struct GradientPanel<Content: View>: View {
 struct TiltCardScreen: View {
     private static let tilts = ["6°", "12°", "24°"]
     private static let radii = ["Card", "Surface", "Control"]
-    private static let themes: [String: DSGradientTheme] = [
+    private static let themes: [String: DSThemeStyle] = [
         "Sunset": .sunset, "Aurora": .aurora, "Lagoon": .lagoon
     ]
 
@@ -50,7 +50,7 @@ struct TiltCardScreen: View {
     @State private var hasHaptic = true
     @State private var themeName = "Sunset"
     @State private var redeemed = 0
-    @State private var panelTheme = DSTheme(gradient: .sunset)
+    @State private var panelTheme = DSTheme(style: .sunset)
 
     private var maxTilt: Angle? {
         switch tiltLabel {
@@ -98,9 +98,9 @@ struct TiltCardScreen: View {
                 }
             }
 
-            LabeledExample("On a gradient — glass over colour") {
+            LabeledExample("On a page tone — glass over a backdrop") {
                 VStack(alignment: .leading, spacing: DSSpacing.md) {
-                    GradientPanel {
+                    BackdropPanel {
                         DSTiltCard { MemberCard() }
                     }
                     .dsTheme(panelTheme)
@@ -108,8 +108,8 @@ struct TiltCardScreen: View {
                 }
             }
             .onChange(of: themeName) { _, name in
-                guard let gradient = Self.themes[name] else { return }
-                withAnimation(DSAnimation.normal) { panelTheme.gradient = gradient }
+                guard let style = Self.themes[name] else { return }
+                withAnimation(DSAnimation.normal) { panelTheme.style = style }
             }
 
             Text("Scroll this screen by dragging from a card: the card tilts for a moment, then springs flat when the scroll takes over. Under Reduce Motion the cards stay flat and only a still sheen fades in while held.")

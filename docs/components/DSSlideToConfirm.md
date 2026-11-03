@@ -15,7 +15,7 @@ A slide-to-confirm gate for irreversible actions like payments. The label dissol
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -49,7 +49,7 @@ struct SlideToConfirmDemo: View {
 | `label` | `String` | required | Text on the track (unlabeled first argument). |
 | `icon` | `String` | `"chevron.right"` | SF Symbol on the knob. |
 | `confirmedLabel` | `String` | `"Confirmed"` | Text shown once the action succeeds. |
-| `accent` | `Color?` | `nil` | Knob fill. Defaults to the theme accent. The trail is always the theme gradient. |
+| `accent` | `Color?` | `nil` | Knob fill. Defaults to the theme accent. The trail is always the accent. |
 | `finish` | `DSSlideFinish` | `.settle` | What happens after success: `.settle` or `.morphAndVanish`. |
 | `onConfirm` | `() async throws -> Void` | required | Runs when the slide commits. Throwing counts as a refusal. |
 

@@ -395,7 +395,7 @@ private struct DSParticleFieldPreviewHost: View {
 
             ZStack(alignment: .topLeading) {
                 Circle()
-                    .fill(theme.gradient.accent)
+                    .fill(theme.style.accent)
                     .frame(width: knobRadius * 2, height: knobRadius * 2)
                     .position(knob)
             }

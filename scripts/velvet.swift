@@ -509,7 +509,7 @@ func printNextSteps(_ ctx: Context, _ opts: Options) {
 
     Next steps
       1. Make sure \(opts.dest) is part of your app target (Xcode 16+ folders added to the project are synced automatically).
-      2. Inject a theme once at the root of your app:  .dsTheme(DSTheme(gradient: .sunset))
+      2. Inject a theme once at the root of your app:  .dsTheme(DSTheme(style: .sunset))
       3. Docs: \(ctx.registry.repository)#readme
     """)
     if !ctx.isLocal && ctx.ref == "main" {
@@ -647,7 +647,7 @@ struct LLMs {
 
         > \(r.summary)
 
-        Add it with Swift Package Manager (\(r.package.url), product `\(r.package.product)`, from \(r.package.from)) and `import \(r.package.module)`, or copy a single component and the core it needs into your app with the CLI: download \(r.raw)/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(gradient: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
+        Add it with Swift Package Manager (\(r.package.url), product `\(r.package.product)`, from \(r.package.from)) and `import \(r.package.module)`, or copy a single component and the core it needs into your app with the CLI: download \(r.raw)/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(style: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
 
         """
     }

@@ -222,7 +222,7 @@ private struct DSTiltCardPreviewHost: View {
                     VStack(alignment: .leading, spacing: DSSpacing.sm) {
                         Image(systemName: "creditcard.fill")
                             .font(.title2)
-                            .foregroundStyle(theme.gradient.accent)
+                            .foregroundStyle(theme.style.accent)
                         Text("Velvet Card").ds(.title2)
                         Text("•••• •••• •••• 2048")
                             .ds(.numeric, color: DSColors.textSecondary)
