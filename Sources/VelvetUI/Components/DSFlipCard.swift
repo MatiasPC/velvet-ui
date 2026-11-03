@@ -118,10 +118,11 @@ public struct DSFlipCard<Front: View, Back: View>: View {
             reduceMotion: reduceMotion,
             axis: axis,
             perspective: Self.perspective,
-            front: DSCard(style: style, padding: padding, cornerRadius: cornerRadius, content: front)
-                .frame(maxWidth: .infinity, maxHeight: .infinity),
-            back: DSCard(style: style, padding: padding, cornerRadius: cornerRadius, content: back)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            style: style,
+            padding: padding,
+            cornerRadius: cornerRadius,
+            front: front(),
+            back: back()
         )
         // Reduce Motion: no turn; the faces crossfade (handled in `DSFlipFaces`).
         .animation(reduceMotion ? nil : DSAnimation.springSmooth, value: isFlipped)
@@ -152,6 +153,19 @@ enum DSFlipMath {
     /// Which face is visible at a live, per-frame angle: the back from the 90 degree edge on.
     static func showsBack(angle: Double) -> Bool { angle >= 90 }
 
+    /// How much of the glass material to show at a live angle: 1 within a few degrees of
+    /// rest, 0 while the card is clearly turning. Continuous in `angle`, so the hand-off
+    /// between the solid body and the glass needs no animation of its own.
+    static func glassAmount(angle: Double) -> Double {
+        let distance = min(abs(angle), abs(180 - angle))
+        let t = min(max((distance - glassHoldDegrees) / glassBlendDegrees, 0), 1)
+        return 1 - t
+    }
+
+    /// Degrees from rest that still show pure glass, and the span over which it fades out.
+    static let glassHoldDegrees: Double = 4
+    static let glassBlendDegrees: Double = 16
+
     /// Pre-rotation of the back face so it reads the right way round once the card has
     /// turned. Zero under Reduce Motion, where the card never turns.
     static func backPreRotation(reduceMotion: Bool) -> Double { reduceMotion ? 0 : 180 }
@@ -164,7 +178,7 @@ enum DSFlipMath {
 /// hand off exactly at the 90° edge for any animation — spring included — with no
 /// cross-fade ghosting. The back face is pre-rotated a half turn so it reads the
 /// right way round once the card has flipped.
-private struct DSFlipFaces<FrontFace: View, BackFace: View>: View, Animatable {
+private struct DSFlipFaces<FrontContent: View, BackContent: View>: View, Animatable {
     // `nonisolated`: `View` makes the type main-actor, while SwiftUI's animation engine
     // reads the `Animatable` conformance off the main actor (an error in Swift 6 mode).
     nonisolated var angle: Double
@@ -172,8 +186,11 @@ private struct DSFlipFaces<FrontFace: View, BackFace: View>: View, Animatable {
     let reduceMotion: Bool
     let axis: DSFlipAxis
     let perspective: CGFloat
-    let front: FrontFace
-    let back: BackFace
+    let style: DSCardStyle
+    let padding: CGFloat
+    let cornerRadius: CGFloat
+    let front: FrontContent
+    let back: BackContent
 
     nonisolated var animatableData: Double {
         get { angle }
@@ -184,12 +201,15 @@ private struct DSFlipFaces<FrontFace: View, BackFace: View>: View, Animatable {
         // Reduce Motion: the card never turns, the faces trade places with a short fade.
         let turn = reduceMotion ? 0 : angle
         let showingBack = reduceMotion ? flipped : DSFlipMath.showsBack(angle: angle)
+        // Materials and shadows lose their backdrop under a 3D projection, so while the card
+        // is turning each face has a solid body and the glass fades back in as it lands.
+        let glass = reduceMotion ? 1 : DSFlipMath.glassAmount(angle: angle)
         DSFlipStack {
-            front
+            DSFlipFace(style: style, padding: padding, cornerRadius: cornerRadius, glass: glass, content: front)
                 .opacity(showingBack ? 0 : 1)
                 .allowsHitTesting(!showingBack)
                 .accessibilityHidden(showingBack)
-            back
+            DSFlipFace(style: style, padding: padding, cornerRadius: cornerRadius, glass: glass, content: back)
                 .rotation3DEffect(
                     .degrees(DSFlipMath.backPreRotation(reduceMotion: reduceMotion)),
                     axis: axis.vector
@@ -201,6 +221,49 @@ private struct DSFlipFaces<FrontFace: View, BackFace: View>: View, Animatable {
         // nil in 3D: the swap must land on the 90 degree edge, never cross-fade over the spring.
         .animation(reduceMotion ? DSAnimation.fast : nil, value: showingBack)
         .rotation3DEffect(.degrees(turn), axis: axis.vector, perspective: perspective)
+    }
+}
+
+// MARK: - Face
+
+/// One side of the card: the same surfaces as `DSCard` (elevated, outlined, flat), but
+/// with a solid layer under the glass whose weight is `1 - glass`. It fills the size the
+/// stack gives it, so both faces share one frame.
+private struct DSFlipFace<Content: View>: View {
+    let style: DSCardStyle
+    let padding: CGFloat
+    let cornerRadius: CGFloat
+    let glass: Double
+    let content: Content
+
+    @DSThemed private var theme
+
+    var body: some View {
+        content
+            .padding(padding)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background { surface }
+    }
+
+    @ViewBuilder
+    private var surface: some View {
+        switch style {
+        case .elevated:
+            ZStack {
+                Color.clear.dsSurface(.solid, radius: cornerRadius).dsShadow(.md).opacity(1 - glass)
+                Color.clear.dsSurface(.glass, radius: cornerRadius).dsShadow(.md).opacity(glass)
+            }
+        case .outlined:
+            ZStack {
+                Color.clear.dsSurface(.solid, radius: cornerRadius).opacity(1 - glass)
+                Color.clear.dsSurface(.glassThick, radius: cornerRadius).opacity(glass)
+            }
+        case .flat:
+            // No material to lose: the wash is a flat fill already.
+            Color.clear
+                .background(theme.subtleFill)
+                .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        }
     }
 }
 
