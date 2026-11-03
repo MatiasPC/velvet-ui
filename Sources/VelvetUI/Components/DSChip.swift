@@ -5,15 +5,17 @@ import SwiftUI
 // Unlike `DSBadge` (a static status label), a chip is interactive: tapping it
 // springs the fill from the subtle surface into the accent and ticks a selection
 // haptic. Group chips with `DSChipGroup`, which wraps them onto as many lines as
-// it needs with a custom `Layout` and manages single- or multi-selection.
+// it needs with `DSFlowLayout` and manages single- or multi-selection.
 //
 // No borders: an unselected chip reads through the `theme.subtleFill` surface and
 // a selected one through the accent fill and a soft lift, so the two states
-// crossfade cleanly under `DSAnimation.springSnappy`.
-//
-// Layout reference: Apple, "Compose custom layouts with SwiftUI" (WWDC22,
-// https://developer.apple.com/videos/play/wwdc2022/10056/). Flow pattern after
-// the community `Layout`-protocol write-ups (e.g. tevelee/SwiftUI-Flow).
+// crossfade cleanly under `DSAnimation.springSnappy` (a quick fade under Reduce
+// Motion).
+
+private enum Metrics {
+    /// Opacity of a chip that is disabled (matches `DSToggle`).
+    static let disabledOpacity: Double = 0.5
+}
 
 public struct DSChip: View {
     private let title: String
@@ -23,8 +25,9 @@ public struct DSChip: View {
     private let haptic: DSHapticStyle
     private let action: () -> Void
 
-    @State private var isPressed = false
     @DSThemed private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isEnabled) private var isEnabled
 
     /// - Parameters:
     ///   - title: The chip's label. Also its VoiceOver label.
@@ -57,32 +60,23 @@ public struct DSChip: View {
             HStack(spacing: DSSpacing.xs) {
                 if let icon {
                     Image(systemName: icon)
-                        .font(.system(size: 13, weight: .semibold))
                         .accessibilityHidden(true)
                 }
                 Text(title)
-                    .font(DSTextStyle.buttonSmall.font)
             }
-            .foregroundStyle(foreground)
+            .dsTextStyle(.buttonSmall, color: foreground)
             .padding(.horizontal, DSSpacing.md)
             .padding(.vertical, DSSpacing.xs)
             .background {
                 Capsule(style: .continuous)
                     .fill(isSelected ? (accent ?? theme.accent) : theme.subtleFill)
             }
-            .clipShape(Capsule(style: .continuous))
             .dsShadow(isSelected ? .sm : .none)
             .contentShape(Capsule(style: .continuous))
-            .scaleEffect(isPressed ? DSPress.scale : 1)
-            .animation(DSAnimation.springSnappy, value: isSelected)
-            .animation(DSPress.animation, value: isPressed)
+            .opacity(isEnabled ? 1 : Metrics.disabledOpacity)
+            .animation(reduceMotion ? DSAnimation.fast : DSAnimation.springSnappy, value: isSelected)
         }
-        .buttonStyle(.plain)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in isPressed = true }
-                .onEnded { _ in isPressed = false }
-        )
+        .buttonStyle(DSChipButtonStyle())
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 
@@ -193,14 +187,23 @@ public struct DSChipGroup<Value: Hashable>: View {
     private func toggle(_ value: Value) {
         switch mode {
         case .single(let binding):
-            binding.wrappedValue = (binding.wrappedValue == value) ? nil : value
+            binding.wrappedValue = Self.toggled(value, from: binding.wrappedValue)
         case .multiple(let binding):
-            if binding.wrappedValue.contains(value) {
-                binding.wrappedValue.remove(value)
-            } else {
-                binding.wrappedValue.insert(value)
-            }
+            binding.wrappedValue = Self.toggled(value, in: binding.wrappedValue)
         }
+    }
+
+    /// Single selection after tapping `value`: it becomes the selection, unless it
+    /// already was, in which case the selection clears.
+    static func toggled(_ value: Value, from current: Value?) -> Value? {
+        current == value ? nil : value
+    }
+
+    /// Multiple selection after tapping `value`: inserted, or removed if present.
+    static func toggled(_ value: Value, in selection: Set<Value>) -> Set<Value> {
+        var result = selection
+        if !result.insert(value).inserted { result.remove(value) }
+        return result
     }
 }
 
@@ -235,6 +238,18 @@ public extension DSChipGroup where Value == String {
             spacing: spacing,
             accent: accent
         )
+    }
+}
+
+// MARK: - Button Style
+
+/// Press feedback as a `ButtonStyle`, so a touch that turns into a scroll inside
+/// a `ScrollView` releases the chip instead of leaving it scaled down.
+private struct DSChipButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? DSPress.scale : 1)
+            .animation(DSPress.animation, value: configuration.isPressed)
     }
 }
 
