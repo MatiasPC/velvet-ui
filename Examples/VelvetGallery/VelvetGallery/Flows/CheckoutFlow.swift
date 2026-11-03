@@ -332,12 +332,12 @@ private struct CheckoutConfirmation: View {
 
 #Preview("Checkout — Light") {
     CheckoutFlow()
-        .dsTheme(DSTheme(gradient: .sunset))
+        .dsTheme(DSTheme(style: .sunset))
         .preferredColorScheme(.light)
 }
 
 #Preview("Checkout — Dark") {
     CheckoutFlow()
-        .dsTheme(DSTheme(gradient: .aurora))
+        .dsTheme(DSTheme(style: .aurora))
         .preferredColorScheme(.dark)
 }

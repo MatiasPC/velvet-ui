@@ -115,7 +115,7 @@ public struct DSLinearProgress: View {
     }
 }
 
-// MARK: - Gradient Progress Bar
+// MARK: - Multi-color Progress Bar
 
 public struct DSGradientProgress: View {
     let progress: Double
@@ -127,7 +127,7 @@ public struct DSGradientProgress: View {
     @DSThemed private var theme
 
     /// - Parameters:
-    ///   - colors: Gradient stops. Defaults to the theme gradient's stops.
+    ///   - colors: Fill stops. Defaults to a single accent stop, i.e. a solid fill.
     ///   - trackColor: Track color. Defaults to the palette border.
     public init(
         progress: Double,
@@ -142,7 +142,7 @@ public struct DSGradientProgress: View {
     }
 
     private var gradient: LinearGradient {
-        LinearGradient(colors: colors ?? theme.gradient.stops, startPoint: .leading, endPoint: .trailing)
+        LinearGradient(colors: colors ?? [theme.accent], startPoint: .leading, endPoint: .trailing)
     }
 
     public var body: some View {
