@@ -96,6 +96,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSButton.gif" width="120" alt="DSButton"> | [DSButton](docs/components/DSButton.md) | Text button with five variants, three sizes, an icon and a loading state. |
 | <img src="docs/media/DSIconButton.gif" width="120" alt="DSIconButton"> | [DSIconButton](docs/components/DSIconButton.md) | Icon-only button with press scale, a haptic and a VoiceOver label. |
 | <img src="docs/media/DSSlideToConfirm.gif" width="120" alt="DSSlideToConfirm"> | [DSSlideToConfirm](docs/components/DSSlideToConfirm.md) | Slide-to-confirm for payments and destructive actions, with an async result. |
+| — | [DSHoldToConfirm](docs/components/DSHoldToConfirm.md) | Press-and-hold confirmation with a charging ring and the same async result; VoiceOver confirms with a double-tap. |
 | <img src="docs/media/DSToggle.gif" width="120" alt="DSToggle"> | [DSToggle](docs/components/DSToggle.md) | Switch with a spring knob and a rigid haptic. |
 | <img src="docs/media/DSStepper.gif" width="120" alt="DSStepper"> | [DSStepper](docs/components/DSStepper.md) | −/+ stepper that ticks on every step and jiggles at its bounds. |
 | — | [DSSlider](docs/components/DSSlider.md) | Continuous value slider with optional notches, a tick per notch and a firm stop at each end. |
@@ -191,6 +192,7 @@ Under the components sit the tokens: glass surfaces (`DSSurface`), the wash that
 
 ## Accessibility
 
+- **VoiceOver.** Interactive controls expose a label, a value and the right traits. `DSStepper`, `DSRating` and `DSPageControl` are adjustable (swipe up and down). `DSSlideToConfirm` and `DSHoldToConfirm` confirm with a double-tap, so nobody has to drag or hold. `DSToast` announces itself. Icon-only buttons take an `accessibilityLabel:`. Each component page lists exactly what VoiceOver reads.
 - **VoiceOver.** Interactive controls expose a label, a value and the right traits. `DSStepper`, `DSSlider`, `DSRating` and `DSPageControl` are adjustable (swipe up and down). `DSSlideToConfirm` confirms with a double-tap, so nobody has to drag. `DSToast` announces itself. Icon-only buttons take an `accessibilityLabel:`. Each component page lists exactly what VoiceOver reads.
 - **Dynamic Type.** Text styled with `.ds(_:)`, `.dsTextStyle(_:)` or `.dsFont(_:)` scales with the user's text size, and looks identical at the default size. Buttons, text field input, the segmented control and badges keep a fixed label size for now. The stepper, code field and slide-to-confirm scale their text inside a fixed-height control.
 - **Reduce Motion** puts ambient effects in a resting state instead of cutting them mid-animation. Gesture feedback stays, and decorative particles are removed.

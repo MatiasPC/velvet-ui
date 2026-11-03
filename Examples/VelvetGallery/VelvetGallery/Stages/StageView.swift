@@ -27,6 +27,7 @@ struct StageView: View {
         case .DSStepper:           StepperStage(autoplay: autoplay)
         case .DSSlider:            SliderStage(autoplay: autoplay)
         case .DSSlideToConfirm:    SlideToConfirmStage()
+        case .DSHoldToConfirm:     HoldToConfirmStage()
         case .DSThinkingIndicator: ThinkingIndicatorStage()
         case .DSTypewriterText:    TypewriterTextStage()
         case .Progress:            ProgressStage(autoplay: autoplay)

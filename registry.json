@@ -83,6 +83,20 @@
       "stage": "DSSlideToConfirm"
     },
     {
+      "name": "DSHoldToConfirm",
+      "category": "actions",
+      "summary": "Press-and-hold confirmation: a ring charges while you hold, with the same async result as slide-to-confirm.",
+      "symbols": [
+        "DSHoldToConfirm"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSHoldToConfirm.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSHoldToConfirm.md",
+      "stage": "DSHoldToConfirm"
+    },
+    {
       "name": "DSToggle",
       "category": "inputs",
       "summary": "Switch with a spring knob and a rigid haptic.",

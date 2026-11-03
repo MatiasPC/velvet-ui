@@ -9,6 +9,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSAvatar, DSListCell, DSToast, DSEmptyState, DSSegmentedControl, DSToggle
     case DSRating, DSPageControl, DSStepper, DSSlideToConfirm, DSThinkingIndicator
     case DSTypewriterText, Progress, Motion
+    case DSHoldToConfirm
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSTimeline
     case DSSuccessCheck, DSConfetti
@@ -36,6 +37,8 @@ enum Stage: String, CaseIterable, Identifiable {
              .DSTextField, .DSBadge, .DSAvatar, .DSListCell, .DSEmptyState,
              .OnboardingFlow, .SettingsFlow, .CheckoutFlow:
             return false
+        case .DSHoldToConfirm:
+            return false   // the gesture is the demo
         case .DSTiltCard:
             return false   // drag it by hand
         case .DSExpandableText:

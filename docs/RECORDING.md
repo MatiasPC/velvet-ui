@@ -118,6 +118,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSStepper` | Autoplay: steps up, then down. |
 | `DSSlider` | Autoplay: the volume and price knobs glide to new values, the price one stepping through its notches. Drag either by hand. |
 | `DSSlideToConfirm` | Drag the knob to the end, release. Manual. |
+| `DSHoldToConfirm` | Press and hold until the ring closes; release early once to show the spring back. Manual; it re-arms itself after 2.5 s. |
 | `DSThinkingIndicator` | Runs on its own. |
 | `DSTypewriterText` | Runs on its own. |
 | `DSExpandableText` | Tap Show more, then Show less. Manual. |

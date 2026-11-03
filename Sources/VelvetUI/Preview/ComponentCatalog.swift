@@ -32,6 +32,8 @@ struct ComponentCatalog: View {
     @State private var sweepOn = true
     @State private var quantity = 2
     @State private var bulk = 25
+    @State private var holdAttempt = 0
+    @State private var holdDeleteAttempt = 0
     @State private var volume: Double = 0.6
     @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
@@ -509,6 +511,26 @@ struct ComponentCatalog: View {
                         DSButton("Reset payments", variant: .ghost, size: .small) {
                             paidAttempt += 1
                             refusedAttempt += 1
+                        }
+                    }
+                }
+
+                // MARK: - Hold to Confirm
+                section("Hold to Confirm") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSHoldToConfirm("Hold to confirm", icon: "hand.tap") { }
+                            .id(holdAttempt)
+                        DSHoldToConfirm(
+                            "Hold to delete",
+                            icon: "trash",
+                            confirmedLabel: "Deleted",
+                            accent: DSColors.error
+                        ) { }
+                        .id(holdDeleteAttempt)
+
+                        DSButton("Reset holds", variant: .ghost, size: .small) {
+                            holdAttempt += 1
+                            holdDeleteAttempt += 1
                         }
                     }
                 }

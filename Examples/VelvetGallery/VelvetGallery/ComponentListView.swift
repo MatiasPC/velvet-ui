@@ -29,6 +29,7 @@ struct ComponentListView: View {
             Section("Actions") {
                 row("Buttons", "Variants, sizes, states") { ButtonsScreen() }
                 row("Slide to Confirm", "Drag to commit") { SlideToConfirmScreen() }
+                row("Hold to Confirm", "Press until the ring closes") { HoldToConfirmScreen() }
             }
             Section("Navigation") {
                 row("Tab Bar", "Floating glass bar, sliding accent") { TabBarScreen() }

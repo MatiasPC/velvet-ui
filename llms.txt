@@ -16,6 +16,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSButton.md): Text button with five variants, three sizes, an icon and a loading state.
 - [DSIconButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSIconButton.md): Icon-only button with press scale, a haptic and a VoiceOver label.
 - [DSSlideToConfirm](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSlideToConfirm.md): Slide-to-confirm for payments and destructive actions, with an async result.
+- [DSHoldToConfirm](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSHoldToConfirm.md): Press-and-hold confirmation: a ring charges while you hold, with the same async result as slide-to-confirm.
 - [DSToggle](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSToggle.md): Switch with a spring knob and a rigid haptic.
 - [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
 - [DSSlider](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSlider.md): Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.

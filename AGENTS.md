@@ -60,6 +60,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Primary / secondary action | `DSButton(_:variant:size:icon:isLoading:action:)` | `.primary` is the accent fill; one per screen. |
 | Icon-only action | `DSIconButton(icon:accessibilityLabel:action:)` | Always pass `accessibilityLabel`. |
 | Confirm a payment or a destructive action | `DSSlideToConfirm(_:confirmedLabel:finish:onConfirm:)` | `onConfirm` is `async throws`. |
+| Confirm by holding (power off, send, one-handed) | `DSHoldToConfirm(_:icon:confirmedLabel:duration:accent:onConfirm:)` | Same `async throws` `onConfirm`; VoiceOver double-taps instead of holding. |
 | On/off setting | `DSToggle(_:isOn:)` | |
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
 | Continuous value (volume, price, opacity) | `DSSlider(value:in:step:)` | `Double` binding, default `0...1`; pass `step` for notches. It draws no value: show your own read-out. Add `.accessibilityLabel(…)`. |
