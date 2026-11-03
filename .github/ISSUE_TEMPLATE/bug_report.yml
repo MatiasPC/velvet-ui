@@ -1,0 +1,82 @@
+name: Bug report
+description: A component looks, moves, sounds or behaves wrong.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. A minimal snippet that reproduces the problem is the fastest way to a fix.
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: Which component or token? e.g. `DSSlideToConfirm`, `DSTextStyle`
+      placeholder: DSSlideToConfirm
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Velvet UI version
+      description: The version or commit you depend on.
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - iOS device
+        - iOS Simulator
+        - macOS
+        - Xcode Preview
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS and Xcode versions
+      placeholder: iOS 18.2 on iPhone 15, Xcode 16.2
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: The smallest view that shows the bug.
+      render: swift
+      placeholder: |
+        import VelvetUI
+
+        struct Repro: View {
+            var body: some View {
+                DSToggle("Example", isOn: .constant(true))
+            }
+        }
+    validations:
+      required: true
+  - type: checkboxes
+    id: settings
+    attributes:
+      label: Settings that were on
+      description: Many visual bugs only show up with one of these.
+      options:
+        - label: Dark mode
+        - label: Reduce Motion
+        - label: Reduce Transparency
+        - label: VoiceOver
+        - label: Larger text (Dynamic Type)
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshot or screen recording
+      description: Drag files here. For motion bugs, a short clip helps most.

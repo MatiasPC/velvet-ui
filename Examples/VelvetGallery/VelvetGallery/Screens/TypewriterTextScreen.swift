@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct TypewriterTextScreen: View {
     var body: some View {
