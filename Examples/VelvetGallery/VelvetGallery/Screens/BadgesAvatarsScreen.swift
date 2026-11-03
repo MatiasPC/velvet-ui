@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 struct BadgesAvatarsScreen: View {
     var body: some View {
