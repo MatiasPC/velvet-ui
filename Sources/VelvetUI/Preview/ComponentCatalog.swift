@@ -239,17 +239,17 @@ struct ComponentCatalog: View {
                 // MARK: - Checkboxes
                 section("Checkboxes") {
                     DSCard {
-                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                             DSCheckbox("Accept terms & conditions", isOn: $acceptTerms)
                             DSCheckbox("Subscribe to the newsletter", isOn: $wantsNewsletter)
-                            DSCheckbox("Send me offers", isOn: $wantsOffers, onColor: DSColors.secondary)
-                            DSCheckbox("Unavailable option", isOn: $wantsNewsletter)
+                            DSCheckbox("Send me offers", isOn: $wantsOffers, onColor: DSColors.success)
+                            DSCheckbox("Unavailable option", isOn: .constant(false))
                                 .disabled(true)
 
-                            HStack(spacing: DSSpacing.xl) {
-                                DSCheckbox(isOn: $acceptTerms, size: .small)
-                                DSCheckbox(isOn: $wantsNewsletter, size: .medium)
-                                DSCheckbox(isOn: $wantsOffers, size: .large, onColor: DSColors.success)
+                            HStack(spacing: DSSpacing.md) {
+                                DSCheckbox(isOn: $acceptTerms, size: .small).accessibilityLabel("Small")
+                                DSCheckbox(isOn: $wantsNewsletter, size: .medium).accessibilityLabel("Medium")
+                                DSCheckbox(isOn: $wantsOffers, size: .large).accessibilityLabel("Large")
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
