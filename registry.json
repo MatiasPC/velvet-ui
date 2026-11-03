@@ -1,6 +1,6 @@
 {
   "name": "Velvet UI",
-  "summary": "Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.",
+  "summary": "Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over solid neutral page tones, no borders, VoiceOver and Reduce Motion built in. MIT.",
   "repository": "https://github.com/MatiasPC/velvet-ui",
   "raw": "https://raw.githubusercontent.com/MatiasPC/velvet-ui",
   "package": {
@@ -16,8 +16,9 @@
   "core": {
     "summary": "Tokens, theme, glass surfaces, typography, spacing, radius, shadows, springs, haptics and layout helpers. Every component needs it; the CLI adds it once.",
     "files": [
+      "Sources/VelvetUI/Tokens/DSBackground.swift",
       "Sources/VelvetUI/Tokens/DSColors.swift",
-      "Sources/VelvetUI/Tokens/DSGradientTheme.swift",
+      "Sources/VelvetUI/Tokens/DSThemeStyle.swift",
       "Sources/VelvetUI/Tokens/DSRadius.swift",
       "Sources/VelvetUI/Tokens/DSShadow.swift",
       "Sources/VelvetUI/Tokens/DSSpacing.swift",
@@ -396,7 +397,7 @@
     {
       "name": "Progress",
       "category": "feedback",
-      "summary": "Circular, linear, gradient and step progress, animated numbers, shimmer skeletons.",
+      "summary": "Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons.",
       "symbols": [
         "DSCircularProgress",
         "DSLinearProgress",

@@ -4,9 +4,19 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Changed
+- **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
+- **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
+- Decorative fills that used the background gradient now use the solid accent: `DSThinkingIndicator`'s symbol, `DSSlideToConfirm`'s trail, `DSParticleField`, the `dsHueDrift` demo tiles and confetti. `DSGradientProgress` defaults to a solid accent fill; pass two or more `colors` to opt into a blend.
+- Gallery theme pickers now show each style as a page tone (light/dark halves) with an accent dot, instead of a gradient swatch.
+
+### Deprecated
+- `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
 ### Added
 - `DSFlowLayout` — a pure SwiftUI `Layout` that wraps its subviews to new rows when they overflow the available width, for tag clouds, filter chips and keyword lists. Greedy first-fit packing; `spacing`, `lineSpacing` and `alignment` (`.leading`/`.center`/`.trailing`, mirrored in right-to-left). An over-wide item gets its own row and is measured again at the container width so text wraps instead of overflowing; shorter items centre in their row; an unbounded width proposal falls back to the widest row. No color or haptics of its own (a layout positions, it never paints) — reflow animates on-system when the caller wraps content changes in `withAnimation`. Gallery screen and recording stage included. Docs: [docs/components/DSFlowLayout.md](docs/components/DSFlowLayout.md).
 - `DSChip` and `DSChipGroup`: selectable pill chips for filters, tags and category pickers, laid out with `DSFlowLayout` and managing single (`Binding<Value?>`) or multiple (`Binding<Set<Value>>`) selection. Generic over any `Hashable` value, with a `String` convenience. Selection springs the fill into the accent (a quick fade under Reduce Motion) and ticks a selection haptic. Depends on `DSFlowLayout`. Gallery screen and recording stage included. Docs: [docs/components/DSChip.md](docs/components/DSChip.md).
+
 
 ## [0.2.0] — 2026-10-23
 

@@ -44,7 +44,7 @@ enum StageBackground: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var label: String { rawValue.capitalized }
 
-    var gradient: DSGradientTheme {
+    var style: DSThemeStyle {
         switch self {
         case .neutral: return .neutral
         case .sunset:  return .sunset

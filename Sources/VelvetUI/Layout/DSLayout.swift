@@ -6,8 +6,9 @@ import SwiftUI
 // MARK: - Screen Container
 
 /// Standard screen container with consistent padding and background.
-/// Pass `backdrop: true` to draw the themed gradient (`DSBackdrop`) instead of
-/// a flat color — that is what turns `dsSurface` cards into glass.
+/// Pass `backdrop: true` to draw the theme's solid page tone (`DSBackdrop`) instead
+/// of the palette's plain background — the backdrop also marks the subtree as
+/// "on backdrop", which is what turns `dsSurface` cards into glass.
 public struct DSScreen<Content: View>: View {
     let backgroundColor: Color?
     let backdrop: Bool

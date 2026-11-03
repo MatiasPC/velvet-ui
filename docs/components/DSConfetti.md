@@ -15,7 +15,7 @@ A one-shot burst of confetti from any point of a view, fired whenever a trigger 
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -71,7 +71,7 @@ Attach it to a container that covers the area the paper should fall through, suc
 
 - Pieces fan upward and outward, slow down from air drag, then drift down under gravity while spinning and tumbling.
 - Each piece lives 1.6 to 2.4 s and fades out over the last 30%.
-- Colors come from the theme: the accent, the gradient stops, lighter tints of each, and the theme ink, which keeps the burst visible against the backdrop.
+- Colors come from the theme: the accent, the theme ink, a lighter tint of each, and the ink again for weight, which keeps the burst visible against every page tone.
 - Several triggers in a row overlap; earlier pieces finish their fall.
 - Nothing runs while idle: the animation stops once the last piece is gone.
 - `haptic` is `nil` by default because the action that triggers confetti (a button press, a confirmed slide) usually has its own haptic. Set it when the trigger is a state change with no haptic of its own.
