@@ -127,6 +127,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `Charts` | Autoplay: shuffles the data every 2 s (line morph, bars regrow). Drag across the bars to scrub. |
 | `DSSkeleton` | Autoplay: loading → loaded → loading. |
 | `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
+| `DSScrollReveal` | Autoplay: the feed scrolls down and back up. Manual: scroll it yourself. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |
 | `SettingsFlow` | Full screen. Flip a toggle (toast), open Delete account and slide. Manual. |

@@ -352,6 +352,47 @@ enum DocSnippetsDisplay {
         }
     }
     // END MotionDemo
+
+    // BEGIN ScrollRevealDemo
+    struct ScrollRevealDemo: View {
+        private let items = ["Weekly summary", "New follower", "Backup complete", "Battery full", "Trip reminder", "Goal reached"]
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(spacing: DSSpacing.sm) {
+                    ForEach(items, id: \.self) { title in
+                        DSCard {
+                            Text(title)
+                                .ds(.title3)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .dsScrollReveal()
+                    }
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+    // END ScrollRevealDemo
+
+    // BEGIN ScrollRevealCarouselDemo
+    struct ScrollRevealCarouselDemo: View {
+        var body: some View {
+            ScrollView(.horizontal) {
+                HStack(spacing: DSSpacing.sm) {
+                    ForEach(0..<5, id: \.self) { index in
+                        DSCard { Text("Card \(index + 1)").ds(.title3) }
+                            .containerRelativeFrame(.horizontal)
+                            .dsScrollReveal(.strong)
+                    }
+                }
+                .scrollTargetLayout()
+            }
+            .contentMargins(.horizontal, DSSpacing.xxxl, for: .scrollContent)
+            .scrollTargetBehavior(.viewAligned)
+        }
+    }
+    // END ScrollRevealCarouselDemo
 }
 
 @MainActor
@@ -368,5 +409,7 @@ final class DocSnippetsDisplayTests: XCTestCase {
         _ = DocSnippetsDisplay.ThinkingDemo()
         _ = DocSnippetsDisplay.TypewriterDemo()
         _ = DocSnippetsDisplay.MotionDemo()
+        _ = DocSnippetsDisplay.ScrollRevealDemo()
+        _ = DocSnippetsDisplay.ScrollRevealCarouselDemo()
     }
 }

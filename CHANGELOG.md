@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `.dsScrollReveal(_ intensity:)` (`Animation/DSScrollEffects.swift`): a scroll-coupled reveal built on `scrollTransition(.interactive)`. A view is at full presence inside its scroll view and recedes (scale + opacity) as it crosses the leading or trailing edge, reversibly; the axis is inferred, so it covers vertical feeds and horizontal `.viewAligned` carousels. Reduce Motion rests at full presence. New public `DSScrollRevealIntensity` (`.subtle`, `.medium` default, `.strong`) and `DSMotion.scrollReveal…Scale` / `…Opacity` tokens.
+
 ### Changed
 - **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
 - **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
