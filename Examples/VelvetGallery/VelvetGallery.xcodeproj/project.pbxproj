@@ -13,6 +13,7 @@
 		218C88C5ECDDF0D161E88C6D /* SuccessCheckScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */; };
 		2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */; };
 		24571EF6E1B3534C30DE94D3 /* NumberTickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */; };
+		2D9327B78826906603552045 /* AudioBarsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FB60AE49C9AF45CDE48886 /* AudioBarsScreen.swift */; };
 		2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7719CDE3248D798BF625C212 /* RatingScreen.swift */; };
 		37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316D05380CECE2E8681282F6 /* PageControlScreen.swift */; };
 		38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC668E35B60F699D3690AA /* MotionScreen.swift */; };
@@ -58,7 +59,6 @@
 		18F764E802EE484CCD96ADDF /* ChartsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsScreen.swift; sourceTree = "<group>"; };
 		1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetScreen.swift; sourceTree = "<group>"; };
-		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		2B6F0563E4BBB324996A851C /* ToastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastScreen.swift; sourceTree = "<group>"; };
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +84,7 @@
 		931294FB9DE3CEC60EEB2738 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
 		93D000BBF8E60C773068243C /* CheckoutFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutFlow.swift; sourceTree = "<group>"; };
 		98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessCheckScreen.swift; sourceTree = "<group>"; };
+		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
 		D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesAvatarsScreen.swift; sourceTree = "<group>"; };
+		E2FB60AE49C9AF45CDE48886 /* AudioBarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBarsScreen.swift; sourceTree = "<group>"; };
 		E328F00376EC8C549740513E /* CardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScreen.swift; sourceTree = "<group>"; };
 		F4A58BF4F0ACB59CB636CB48 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
 		F7FC668E35B60F699D3690AA /* MotionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionScreen.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		D7E2BEC39477C80B58A76451 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				E2FB60AE49C9AF45CDE48886 /* AudioBarsScreen.swift */,
 				D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */,
 				5C211B7682F0E826683528A4 /* ButtonsScreen.swift */,
 				E328F00376EC8C549740513E /* CardsScreen.swift */,
@@ -284,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E55A10EACCACAB360C3A32D /* Appearance.swift in Sources */,
+				2D9327B78826906603552045 /* AudioBarsScreen.swift in Sources */,
 				5E2A0B87946889ED5E9765C8 /* BadgesAvatarsScreen.swift in Sources */,
 				9722FA983500E3DDFCFBDD7D /* ButtonsScreen.swift in Sources */,
 				B76C2E76BF9616710DE63A2E /* CardsScreen.swift in Sources */,

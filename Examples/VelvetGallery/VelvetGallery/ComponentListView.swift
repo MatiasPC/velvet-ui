@@ -61,6 +61,7 @@ struct ComponentListView: View {
                 row("Success Check", "Ring, check and a pop on the beat") { SuccessCheckScreen() }
                 row("Confetti", "A themed burst on any trigger") { ConfettiScreen() }
                 row("Thinking Indicator", "Ambient processing") { ThinkingIndicatorScreen() }
+                row("Audio Bars", "An equaliser for live audio") { AudioBarsScreen() }
                 row("Typewriter Text", "Typed reveal") { TypewriterTextScreen() }
             }
         }

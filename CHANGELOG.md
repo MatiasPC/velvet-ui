@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSAudioBars`: an equaliser for live audio. Capsule bars in the theme accent ripple while active and ease down to a flat line when idle, with an optional live `level` (0...1) that sets the amplitude. Eased, not sprung; Reduce Motion rests on a calm bell; the timeline clock pauses when idle, off screen, in the background or under Reduce Motion.
+
 ### Changed
 - **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
 - **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.

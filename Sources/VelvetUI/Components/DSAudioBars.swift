@@ -245,7 +245,7 @@ private struct DSAudioBarsRow: View, Animatable {
     let height: CGFloat
     let fill: Color
 
-    var animatableData: AnimatablePair<Double, Double> {
+    nonisolated var animatableData: AnimatablePair<Double, Double> {
         get { AnimatablePair(intensity, amplitude) }
         set { intensity = newValue.first; amplitude = newValue.second }
     }
