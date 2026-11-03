@@ -320,7 +320,7 @@ enum DocSnippetsDisplay {
                     VStack(alignment: .leading, spacing: DSSpacing.sm) {
                         Text("About").ds(.title3)
                         DSExpandableText(
-                            "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a gradient theme, spring motion on everything you touch, and haptics that make the interface feel alive.",
+                            "Velvet UI is a small, opinionated SwiftUI library: frosted glass over a calm page tone, spring motion on everything you touch, and haptics that make the interface feel alive.",
                             lineLimit: 3
                         )
                     }

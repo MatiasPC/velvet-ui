@@ -15,7 +15,7 @@ A circular avatar that loads a remote photo and falls back to tinted initials, s
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -63,7 +63,7 @@ struct AvatarDemo: View {
 ## Behavior
 
 - No motion and no haptics. Add `.dsPopIn()` for an entrance or `.dsBreathe()` for a "waiting" avatar (see [Motion](Motion.md)).
-- Everything is derived from the theme, so the tint follows the active gradient.
+- Everything is derived from the theme, so the tint follows the active style.
 
 ## Accessibility
 

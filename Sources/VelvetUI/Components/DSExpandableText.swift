@@ -211,11 +211,11 @@ public struct DSExpandableText: View {
 
 #if DEBUG
 private struct DSExpandableTextPreviewHost: View {
-    @State private var theme = DSTheme(gradient: .aurora)
+    @State private var theme = DSTheme(style: .aurora)
 
     private let bio = """
     Velvet UI is a small, opinionated SwiftUI library: frosted glass over a \
-    gradient theme, spring motion on everything you touch, and haptics that \
+    page tone, spring motion on everything you touch, and haptics that \
     make the interface feel alive. Every component honors Reduce Motion, Reduce \
     Transparency and Dynamic Type out of the box, so you spend your time on the \
     app and not on the plumbing underneath it.

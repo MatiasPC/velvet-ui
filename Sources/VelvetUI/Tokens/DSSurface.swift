@@ -5,9 +5,9 @@ import SwiftUI
 // `.dsSurface(_:radius:)`: it fills with the material, clips to a continuous
 // rounded rect and draws the specular edge highlight (`DSWash.edge`) — no border.
 //
-// Default for cards is `.glass` (thinMaterial), NOT `.glassThin`: over a
-// saturated gradient, ultraThin lets too much color through and secondary text
-// loses contrast. Keep `.glassThin` for small floating elements.
+// Default for cards is `.glass` (thinMaterial), NOT `.glassThin`: ultraThin
+// lets too much of the page tone through and secondary text loses contrast.
+// Keep `.glassThin` for small floating elements.
 //
 // Falls back to `.solid` automatically when the user enables
 // "Reduce Transparency".

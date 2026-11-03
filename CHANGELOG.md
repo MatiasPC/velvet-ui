@@ -4,6 +4,15 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Changed
+- **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
+- **BREAKING:** `DSGradientTheme` is now `DSThemeStyle`; its `stops`, `linearGradient`, `horizontalGradient`, `lightWash` and `darkDim` members are removed, and its initializer takes a `background: DSBackground` instead of `stops: [Color]`. `DSTheme.gradient` is now `DSTheme.style`, and `DSResolvedTheme` gains `backgroundColor`. `DSGradientTheme`, `theme.gradient`, `DSTheme(gradient:)`, `DSResolvedTheme.gradient` and the `gradient:` initializer remain as deprecated shims for migration; the `stops`-based API does not.
+- Decorative fills that used the background gradient now use the solid accent: `DSThinkingIndicator`'s symbol, `DSSlideToConfirm`'s trail, `DSParticleField`, the `dsHueDrift` demo tiles and confetti. `DSGradientProgress` defaults to a solid accent fill; pass two or more `colors` to opt into a blend.
+- Gallery theme pickers now show each style as a page tone (light/dark halves) with an accent dot, instead of a gradient swatch.
+
+### Deprecated
+- `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
 ### Added
 - `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 

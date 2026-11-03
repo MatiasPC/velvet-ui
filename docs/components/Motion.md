@@ -15,7 +15,7 @@ Five composable view modifiers for ambient motion: breathe, jiggle, pop in, edge
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -117,7 +117,7 @@ For your own ambient effects: `DSMotion.loop(_ base: Animation, autoreverses: Bo
 | `.dsJiggle` | a rejected input, an item that needs noticing | 0.45s, peak 7 degrees, decaying counter-swings |
 | `.dsPopIn` | entrances and staggered rows | `springBouncy` overshoot from 0.8 scale |
 | `.dsEdgeSweep` | processing, recording, "AI is working" | 2.0s linear loop of a specular highlight on the 1pt glass edge |
-| `.dsHueDrift` | decorative life on a static gradient | 8.0s loop, at most 12 degrees of hue rotation |
+| `.dsHueDrift` | decorative life on a solid fill | 8.0s loop, at most 12 degrees of hue rotation |
 
 The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDuration`, `driftDegrees`, `jiggleDegrees`, `jiggleDuration`).
 
