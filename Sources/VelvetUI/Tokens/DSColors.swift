@@ -7,7 +7,7 @@ import AppKit
 
 // MARK: - Design System Colors
 // Neutrals and status colors live here (`DSColorPalette`). The accent lives in
-// the active `DSGradientTheme` — components read it through `@DSThemed`.
+// the active `DSThemeStyle` — components read it through `@DSThemed`.
 // The static accessors below are adaptive (light/dark) convenience colors for
 // code that has no environment (models, previews, quick prototypes). They do
 // NOT follow an injected custom palette; use `@DSThemed` inside views for that.
@@ -57,7 +57,7 @@ public struct DSColors {
 
 public extension DSColors {
     /// Velvet defaults. `primary` matches the Sunset accent so raw-token usage
-    /// lines up with the default gradient theme. `textOnPrimary` is white: it is
+    /// lines up with the default theme style. `textOnPrimary` is white: it is
     /// the text color on *secondary, status and destructive* fills. On the
     /// accent itself use the theme's `onAccent`.
     static let defaultPalette = DSColorPalette(

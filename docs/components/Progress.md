@@ -1,6 +1,6 @@
 # Progress
 
-Progress indicators that animate to their value instead of jumping: ring, bar, gradient bar, step dots, a counting number and a skeleton shimmer.
+Progress indicators that animate to their value instead of jumping: ring, bar, multi-color bar, step dots, a counting number and a skeleton shimmer.
 
 ![Progress](../media/Progress.gif)
 
@@ -15,7 +15,7 @@ Progress indicators that animate to their value instead of jumping: ring, bar, g
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -84,7 +84,7 @@ struct ProgressDemo: View {
 |---|---|---|---|
 | `progress` | `Double` | required | 0 to 1, clamped. |
 | `height` | `CGFloat` | `8` | Bar height. |
-| `colors` | `[Color]?` | `nil` | Gradient stops, left to right. Defaults to the theme gradient's stops. |
+| `colors` | `[Color]?` | `nil` | Fill stops, left to right. Defaults to a single accent stop, i.e. a solid fill; pass two or more for a blend. |
 | `trackColor` | `Color?` | `nil` | Track color. Defaults to the palette border color. |
 
 ### DSStepProgress
@@ -110,7 +110,7 @@ struct ProgressDemo: View {
 
 ## Variants
 
-- **Determinate**: ring, bar and gradient bar for a known fraction. `DSStepProgress` for a wizard or onboarding (4pt segments).
+- **Determinate**: ring, bar and multi-color bar for a known fraction. `DSStepProgress` for a wizard or onboarding (4pt segments).
 - **Counting**: `DSAnimatedNumber` with `.numericText` content transition for scores and totals.
 - **Skeleton**: `.dsShimmer()` over placeholder shapes while content loads. `DSImageCard` uses it for its image placeholder.
 - For indeterminate work with no fraction, use [DSThinkingIndicator](DSThinkingIndicator.md).

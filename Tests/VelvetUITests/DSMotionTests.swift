@@ -21,8 +21,8 @@ final class DSMotionTests: XCTestCase {
 
     // MARK: - Bounds
 
-    /// The drift must stay inside the gradient family. If this ever grows past a
-    /// handful of degrees the theme stops being recognisable.
+    /// The drift must stay inside the theme family. If this ever grows past a
+    /// handful of degrees the accent stops being recognisable.
     func testHueDriftStaysWithinTheThemeFamily() {
         XCTAssertLessThanOrEqual(DSMotion.driftDegrees, 15)
         XCTAssertGreaterThan(DSMotion.driftDegrees, 0)
