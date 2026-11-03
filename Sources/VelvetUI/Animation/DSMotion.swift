@@ -26,7 +26,7 @@ public enum DSMotion {
 
     // MARK: - Bounds
 
-    /// Maximum hue rotation of `dsHueDrift`. Small on purpose — the gradient theme
+    /// Maximum hue rotation of `dsHueDrift`. Small on purpose — the theme
     /// must stay recognisable, so the drift shifts within the family, never out of it.
     public static let driftDegrees: Double = 12
     /// Peak rotation of the first `dsJiggle` swing; later swings shrink from here.
@@ -221,7 +221,7 @@ public struct DSEdgeSweepModifier: ViewModifier {
 
 // MARK: - Hue Drift
 
-/// Slow hue rotation bounded to `DSMotion.driftDegrees`. Gives a static gradient
+/// Slow hue rotation bounded to `DSMotion.driftDegrees`. Gives a static surface
 /// surface a sense of being lit from a moving source without leaving the theme.
 public struct DSHueDriftModifier: ViewModifier {
     let isActive: Bool
@@ -268,7 +268,7 @@ public extension View {
         modifier(DSEdgeSweepModifier(radius: radius, isActive: isActive))
     }
 
-    /// Slow, bounded hue drift over the theme gradient. Decorative only.
+    /// Slow, bounded hue drift over the theme accent. Decorative only.
     func dsHueDrift(isActive: Bool = true) -> some View {
         modifier(DSHueDriftModifier(isActive: isActive))
     }
@@ -298,7 +298,7 @@ private struct DSMotionPreviewHost: View {
                 HStack(spacing: DSSpacing.md) {
                     Image(systemName: "bell.fill")
                         .font(.largeTitle)
-                        .foregroundStyle(theme.gradient.accent)
+                        .foregroundStyle(theme.style.accent)
                         .dsJiggle(trigger: jiggle)
                     Spacer()
                     DSButton("Shake", size: .small) { jiggle += 1 }
@@ -318,7 +318,7 @@ private struct DSMotionPreviewHost: View {
                 HStack(spacing: DSSpacing.sm) {
                     ForEach(0..<4, id: \.self) { index in
                         RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
-                            .fill(theme.gradient.horizontalGradient)
+                            .fill(theme.style.accent)
                             .frame(height: DSSpacing.huge)
                             .dsHueDrift()
                             .dsPopIn(delay: Double(index) * 0.08)
@@ -339,7 +339,7 @@ private struct DSMotionPreviewHost: View {
     private func dot(_ name: String, _ intensity: DSBreatheIntensity) -> some View {
         VStack(spacing: DSSpacing.xs) {
             Circle()
-                .fill(theme.gradient.accent)
+                .fill(theme.style.accent)
                 .frame(width: DSSpacing.huge, height: DSSpacing.huge)
                 .dsBreathe(intensity)
             Text(name).ds(.caption1, color: DSColors.textTertiary)

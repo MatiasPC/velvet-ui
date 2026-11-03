@@ -127,36 +127,6 @@ private struct CardStage: View {
     }
 }
 
-private struct FlipCardStage: View {
-    let autoplay: Bool
-    @State private var flipped = false
-
-    var body: some View {
-        DSFlipCard(isFlipped: $flipped) {
-            VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                Text("This month").ds(.footnote, color: DSColors.textSecondary)
-                Text("1 248").ds(.displayMedium)
-                Text("Tap to see the trend").ds(.callout, color: DSColors.textSecondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        } back: {
-            VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                Text("vs. last month").ds(.footnote, color: DSColors.textSecondary)
-                Text("+12%").ds(.displayMedium)
-                Text("Tap to flip back").ds(.callout, color: DSColors.textSecondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .task(id: autoplay) {
-            guard autoplay else { return }
-            await stageLoop {
-                await stagePause(1.8)
-                flipped.toggle()
-            }
-        }
-    }
-}
-
 private struct TextFieldStage: View {
     @State private var email = ""
     @State private var password = ""
@@ -444,7 +414,7 @@ private struct ThinkingIndicatorStage: View {
 private struct TypewriterTextStage: View {
     var body: some View {
         DSTypewriterText(
-            ["Design at the speed of thought.", "Glass over gradient.", "No borders. Ever."],
+            ["Design at the speed of thought.", "Glass over solid tone.", "No borders. Ever."],
             style: .title2
         )
         .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)

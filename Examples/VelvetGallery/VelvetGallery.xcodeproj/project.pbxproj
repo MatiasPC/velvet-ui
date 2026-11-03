@@ -16,6 +16,7 @@
 		2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7719CDE3248D798BF625C212 /* RatingScreen.swift */; };
 		37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316D05380CECE2E8681282F6 /* PageControlScreen.swift */; };
 		38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC668E35B60F699D3690AA /* MotionScreen.swift */; };
+		3F02B029FBFE64F558F091B7 /* FlipCardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC054401571EC2E09394EFF /* FlipCardScreen.swift */; };
 		3F9C6E939063C3A8F3ECA9BC /* FlowStages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9B0C04AFCD8F2D1ECC23AD /* FlowStages.swift */; };
 		424574B6BCA10E08E2F3A5F2 /* ConfettiScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6134837B127382EC53CC0104 /* ConfettiScreen.swift */; };
 		4386829CB14CD0D06D656762 /* CodeFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F832409543665FBF97B12CD /* CodeFieldScreen.swift */; };
@@ -58,7 +59,6 @@
 		18F764E802EE484CCD96ADDF /* ChartsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsScreen.swift; sourceTree = "<group>"; };
 		1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		24BAFE8DA79FD73A3A9BA650 /* SheetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetScreen.swift; sourceTree = "<group>"; };
-		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		2B6F0563E4BBB324996A851C /* ToastScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastScreen.swift; sourceTree = "<group>"; };
 		316D05380CECE2E8681282F6 /* PageControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlScreen.swift; sourceTree = "<group>"; };
 		337B87D9114B656E1412E8BF /* VelvetGallery.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VelvetGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +80,7 @@
 		70D775411C5AFFA688F1C4CF /* SkeletonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonScreen.swift; sourceTree = "<group>"; };
 		7719CDE3248D798BF625C212 /* RatingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingScreen.swift; sourceTree = "<group>"; };
 		881BF062001690F173C72A36 /* CarouselScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselScreen.swift; sourceTree = "<group>"; };
+		8BC054401571EC2E09394EFF /* FlipCardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipCardScreen.swift; sourceTree = "<group>"; };
 		8F832409543665FBF97B12CD /* CodeFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeFieldScreen.swift; sourceTree = "<group>"; };
 		931294FB9DE3CEC60EEB2738 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
 		93D000BBF8E60C773068243C /* CheckoutFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutFlow.swift; sourceTree = "<group>"; };
@@ -88,6 +89,7 @@
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
 		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
+		A507119A3C59FCB4C3291B32 /* velvet-ui */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "velvet-ui"; path = ../..; sourceTree = SOURCE_ROOT; };
 		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
 		D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesAvatarsScreen.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				8F832409543665FBF97B12CD /* CodeFieldScreen.swift */,
 				6134837B127382EC53CC0104 /* ConfettiScreen.swift */,
 				380D68B23697A76256DC8EEB /* EmptyStateScreen.swift */,
+				8BC054401571EC2E09394EFF /* FlipCardScreen.swift */,
 				629C745CA3297503D924937D /* LayoutScreen.swift */,
 				54F60FD1D436135BECE7C11C /* ListsScreen.swift */,
 				F7FC668E35B60F699D3690AA /* MotionScreen.swift */,
@@ -294,6 +297,7 @@
 				6B4931D0526771EB741B5798 /* ComponentListView.swift in Sources */,
 				424574B6BCA10E08E2F3A5F2 /* ConfettiScreen.swift in Sources */,
 				4D88FE867C7446369EED6C5B /* EmptyStateScreen.swift in Sources */,
+				3F02B029FBFE64F558F091B7 /* FlipCardScreen.swift in Sources */,
 				3F9C6E939063C3A8F3ECA9BC /* FlowStages.swift in Sources */,
 				F20212FE31979162C787E5C2 /* GalleryScreen.swift in Sources */,
 				A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */,

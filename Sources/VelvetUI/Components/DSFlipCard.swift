@@ -43,7 +43,7 @@ public struct DSFlipCard<Front: View, Back: View>: View {
     private let padding: CGFloat
     private let cornerRadius: CGFloat
     private let flipOnTap: Bool
-    private let haptic: DSHapticStyle
+    private let haptic: DSHapticStyle?
     private let front: () -> Front
     private let back: () -> Back
 
@@ -58,7 +58,7 @@ public struct DSFlipCard<Front: View, Back: View>: View {
     ///   - cornerRadius: Corner radius of each face. Defaults to `DSRadius.card`.
     ///   - flipOnTap: Turn the card over when it is tapped. Set `false` when a face
     ///     holds its own controls and should only flip from code. Defaults to `true`.
-    ///   - haptic: Haptic fired on the turn. Defaults to `.rigid`.
+    ///   - haptic: Haptic fired on every turn, tap or binding. `nil` for none. Defaults to `.rigid`.
     ///   - front: The face shown at rest.
     ///   - back: The face revealed after the turn.
     public init(
@@ -67,7 +67,7 @@ public struct DSFlipCard<Front: View, Back: View>: View {
         padding: CGFloat = DSSpacing.md,
         cornerRadius: CGFloat = DSRadius.card,
         flipOnTap: Bool = true,
-        haptic: DSHapticStyle = .rigid,
+        haptic: DSHapticStyle? = .rigid,
         @ViewBuilder front: @escaping () -> Front,
         @ViewBuilder back: @escaping () -> Back
     ) {
@@ -92,7 +92,7 @@ public struct DSFlipCard<Front: View, Back: View>: View {
         padding: CGFloat = DSSpacing.md,
         cornerRadius: CGFloat = DSRadius.card,
         flipOnTap: Bool = true,
-        haptic: DSHapticStyle = .rigid,
+        haptic: DSHapticStyle? = .rigid,
         @ViewBuilder front: @escaping () -> Front,
         @ViewBuilder back: @escaping () -> Back
     ) {
@@ -113,27 +113,48 @@ public struct DSFlipCard<Front: View, Back: View>: View {
 
     public var body: some View {
         DSFlipFaces(
-            angle: isFlipped ? 180 : 0,
+            angle: DSFlipMath.angle(isFlipped: isFlipped),
+            flipped: isFlipped,
+            reduceMotion: reduceMotion,
             axis: axis,
             perspective: Self.perspective,
-            front: DSCard(style: style, padding: padding, cornerRadius: cornerRadius, content: front),
+            front: DSCard(style: style, padding: padding, cornerRadius: cornerRadius, content: front)
+                .frame(maxWidth: .infinity, maxHeight: .infinity),
             back: DSCard(style: style, padding: padding, cornerRadius: cornerRadius, content: back)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         )
-        // Reduce Motion: a quiet, instant swap rather than a spin. Passing `nil`
-        // animates the angle change immediately, so the faces trade places at rest.
+        // Reduce Motion: no turn; the faces crossfade (handled in `DSFlipFaces`).
         .animation(reduceMotion ? nil : DSAnimation.springSmooth, value: isFlipped)
         .contentShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-        .modifier(DSFlipTapModifier(enabled: flipOnTap, flip: flip))
+        .modifier(DSFlipTapModifier(enabled: flipOnTap, isFlipped: isFlipped, flip: flip))
+        // The haptic rides the state change, so a binding-driven flip gets it too.
+        .onChange(of: isFlipped) { _, _ in
+            if let haptic { DSHapticEngine.shared.fire(haptic) }
+        }
     }
 
     private func flip() {
-        DSHapticEngine.shared.fire(haptic)
         if let externalIsFlipped {
             externalIsFlipped.wrappedValue.toggle()
         } else {
             internalIsFlipped.toggle()
         }
     }
+}
+
+// MARK: - Math
+
+/// The pure rules behind the turn, kept out of the generic views so they can be tested.
+enum DSFlipMath {
+    /// Rest angle of each side, in degrees.
+    static func angle(isFlipped: Bool) -> Double { isFlipped ? 180 : 0 }
+
+    /// Which face is visible at a live, per-frame angle: the back from the 90 degree edge on.
+    static func showsBack(angle: Double) -> Bool { angle >= 90 }
+
+    /// Pre-rotation of the back face so it reads the right way round once the card has
+    /// turned. Zero under Reduce Motion, where the card never turns.
+    static func backPreRotation(reduceMotion: Bool) -> Double { reduceMotion ? 0 : 180 }
 }
 
 // MARK: - Animatable Face Container
@@ -144,29 +165,64 @@ public struct DSFlipCard<Front: View, Back: View>: View {
 /// cross-fade ghosting. The back face is pre-rotated a half turn so it reads the
 /// right way round once the card has flipped.
 private struct DSFlipFaces<FrontFace: View, BackFace: View>: View, Animatable {
-    var angle: Double
+    // `nonisolated`: `View` makes the type main-actor, while SwiftUI's animation engine
+    // reads the `Animatable` conformance off the main actor (an error in Swift 6 mode).
+    nonisolated var angle: Double
+    let flipped: Bool
+    let reduceMotion: Bool
     let axis: DSFlipAxis
     let perspective: CGFloat
     let front: FrontFace
     let back: BackFace
 
-    var animatableData: Double {
+    nonisolated var animatableData: Double {
         get { angle }
         set { angle = newValue }
     }
 
     var body: some View {
-        let showingBack = angle >= 90
-        ZStack {
+        // Reduce Motion: the card never turns, the faces trade places with a short fade.
+        let turn = reduceMotion ? 0 : angle
+        let showingBack = reduceMotion ? flipped : DSFlipMath.showsBack(angle: angle)
+        DSFlipStack {
             front
                 .opacity(showingBack ? 0 : 1)
+                .allowsHitTesting(!showingBack)
                 .accessibilityHidden(showingBack)
             back
-                .rotation3DEffect(.degrees(180), axis: axis.vector)
+                .rotation3DEffect(
+                    .degrees(DSFlipMath.backPreRotation(reduceMotion: reduceMotion)),
+                    axis: axis.vector
+                )
                 .opacity(showingBack ? 1 : 0)
+                .allowsHitTesting(showingBack)
                 .accessibilityHidden(!showingBack)
         }
-        .rotation3DEffect(.degrees(angle), axis: axis.vector, perspective: perspective)
+        // nil in 3D: the swap must land on the 90 degree edge, never cross-fade over the spring.
+        .animation(reduceMotion ? DSAnimation.fast : nil, value: showingBack)
+        .rotation3DEffect(.degrees(turn), axis: axis.vector, perspective: perspective)
+    }
+}
+
+// MARK: - Equal-Size Stack
+
+/// Lays both faces over each other at the size of the larger one, so the card keeps its
+/// frame when it turns. Height is the larger natural height (a taller offer from the
+/// parent never stretches it); each face is then proposed that exact size and fills it.
+private struct DSFlipStack: Layout {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let natural = ProposedViewSize(width: proposal.width, height: nil)
+        let sizes = subviews.map { $0.sizeThatFits(natural) }
+        return CGSize(
+            width: sizes.map(\.width).max() ?? 0,
+            height: sizes.map(\.height).max() ?? 0
+        )
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        for subview in subviews {
+            subview.place(at: bounds.origin, anchor: .topLeading, proposal: ProposedViewSize(bounds.size))
+        }
     }
 }
 
@@ -176,13 +232,18 @@ private struct DSFlipFaces<FrontFace: View, BackFace: View>: View, Animatable {
 /// card that flips from code keeps its faces' own hit testing and VoiceOver.
 private struct DSFlipTapModifier: ViewModifier {
     let enabled: Bool
+    let isFlipped: Bool
     let flip: () -> Void
 
     func body(content: Content) -> some View {
         if enabled {
+            // One element: the visible face reads as the label, and the value changes
+            // on every turn so VoiceOver announces which side is showing.
             content
                 .onTapGesture(perform: flip)
+                .accessibilityElement(children: .combine)
                 .accessibilityAddTraits(.isButton)
+                .accessibilityValue(Text(isFlipped ? "Back side" : "Front side"))
                 .accessibilityHint(Text("Double tap to flip"))
         } else {
             content
@@ -237,7 +298,7 @@ private struct DSFlipCardPreviewHost: View {
 
     private func faceRow(icon: String, text: String) -> some View {
         HStack(spacing: DSSpacing.sm) {
-            Image(systemName: icon).foregroundStyle(theme.gradient.accent)
+            Image(systemName: icon).foregroundStyle(theme.style.accent)
             Text(text).ds(.numeric)
             Spacer()
         }

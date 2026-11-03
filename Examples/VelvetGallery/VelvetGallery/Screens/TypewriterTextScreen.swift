@@ -8,7 +8,7 @@ struct TypewriterTextScreen: View {
                 VStack(alignment: .leading, spacing: DSSpacing.lg) {
                     LabeledExample("Looping phrases") {
                         DSTypewriterText(
-                            ["Design at the speed of thought.", "Glass over gradient.", "No borders. Ever."],
+                            ["Design at the speed of thought.", "Glass over solid tone.", "No borders. Ever."],
                             style: .title3
                         )
                     }

@@ -77,17 +77,17 @@ DSFlipCard(axis: DSFlipAxis = .horizontal,       // .horizontal (y) · .vertical
            padding: CGFloat = DSSpacing.md,
            cornerRadius: CGFloat = DSRadius.card,
            flipOnTap: Bool = true,
-           haptic: DSHapticStyle = .rigid) { front } back: { back }
+           haptic: DSHapticStyle? = .rigid) { front } back: { back }
 
 // Controlled: same params plus a leading `isFlipped: Binding<Bool>`.
 DSFlipCard(isFlipped: $revealed, axis: .vertical) { front } back: { back }
 ```
 
-Each face is a `DSCard` (depends on it). The turn is one `DSAnimation.springSmooth` about `axis` with `perspective` 0.5. A single animated angle runs through an inner `Animatable` container (`DSFlipFaces`); the faces swap on the `angle >= 90` threshold, so the hand-off lands at the edge for any animation, spring included — no opacity cross-fade, no ghosting. The back face is pre-rotated 180° about the same axis so it reads correctly once flipped. Haptic (`.rigid`) fires on tap and on binding-driven flips via `.animation(_:value:)`.
+Each face is a `DSCard` (depends on it). The turn is one `DSAnimation.springSmooth` about `axis` with `perspective` 0.5. A single animated angle runs through an inner `Animatable` container (`DSFlipFaces`); the faces swap on the `angle >= 90` threshold, so the hand-off lands at the edge for any animation, spring included — no opacity cross-fade, no ghosting. The back face is pre-rotated 180° about the same axis so it reads correctly once flipped. The haptic (`.rigid`, `nil` for none) fires from `onChange(of: isFlipped)`, so tap and binding-driven flips both get it as the turn starts. Both faces are laid out by a small `Layout` at the larger face's size (they fill it), and the face that is not showing has hit testing off.
 
-Motion: `.animation(reduceMotion ? nil : .springSmooth, value: isFlipped)` — under Reduce Motion the angle jumps, so faces swap instantly with no 3D spin. No `compositingGroup()`: it is unnecessary once the faces never overlap, and it risks changing how the glass material samples the backdrop.
+Motion: under Reduce Motion the card never turns (the back face is not pre-rotated) and the faces crossfade with `DSAnimation.fast`. No `compositingGroup()`: it is unnecessary once the faces never overlap, and it risks changing how the glass material samples the backdrop.
 
-Accessibility: with `flipOnTap` the card adds `.isButton` + hint "Double tap to flip"; the hidden face is `.accessibilityHidden`. With `flipOnTap: false` no button semantics are added, so faces keep their own hit testing — the documented path for a face with its own controls.
+Accessibility: with `flipOnTap` the card is one combined element with `.isButton`, hint "Double tap to flip" and a Front/Back side value; the hidden face is `.accessibilityHidden`. With `flipOnTap: false` no button semantics are added, so faces keep their own hit testing — the documented path for a face with its own controls.
 
 Previews: light and dark on `.dsBackdrop()`, a tap-to-flip stat card and a binding-driven vertical card.
 
@@ -248,7 +248,7 @@ Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.sel
 ```swift
 DSCircularProgress(progress:, lineWidth: 6, size: 80, primaryColor: Color? = nil, trackColor: Color? = nil)
 DSLinearProgress(progress:, height: 6, primaryColor:, trackColor:)
-DSGradientProgress(progress:, height: 8, colors: [Color]? = nil, trackColor:)   // colors default to theme.gradient.stops
+DSGradientProgress(progress:, height: 8, colors: [Color]? = nil, trackColor:)   // colors default to a single accent stop (solid)
 DSStepProgress(currentStep:, totalSteps:, activeColor:, inactiveColor:)
 DSAnimatedNumber(value:, format: "%.0f", style: .displayLarge)
 ```
@@ -271,7 +271,7 @@ DSSlideToConfirm(_ label: String, icon: String = "chevron.right", confirmedLabel
 enum DSSlideFinish { case settle, morphAndVanish }
 ```
 
-A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, a gradient trail reveals behind it and the label dissolves letter by letter (paced by the drag — each letter waits its turn). The moment the confirmation commits, the label clears on a fast fade regardless of how far the letter-by-letter dissolve had got, so a quick flick past the threshold never leaves text hanging over the pill as it collapses. Tracking is pure 1:1 — no rubber-banding, no magnetic snap: physics tricks under a payment gesture read as the control second-guessing the user.
+A glass pill track with a knob filled by `accent ?? theme.accent`. The knob is a circle as tall as the track — it nests into the pill's rounded ends (no track surface above or below it) and starts flush with the leading edge; it's layered over the track's glass clip so its shadow isn't cropped. As the knob tracks the drag, an accent trail reveals behind it and the label dissolves letter by letter (paced by the drag — each letter waits its turn). The moment the confirmation commits, the label clears on a fast fade regardless of how far the letter-by-letter dissolve had got, so a quick flick past the threshold never leaves text hanging over the pill as it collapses. Tracking is pure 1:1 — no rubber-banding, no magnetic snap: physics tricks under a payment gesture read as the control second-guessing the user.
 
 Threshold is 0.75 of available travel. The drag itself carries a detent texture — 8 `.soft` ticks across the full travel with intensity ramped 0.2 → 0.6 — and crossing the threshold fires `.rigid` once per drag. Releasing below it snaps the knob back with `springBouncy` and a `.light` haptic.
 
@@ -335,7 +335,7 @@ func dsHueDrift(isActive: Bool = true) -> some View
 DSMotion.loop(_ base: Animation, autoreverses: Bool = true, unless reduceMotion: Bool) -> Animation?
 ```
 
-Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a static gradient without leaving the theme. All five settle to a resting state under Reduce Motion (breathe at scale 1, drift at 0°) instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
+Reach for `.dsBreathe()` on any element that should read as "alive and waiting" (loading states, avatars, status indicators). Use `.dsPopIn()` for list entrances, `.dsJiggle(trigger:)` when an input is rejected or something needs shaking attention. `.dsEdgeSweep()` signals processing or recording (pair it with the surface radius). `.dsHueDrift()` is purely decorative — adds life to a solid fill without leaving the theme. All five settle to a resting state under Reduce Motion (breathe at scale 1, drift at 0°) instead of being skipped; `DSMotion.loop(_:unless:)` handles this by returning `nil`.
 
 ---
 
@@ -445,7 +445,7 @@ Ring strokes, disc fills, check draws (eased state), then one pop and a fading h
 .dsConfetti(trigger: some Equatable, origin: UnitPoint = .center, count: Int = 80, haptic: DSHapticStyle? = nil)
 ```
 
-Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-form physics (gravity + exponential drag, spin, flutter) from a seeded SplitMix64, so it's testable; count clamped to 150. Colors: accent, gradient stops, their light tints and the theme ink (for contrast on the backdrop). Draws inside the view it's attached to, so attach it to a container that covers the area. Removed under Reduce Motion; no haptic by default because the triggering action usually has one.
+Pure `Canvas` in a `TimelineView` that pauses when the last burst ends. Closed-form physics (gravity + exponential drag, spin, flutter) from a seeded SplitMix64, so it's testable; count clamped to 150. Colors: the accent, the theme ink, a lighter tint of each and the ink again for weight (for contrast on every page tone). Draws inside the view it's attached to, so attach it to a container that covers the area. Removed under Reduce Motion; no haptic by default because the triggering action usually has one.
 
 ---
 

@@ -2,9 +2,9 @@ import SwiftUI
 import VelvetUI
 
 struct ComponentListView: View {
-    /// Examples show Velvet the way an app ships it: on a gradient theme, not the
+    /// Examples show Velvet the way an app ships it: on a built-in style, not the
     /// Gallery's neutral one.
-    @State private var exampleTheme = DSTheme(gradient: .sunset)
+    @State private var exampleTheme = DSTheme(style: .sunset)
 
     var body: some View {
         List {
@@ -36,6 +36,7 @@ struct ComponentListView: View {
             Section("Containers") {
                 row("Cards", "Glass containers") { CardsScreen() }
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
+                row("Flip Card", "Two-sided glass, turns in 3D") { FlipCardScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
             }
             Section("Inputs") {

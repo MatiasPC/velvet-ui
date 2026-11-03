@@ -2,7 +2,7 @@
 
 A two-sided glass card that turns over in 3D to reveal its back — tap it, or drive it from a binding. The flip is a single spring about one axis with a touch of perspective, and it fires a haptic on the turn.
 
-![DSFlipCard](../media/DSFlipCard.gif)
+<!-- GIF pending: ![DSFlipCard](../media/DSFlipCard.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlipCard.swift`](../../Sources/VelvetUI/Components/DSFlipCard.swift)
 
@@ -15,7 +15,7 @@ A two-sided glass card that turns over in 3D to reveal its back — tap it, or d
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -47,11 +47,11 @@ struct FlipDemo: View {
 }
 ```
 
-Glass looks best over `.dsBackdrop()` or `DSScreen(backdrop: true)`. Keep the two faces a similar size — the card sizes to the larger one and centers the other.
+Glass looks best over `.dsBackdrop()` or `DSScreen(backdrop: true)`. The card takes the size of the larger face and both faces fill it, so the card keeps its frame when it turns. Give the card a fixed `.frame(...)` to size it yourself.
 
 ### Drive it from a binding
 
-Pass `isFlipped` to turn the card over from code (a button, a gesture, a result) as well as by tapping. Animate your own mutations with a `DSAnimation` spring; tap flips are animated for you.
+Pass `isFlipped` to turn the card over from code (a button, a gesture, a result) as well as by tapping. The card animates the turn itself whenever `isFlipped` changes, so no `withAnimation` is needed.
 
 ```swift
 struct CardFace: View {
@@ -85,7 +85,7 @@ When a face holds its own controls, set `flipOnTap: false` so taps reach them an
 | `padding` | `CGFloat` | `DSSpacing.md` | Inner padding of each face. |
 | `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius of each face (20). |
 | `flipOnTap` | `Bool` | `true` | Turn the card over when it is tapped. Set `false` when a face has its own controls. |
-| `haptic` | `DSHapticStyle` | `.rigid` | Haptic fired on the turn. |
+| `haptic` | `DSHapticStyle?` | `.rigid` | Haptic fired on every turn, tap or binding. `nil` for none. |
 | `front` | `@ViewBuilder () -> Front` | required | The face shown at rest. |
 | `back` | `@ViewBuilder () -> Back` | required | The face revealed after the turn. |
 
@@ -94,12 +94,13 @@ When a face holds its own controls, set `flipOnTap: false` so taps reach them an
 - The turn is one `DSAnimation.springSmooth` about `axis`, with a subtle perspective so the card reads as lifting off the glass.
 - A single animated angle drives the turn through an `Animatable` container, so the two faces swap exactly at the 90° edge — no ghosting and no mirrored text. The back face is pre-rotated a half turn so it reads the right way round once flipped.
 - Each face is a `DSCard`, so it inherits the glass, the 1pt edge highlight and the soft shadow. Under Reduce Transparency the glass becomes a solid elevated background.
-- The turn fires `haptic` (default `.rigid`) on both tap and programmatic flips.
-- **Reduce Motion:** the card swaps faces instantly instead of spinning in 3D.
+- The turn fires `haptic` (default `.rigid`) as it starts, on both tap and programmatic flips (it follows `isFlipped`). Pass `nil` when your own control already fires one.
+- A face that is not showing never takes touches, so controls on the front and back can share a position.
+- **Reduce Motion:** the card does not turn; the faces crossfade with `DSAnimation.fast`.
 
 ## Accessibility
 
-- With `flipOnTap` on, the card gains the `.isButton` trait and the hint "Double tap to flip"; the visible face's content is read as the label.
+- With `flipOnTap` on, the card is one VoiceOver element with the `.isButton` trait, the hint "Double tap to flip" and the value "Front side" / "Back side" (announced on every turn); the visible face's content is read as the label.
 - The hidden face is marked `.accessibilityHidden`, so VoiceOver never reads both sides at once.
 - With `flipOnTap: false`, no button semantics are added and each face keeps its own hit testing and VoiceOver — label the flip control yourself.
 - Text uses `.ds(_:)` styles, which scale with Dynamic Type; give both faces room to grow.
