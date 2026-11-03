@@ -44,6 +44,10 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var liked = false
+    @State private var starred = false
+    @State private var postLiked = false
+    @State private var postLikes = 128
 
     var body: some View {
         NavigationStack {
@@ -561,6 +565,24 @@ struct ComponentCatalog: View {
                         DSButton(isPaymentDone ? "Reset" : "Complete", variant: .secondary, size: .small) {
                             isPaymentDone.toggle()
                         }
+                    }
+                }
+
+                // MARK: - Like Button
+                section("Like Button") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            HStack(spacing: DSSpacing.xl) {
+                                DSLikeButton(isLiked: $liked, accessibilityLabel: "Like")
+                                DSLikeButton(isLiked: $starred, symbol: "star.fill", emptySymbol: "star",
+                                             tint: DSColors.warning, accessibilityLabel: "Favorite")
+                                DSLikeButton(isLiked: $postLiked, count: postLikes, accessibilityLabel: "Like post")
+                                    .onChange(of: postLiked) { _, on in postLikes += on ? 1 : -1 }
+                            }
+                            Text("Pops and radiates a halo on the way in; quiet on the way out.")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 

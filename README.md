@@ -89,7 +89,7 @@ struct ContentView: View {
 
 ## Components
 
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 28 components, every one with a Gallery stage.
+Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 29 components, every one with a Gallery stage.
 
 | Preview | Component | What it does |
 |:---:|---|---|
@@ -117,6 +117,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons. |
 | <img src="docs/media/DSSkeleton.gif" width="120" alt="DSSkeleton"> | [DSSkeleton](docs/components/DSSkeleton.md) | Loading placeholders, plus `.dsSkeleton(_:)` to redact a real view in place. |
 | <img src="docs/media/DSSuccessCheck.gif" width="120" alt="DSSuccessCheck"> | [DSSuccessCheck](docs/components/DSSuccessCheck.md) | A success seal that draws itself and pops, with a haptic on the beat. |
+| — | [DSLikeButton](docs/components/DSLikeButton.md) | Like / favorite / bookmark toggle that pops and radiates a halo, with a rolling count. |
 | <img src="docs/media/DSThinkingIndicator.gif" width="120" alt="DSThinkingIndicator"> | [DSThinkingIndicator](docs/components/DSThinkingIndicator.md) | Ambient "thinking" state for AI and background work. |
 | <img src="docs/media/DSTypewriterText.gif" width="120" alt="DSTypewriterText"> | [DSTypewriterText](docs/components/DSTypewriterText.md) | Types phrases out character by character, with a blinking caret. |
 | — | [DSExpandableText](docs/components/DSExpandableText.md) | Long copy that collapses to a few lines and springs open, with a Show more / Show less toggle. |

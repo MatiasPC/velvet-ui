@@ -129,6 +129,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSSkeleton` | Autoplay: loading → loaded → loading. |
 | `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
+| `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |
 | `SettingsFlow` | Full screen. Flip a toggle (toast), open Delete account and slide. Manual. |
 | `CheckoutFlow` | Full screen. Step a quantity (total rolls), apply `VELVET`, slide to pay. Manual. |
