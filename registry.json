@@ -458,6 +458,20 @@
       "stage": "DSTypewriterText"
     },
     {
+      "name": "DSExpandableText",
+      "category": "display",
+      "summary": "Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.",
+      "symbols": [
+        "DSExpandableText"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSExpandableText.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSExpandableText.md",
+      "stage": "DSExpandableText"
+    },
+    {
       "name": "Motion",
       "category": "motion",
       "summary": "dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.",

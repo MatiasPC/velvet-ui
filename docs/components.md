@@ -283,6 +283,22 @@ Types a phrase out character by character, holds it, erases it, then moves to th
 
 ---
 
+## DSExpandableText  ✅
+
+`Components/DSExpandableText.swift`. Clamp-and-reveal for long copy.
+
+```swift
+DSExpandableText(_ text: String, lineLimit: Int = 3, expandLabel: String = "Show more", collapseLabel: String = "Show less", style: DSTextStyle = .body, color: Color? = nil, haptic: DSHapticStyle = .light)
+```
+
+Collapses `text` to `lineLimit` lines and springs open on tap. Truncation is measured, not guessed: two hidden copies of the text (one clamped to `lineLimit`, one unbounded) sit in the copy's `.background` and report their height with `onGeometryChange` (iOS 18 / macOS 15); the toggle shows only when the unbounded copy is taller by more than half a point, so short copy has no affordance. Neither probe depends on the expanded state, so the toggle never flickers. The rules (`lines(for:)`, `isTruncated`, `revealHeight`) live in an internal `DSExpandableTextLayout` and are unit tested.
+
+The reveal animates a frame, not `lineLimit`: the visible `Text` is `fixedSize(vertical:)`, then `frame(height: revealHeight, alignment: .top)` and `.clipped()`, with `revealHeight` switching between the two measured heights under `DSAnimation.springSmooth`. Animating `lineLimit` directly re-wraps the text on the first frame and centres it in a frame that is still resizing, so lines jump. Two states keep it clean: `isExpanded` is the target (frame, chevron, label), `showsFullCopy` lays the text out without a limit and is set before an expand and cleared in the `withAnimation` completion of a collapse, so the ellipsis only changes while it is clipped away. Chevron rotates 180°, label crossfades (`.contentTransition(.opacity)`), the haptic fires on the tap. Copy color is `color ?? palette.textPrimary` via `.ds(_:)`, so it scales with Dynamic Type and re-measures; the toggle uses `theme.ink`. Reduce Motion skips the animation and sets both states directly. VoiceOver reads the full copy whether collapsed or expanded; the toggle is a button labelled with its visible text with the value Collapsed or Expanded, the chevron and the probes are hidden.
+
+Known gaps: the expansion state is internal (no `isExpanded` binding), so a list cannot expand or collapse rows for you or remember it across reloads; the label strings are English defaults you pass in to localize.
+
+---
+
 ## DSStepper  ✅
 
 `Components/DSStepper.swift`. Numeric −/value/+ stepper on a glass track.

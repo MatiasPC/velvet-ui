@@ -51,6 +51,7 @@ struct ComponentListView: View {
             Section("Data Display") {
                 row("Badges & Avatars", "Status marks & identity") { BadgesAvatarsScreen() }
                 row("Lists", "Rows & sections") { ListsScreen() }
+                row("Expandable Text", "Long copy that springs open") { ExpandableTextScreen() }
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
             }
