@@ -72,6 +72,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Page dots | `DSPageControl(currentPage:numberOfPages:)` | |
 | Modal panel | `.dsSheet(isPresented:detents:content:)` | Native sheet with Velvet chrome. |
 | A surface to group content | `DSCard { … }` | `DSInteractiveCard(action:)` when tappable. |
+| Expandable section, FAQ row | `DSDisclosureGroup(_:subtitle:icon:initiallyExpanded:content:)` | Use this, not the stock `DisclosureGroup`. `isExpanded:` instead of `initiallyExpanded:` for state you own (accordion). |
 | Rows in a group | `DSListCell(title:subtitle:leading:trailing:action:)` + `DSDivider` | Inside `DSCard(padding: 0)`. |
 | Status label / unread count | `DSBadge(_:variant:)`, `DSCountBadge(count:)` | |
 | Person | `DSAvatar(name:imageURL:size:)` | Falls back to initials. |

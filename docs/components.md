@@ -371,6 +371,21 @@ Detents + visible grabber. Background: `.regularMaterial` before iOS/macOS 26, t
 
 ---
 
+## DSDisclosureGroup  ✅
+
+`Components/DSDisclosureGroup.swift`. Glass accordion / FAQ row — a custom, themed replacement for the stock `DisclosureGroup` (whose open/close animation breaks inside a `ForEach` on iOS 17, whose chevron ignores the tint, and which has no haptics or glass).
+
+```swift
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  initiallyExpanded: Bool = false, haptic: DSHapticStyle = .light) { content }
+DSDisclosureGroup(_ title: String, subtitle: String? = nil, icon: String? = nil,
+                  isExpanded: Binding<Bool>, haptic: DSHapticStyle = .light) { content }
+```
+
+Two inits: self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`, for "one open at a time"). On a `.glass` surface at `DSRadius.card`. The body sits in a private `Layout` (`DSDisclosureReveal`) whose `animatableData` is the revealed fraction, so the card grows with the body on `springSmooth`, the body fades with it and the chevron rotates 180° on the same spring; the body is laid out at full height and clipped, so text never re-wraps mid-reveal. The animation hangs off the open state (`.animation(_, value:)`), so it plays for a bound `isExpanded` flipped from outside and retargets on rapid taps. A hairline `palette.divider` splits header from body; the header dips with `DSPress.scale`. `.light` haptic on each toggle. The body stays mounted while collapsed (keeps its state), hidden from touch and VoiceOver. Reduce Motion: a short `DSAnimation.fast` ease instead of the spring, haptic still fires. Reduce Transparency: solid elevated surface. Header is one combined button with value Expanded/Collapsed and a "Shows/Hides the details" hint; the icon and chevron are `accessibilityHidden`.
+
+---
+
 ## DSNumberTicker  ✅
 
 `Components/DSNumberTicker.swift`.

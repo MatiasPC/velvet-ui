@@ -38,6 +38,7 @@ struct StageView: View {
         case .DSSkeleton:          SkeletonStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
+        case .DSDisclosureGroup:   DisclosureGroupStage(autoplay: autoplay)
         case .DSExpandableText:    ExpandableTextStage()
         case .DSLikeButton:        LikeButtonStage()
         case .OnboardingFlow:      OnboardingFlowStage()

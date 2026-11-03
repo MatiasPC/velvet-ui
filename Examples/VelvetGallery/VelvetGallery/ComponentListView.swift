@@ -37,6 +37,7 @@ struct ComponentListView: View {
                 row("Cards", "Glass containers") { CardsScreen() }
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
+                row("Disclosure Group", "Glass accordion that springs open") { DisclosureGroupScreen() }
             }
             Section("Inputs") {
                 row("Text Field", "Inputs & validation") { TextFieldScreen() }
