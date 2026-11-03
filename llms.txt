@@ -43,6 +43,13 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSTypewriterText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTypewriterText.md): Types phrases out character by character, with a blinking caret.
 - [Motion](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Motion.md): dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.
 - [DSConfetti](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSConfetti.md): A themed confetti burst from any point, fired whenever a trigger value changes.
+- [DSHoldToConfirm](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSHoldToConfirm.md): Press-and-hold confirmation: a ring charges while you hold, with the same async result as slide-to-confirm.
+- [DSSlider](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSlider.md): Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.
+- [DSLikeButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSLikeButton.md): A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.
+- [DSTiltCard](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTiltCard.md): A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.
+- [DSDisclosureGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSDisclosureGroup.md): Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.
+- [DSTimeline](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTimeline.md): A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.
+- [DSExpandableText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSExpandableText.md): Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.
 
 ## Examples
 
