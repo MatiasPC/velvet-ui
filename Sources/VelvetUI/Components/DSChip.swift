@@ -166,7 +166,7 @@ public struct DSChipGroup<Value: Hashable>: View {
     }
 
     public var body: some View {
-        DSFlowLayout(horizontalSpacing: spacing, verticalSpacing: spacing) {
+        DSFlowLayout(spacing: spacing, lineSpacing: spacing) {
             ForEach(items) { item in
                 DSChip(
                     item.title,
@@ -235,67 +235,6 @@ public extension DSChipGroup where Value == String {
             spacing: spacing,
             accent: accent
         )
-    }
-}
-
-// MARK: - Flow Layout
-
-/// A line-wrapping layout: it lays subviews left to right and breaks onto a new
-/// line whenever the next subview would overflow the proposed width. No stock
-/// stack wraps, so `DSChipGroup` needs this. Kept private — it is an
-/// implementation detail of the chip group, not a public layout primitive.
-private struct DSFlowLayout: Layout {
-    var horizontalSpacing: CGFloat
-    var verticalSpacing: CGFloat
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
-        let maxWidth = proposal.width ?? .infinity
-        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
-        return arrange(sizes: sizes, maxWidth: maxWidth).size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) {
-        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
-        let origins = arrange(sizes: sizes, maxWidth: bounds.width).origins
-        for (index, subview) in subviews.enumerated() {
-            subview.place(
-                at: CGPoint(x: bounds.minX + origins[index].x, y: bounds.minY + origins[index].y),
-                anchor: .topLeading,
-                proposal: ProposedViewSize(sizes[index])
-            )
-        }
-    }
-
-    /// Walk the subviews with an x/y cursor, wrapping to a new line whenever the
-    /// next one would cross `maxWidth`. Returns each subview's top-left origin and
-    /// the total size the lines occupy.
-    private func arrange(sizes: [CGSize], maxWidth: CGFloat) -> (size: CGSize, origins: [CGPoint]) {
-        var origins: [CGPoint] = []
-        origins.reserveCapacity(sizes.count)
-
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var lineHeight: CGFloat = 0
-        var widestLine: CGFloat = 0
-
-        for size in sizes {
-            // Wrap before placing, but never leave a line empty (a single
-            // oversized chip just overflows its own line).
-            if x > 0, x + size.width > maxWidth {
-                widestLine = max(widestLine, x - horizontalSpacing)
-                x = 0
-                y += lineHeight + verticalSpacing
-                lineHeight = 0
-            }
-            origins.append(CGPoint(x: x, y: y))
-            x += size.width + horizontalSpacing
-            lineHeight = max(lineHeight, size.height)
-        }
-        widestLine = max(widestLine, x - horizontalSpacing)
-
-        let totalWidth = maxWidth.isFinite ? maxWidth : max(widestLine, 0)
-        let totalHeight = y + lineHeight
-        return (CGSize(width: totalWidth, height: totalHeight), origins)
     }
 }
 

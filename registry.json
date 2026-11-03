@@ -154,7 +154,9 @@
       "files": [
         "Sources/VelvetUI/Components/DSChip.swift"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "DSFlowLayout"
+      ],
       "docs": "docs/components/DSChip.md"
     },
     {
@@ -281,6 +283,20 @@
       "dependencies": [],
       "docs": "docs/components/DSSheet.md",
       "stage": "DSSheet"
+    },
+    {
+      "name": "DSFlowLayout",
+      "category": "containers",
+      "summary": "Wrapping layout that flows items onto new rows when they overflow the width — tag clouds, filter chips, keyword lists.",
+      "symbols": [
+        "DSFlowLayout"
+      ],
+      "files": [
+        "Sources/VelvetUI/Layout/DSFlowLayout.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSFlowLayout.md",
+      "stage": "DSFlowLayout"
     },
     {
       "name": "DSBadge",
