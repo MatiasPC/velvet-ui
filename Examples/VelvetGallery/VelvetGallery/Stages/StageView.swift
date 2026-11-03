@@ -42,6 +42,7 @@ struct StageView: View {
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
         case .DSFlowLayout:        FlowLayoutStage(autoplay: autoplay)
+        case .DSChip:              ChipStage(autoplay: autoplay)
         case .DSTiltCard:          TiltCardStage()
         case .DSDisclosureGroup:   DisclosureGroupStage(autoplay: autoplay)
         case .DSExpandableText:    ExpandableTextStage()
