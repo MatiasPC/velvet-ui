@@ -78,16 +78,10 @@ final class DSFlipCardTests: XCTestCase {
         XCTAssertEqual(DSFlipMath.backPreRotation(reduceMotion: true), 0)
     }
 
-    func testGlassIsFullAtRestAndGoneMidTurn() {
-        XCTAssertEqual(DSFlipMath.glassAmount(angle: 0), 1, accuracy: 0.0001)
-        XCTAssertEqual(DSFlipMath.glassAmount(angle: 180), 1, accuracy: 0.0001)
-        XCTAssertEqual(DSFlipMath.glassAmount(angle: 90), 0, accuracy: 0.0001)
-        XCTAssertEqual(DSFlipMath.glassAmount(angle: 45), 0, accuracy: 0.0001)
-        // Symmetric around both rest angles, and it fades in monotonically while landing.
-        XCTAssertEqual(DSFlipMath.glassAmount(angle: 10), DSFlipMath.glassAmount(angle: 170), accuracy: 0.0001)
-        XCTAssertGreaterThan(DSFlipMath.glassAmount(angle: 8), DSFlipMath.glassAmount(angle: 14))
-        // Spring overshoot past rest stays glass.
-        XCTAssertEqual(DSFlipMath.glassAmount(angle: 183), 1, accuracy: 0.0001)
+    func testSolidBodyIsHeldLongerThanTheSpringTakesToSettle() {
+        // springSmooth has a 0.45 s response; the hold must outlast its visible tail.
+        XCTAssertGreaterThan(DSFlipMath.settleSeconds, 0.45 * 1.5)
+        XCTAssertLessThan(DSFlipMath.settleSeconds, 2)
     }
 
     func testAxisVectors() {

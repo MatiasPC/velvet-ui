@@ -1853,7 +1853,7 @@ When a face holds its own controls, set `flipOnTap: false` so taps reach them an
 
 - The turn is one `DSAnimation.springSmooth` about `axis`, with a subtle perspective so the card reads as lifting off the glass.
 - A single animated angle drives the turn through an `Animatable` container, so the two faces swap exactly at the 90° edge — no ghosting and no mirrored text. The back face is pre-rotated a half turn so it reads the right way round once flipped.
-- Each face draws the same surfaces as `DSCard` (glass, the 1pt edge highlight, the soft shadow). While the card is turning, a solid body with its own shadow replaces the glass, which cannot render under the 3D projection, and the glass fades back in as it lands. Under Reduce Transparency the glass becomes a solid elevated background.
+- Each face draws the same surfaces as `DSCard` (glass, the 1pt edge highlight, the soft shadow). While the card is turning, a solid body with its own shadow replaces the glass, which does not render while the 3D transform animates; the glass fades back in just under a second after the last flip. Under Reduce Transparency the glass becomes a solid elevated background.
 - The turn fires `haptic` (default `.rigid`) as it starts, on both tap and programmatic flips (it follows `isFlipped`). Pass `nil` when your own control already fires one.
 - A face that is not showing never takes touches, so controls on the front and back can share a position.
 - **Reduce Motion:** the card does not turn; the faces crossfade with `DSAnimation.fast`.

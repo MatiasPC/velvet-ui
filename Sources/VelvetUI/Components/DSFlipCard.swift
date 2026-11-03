@@ -48,6 +48,8 @@ public struct DSFlipCard<Front: View, Back: View>: View {
     private let back: () -> Back
 
     @State private var internalIsFlipped = false
+    @State private var isTurning = false
+    @State private var turnToken = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// A self-managing flip card: tap to turn it over.
@@ -116,6 +118,7 @@ public struct DSFlipCard<Front: View, Back: View>: View {
             angle: DSFlipMath.angle(isFlipped: isFlipped),
             flipped: isFlipped,
             reduceMotion: reduceMotion,
+            glass: isTurning ? 0 : 1,
             axis: axis,
             perspective: Self.perspective,
             style: style,
@@ -131,10 +134,27 @@ public struct DSFlipCard<Front: View, Back: View>: View {
         // The haptic rides the state change, so a binding-driven flip gets it too.
         .onChange(of: isFlipped) { _, _ in
             if let haptic { DSHapticEngine.shared.fire(haptic) }
+            beginTurn()
+        }
+    }
+
+    /// Holds the solid body from now until `settleSeconds` after the LAST flip, so rapid
+    /// taps stay solid until the final spring has landed. Idempotent: `flip()` calls it
+    /// before toggling (no glass frame at the start), `onChange` covers binding flips.
+    private func beginTurn() {
+        guard !reduceMotion else { return }
+        isTurning = true
+        turnToken += 1
+        let token = turnToken
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(DSFlipMath.settleSeconds))
+            guard token == turnToken else { return }
+            withAnimation(DSAnimation.fast) { isTurning = false }
         }
     }
 
     private func flip() {
+        beginTurn()
         if let externalIsFlipped {
             externalIsFlipped.wrappedValue.toggle()
         } else {
@@ -153,18 +173,12 @@ enum DSFlipMath {
     /// Which face is visible at a live, per-frame angle: the back from the 90 degree edge on.
     static func showsBack(angle: Double) -> Bool { angle >= 90 }
 
-    /// How much of the glass material to show at a live angle: 1 within a few degrees of
-    /// rest, 0 while the card is clearly turning. Continuous in `angle`, so the hand-off
-    /// between the solid body and the glass needs no animation of its own.
-    static func glassAmount(angle: Double) -> Double {
-        let distance = min(abs(angle), abs(180 - angle))
-        let t = min(max((distance - glassHoldDegrees) / glassBlendDegrees, 0), 1)
-        return 1 - t
-    }
-
-    /// Degrees from rest that still show pure glass, and the span over which it fades out.
-    static let glassHoldDegrees: Double = 4
-    static let glassBlendDegrees: Double = 16
+    /// How long the solid body is held after the last flip before the glass fades back
+    /// in: the settle time of `DSAnimation.springSmooth` (response 0.45 s, damping 0.75)
+    /// with margin. Glass does not render while the 3D transform is still animating, and
+    /// the spring spends a long tail within a degree of rest, so an angle threshold hands
+    /// back too early; a hold measured from the last flip does not.
+    static let settleSeconds: Double = 0.9
 
     /// Pre-rotation of the back face so it reads the right way round once the card has
     /// turned. Zero under Reduce Motion, where the card never turns.
@@ -184,6 +198,7 @@ private struct DSFlipFaces<FrontContent: View, BackContent: View>: View, Animata
     nonisolated var angle: Double
     let flipped: Bool
     let reduceMotion: Bool
+    let glass: Double
     let axis: DSFlipAxis
     let perspective: CGFloat
     let style: DSCardStyle
@@ -202,8 +217,8 @@ private struct DSFlipFaces<FrontContent: View, BackContent: View>: View, Animata
         let turn = reduceMotion ? 0 : angle
         let showingBack = reduceMotion ? flipped : DSFlipMath.showsBack(angle: angle)
         // Materials and shadows lose their backdrop under a 3D projection, so while the card
-        // is turning each face has a solid body and the glass fades back in as it lands.
-        let glass = reduceMotion ? 1 : DSFlipMath.glassAmount(angle: angle)
+        // is turning each face keeps a solid body; the glass fades back in once the turn has settled.
+        let glass = reduceMotion ? 1 : self.glass
         DSFlipStack {
             DSFlipFace(style: style, padding: padding, cornerRadius: cornerRadius, glass: glass, content: front)
                 .opacity(showingBack ? 0 : 1)
