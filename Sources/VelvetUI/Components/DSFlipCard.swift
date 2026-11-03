@@ -260,18 +260,33 @@ private struct DSFlipFace<Content: View>: View {
             .background { surface }
     }
 
+    // Sequential handoff, so the body never dips through "neither": the glass fades in
+    // over the still-opaque solid body (first half of `glass`), and only then does the
+    // solid body fade out underneath it (second half).
+    private var glassOpacity: Double { min(1, glass * 2) }
+    private var solidOpacity: Double { 1 - max(0, glass * 2 - 1) }
+
+    /// The body held while turning. Opaque, but the tone of the resting glass over the
+    /// page (`backgroundSecondary`) rather than the white of `.solid`, so the handoff is a
+    /// gentle tone shift, not a flash.
+    private var turningBody: some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        return shape.fill(theme.palette.backgroundSecondary)
+            .overlay { shape.strokeBorder(theme.washEdge, lineWidth: DSWash.edgeWidth) }
+    }
+
     @ViewBuilder
     private var surface: some View {
         switch style {
         case .elevated:
             ZStack {
-                Color.clear.dsSurface(.solid, radius: cornerRadius).dsShadow(.md).opacity(1 - glass)
-                Color.clear.dsSurface(.glass, radius: cornerRadius).dsShadow(.md).opacity(glass)
+                turningBody.dsShadow(.md).opacity(solidOpacity)
+                Color.clear.dsSurface(.glass, radius: cornerRadius).dsShadow(.md).opacity(glassOpacity)
             }
         case .outlined:
             ZStack {
-                Color.clear.dsSurface(.solid, radius: cornerRadius).opacity(1 - glass)
-                Color.clear.dsSurface(.glassThick, radius: cornerRadius).opacity(glass)
+                turningBody.opacity(solidOpacity)
+                Color.clear.dsSurface(.glassThick, radius: cornerRadius).opacity(glassOpacity)
             }
         case .flat:
             // No material to lose: the wash is a flat fill already.
