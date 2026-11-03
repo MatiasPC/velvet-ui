@@ -20,6 +20,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSCheckbox](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCheckbox.md): Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic.
 - [DSStepper](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSStepper.md): Minus/plus stepper that ticks on every step and jiggles at its bounds.
 - [DSRating](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSRating.md): Drag-to-rate stars, with half steps and a read-only mode.
+- [DSLikeButton](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSLikeButton.md): A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.
 - [DSSegmentedControl](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSegmentedControl.md): Pill or underline picker with a sliding indicator.
 - [DSTextField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTextField.md): Text field with label, icon and validation states, plus DSSearchBar.
 - [DSCodeField](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCodeField.md): One-time-code input with SMS autofill, a shake on error and success feedback.

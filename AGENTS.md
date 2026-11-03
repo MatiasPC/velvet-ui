@@ -65,6 +65,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
+| Like / favorite / bookmark toggle | `DSLikeButton(isLiked:count:symbol:emptySymbol:accessibilityLabel:)` | Pops and radiates a halo when a tap likes. Pass `accessibilityLabel:` that matches a swapped symbol (default "Like"); `count` is display-only, so update it in `.onChange(of: isLiked)`. |
 | Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |
 | One-time code | `DSCodeField(code:state:onComplete:)` | SMS autofill on iOS. |
 | App sections at the bottom | `DSTabBar(selection:items:)` | Place with `.safeAreaInset(edge: .bottom)`. |
