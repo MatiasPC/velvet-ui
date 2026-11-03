@@ -6,6 +6,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ### Fixed
 - `DSSlideToConfirm` knob renders as a true circle at rest again. The `Capsule()` mask that drives the `.morphAndVanish` collapse was sized to the track, so its straight edges sat exactly on the idle knob's top and bottom and its antialiased edge shaved ~1pt off each (the knob measured 168×166 instead of 168×168 at @3×, and its shadow was cropped). The mask is now held clear of the knob until the collapse begins, then both axes ride the same spring so the morph still lands on a capsule exactly `trackHeight` square.
+### Added
+- `DSDisclosureGroup`: a glass accordion / FAQ row, a themed replacement for the stock `DisclosureGroup`. The card grows with the body on `springSmooth` (a clipped reveal layout, so text never re-wraps mid-animation) while the chevron rotates on the same spring, with a hairline divider and a `.light` haptic; Reduce Motion swaps the spring for a short ease, Reduce Transparency gives a solid surface, and VoiceOver reads Expanded / Collapsed. Self-contained (`initiallyExpanded:`) and controlled (`isExpanded:`) initializers. Gallery screen and recording stage included.
+- `DSLikeButton`: a favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransition(.symbolEffect(.replace))`, pops the glyph on a `keyframeAnimator` track and radiates one filled halo in the tint (the same halo mechanism as `DSSuccessCheck`, so no border), with the haptic on the peak of the pop; unliking is quiet and rapid taps never stack. Optional `count` rolls with `.numericText`. 44 pt tap target, press feel, Reduce Motion (no pop or halo, crossfades), VoiceOver toggle with a Liked / Not liked value. Configurable `symbol`/`emptySymbol` for stars, bookmarks or any filled/outline SF Symbol pair. Gallery screen and recording stage included.
 
 ### Changed
 - **Backgrounds are solid.** The Sunset/Aurora/Lagoon background gradients are gone. A page now sits on one flat neutral tone per color scheme, chosen from `DSBackground` (`.snow` white/true black, `.paper` warm off-white/warm black, `.graphite` cool grey/deep graphite). `DSBackdrop` no longer draws a radial light, a light wash or a dark dim layer.
@@ -15,6 +18,10 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ### Deprecated
 - `DSGradientTheme` → `DSThemeStyle`; `DSTheme.gradient` → `DSTheme.style`; `DSResolvedTheme.gradient` → `DSResolvedTheme.style`; `DSTheme(gradient:)` → `DSTheme(style:)`.
+
+### Added
+- `DSTimeline` — a vertical progress timeline with `DSTimelineItem`. Nodes joined by a connector that fills as `currentStep` advances; the live node glows and breathes, rows cascade in with `dsStaggerIn`, and a `.success` haptic fires on forward progress. The content-bearing, vertical complement to `DSStepProgress`. For order tracking, multi-step flows and activity histories.
+- `DSExpandableText` — long copy that collapses to a configurable line limit and springs open on tap. The toggle appears only when the text is actually clipped (measured with `onGeometryChange`), the reveal animates a clipped frame so lines are uncovered in place instead of re-wrapping, the chevron rotates, the label crossfades, a haptic fires on toggle, and Reduce Motion, VoiceOver (full copy, Collapsed / Expanded value) and Dynamic Type are supported.
 
 ## [0.2.0] — 2026-10-23
 
