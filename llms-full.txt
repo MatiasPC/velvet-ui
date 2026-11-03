@@ -1243,9 +1243,9 @@ struct SegmentedControlDemo: View {
 
 # DSChip / DSChipGroup
 
-Selectable pill chips for filters, tags, categories and interest pickers. `DSChipGroup` lays them out on a wrapping flow that breaks onto as many lines as the width needs, and manages single or multiple selection. Selecting a chip springs its fill into the accent and ticks a selection haptic.
+Selectable pill chips for filters, tags, categories and interest pickers. `DSChipGroup` lays them out with [`DSFlowLayout`](DSFlowLayout.md), which breaks onto as many lines as the width needs, and manages single or multiple selection. Selecting a chip springs its fill into the accent and ticks a selection haptic.
 
-![DSChip](../media/DSChip.gif)
+<!-- GIF pending: ![DSChip](../media/DSChip.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSChip.swift`](../../Sources/VelvetUI/Components/DSChip.swift)
 
@@ -1258,7 +1258,7 @@ Selectable pill chips for filters, tags, categories and interest pickers. `DSChi
 .product(name: "VelvetUI", package: "velvet-ui")
 ```
 
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
 
 ## Usage
 
@@ -1318,19 +1318,61 @@ DSChip("Design", isSelected: isOn) { isOn.toggle() }
 | `haptic` | `DSHapticStyle` | `.selection` | Fired on tap. |
 | `action` | `() -> Void` | required | Called on tap. In a `DSChipGroup` this toggles selection. |
 
+## Variants
+
+```swift
+enum Sort: Hashable { case trending, newest, topRated }
+
+struct ChipVariantsDemo: View {
+    @State private var media: Set<String> = ["photos"]
+    @State private var sort: Sort? = .trending
+    @DSThemed private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+            // Leading icons and a custom accent for the selected fill
+            DSChipGroup(
+                [
+                    DSChipItem("Photos", value: "photos", icon: "photo"),
+                    DSChipItem("Videos", value: "videos", icon: "video"),
+                    DSChipItem("Audio", value: "audio", icon: "waveform")
+                ],
+                selection: $media,
+                accent: theme.palette.success
+            )
+
+            // Any Hashable value, not just strings
+            DSChipGroup(
+                [
+                    DSChipItem("Trending", value: Sort.trending),
+                    DSChipItem("Newest", value: Sort.newest),
+                    DSChipItem("Top rated", value: Sort.topRated)
+                ],
+                selection: $sort,
+                spacing: DSSpacing.sm
+            )
+        }
+    }
+}
+```
+
 ## Behavior
 
-- Chips flow left to right and wrap onto a new line whenever the next one would overflow the available width, using a custom `Layout` — no horizontal scrolling.
+- Chips flow left to right and wrap onto a new line whenever the next one would overflow the available width, using [`DSFlowLayout`](DSFlowLayout.md) — no horizontal scrolling. `DSChipGroup` depends on it, so copying `DSChip` into an app with the CLI brings it along.
 - Selecting a chip crossfades its fill from `theme.subtleFill` to the accent with a snappy spring, lifts it with a soft shadow, and ticks a selection haptic.
+- Pressing scales the chip to `DSPress.scale`. The press is a `ButtonStyle`, so a touch that becomes a scroll releases the chip instead of leaving it shrunk.
 - No borders: an unselected chip reads through the subtle surface, a selected one through the accent fill.
+- Reduce Motion: the fill changes with a quick fade instead of a spring.
 
 ## Accessibility
 
 - Each chip is a button labelled with its title, and marked selected when active. A leading icon is decorative and hidden from VoiceOver.
-- Chip labels use the rounded button text style so they scale with Dynamic Type alongside the rest of your screen.
+- Chip labels use the `buttonSmall` text style, so they scale with Dynamic Type alongside the rest of your screen.
+- A chip is as tall as its label plus `DSSpacing.xs` above and below, a little under the 44 pt minimum target. Keep `spacing` generous (`DSSpacing.sm`) where chips sit close together.
 
 ## See also
 
+- [DSFlowLayout](DSFlowLayout.md)
 - [DSSegmentedControl](DSSegmentedControl.md)
 - [DSBadge](DSBadge.md)
 - [DSButton](DSButton.md)
