@@ -5,7 +5,7 @@ options:
   deploymentTarget:
     iOS: "18.0"
 packages:
-  DesignSystem:
+  VelvetUI:
     path: ../..
 targets:
   VelvetGallery:
@@ -14,8 +14,8 @@ targets:
     sources:
       - path: VelvetGallery
     dependencies:
-      - package: DesignSystem
-        product: DesignSystem
+      - package: VelvetUI
+        product: VelvetUI
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.matiasperaltacharro.VelvetGallery

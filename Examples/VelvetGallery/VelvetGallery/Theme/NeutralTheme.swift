@@ -1,5 +1,5 @@
 import SwiftUI
-import DesignSystem
+import VelvetUI
 
 extension DSGradientTheme {
     /// Gallery-only theme: no gradient, graphite accent that adapts to light/dark.
