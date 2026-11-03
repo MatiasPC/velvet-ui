@@ -1,7 +1,8 @@
 # VelvetGallery
 
-A runnable iOS app that shows every Velvet UI component on its own screen, for
-demos and video capture. Not part of `swift build` / `swift test`.
+A runnable iOS app that shows every Velvet UI component on its own screen, three
+example flows, and a recording stage for each, for demos and video capture. Not
+part of `swift build` / `swift test`.
 
 ## Run
 
@@ -43,16 +44,34 @@ After changing the file list or target settings, re-run `xcodegen generate` and
   the motion set: `MotionScreen` (the five `DSMotion` primitives),
   `SlideToConfirmScreen` (async slide-to-pay + "next charge fails" toggle),
   `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`.
+- `Screens/` also holds the newer components, each with its stage in the same
+  file: `TabBarScreen`, `CarouselScreen`, `SheetScreen`, `NumberTickerScreen`,
+  `ChartsScreen`, `SkeletonScreen`, `SuccessCheckScreen`, `ConfettiScreen`.
+- `Flows/` — the example flows (`OnboardingFlow`, `SettingsFlow`, `CheckoutFlow`)
+  and their full-screen stages. These files import only SwiftUI and VelvetUI, so
+  `swift scripts/velvet.swift add Checkout` can copy them into an app.
+- `Stages/` — recording stages: `Stage` enum + launch arguments, `StageContainer`
+  (chrome-free host, long-press the background to exit), `StageListView`, `StageView`
+  (one isolated view per component).
 - `Support/` — `GalleryScreen` + `LabeledExample` chrome, `Appearance` toggle.
 - `Theme/NeutralTheme.swift` — `DSGradientTheme.neutral`.
 
+## Recording
+
+The **Recording → Recording stages** list opens chrome-free, centered views of
+each component for clips and GIFs, and `scripts/record-stage.sh` records one
+end-to-end. Launch arguments: `-VelvetStage <ID>`, `-VelvetStageBackground
+neutral|sunset|aurora|lagoon`, `-VelvetStageAutoplay YES|NO`,
+`-VelvetAppearance light|dark|system`. See [`docs/RECORDING.md`](../../docs/RECORDING.md).
+
 ## Design
 
-Neutral-only: solid `DSColors.backgroundPrimary` background, no `.dsBackdrop()`, a
-local `DSGradientTheme.neutral` with a graphite accent. Semantic status colours
+Neutral component screens: solid `DSColors.backgroundPrimary` background, no
+`.dsBackdrop()`, a local `DSGradientTheme.neutral` with a graphite accent. The
+Examples are the exception: they run on a gradient theme with a backdrop, the way
+an app would ship. Semantic status colours
 (error / success / warning / info) are kept; decorative defaults are shown in
 neutral with one labelled colourful example each. Appearance (System / Light /
 Dark) is switchable from the toolbar and persisted.
 
-Rationale in `docs/engineering-notes.md` and
-`docs/superpowers/specs/2026-09-08-velvet-gallery-app-design.md`.
+Rationale in `docs/engineering-notes.md` ("VelvetGallery example app").

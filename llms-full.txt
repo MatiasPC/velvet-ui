@@ -1,0 +1,3545 @@
+# Velvet UI
+
+> Glassy SwiftUI components with spring motion and haptics for iOS 18+ and macOS 15+. Frosted glass over a gradient theme, no borders, VoiceOver and Reduce Motion built in. MIT.
+
+Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, product `VelvetUI`, from 0.2.0) and `import VelvetUI`, or copy a single component and the core it needs into your app with the CLI: download https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift, then run `swift velvet.swift add <Name>`. Inject a `DSTheme` once at the root with `.dsTheme(DSTheme(gradient: .sunset))`, wrap screens in `DSScreen(backdrop: true)` for the glass look, use design tokens only (never raw colors, fonts or spacing), and read AGENTS.md first.
+
+---
+<!-- source: AGENTS.md -->
+
+# Velvet UI: guide for AI coding agents
+
+This file is for agents (Claude Code, Cursor, Codex, Xcode) writing SwiftUI that **uses** Velvet UI, and for the people reviewing their output. It covers the rules, the token cheat sheet, copyable patterns and the mistakes to avoid.
+
+- Everything an agent needs in one file: [`llms-full.txt`](llms-full.txt). Index: [`llms.txt`](llms.txt).
+- Every component as data (source files, dependencies, docs): [`registry.json`](registry.json).
+- Contributing to Velvet UI itself? Read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/engineering-notes.md](docs/engineering-notes.md) too.
+
+**Use it in your app's agent setup.** Add one line to your project's `AGENTS.md`, `CLAUDE.md` or `.cursor/rules`:
+
+```text
+UI uses Velvet UI. Follow https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/AGENTS.md
+```
+
+## Setup (once per app)
+
+Pick one of the two install paths and don't mix them in one target: the package and copied sources define the same types.
+
+**Swift Package (recommended).** `https://github.com/MatiasPC/velvet-ui.git`, product `VelvetUI`, from `0.2.0`. Then `import VelvetUI` in every file with UI.
+
+**Copy the source.** Velvet ships a small CLI that copies one component, plus the shared core it needs, into your app:
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/scripts/velvet.swift
+swift velvet.swift add DSTabBar --dest MyApp/VelvetUI   # also: list, info <name>
+```
+
+Copied files compile in Swift 5 and Swift 6 language mode and need no `import`. Previews aren't copied. Running `add` again updates untouched files and never overwrites your edits without `--force`.
+
+**Theme at the root.** Both paths need exactly one theme injected at the top of the view tree:
+
+```swift
+import VelvetUI
+
+@main struct MyApp: App {
+    @State private var theme = DSTheme(gradient: .sunset)   // .sunset, .aurora, .lagoon
+    var body: some Scene { WindowGroup { RootView().dsTheme(theme) } }
+}
+```
+
+Velvet targets iOS 18+ and macOS 15+.
+
+## The rules
+
+1. **Inject one `DSTheme` with `.dsTheme(_:)` at the root.** Without it every view silently uses a shared default, and changing "your" theme does nothing.
+2. **Put screens on the backdrop.** Write `DSScreen(backdrop: true) { … }` (it scrolls) or add `.dsBackdrop()` to a container. Glass needs a gradient behind it to read as glass.
+3. **Reach for a component before building one.** See [the component chooser](#component-chooser). Velvet components already handle press feel, haptics, VoiceOver and Reduce Motion.
+4. **Tokens only.** Use `DSSpacing` for padding and gaps, `DSRadius` for corners, `.ds(_:)` for text, `DSShadow` for elevation and `DSAnimation` for motion. Never write literal numbers, fonts or colors.
+5. **Colors come from the theme.** In your own views, declare `@DSThemed private var theme` and paint with its roles (table below). Don't use `DSColors.x` inside a view body; those statics don't follow the injected theme.
+6. **No borders.** Separate surfaces with `.dsSurface(_:radius:)`, `DSCard`, `theme.subtleFill` or `.dsWashEdge(radius:)`. Never use `.border` or `.stroke`.
+7. **Haptics are built in.** `DSButton`, `DSToggle`, `DSStepper`, `DSTabBar` and the other controls already fire their haptic. Don't add a second one. Call `dsHaptic(_:)` only for your own custom controls.
+8. **Springs for touch, eased curves for ambience.** Use `DSAnimation.springSnappy` / `.springSmooth` for state changes caused by a tap or drag, and `withAnimation(DSAnimation.normal)` for theme changes. Loop effects through `.dsBreathe`, `.dsShimmer` or `DSMotion.loop(_:unless:)`, which respect Reduce Motion.
+9. **Accessibility is part of the job.** Give icon-only buttons an `accessibilityLabel:`, give bare controls (`DSStepper`, `DSRating`) a `.accessibilityLabel("Guests")`, and keep text on `.ds(_:)` so it scales with Dynamic Type.
+10. **Async work goes into the component.** `DSSlideToConfirm`'s `onConfirm` is `async throws`. Await the payment inside it and throw to refuse; the control spins, then succeeds or re-opens by itself.
+
+## Component chooser
+
+| You need | Use | Notes |
+|---|---|---|
+| Primary / secondary action | `DSButton(_:variant:size:icon:isLoading:action:)` | `.primary` is the accent fill; one per screen. |
+| Icon-only action | `DSIconButton(icon:accessibilityLabel:action:)` | Always pass `accessibilityLabel`. |
+| Confirm a payment or a destructive action | `DSSlideToConfirm(_:confirmedLabel:finish:onConfirm:)` | `onConfirm` is `async throws`. |
+| On/off setting | `DSToggle(_:isOn:)` | |
+| Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
+| Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
+| Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
+| Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |
+| One-time code | `DSCodeField(code:state:onComplete:)` | SMS autofill on iOS. |
+| App sections at the bottom | `DSTabBar(selection:items:)` | Place with `.safeAreaInset(edge: .bottom)`. |
+| Horizontal paging content | `DSCarousel(_:currentPage:content:)` + `DSPageControl` | |
+| Page dots | `DSPageControl(currentPage:numberOfPages:)` | |
+| Modal panel | `.dsSheet(isPresented:detents:content:)` | Native sheet with Velvet chrome. |
+| A surface to group content | `DSCard { … }` | `DSInteractiveCard(action:)` when tappable. |
+| Rows in a group | `DSListCell(title:subtitle:leading:trailing:action:)` + `DSDivider` | Inside `DSCard(padding: 0)`. |
+| Status label / unread count | `DSBadge(_:variant:)`, `DSCountBadge(count:)` | |
+| Person | `DSAvatar(name:imageURL:size:)` | Falls back to initials. |
+| Transient message | `DSToast(_:type:)` | Present in an overlay; it announces itself. |
+| Nothing to show | `DSEmptyState(icon:title:message:actionTitle:action:)` | |
+| Loading layout | `.dsSkeleton(isLoading)` or `DSSkeleton` blocks | |
+| Progress | `DSCircularProgress`, `DSLinearProgress`, `DSGradientProgress`, `DSStepProgress` | |
+| Animated number | `DSNumberTicker(_:format:)` (rolling digits), `DSAnimatedNumber` (count-up) | |
+| Trend / small chart | `DSSparkline(_:)`, `DSBarChart(_:labels:selection:)` | Use Swift Charts for axes, legends, many series. |
+| Success moment | `DSSuccessCheck(isComplete:)`, `.dsConfetti(trigger:)` | Confetti is decorative; pair it with a real result. |
+| AI / background work | `DSThinkingIndicator(phrases:)` | |
+| Typed headline | `DSTypewriterText(_:style:)` | |
+| Ambient motion on any view | `.dsBreathe()`, `.dsJiggle(trigger:)`, `.dsPopIn(delay:)`, `.dsEdgeSweep()`, `.dsHueDrift()` | |
+| Menu, context menu | SwiftUI `Menu`, `.contextMenu` | Native is right; it inherits the tint. |
+| Pull to refresh | `.refreshable { await … }` | Native. |
+| Tips, coach marks | TipKit | Native. |
+| Alerts, confirmations | `.alert`, `.confirmationDialog` | Native. |
+| Date and time input | `DatePicker` | Native, tinted with `.tint(theme.ink)`. |
+
+## Tokens cheat sheet
+
+**Theme roles** (from `@DSThemed private var theme`):
+
+| Role | Use for |
+|---|---|
+| `theme.accent` | Fills: primary CTA, toggle on, selected tab, active indicator |
+| `theme.onAccent` | Text and icons **on** `theme.accent` |
+| `theme.ink` | Text, icons, links and focus **on glass or surfaces** |
+| `theme.palette.textPrimary` / `.textSecondary` / `.textTertiary` | Body copy hierarchy |
+| `theme.palette.success` / `.warning` / `.error` / `.info` | Status; `theme.palette.textOnPrimary` for text on them |
+| `theme.subtleFill` | Flat fill for a surface nested in another |
+| `theme.gradient.stops`, `.linearGradient`, `.horizontalGradient` | Decoration |
+
+**Spacing** (`DSSpacing`, 4 pt grid): `xxxs` 2 · `xxs` 4 · `xs` 8 · `sm` 12 · `md` 16 · `lg` 20 · `xl` 24 · `xxl` 32 · `xxxl` 40 · `huge` 48 · `massive` 64. Screen margin: `.dsScreenPadding()` (20).
+
+**Radius by role** (`DSRadius`): `.card` 20 (cards, sheets) · `.surface` 16 (nested surfaces) · `.control` 12 (buttons, inputs) · `.chip` pill (badges, small buttons).
+
+**Text** (`Text("…").ds(.style)` or `.dsTextStyle(.style)`): `hero`, `largeTitle`, `title1`, `title2`, `title3`, `body`, `callout`, `footnote`, `caption1`, `caption2`, `button`, `buttonSmall`, `overline`, `displayLarge`, `displayMedium`, `numeric`, `badge`. Pass a color with `.ds(.callout, color: theme.palette.textSecondary)`.
+
+**Surfaces** (`.dsSurface(_:radius:)`): `.glassThin` (chips, toolbars) · `.glass` (cards, default) · `.glassThick` (sheets, popovers) · `.solid`. They fall back to solid under Reduce Transparency.
+
+**Shadows** (`.dsShadow(_:)`): `.sm`, `.md`, `.lg`, `.xl`, `.glow(theme.accent)` (primary CTA only).
+
+**Motion** (`DSAnimation`): `micro` 0.20 s, `fast` 0.24 s, `normal` 0.32 s, `slow` 0.48 s curves; springs `springSnappy`, `springSmooth`, `springGentle`, `springBouncy`; `ambient` for loops. Press feel: `DSPress.scale` (0.96) with `DSPress.animation`.
+
+**Haptics** (`dsHaptic(_:)`): `.light`, `.medium`, `.heavy`, `.soft`, `.rigid`, `.selection`, `.success`, `.warning`, `.error`. No-op on macOS.
+
+All values: [docs/tokens.md](docs/tokens.md).
+
+## Patterns
+
+Every snippet below compiles against the current API (they're mirrored in the test suite).
+
+**A screen**
+
+```swift
+struct ProfileScreen: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.xl) {
+                Text("Profile").ds(.largeTitle)
+                DSCard {
+                    HStack(spacing: DSSpacing.md) {
+                        DSAvatar(name: "Ada Lovelace", size: 56)
+                        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                            Text("Ada Lovelace").ds(.title3)
+                            Text("Member since 2024").ds(.footnote)
+                        }
+                        Spacer()
+                    }
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+**A settings group**
+
+```swift
+struct NotificationSettings: View {
+    @State private var push = true
+    @State private var digest = false
+
+    var body: some View {
+        DSCard(padding: 0) {
+            VStack(spacing: 0) {
+                DSListCell(title: "Push notifications") {
+                    Image(systemName: "bell")
+                } trailing: {
+                    DSToggle(isOn: $push)
+                }
+                DSDivider(inset: DSSpacing.md)
+                DSListCell(title: "Weekly digest", subtitle: "Every Monday") {
+                    Image(systemName: "envelope")
+                } trailing: {
+                    DSToggle(isOn: $digest)
+                }
+            }
+        }
+    }
+}
+```
+
+**A primary action pinned to the bottom**
+
+```swift
+struct CheckoutScreen: View {
+    @State private var isPaying = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            Text("Your order").ds(.largeTitle).dsScreenPadding()
+        }
+        .safeAreaInset(edge: .bottom) {
+            DSButton("Pay $24.00", size: .large, isFullWidth: true, isLoading: isPaying) {
+                isPaying = true
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+**An async confirmation**
+
+```swift
+struct PayRow: View {
+    var body: some View {
+        DSSlideToConfirm("Slide to pay $24.00", confirmedLabel: "Paid", finish: .morphAndVanish) {
+            try await PaymentService.charge(cents: 2400)   // throw to refuse; the control re-opens
+        }
+    }
+}
+
+enum PaymentService {
+    static func charge(cents: Int) async throws { try await Task.sleep(for: .seconds(1)) }
+}
+```
+
+**Loading, then content**
+
+```swift
+struct ArticleCard: View {
+    @State private var isLoading = true
+
+    var body: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                Text("Weekend in Lisbon").ds(.title3)
+                Text("Three nights by the river, two guests.").ds(.callout)
+            }
+            .dsSkeleton(isLoading)
+        }
+        .task {
+            try? await Task.sleep(for: .seconds(1))
+            isLoading = false
+        }
+    }
+}
+```
+
+Keep `.task` and `.onAppear` outside the view you pass to `.dsSkeleton`.
+
+**A tab bar shell**
+
+```swift
+enum AppTab: Hashable { case home, search, inbox, profile }
+
+struct AppShell: View {
+    @State private var tab = AppTab.home
+
+    var body: some View {
+        Group {
+            switch tab {
+            case .home:    Text("Home").ds(.largeTitle)
+            case .search:  Text("Search").ds(.largeTitle)
+            case .inbox:   Text("Inbox").ds(.largeTitle)
+            case .profile: Text("Profile").ds(.largeTitle)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .dsBackdrop()
+        .safeAreaInset(edge: .bottom) {
+            DSTabBar(selection: $tab, items: [
+                DSTabItem("Home", value: .home, icon: "house", selectedIcon: "house.fill"),
+                DSTabItem("Search", value: .search, icon: "magnifyingglass"),
+                DSTabItem("Inbox", value: .inbox, icon: "tray", selectedIcon: "tray.fill", badge: 3),
+                DSTabItem("Profile", value: .profile, icon: "person", selectedIcon: "person.fill"),
+            ])
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+**A toast**
+
+```swift
+struct SaveButton: View {
+    @State private var showsToast = false
+
+    var body: some View {
+        DSButton("Save") {
+            withAnimation(DSAnimation.springSmooth) { showsToast = true }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .bottom) {
+            if showsToast {
+                DSToast("Saved to your library", type: .success)
+                    .transition(.dsSlideUp)
+                    .task {
+                        try? await Task.sleep(for: .seconds(2))
+                        withAnimation(DSAnimation.springSmooth) { showsToast = false }
+                    }
+            }
+        }
+    }
+}
+```
+
+**Your own view, on-system**
+
+```swift
+struct PriceTag: View {
+    let amount: String
+    @DSThemed private var theme
+
+    var body: some View {
+        Text(amount)
+            .ds(.numeric, color: theme.onAccent)
+            .padding(.horizontal, DSSpacing.sm)
+            .padding(.vertical, DSSpacing.xxs)
+            .background(theme.accent, in: Capsule())
+    }
+}
+```
+
+**Switching the theme at runtime**
+
+```swift
+struct ThemePicker: View {
+    let theme: DSTheme
+
+    var body: some View {
+        DSSegmentedControl(
+            selection: Binding(
+                get: { theme.gradient.id },
+                set: { id in
+                    withAnimation(DSAnimation.normal) {
+                        theme.gradient = DSGradientTheme.all.first { $0.id == id } ?? .sunset
+                    }
+                }
+            ),
+            segments: DSGradientTheme.all.map { DSSegment($0.name, value: $0.id) }
+        )
+    }
+}
+```
+
+## Anti-patterns
+
+| Don't | Do | Why |
+|---|---|---|
+| `.foregroundStyle(.blue)`, `Color(hex: "FF7E5F")` in a view | `theme.ink`, `theme.accent`, `theme.palette.textSecondary` | Literals ignore the theme and dark mode. |
+| `DSColors.primary` inside `body` | `@DSThemed private var theme` then `theme.accent` | Statics don't follow the injected theme. |
+| `.font(.system(size: 17))`, `.font(.headline)` | `.ds(.body)`, `.ds(.title3)` | DS styles carry tracking, line spacing and Dynamic Type. |
+| `.padding(15)`, `.cornerRadius(10)` | `.padding(DSSpacing.md)`, `.dsSurface(.glass, radius: DSRadius.control)` | Off-grid values drift from the system. |
+| `.border(.gray)`, `.overlay(RoundedRectangle(…).stroke(…))` | `.dsSurface(_:radius:)`, `.dsWashEdge(radius:)`, `theme.subtleFill` | Velvet has no borders. |
+| `DSCard { DSCard { … } }` | Inner `DSCard(style: .flat)` or `.background(theme.subtleFill)` | Glass on glass turns muddy. |
+| A haptic in the action of a `DSButton` | Nothing. The button already fires one. | Double haptics feel broken. |
+| `withAnimation(.easeInOut)` after a tap | `withAnimation(DSAnimation.springSnappy)` | Touch gets springs. |
+| `.repeatForever()` on your own loop | `.dsBreathe()` or `DSMotion.loop(_:unless: reduceMotion)` | Loops must rest under Reduce Motion. |
+| `ScrollView { DSScreen { … } }` | `DSScreen(backdrop: true) { … }` alone | `DSScreen` already scrolls. |
+| Showing `DSToast` without removing it | Remove it after a delay (see the pattern) | It stays on screen otherwise. |
+| `Image(systemName: "trash")` as a button with no label | `DSIconButton(icon: "trash", accessibilityLabel: "Delete") { … }` | VoiceOver reads "trash" or nothing. |
+| A `DSStepper` with no label | `.accessibilityLabel("Guests")` | It reads "Stepper" otherwise. |
+| `DSListCell(title: "Wi-Fi") { Image(systemName: "wifi") }` | `DSListCell(title: "Wi-Fi", leading: { Image(systemName: "wifi") })` | A single trailing closure binds to `action`, so the icon never shows. |
+| Adding the package **and** copying sources | Pick one | Duplicate symbols. |
+| Glass on a plain white screen, then "it looks flat" | `DSScreen(backdrop: true)` or `.dsBackdrop()` | Glass needs something behind it. |
+
+## Naming
+
+- Types start with `DS` (`DSButton`, `DSTabItem`); modifiers start with `ds` (`.dsSurface`, `.dsConfetti`).
+- Bindings: `selection:` for a selected value, `value:` / `isOn:` / `rating:` / `code:` / `text:` for edited values, `currentPage:` for page indices.
+- Optional tint parameters are `Color? = nil` (`accent:`, `color:`, `tint:`); `nil` means "follow the theme". Passing `nil` explicitly is fine.
+- `haptic:` is the parameter for a configurable haptic, `accessibilityLabel:` for VoiceOver text, and the trailing closure is `action:`, `content:` or `onConfirm:`.
+
+## Before you hand back
+
+- Build for every platform the app targets. `swift build` alone only checks macOS.
+- Look at the screen in light and dark mode, with the theme injected, on a backdrop.
+- Turn on Reduce Motion and check that the UI still makes sense at rest.
+- Search your diff for `Color(`, `.font(.system`, `.stroke(`, `.border(`, `cornerRadius(` and literal numbers in `padding`. Each one is usually a missed token.
+
+## Working on Velvet UI itself
+
+Library code follows the rules in [CONTRIBUTING.md](CONTRIBUTING.md): tokens only, colors from `@DSThemed`, `Color? = nil` for overridable colors, no borders, `DSPress` for press states, both platforms building, and a definition of done that includes docs, a Gallery stage and the registry entry. [docs/engineering-notes.md](docs/engineering-notes.md) records the decisions and gotchas.
+
+---
+<!-- source: docs/tokens.md -->
+
+# Tokens reference
+
+Every value a component is allowed to use. If you need something that isn't here, add a token first, then use it. Files live in `Sources/VelvetUI/Tokens/`, `Animation/`, `Haptics/`, `Layout/`.
+
+## Theme
+
+`DSTheme` (`Tokens/DSTheme.swift`) is an `@Observable` class holding `light`, `dark` (`DSColorPalette`) and `gradient` (`DSGradientTheme`). Inject once with `.dsTheme(theme)`. When nothing is injected, a shared default (Sunset) is used.
+
+Inside views, read it with the property wrapper:
+
+```swift
+@DSThemed private var theme        // DSResolvedTheme for the current color scheme
+theme.palette.textPrimary          // neutrals & status colors
+theme.accent / theme.onAccent      // fills and their text
+theme.ink                          // text / icons / focus on glass, resolved light/dark
+theme.subtleFill                   // wash on a backdrop, backgroundSecondary otherwise
+theme.washSurface / theme.washEdge // raw wash values
+theme.isDark / theme.onBackdrop
+```
+
+`DSResolvedTheme` is a value type; `DSTheme.resolved(for:onBackdrop:)` builds one without a view.
+
+## Gradient themes
+
+`DSGradientTheme` (`Tokens/DSGradientTheme.swift`). Four derived colors, each with one job. Contrast is verified by `VelvetUITests.testGradientThemesMeetAAContrast`.
+
+| Theme | Stops | `accent` | `onAccent` | `ink` | `inkDark` |
+|---|---|---|---|---|---|
+| `.sunset` (default) | `#FF7E5F → #FEB47B` | `#FF7E5F` | `#2B1510` | `#C2361A` | `#FFA98F` |
+| `.aurora` | `#7F5AF0 → #E84393` | `#7F5AF0` | `#FFFFFF` | `#6D47E6` | `#B9A3FF` |
+| `.lagoon` | `#16F2B3 → #0DB4F7` | `#16F2B3` | `#06231D` | `#0B7D8C` | `#5EF5CB` |
+
+| Slot | Use it for | Contrast rule |
+|---|---|---|
+| `stops` | `DSBackdrop`, `DSGradientProgress`, decorative fills | — |
+| `accent` | Primary CTA fill, toggle on, active page dot, filled badge, progress fills | — |
+| `onAccent` | Text and icons on `accent` | ≥ 4.5:1 on accent |
+| `ink` | Text, icons, links, focus glow on light glass | ≥ 4.5:1 on white |
+| `inkDark` | Same, on dark glass | ≥ 4.5:1 on `#1A1A2E` |
+| `lightWash` (0.08) | White overlay on the gradient in light mode | — |
+| `darkDim` (0.58) | Black overlay on the gradient in dark mode | — |
+
+Custom themes: `DSGradientTheme(id:name:stops:accent:onAccent:ink:inkDark:)`. Keep the contrast rules or text on glass becomes unreadable. `DSGradientTheme.all` lists the built-ins for pickers.
+
+## Colors
+
+`DSColorPalette` (`Tokens/DSColors.swift`) holds neutrals and status colors. 19 slots, memberwise `init`. Don't add slots (it would break every custom palette); add a new type instead.
+
+| Slot | Light | Dark | Role |
+|---|---|---|---|
+| `primary` / `primaryVariant` | `#FF7E5F` / `#C2361A` | `#FF7E5F` / `#FFA98F` | Mirrors Sunset accent / ink for raw-token code |
+| `secondary` / `secondaryVariant` | `#7F5AF0` / `#6D47E6` | `#7F5AF0` / `#B9A3FF` | Secondary button fill |
+| `tertiary` | `#16F2B3` | `#16F2B3` | Accent alternative |
+| `success` / `warning` / `error` / `info` | `#22C55E` / `#F59E0B` / `#EF4444` / `#3B82F6` | `#34D399` / `#FBBF24` / `#F87171` / `#60A5FA` | Status |
+| `backgroundPrimary` / `Secondary` / `Elevated` | `#FFFFFF` / `#F7F7F7` / `#FFFFFF` | `#0F0F1A` / `#1A1A2E` / `#242440` | Screens, subtle fills, solid surface fallback |
+| `textPrimary` / `Secondary` / `Tertiary` | `#1A1A2E` / `#6B7280` / `#9CA3AF` | `#F9FAFB` / `#9CA3AF` / `#6B7280` | Text hierarchy |
+| `textOnPrimary` | `#FFFFFF` | `#FFFFFF` | Text on **secondary, status, destructive** fills. On the accent use `onAccent`. |
+| `border` / `borderFocused` / `divider` | `#E5E7EB` / `#C2361A` / `#F3F4F6` | `#374151` / `#FFA98F` / `#1F2937` | Legacy separators and inactive tracks. Components should prefer `subtleFill` / `ink`. |
+
+`DSColors.primary`, `DSColors.textPrimary`, … are **adaptive light/dark** static colors built from the two default palettes (`Color.dsDynamic(light:dark:)`). Use them in previews, models, or quick prototypes. They do not follow a custom injected palette — inside views use `@DSThemed`.
+
+`Color(hex:)` accepts `RRGGBB` or `AARRGGBB`, with or without `#`.
+
+## Surfaces
+
+`DSSurface` (`Tokens/DSSurface.swift`) + `.dsSurface(_ level, radius:, edge:)`.
+
+| Level | Material | Use |
+|---|---|---|
+| `.glassThin` | `ultraThinMaterial` | Chips, toolbars, small floating elements; `DSStepper` and `DSSlideToConfirm` tracks |
+| `.glass` | `thinMaterial` | **Cards (default)**, list groups |
+| `.glassThick` | `regularMaterial` | Sheets, modals, popovers, outlined cards |
+| `.solid` | `backgroundElevated` | Fallback; also what every level becomes under Reduce Transparency |
+
+The modifier fills, clips to a continuous rounded rect and draws `DSWash.edge` inside the shape. Default radius `DSRadius.card`.
+
+## Wash
+
+`DSWash` (`Tokens/DSWash.swift`). Velvet never calls `.stroke()` with a border color.
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `surface(for:)` | white 0.45 | white 0.10 | Flat translucent fill for a surface nested inside another, such as the flat card. Read via `theme.washSurface`, or `theme.subtleFill` for the no-backdrop fallback. |
+| `edge(for:)` | white 0.55 → 0.05, top → bottom | white 0.18 → 0.02 | 1pt specular highlight (`edgeWidth`), drawn with `strokeBorder`. `.dsWashEdge(radius:)` |
+| focus | opacity 0.35, width 2, blur 1.5 | same | `.dsFocusGlow(color, radius:, isActive:)` — pass `theme.ink` or a status color |
+
+## Backdrop
+
+`DSBackdrop` (`Layout/DSBackdrop.swift`) draws the active gradient topLeading → bottomTrailing, a radial white light (0.18) at the top-leading corner, the `lightWash` in light mode and `darkDim` in dark mode. Wrap theme changes in `withAnimation(DSAnimation.normal)` for a crossfade.
+
+`.dsBackdrop()` puts it behind a view **and** sets `EnvironmentValues.dsOnBackdrop = true`, which is how `theme.subtleFill` knows to use the wash. `DSScreen(backdrop: true)` does this for a whole screen.
+
+## Shadows
+
+`DSShadow` (`Tokens/DSShadow.swift`) + `.dsShadow(_:)`. Radius / opacity / y-offset.
+
+| Level | Values | Use |
+|---|---|---|
+| `.sm` | 8 / 0.04 / 2 | Toggle knob, active segment |
+| `.md` | 16 / 0.06 / 4 | Cards at rest |
+| `.lg` | 24 / 0.08 / 8 | Toast, popovers |
+| `.xl` | 32 / 0.10 / 12 | Sheets, modals |
+| `.glow(tint)` | 20 / 0.28 light · 0.40 dark / 8 | Primary CTA, toggle on. Pass `theme.accent`. |
+
+Shadow color is black except for `.glow`. `color(for:)` is scheme-aware; the modifier uses it.
+
+## Radius
+
+`DSRadius` (`Tokens/DSRadius.swift`). Always continuous corners.
+
+| Numeric | Value | Semantic alias | Where |
+|---|---|---|---|
+| `xs` | 4 | | |
+| `sm` | 8 | | |
+| `md` | 12 | `control` | Buttons medium/large, inputs, code-field boxes, toast |
+| `lg` | 16 | `surface` | Nested surfaces, such as a flat card inside a card |
+| `xl` | 20 | `card` | DSCard, DSInteractiveCard, DSImageCard, sheets |
+| `xxl` | 24 | | Hero cards |
+| `pill` | 9999 | `chip` | Badges, tags, small buttons, search bar, segmented pill |
+
+`.dsCornerRadius(_:)` clips. The stroke overload is deprecated.
+
+## Spacing
+
+`DSSpacing` (`Tokens/DSSpacing.swift`), 4pt grid: `xxxs` 2 · `xxs` 4 · `xs` 8 · `sm` 12 · `md` 16 · `lg` 20 · `xl` 24 · `xxl` 32 · `xxxl` 40 · `huge` 48 · `massive` 64. Screen margins: `screenHorizontal` 20, `screenHorizontalCompact` 16, `screenTop` 16, `screenBottom` 24. Helpers: `.dsScreenPadding()`, `.dsPadding(_:)`, `.dsPadding(horizontal:vertical:)`.
+
+## Typography
+
+`DSTextStyle` (`Tokens/DSTypography.swift`). Apply with `Text("…").ds(.title1)` or `.dsTextStyle(.body, color:)`. Color defaults to `theme.palette.textPrimary`.
+
+| Style | Size / weight | Design | Tracking | Use |
+|---|---|---|---|---|
+| `hero` | 34 bold | SF Pro | −0.8 | Onboarding headlines |
+| `largeTitle` | 28 bold | SF Pro | −0.6 | Screen titles |
+| `title1` | 22 semibold | SF Pro | −0.4 | Section headers |
+| `title2` | 20 semibold | SF Pro | −0.3 | Card titles |
+| `title3` | 17 semibold | SF Pro | −0.2 | Subsection headers |
+| `body` | 17 regular | SF Pro | 0 | Body text |
+| `callout` | 15 regular | SF Pro | 0 | Secondary content |
+| `footnote` | 13 medium | SF Pro | 0 | Labels, metadata |
+| `caption1` / `caption2` | 12 / 11 regular | SF Pro | 0 | Timestamps / fine print |
+| `button` / `buttonSmall` | 15 / 13 semibold | Rounded | 0 | Button labels |
+| `overline` | 11 bold, uppercase | SF Pro | +1.2 | Section overlines |
+| `displayLarge` / `displayMedium` | 60 / 40 bold | Rounded, monospaced digits | −1.2 / −0.6 | Stats, timers |
+| `numeric` | 17 semibold | Rounded, monospaced digits | 0 | Prices, counters inline |
+| `badge` | 11 bold | Rounded | 0 | Count badges |
+
+**Dynamic Type.** `.ds(_:)` / `.dsTextStyle(_:)` scale with the user's text size: each style scales along a system text style (`DSTextStyle.textStyle`, e.g. `body` -> `.body`, `hero` -> `.largeTitle`) via `@ScaledMetric`, and line spacing scales too. At the default size the output is identical to the old fixed fonts. `DSTextStyle.size/weight/design/textStyle` are public. `.dsFont(_:)` applies only the scaled font (no color, tracking or line spacing); `DSTextStyle.font` stays fixed-size. Some controls still use fixed fonts: DSButton, the input text of DSTextField / DSSearchBar, DSSegmentedControl and DSBadge / DSCountBadge. DSStepper (number), DSCodeField (digits) and DSSlideToConfirm (label) use `.ds(_:)` and scale, but their boxes and tracks have fixed heights.
+
+Rule: numbers are always Rounded; titles are never Rounded. Max three styles per visual section.
+
+## Motion
+
+`DSAnimation` (`Animation/DSAnimation.swift`).
+
+| Token | Value | Use |
+|---|---|---|
+| `micro` | 0.20s, curve (0.25, 0.10, 0.25, 1) | Toggles, highlights, color changes |
+| `fast` | 0.24s, curve (0.20, 0, 0, 1) | State changes, button feedback |
+| `normal` | 0.32s, curve (0.20, 0, 0, 1) | View transitions, card reveals, theme crossfade |
+| `slow` | 0.48s, curve (0.30, 0, 0.10, 1) | Large layout shifts |
+| `springSnappy` | response 0.3, damping 0.7 | Buttons, toggles, press states |
+| `springSmooth` | 0.45 / 0.75 | Cards, panels |
+| `springGentle` | 0.6 / 0.8 | Sheets, full-screen |
+| `springBouncy` | 0.5 / 0.5 | Celebrations, rating pop |
+| `interactive` | 0.3 / 0.7, blend 0.05 | Gesture-driven |
+| `progress` / `counting` | easeInOut 0.8 / easeOut 1.0 | Progress fills / number count-up |
+| `ambient` | easeInOut 1.8s | Base curve for ambient loops (breathe, drift, sweep) |
+| `stagger(index:base:)` | springSmooth + index × 0.05s | List entrances |
+
+`DSPress`: `scale` 0.96, `iconScale` 0.88, `animation` = springSnappy. Every pressable component uses these.
+
+Transitions: `.dsSlideUp`, `.dsScale`, `.dsFade`, `.dsPush`. Modifiers: `.dsAnimate(_:value:)`, `.dsStaggerIn(index:)` (fade + 8pt rise, respects Reduce Motion), `.dsShimmer()`, `.dsPulse()` (deprecated — use `.dsBreathe()`).
+
+### Motion primitives
+
+These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnimation`, composing constant motion effects for decorative and attention-holding purposes.
+
+| Modifier | What it does | Reduce Motion |
+|---|---|---|
+| `.dsBreathe(_ intensity:)` | Slow swell in scale and dip in opacity at `breatheDuration` | Rests at scale 1 |
+| `.dsJiggle(trigger:)` | One decaying shake on trigger change — a continuous keyframe track through `jiggleSwings`, ending at rest | Not applied at all |
+| `.dsPopIn(delay:)` | Entrance with springBouncy overshoot and fade | Fades only, no scale |
+| `.dsEdgeSweep(radius:isActive:)` | Specular highlight travelling the surface edge | Highlight stays static |
+| `.dsHueDrift(isActive:)` | Slow, bounded hue rotation over the gradient (decorative) | Stays at 0° |
+
+`DSMotion.loop(_:autoreverses:unless:)` wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on. Passing nil to `.animation(_:value:)` applies the change instantly, so every ambient effect settles at its resting state instead of being skipped.
+
+| Constant | Value | Purpose |
+|---|---|---|
+| `breatheDuration` | 2.4s | Breathing swell. Slow enough to read as alive, not as a spinner. |
+| `sweepDuration` | 2.0s | One full trip of the edge sweep. |
+| `driftDuration` | 8.0s | Hue drift. Deliberately slow: notice it only on a second look. |
+| `driftDegrees` | 12 | Maximum hue rotation. Small to keep the gradient recognisable. |
+| `jiggleDegrees` | 7 | Peak rotation of the first jiggle swing; later swings shrink from here. |
+| `jiggleDuration` | 0.45s | Total length of one jiggle — a quick "no" shake. |
+| `jiggleSwings` | `[7, -4.34, 2.66, -1.26, 0]` | The decay envelope in degrees; Cubic keyframes interpolate between the points. |
+
+## Haptics
+
+`DSHapticStyle` (`Haptics/DSHaptics.swift`): `light`, `medium`, `heavy`, `soft`, `rigid`, `selection`, `success`, `warning`, `error`. Fire with `dsHaptic(.success)`, `DSHapticEngine.shared.fire(.medium, intensity: 0.7)`, or `.dsHapticTap(.light) { }`. No-op on macOS. Components fire their own haptics — don't double up.
+
+## Layout
+
+`DSScreen(backgroundColor:backdrop:)`, `DSHorizontalScroll`, `DSVStack`, `DSHStack`, `DSGrid(minItemWidth:)` in `Layout/DSLayout.swift`.
+
+---
+<!-- source: docs/components/DSButton.md -->
+
+# DSButton
+
+A themed text button with optional icon and loading state. It presses down with a spring and taps out a haptic, so every action feels acknowledged.
+
+![DSButton](../media/DSButton.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSButton.swift`](../../Sources/VelvetUI/Components/DSButton.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ButtonDemo: View {
+    @State private var isSaving = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                DSButton("Save changes", icon: "checkmark", isFullWidth: true, isLoading: isSaving) {
+                    isSaving = true
+                }
+                DSButton("Cancel", variant: .ghost) { }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `title` | `String` | required | Button text (unlabeled first argument). |
+| `variant` | `DSButtonVariant` | `.primary` | `.primary`, `.secondary`, `.outline`, `.ghost` or `.destructive`. |
+| `size` | `DSButtonSize` | `.medium` | `.small` (36pt pill), `.medium` (44pt), `.large` (52pt). |
+| `icon` | `String?` | `nil` | SF Symbol name shown beside the title. |
+| `iconPosition` | `IconPosition` | `.leading` | `.leading` or `.trailing`. |
+| `isFullWidth` | `Bool` | `false` | Stretch to the available width. |
+| `isLoading` | `Bool` | `false` | Shows a spinner, dims the button and disables taps. |
+| `haptic` | `DSHapticStyle` | `.medium` | Haptic fired on tap. |
+| `action` | `() -> Void` | required | Called on tap (trailing closure). |
+
+Icon-only buttons use [`DSIconButton`](DSIconButton.md).
+
+## Variants
+
+| Variant | Look |
+|---|---|
+| `.primary` | Theme accent fill, `onAccent` text. |
+| `.secondary` | Palette secondary fill. |
+| `.outline` | Clear fill with an ink outline. |
+| `.ghost` | Text only, no fill. |
+| `.destructive` | Error-red fill for irreversible actions. |
+
+```swift
+struct ButtonVariantsDemo: View {
+    var body: some View {
+        VStack(spacing: DSSpacing.sm) {
+            DSButton("Primary") { }
+            DSButton("Secondary", variant: .secondary) { }
+            DSButton("Outline", variant: .outline) { }
+            DSButton("Ghost", variant: .ghost) { }
+            DSButton("Delete account", variant: .destructive, icon: "trash") { }
+            DSButton("Next", size: .large, icon: "arrow.right", iconPosition: .trailing) { }
+            DSButton("Tag", size: .small) { }
+        }
+    }
+}
+```
+
+`.small` is a pill; `.medium` and `.large` use the control corner radius.
+
+## Behavior
+
+- Pressing scales the button down with the shared press spring and releases back on lift.
+- A haptic fires on tap (`.medium` by default; pass `haptic:` to change it). Don't add another at the call site.
+- While `isLoading` is true the button shows a spinner, dims to 80% and ignores taps.
+
+## Accessibility
+
+- VoiceOver reads the button as a standard SwiftUI `Button` whose label is `title`; the icon is decorative. While loading it is disabled and read as dimmed.
+- Override the spoken label from outside with `.accessibilityLabel("Save your changes")`.
+- Label text doesn't scale with Dynamic Type yet: the control has a fixed height, so its label keeps a fixed size. Text elsewhere on your screen that uses `.ds(_:)` / `.dsTextStyle(_:)` does scale.
+
+## See also
+
+- [DSIconButton](DSIconButton.md)
+- [DSSlideToConfirm](DSSlideToConfirm.md)
+- [DSToggle](DSToggle.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSIconButton.md -->
+
+# DSIconButton
+
+An icon-only button, with no background, that shrinks under your thumb and ticks a light haptic. Use it for toolbar-style actions like share, favorite and more.
+
+![DSIconButton](../media/DSIconButton.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSButton.swift`](../../Sources/VelvetUI/Components/DSButton.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct IconButtonDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            HStack(spacing: DSSpacing.md) {
+                DSIconButton(icon: "square.and.arrow.up", accessibilityLabel: "Share") { }
+                DSIconButton(icon: "heart", haptic: .medium, accessibilityLabel: "Favorite") { }
+                DSIconButton(icon: "ellipsis", size: 36, accessibilityLabel: "More options") { }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `icon` | `String` | required | SF Symbol name. |
+| `size` | `CGFloat` | `44` | Width and height of the square tappable area in points. The symbol is drawn at 40% of it. |
+| `color` | `Color?` | `nil` | Icon color. Defaults to the palette's primary text color. |
+| `haptic` | `DSHapticStyle` | `.light` | Haptic fired on tap. |
+| `accessibilityLabel` | `String?` | `nil` | What VoiceOver reads, e.g. "Share". When nil, VoiceOver falls back to the SF Symbol's own description. |
+| `action` | `() -> Void` | required | Called on tap (trailing closure). |
+
+`DSIconButton` lives in `DSButton.swift`.
+
+## Variants
+
+There are no style variants; adjust `size`, `color` and `haptic`:
+
+```swift
+DSIconButton(icon: "trash", size: 52, color: Color.red, haptic: .warning, accessibilityLabel: "Delete") { }
+```
+
+## Behavior
+
+- Press uses the stronger icon press scale (shrinks more than a text button) with the shared press spring.
+- A `.light` haptic fires on tap by default.
+
+## Accessibility
+
+- The button has no visible text, so always pass `accessibilityLabel:` (e.g. "Share"). Without it VoiceOver falls back to the SF Symbol's own description, which is often unhelpful (for example "ellipsis").
+- You can also set it from outside with `.accessibilityLabel("Share")`.
+- Keep `size` at 44pt or more for a comfortable touch target.
+
+## See also
+
+- [DSButton](DSButton.md)
+- [DSToggle](DSToggle.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSSlideToConfirm.md -->
+
+# DSSlideToConfirm
+
+A slide-to-confirm gate for irreversible actions like payments. The label dissolves under your finger, motes trail the knob, and the result lands with a success or refusal haptic.
+
+![DSSlideToConfirm](../media/DSSlideToConfirm.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSlideToConfirm.swift`](../../Sources/VelvetUI/Components/DSSlideToConfirm.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct SlideToConfirmDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                Text("Pay $24.00").ds(.title2)
+                DSSlideToConfirm("Slide to pay", confirmedLabel: "Paid") {
+                    try await chargeCard(amountCents: 2400)
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+
+    // Stand-in for your payment call. Throwing re-opens the slider for a retry.
+    private func chargeCard(amountCents: Int) async throws {
+        try await Task.sleep(for: .seconds(1))
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `label` | `String` | required | Text on the track (unlabeled first argument). |
+| `icon` | `String` | `"chevron.right"` | SF Symbol on the knob. |
+| `confirmedLabel` | `String` | `"Confirmed"` | Text shown once the action succeeds. |
+| `accent` | `Color?` | `nil` | Knob fill. Defaults to the theme accent. The trail is always the theme gradient. |
+| `finish` | `DSSlideFinish` | `.settle` | What happens after success: `.settle` or `.morphAndVanish`. |
+| `onConfirm` | `() async throws -> Void` | required | Runs when the slide commits. Throwing counts as a refusal. |
+
+A plain synchronous `() -> Void` closure also compiles, since it is a subtype of `() async throws -> Void`.
+
+## Variants
+
+- `.settle` (default): the control stays in place showing a check and `confirmedLabel`. Right for destructive confirmations where the screen doesn't change.
+- `.morphAndVanish`: the pill collapses to a circle, resolves, then dissolves. It keeps its slot so your layout doesn't jump; swap in your own success state.
+
+```swift
+struct SlideToConfirmVanishDemo: View {
+    @State private var paid = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                if paid {
+                    Text("Payment received").ds(.title2)
+                } else {
+                    DSSlideToConfirm("Slide to pay", finish: .morphAndVanish) {
+                        try await Task.sleep(for: .seconds(1))
+                        paid = true
+                    }
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+There is no reset API; re-mount with `.id(attempt)` to run it again.
+
+## Behavior
+
+- The knob follows your finger 1:1, with soft detent ticks along the track. Crossing 75% of the travel fires a rigid haptic once.
+- Release before the threshold and the knob springs back with a light haptic.
+- While `onConfirm` runs a spinner shows for at least half a second (applied after the closure returns, never padding a slow call). Success fires a success haptic.
+- If `onConfirm` throws, an error haptic fires and the control re-opens for a retry. It never words the failure; telling the user why is your job.
+- Reduce Motion: the per-letter label stagger becomes a single fade. Reduce Motion or Reduce Transparency removes the motes.
+
+## Accessibility
+
+- One element, read as a button with the `label` you passed and the hint "Double-tap to confirm". VoiceOver users confirm with a double-tap, no dragging.
+- Value is "Processing" while `onConfirm` runs, then the `confirmedLabel` once done.
+- Override the label with `.accessibilityLabel("Pay 24 dollars")` on the outside.
+- Dynamic Type: the label uses `.ds(.button)` and scales, but the track is a fixed 56pt tall, so long labels at large sizes will clip.
+
+## See also
+
+- [DSButton](DSButton.md)
+- [DSToggle](DSToggle.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSToggle.md -->
+
+# DSToggle
+
+A themed on/off switch whose knob springs across a pill track and snaps with a rigid haptic.
+
+![DSToggle](../media/DSToggle.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToggle.swift`](../../Sources/VelvetUI/Components/DSToggle.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ToggleDemo: View {
+    @State private var notifications = true
+    @State private var compact = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                DSToggle("Push notifications", isOn: $notifications)
+                DSToggle("Compact layout", isOn: $compact, size: .small)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `label` | `String?` | `nil` | Text shown beside the switch (unlabeled first argument). |
+| `isOn` | `Binding<Bool>` | required | The on/off state. |
+| `size` | `DSToggleSize` | `.medium` | `.small` (42x26) or `.medium` (51x31). |
+| `onColor` | `Color?` | `nil` | Track color when on. Defaults to the theme accent. |
+| `haptic` | `DSHapticStyle` | `.rigid` | Haptic fired on change. |
+
+
+
+## Variants
+
+- `.medium` matches the native switch size; `.small` suits dense settings lists.
+- Without a label it is just the switch, for use in your own rows:
+
+```swift
+DSToggle(isOn: $notifications).accessibilityLabel("Push notifications")
+```
+- `.disabled(true)` dims it to 50% and suppresses the haptic.
+
+## Behavior
+
+- The knob springs across the track with `DSAnimation.springSnappy`. The track fills with `onColor` (theme accent by default) when on and with the palette border color when off.
+- A rigid haptic fires on every change (not when disabled).
+
+## Accessibility
+
+- One accessibility element. Its label is the `label` text; when you use the toggle without a label, add `.accessibilityLabel("…")` yourself.
+- Value is "On" or "Off", with the toggle trait, and it reads as dimmed when `.disabled`.
+- Dynamic Type: the optional label text scales with the user's text size.
+
+## See also
+
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [DSStepper](DSStepper.md)
+- [DSButton](DSButton.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSStepper.md -->
+
+# DSStepper
+
+A minus / number / plus stepper on a glass track. The number rolls, and hitting a limit wiggles the track with a warning haptic so you feel the refusal.
+
+![DSStepper](../media/DSStepper.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSStepper.swift`](../../Sources/VelvetUI/Components/DSStepper.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct StepperDemo: View {
+    @State private var guests = 2
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            HStack {
+                Text("Guests").ds(.title3)
+                Spacer()
+                DSStepper(value: $guests, in: 1...8)
+                    .accessibilityLabel("Guests")
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `value` | `Binding<Int>` | required | The current number. |
+| `range` | `ClosedRange<Int>` | `0...99` | Allowed values. Declared as `in range:` at the call site. |
+| `step` | `Int` | `1` | Amount added or removed per tap. A non-positive step is treated as 1. |
+| `accent` | `Color?` | `nil` | Tint of the − and + glyphs. Defaults to theme ink (the number itself always uses the primary text color). |
+
+Stepping clamps into `range`, so a `step` that doesn't divide the range evenly lands on the bound instead of overshooting.
+
+## Variants
+
+```swift
+DSStepper(value: $quantity, in: 0...10, step: 2)
+```
+At a bound the buttons dim but stay tappable on purpose, so the refusal can be felt.
+
+## Behavior
+
+- The number rolls with a numeric text transition on each change.
+- Each successful step fires a selection haptic.
+- At a bound the value doesn't move; the track does a short jiggle with a warning haptic.
+- Reduce Motion: the jiggle is skipped (the warning haptic still fires).
+- Reduce Transparency: the glass track becomes a solid elevated background.
+
+## Accessibility
+
+- One adjustable element: "Stepper", value is the number. Swipe up or down to step.
+- Override the label with `.accessibilityLabel("Guests")`, as in the snippet above.
+- Dynamic Type: the control has a fixed 44pt height and the glyphs are fixed size. The number uses `.ds(.numeric)` and scales, but its width is reserved from the range, so keep ranges short.
+
+## See also
+
+- [DSToggle](DSToggle.md)
+- [DSRating](DSRating.md)
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSRating.md -->
+
+# DSRating
+
+A star rating you can drag or tap, with a selection tick per star and a pop on the active one. It also has a read-only form with fractional fills.
+
+![DSRating](../media/DSRating.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRating.swift`](../../Sources/VelvetUI/Components/DSRating.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct RatingDemo: View {
+    @State private var stars = 3.0
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                Text("How was your stay?").ds(.title3)
+                DSRating(rating: $stars, step: 0.5)
+                DSRating(value: 4.5)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `rating` | `Binding<Double>` | required | Current rating, in `0...count`. |
+| `count` | `Int` | `5` | Number of stars (minimum 1). |
+| `step` | `Double` | `1` | Snap increment: `1` for whole stars, `0.5` for half stars. |
+| `symbol` | `String` | `"star.fill"` | SF Symbol for a filled star. |
+| `emptySymbol` | `String` | `"star"` | SF Symbol for an empty star. |
+| `size` | `CGFloat` | `28` | Point size of each star. |
+| `spacing` | `CGFloat` | `DSSpacing.xs` | Gap between stars. |
+| `tint` | `Color?` | `nil` | Rated star color. Defaults to the warning amber. |
+| `emptyColor` | `Color?` | `nil` | Unrated star color. Defaults to the border color. |
+| `haptics` | `Bool` | `true` | Fire haptics while rating. |
+
+**Read-only init:** `DSRating(value: Double, count: Int = 5, symbol: String = "star.fill", emptySymbol: String = "star", size: CGFloat = 20, spacing: CGFloat = DSSpacing.xxs, tint: Color? = nil, emptyColor: Color? = nil)`. It fills stars fractionally (4.5 shows four and a half) and ignores touches.
+
+## Variants
+
+```swift
+DSRating(rating: $stars, count: 10, symbol: "heart.fill", emptySymbol: "heart", tint: .pink)
+```
+Use `step: 0.5` for half stars. Use `DSRating(value:)` for displaying averages.
+
+## Behavior
+
+- Drag across the stars or tap one; the value snaps to `step`.
+- A selection tick fires per star crossed and a light haptic on release. The active star pops with a bouncy spring.
+
+## Accessibility
+
+- Editable: one adjustable element labelled "Rating" with the value "3 out of 5 stars". Swipe up or down to change it.
+- The read-only init has the same label and value format ("Rating", "3.5 out of 5 stars"). VoiceOver still announces it as adjustable, but swiping does nothing.
+- Dynamic Type: stars are sized by the `size` parameter, so they don't scale with text size.
+
+## See also
+
+- [DSStepper](DSStepper.md)
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [DSToggle](DSToggle.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSSegmentedControl.md -->
+
+# DSSegmentedControl
+
+A generic segmented control where a filled pill (or an accent underline) slides between options, with a selection tick on each change.
+
+![DSSegmentedControl](../media/DSSegmentedControl.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSegmentedControl.swift`](../../Sources/VelvetUI/Components/DSSegmentedControl.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct SegmentedControlDemo: View {
+    enum Range: Hashable { case day, week, month }
+
+    @State private var range = Range.week
+    @State private var tab = "Overview"
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSSegmentedControl(
+                    selection: $range,
+                    segments: [
+                        DSSegment("Day", value: Range.day),
+                        DSSegment("Week", value: Range.week),
+                        DSSegment("Month", value: Range.month),
+                    ]
+                )
+                DSSegmentedControl(
+                    selection: $tab,
+                    options: ["Overview", "Details", "Reviews"],
+                    style: .underline
+                )
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `selection` | `Binding<Value>` | required | The selected value (`Value: Hashable`). |
+| `segments` | `[DSSegment<Value>]` | required | The options. Build each with `DSSegment(_ title: String, value: Value, icon: String? = nil)`. |
+| `style` | `DSSegmentedControlStyle` | `.pill` | `.pill` or `.underline`. |
+| `accent` | `Color?` | `nil` | `.underline` only: overrides both the underline and the selected label. Without it the underline is the theme accent and the selected label is theme ink. Ignored by `.pill`. |
+| `haptic` | `DSHapticStyle` | `.selection` | Haptic fired when the selection changes. |
+
+**String shortcut:** `DSSegmentedControl(selection: Binding<String>, options: [String], style: DSSegmentedControlStyle = .pill, accent: Color? = nil, haptic: DSHapticStyle = .selection)`, available when `Value` is `String`.
+
+## Variants
+
+- `.pill`: a raised elevated-background indicator on a rounded secondary-background track, like the native iOS control.
+- `.underline`: an accent underline beneath the labels, tab-bar style.
+- Segments can carry an SF Symbol: `DSSegment("Map", value: Mode.map, icon: "map")`.
+
+## Behavior
+
+- The indicator slides between segments with a snappy spring (shared geometry).
+- A selection haptic fires on each change; tapping the already-selected segment does nothing.
+
+## Accessibility
+
+- Each segment is a separate button labelled with its title, and marked selected when active. An icon is hidden from VoiceOver when the segment has a title.
+- Label text doesn't scale with Dynamic Type yet: the control has a fixed height, so its label keeps a fixed size. Text elsewhere on your screen that uses `.ds(_:)` / `.dsTextStyle(_:)` does scale.
+
+## See also
+
+- [DSToggle](DSToggle.md)
+- [DSPageControl](DSPageControl.md)
+- [DSStepper](DSStepper.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSTextField.md -->
+
+# DSTextField
+
+A labelled text input with leading icon, secure mode and validation states, plus a matching `DSSearchBar` with a clear button.
+
+![DSTextField](../media/DSTextField.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTextField.swift`](../../Sources/VelvetUI/Components/DSTextField.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct TextFieldDemo: View {
+    @State private var email = ""
+    @State private var password = ""
+    @State private var query = ""
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                DSSearchBar(placeholder: "Search destinations", text: $query)
+                DSTextField(
+                    label: "Email",
+                    placeholder: "you@example.com",
+                    icon: "envelope",
+                    text: $email,
+                    state: email.isEmpty || email.contains("@") ? .normal : .error("Enter a valid email")
+                )
+                DSTextField(
+                    label: "Password",
+                    placeholder: "At least 8 characters",
+                    icon: "lock",
+                    text: $password,
+                    isSecure: true
+                )
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `label` | `String` | `""` | Caption above the field; hidden when empty. |
+| `placeholder` | `String` | required | Placeholder text. |
+| `icon` | `String?` | `nil` | Leading SF Symbol. |
+| `text` | `Binding<String>` | required | The field's text. |
+| `state` | `DSTextFieldState` | `.normal` | `.normal`, `.focused`, `.error(String)`, `.success` or `.disabled`. |
+| `isSecure` | `Bool` | `false` | Use a secure (password) field. |
+
+**DSSearchBar:** `DSSearchBar(placeholder: String = "Search", text: Binding<String>)`. A pill-shaped search field with a magnifier and a clear button that appears once there is text.
+
+## Variants
+
+- `.normal`: neutral. Real keyboard focus tints the icon and a 1.5pt outline with theme ink. `.focused` is accepted but looks the same as `.normal`; focus is read from the system, not from `state`.
+- `.error("message")`: red outline, a red warning icon and the message below the field.
+- `.success`: a green check mark appears (the green outline shows only while focused).
+- `.disabled`: dimmed to 50%.
+
+## Behavior
+
+- Focusing a field tints it with the theme ink; validation states change color and icon.
+- The search bar's clear button fires a light haptic.
+
+## Accessibility
+
+- The field is a standard SwiftUI `TextField` (or `SecureField`); VoiceOver uses its placeholder as the field name, and `label` is shown as visible text above it.
+- Override the spoken name with `.accessibilityLabel("Email address")`.
+- Dynamic Type: the caption above the field and the error message use `.ds(_:)` and scale. The typed text and placeholder use a fixed-size font inside a fixed-height box (48pt; `DSSearchBar` is 44pt), so they do not.
+
+## See also
+
+- [DSCodeField](DSCodeField.md)
+- [DSButton](DSButton.md)
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSCodeField.md -->
+
+# DSCodeField
+
+A one-time-code input of separate digit boxes with a blinking caret, a springy active box, and a shake on a wrong code.
+
+![DSCodeField](../media/DSCodeField.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCodeField.swift`](../../Sources/VelvetUI/Components/DSCodeField.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct CodeFieldDemo: View {
+    @State private var code = ""
+    @State private var state = DSCodeFieldState.normal
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                Text("Enter the 6-digit code we texted you").ds(.callout)
+                DSCodeField(code: $code, state: state) { entered in
+                    state = (entered == "123456") ? .success : .error
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `length` | `Int` | `6` | Number of digit boxes. |
+| `code` | `Binding<String>` | required | The digits entered so far. Digits only, clamped to `length`. |
+| `state` | `DSCodeFieldState` | `.normal` | `.normal`, `.error` or `.success`. |
+| `boxHeight` | `CGFloat` | `56` | Height of each box. |
+| `onComplete` | `((String) -> Void)?` | `nil` | Called with the full code once `length` digits are entered. |
+
+
+
+## Variants
+
+- `.normal`: neutral boxes.
+- `.error`: red boxes, a shake and an error haptic. Clear `code` and reset `state` to retry.
+- `.success`: green boxes and a success haptic.
+
+## Behavior
+
+- Tap anywhere on the field to focus a hidden text field that owns the keyboard (number pad on iOS).
+- On iOS the field supports SMS one-time-code autofill.
+- The active box scales up with a snappy spring, a caret blinks in it, and each digit fires a light haptic.
+
+## Accessibility
+
+- One element labelled "Verification code" that accepts typing.
+- Its value spells the digits and progress, for example "1 2 3, 3 of 6 digits", plus ", incorrect code" for `.error` or ", verified" for `.success`.
+- Dynamic Type: the digits use `.ds(.title1)` and scale, but each box keeps the fixed `boxHeight`, so very large sizes can clip.
+
+## See also
+
+- [DSTextField](DSTextField.md)
+- [DSButton](DSButton.md)
+- [DSSlideToConfirm](DSSlideToConfirm.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSPageControl.md -->
+
+# DSPageControl
+
+An animated page indicator where the active dot springs open into a capsule. A drop-in, nicer replacement for UIPageControl.
+
+![DSPageControl](../media/DSPageControl.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSPageControl.swift`](../../Sources/VelvetUI/Components/DSPageControl.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct PageControlDemo: View {
+    @State private var page = 0
+    private let titles = ["Welcome", "Pick a theme", "Turn on haptics", "You're set"]
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                Text(titles[page]).ds(.title2)
+                DSPageControl(currentPage: $page, numberOfPages: titles.count)
+                DSButton("Next", isFullWidth: true) {
+                    page = (page + 1) % titles.count
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `currentPage` | `Binding<Int>` | required | Index of the selected page. |
+| `numberOfPages` | `Int` | required | Total number of pages. |
+| `activeColor` | `Color?` | `nil` | Selected indicator fill. Defaults to the theme accent. |
+| `inactiveColor` | `Color?` | `nil` | Unselected dot fill. Defaults to the palette border color. |
+| `dotSize` | `CGFloat` | `DSSpacing.xs` | Diameter of an unselected dot (also the control height). |
+| `activeWidth` | `CGFloat` | `DSSpacing.xl` | Width the selected indicator expands to. |
+| `spacing` | `CGFloat` | `DSSpacing.xs` | Gap between indicators. |
+| `allowsTap` | `Bool` | `true` | Tapping a dot jumps to that page. |
+
+
+
+## Variants
+
+- Interactive (default): tap a dot to jump to it.
+- Pass `allowsTap: false` for a purely visual indicator, e.g. driven by a `TabView` or scroll position.
+
+## Behavior
+
+- The selected dot stretches into a capsule with a smooth spring as the page changes.
+- Tapping a dot fires a selection haptic.
+
+## Accessibility
+
+- One adjustable element labelled "Page" with the value "2 of 5". Swipe up or down to change pages.
+- When `allowsTap` is false it is read-only.
+- Dynamic Type: dot sizes come from `dotSize`, so they don't scale with text size.
+
+## See also
+
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [DSButton](DSButton.md)
+- [DSStepper](DSStepper.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSTabBar.md -->
+
+# DSTabBar
+
+A floating glass tab bar. The selected tab sits on an accent capsule that slides between tabs, and its icon swaps to the filled variant with one bounce.
+
+![DSTabBar](../media/DSTabBar.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTabBar.swift`](../../Sources/VelvetUI/Components/DSTabBar.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct TabBarDemo: View {
+    enum Tab: Hashable { case home, search, inbox, profile }
+    @State private var tab = Tab.home
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            Text(String(describing: tab).capitalized).ds(.title1)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .safeAreaInset(edge: .bottom) {
+            DSTabBar(selection: $tab, items: [
+                DSTabItem("Home", value: .home, icon: "house", selectedIcon: "house.fill"),
+                DSTabItem("Search", value: .search, icon: "magnifyingglass"),
+                DSTabItem("Inbox", value: .inbox, icon: "tray", selectedIcon: "tray.fill", badge: 3),
+                DSTabItem("Profile", value: .profile, icon: "person", selectedIcon: "person.fill")
+            ])
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+`DSTabBar`:
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `selection` | `Binding<Value>` | required | The selected tab's value. `Value` is any `Hashable`. |
+| `items` | `[DSTabItem<Value>]` | required | The tabs, in order. |
+| `accent` | `Color?` | `nil` | Fill of the selected capsule. Defaults to the theme accent. |
+| `haptic` | `DSHapticStyle` | `.selection` | Fired when the selection changes. |
+
+`DSTabItem(_ title:, value:, icon:, selectedIcon:, badge:)`:
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `title` | `String` | required | Short label under the icon. |
+| `value` | `Value` | required | Written to `selection` when chosen. |
+| `icon` | `String` | required | SF Symbol name. |
+| `selectedIcon` | `String?` | `nil` | Symbol shown while selected. `nil` reuses `icon`. |
+| `badge` | `Int?` | `nil` | Count badge on the icon. `nil` or `0` shows none. |
+
+## Variants
+
+```swift
+DSTabBar(selection: $section, items: [
+    DSTabItem("Feed", value: "feed", icon: "square.stack"),
+    DSTabItem("Map", value: "map", icon: "map"),
+    DSTabItem("Saved", value: "saved", icon: "bookmark", selectedIcon: "bookmark.fill")
+], accent: .indigo)
+```
+Three tabs with a custom accent and `String` values. Any `Hashable` works, including enums.
+
+## Behavior
+
+- The bar is a glass capsule with a large shadow. It sizes to its container, so place it with `.safeAreaInset(edge: .bottom)` and `.dsScreenPadding()`.
+- Tabs share the width equally; labels never change width on selection, so nothing jitters.
+- Selecting a tab slides the accent capsule with a snappy spring, swaps to `selectedIcon`, and bounces the icon once. A selection haptic fires only when the selection changes; tapping the selected tab does nothing.
+- Pressing a tab scales it slightly.
+- Reduce Motion: the capsule moves with a short ease (no overshoot) and the bounce is skipped.
+
+## Accessibility
+
+- The bar is a tab-bar container; each tab is a button labelled with its title. The selected tab has the selected trait.
+- A badge is read as the value, for example "3 new". Tabs without a badge have no value.
+- The layout uses padding rather than a fixed height, so labels and icons grow with Dynamic Type.
+
+## See also
+
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [DSBadge](DSBadge.md)
+- [DSPageControl](DSPageControl.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSCard.md -->
+
+# DSCard
+
+A glass surface for grouping content: thin material, a 1pt specular edge and a soft shadow, with a press-to-scale interactive variant and an image card for media.
+
+![DSCard](../media/DSCard.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCard.swift`](../../Sources/VelvetUI/Components/DSCard.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct CardDemo: View {
+    @State private var opened = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                DSCard {
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                        Text("This week").ds(.title2)
+                        Text("4 sessions · 2 h 35 min").ds(.callout)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                DSInteractiveCard(action: { opened.toggle() }) {
+                    HStack {
+                        Text(opened ? "Opened" : "Open plan").ds(.body)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                }
+
+                DSImageCard(
+                    title: "Cabin in the woods",
+                    subtitle: "$120 / night",
+                    badge: "New"
+                )
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+Glass looks best over `.dsBackdrop()` or `DSScreen(backdrop: true)`. Without a backdrop `.elevated` still reads as a plain elevated card.
+
+## Parameters
+
+### DSCard
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `style` | `DSCardStyle` | `.elevated` | Surface treatment: `.flat`, `.elevated`, `.outlined`. |
+| `padding` | `CGFloat` | `DSSpacing.md` | Inner padding around the content. |
+| `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius (20). Use `DSRadius.surface` for nested cards. |
+| `content` | `@ViewBuilder () -> Content` | required | The card's content (trailing closure). |
+
+### DSInteractiveCard
+
+Same as `DSCard`, plus a haptic and an action. Parameters in order:
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `style` | `DSCardStyle` | `.elevated` | Surface treatment. |
+| `padding` | `CGFloat` | `DSSpacing.md` | Inner padding. |
+| `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius. |
+| `haptic` | `DSHapticStyle` | `.light` | Haptic fired on tap. |
+| `action` | `() -> Void` | required | Called on tap, after the haptic. |
+| `content` | `@ViewBuilder () -> Content` | required | The card's content. |
+
+### DSImageCard
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `imageURL` | `URL?` | `nil` | Remote image, loaded with `AsyncImage`. |
+| `imageName` | `String?` | `nil` | Asset-catalog image. Wins over `imageURL` when both are set. |
+| `title` | `String` | required | Up to two lines, `.title3`. |
+| `subtitle` | `String?` | `nil` | One line, `.callout`, secondary color. |
+| `badge` | `String?` | `nil` | Pill drawn on the image's top-leading corner (accent fill). |
+| `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius of the image area. |
+
+## Variants
+
+| `DSCardStyle` | Surface | Edge | Shadow |
+|---|---|---|---|
+| `.elevated` (default) | Thin glass | yes | `.md` |
+| `.outlined` | Thicker, denser glass | yes | none |
+| `.flat` | Translucent wash (`theme.subtleFill`) | no | none |
+
+`.flat` is for grouping inside another surface. There are no borders: separation comes from material density, the edge highlight and shadow.
+
+```swift
+import VelvetUI
+
+struct CardStylesDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                DSCard(style: .outlined) {
+                    Text("Denser glass, no shadow").ds(.body)
+                }
+
+                DSCard {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("Nested").ds(.title3)
+                        DSCard(style: .flat, cornerRadius: DSRadius.surface) {
+                            Text("Flat card inside an elevated one").ds(.callout)
+                        }
+                    }
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Behavior
+
+- `DSInteractiveCard` scales to `DSPress.scale` (0.96) while pressed using `DSPress.animation`, and fires `haptic` (default `.light`) on tap.
+- `DSImageCard` shows a shimmering placeholder until the image loads; the image gets the glass edge highlight.
+- The shimmer placeholder stays still under Reduce Motion. Under Reduce Transparency the glass becomes a solid elevated background. On a screen without a backdrop, `.flat` uses `backgroundSecondary` so it stays visible.
+
+## Accessibility
+
+- `DSCard` adds no accessibility semantics of its own: its content is read as written.
+- `DSInteractiveCard` is a real `Button` (plain style), so VoiceOver reads the card's text content as the button label. Add `.accessibilityLabel("…")` or `.accessibilityHint("…")` on the outside when the visible text is not enough.
+- `DSImageCard` has no built-in image description. Label it from outside, for example `.accessibilityLabel("Cabin in the woods, $120 per night")`.
+- Text uses `.ds(_:)` styles, which scale with Dynamic Type; give card content room to grow.
+
+## See also
+
+- [DSListCell](DSListCell.md) for rows inside a card
+- [DSBadge](DSBadge.md) for status labels
+- [DSButton](DSButton.md) for actions
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSListCell.md -->
+
+# DSListCell
+
+A consistent list row with leading and trailing slots, an optional tap action, a section header and a hairline divider.
+
+![DSListCell](../media/DSListCell.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSList.swift`](../../Sources/VelvetUI/Components/DSList.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ListDemo: View {
+    @State private var selected = "None yet"
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: 0) {
+                DSSectionHeader("Account", action: "Edit") { selected = "Edit" }
+
+                DSCard(padding: 0) {
+                    VStack(spacing: 0) {
+                        DSListCell(
+                            title: "Ada Lovelace",
+                            subtitle: "ada@example.com",
+                            leading: { DSAvatar(name: "Ada Lovelace") },
+                            action: { selected = "Profile" }
+                        )
+                        DSDivider(inset: DSSpacing.screenHorizontal)
+                        DSListCell(
+                            title: "Notifications",
+                            trailing: { DSCountBadge(count: 3) },
+                            action: { selected = "Notifications" }
+                        )
+                        DSDivider(inset: DSSpacing.screenHorizontal)
+                        DSListCell(title: "Version", subtitle: "0.2.0")
+                    }
+                }
+                .padding(.horizontal, DSSpacing.screenHorizontal)
+
+                Text("Last tapped: \(selected)")
+                    .ds(.caption1)
+                    .padding(DSSpacing.screenHorizontal)
+            }
+        }
+    }
+}
+```
+
+Wrap groups of cells in a `DSCard(padding: 0)` for the glass look. Cells add their own horizontal padding (`DSSpacing.screenHorizontal`), so use `padding: 0` on the card.
+
+## Parameters
+
+### DSListCell
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `title` | `String` | required | Primary text (`.body`). |
+| `subtitle` | `String?` | `nil` | Secondary text (`.callout`, secondary color). |
+| `leading` | `@ViewBuilder () -> Leading` | `{ EmptyView() }` | View before the text, such as an icon or `DSAvatar`. |
+| `trailing` | `@ViewBuilder () -> Trailing` | `{ EmptyView() }` | View after the text, such as a `DSCountBadge`. |
+| `action` | `(() -> Void)?` | `nil` | When set, the cell is a button with a chevron. |
+
+### DSSectionHeader
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `_ title` | `String` | required | Uppercase overline title. |
+| `action` | `String?` | `nil` | Label of the trailing text button. |
+| `onAction` | `(() -> Void)?` | `nil` | Called when the button is tapped. The button only appears when both `action` and `onAction` are set. |
+
+### DSDivider
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `inset` | `CGFloat` | `0` | Leading inset, so the line can start under the text instead of under the icon. |
+
+## Variants
+
+- **Static row**: omit `action` and the cell is plain content without chevron.
+- **Tappable row**: pass `action` and the whole row (padding included) becomes the tap target, with a trailing chevron and a `.light` haptic.
+- **Divider**: a 1pt `palette.divider` line; it is the only separator, there are no borders.
+
+## Behavior
+
+- Tappable cells use a plain button style: no system highlight, no press animation. Wrap them in `DSInteractiveCard` if you want a scale-on-press card instead.
+- The header action fires a `.light` haptic as well.
+
+## Accessibility
+
+- A tappable cell is a `Button`: VoiceOver reads the title, subtitle and any text in the slots as one label, and activating it calls `action`. A static cell is a plain stack whose pieces are read in order.
+- The chevron is a decorative SF Symbol; the section header title is read as a normal text element.
+- Override with `.accessibilityLabel("…")` or `.accessibilityHint("…")` on the cell.
+- Text uses `.ds(_:)` styles, so rows grow with Dynamic Type.
+
+## See also
+
+- [DSCard](DSCard.md) for grouping rows
+- [DSAvatar](DSAvatar.md) and [DSBadge](DSBadge.md) for slots
+- [DSEmptyState](DSEmptyState.md) for an empty list
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSCarousel.md -->
+
+# DSCarousel
+
+A snapping carousel where the neighbouring items peek in at the edges and lean away with a little depth. The page index is a plain `Int`, so it pairs directly with `DSPageControl`.
+
+![DSCarousel](../media/DSCarousel.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCarousel.swift`](../../Sources/VelvetUI/Components/DSCarousel.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct Trip: Identifiable {
+    let id: Int
+    let city: String
+    let price: String
+}
+
+struct CarouselDemo: View {
+    @State private var page = 0
+    private let trips = [
+        Trip(id: 0, city: "Lisbon", price: "$480"),
+        Trip(id: 1, city: "Kyoto", price: "$1,240"),
+        Trip(id: 2, city: "Oaxaca", price: "$620")
+    ]
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.md) {
+                DSCarousel(trips, currentPage: $page) { trip in
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                        Text(trip.city).ds(.title2)
+                        Text(trip.price).ds(.callout)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                    .padding(DSSpacing.md)
+                    .dsSurface(.glass, radius: DSRadius.card)
+                }
+                .frame(height: 200)
+
+                DSPageControl(currentPage: $page, numberOfPages: trips.count)
+            }
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `data` | `RandomAccessCollection` of `Identifiable` | required | The items. Each element's `id` identifies its page. |
+| `currentPage` | `Binding<Int>` | none | The page index. Scrolling updates it; changing it scrolls there with a spring. Out-of-range values are clamped. Leave it out and the carousel keeps its own index. |
+| `peek` | `CGFloat` | `DSSpacing.xxxl` | Margin on each side of the centred item. `peek - spacing` of each neighbour shows. |
+| `spacing` | `CGFloat` | `DSSpacing.sm` | Gap between items. |
+| `haptic` | `DSHapticStyle?` | `.selection` | Fired once per page change. `nil` for none. |
+| `content` | `(Element) -> View` | required | The view for one item. Trailing closure. |
+
+Each item is as wide as the carousel minus `peek` on both sides. Give the carousel a height and let each item fill it with `.frame(maxHeight: .infinity)`: content taller than the carousel is clipped.
+
+## Variants
+
+```swift
+struct CarouselCompactDemo: View {
+    private let tags = [
+        Trip(id: 0, city: "Lisbon", price: "$480"),
+        Trip(id: 1, city: "Kyoto", price: "$1,240")
+    ]
+
+    var body: some View {
+        DSCarousel(tags, peek: DSSpacing.lg, spacing: DSSpacing.sm, haptic: nil) { trip in
+            Text(trip.city)
+                .ds(.title3)
+                .frame(maxWidth: .infinity, minHeight: 72)
+                .dsSurface(.glassThin, radius: DSRadius.surface)
+        }
+        .frame(height: 80)
+    }
+}
+```
+Smaller peek and spacing, no haptic. Without `currentPage` the carousel manages its own index.
+
+## Behavior
+
+- Scrolling snaps to whole items.
+- Items away from the centre shrink to about 90%, fade to about 60% and yaw a few degrees towards the centre.
+- Setting `currentPage` from code scrolls there with `DSAnimation.springSmooth` (without animation under Reduce Motion). Only user scrolling fires the haptic.
+- Reduce Motion: the scale, fade and yaw are skipped (items stay at full size). Snapping stays.
+
+## Accessibility
+
+- The carousel is a container labelled "Carousel" whose value reads "Page 2 of 5". Items stay individually accessible.
+- Give each item its own accessibility label inside `content`.
+
+## See also
+
+- [DSPageControl](DSPageControl.md)
+- [DSCard](DSCard.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSSheet.md -->
+
+# DSSheet
+
+A Velvet-styled native sheet: detents, a visible grabber, a glass background, and your theme carried into the content.
+
+![DSSheet](../media/DSSheet.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSheet.swift`](../../Sources/VelvetUI/Components/DSSheet.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct SheetDemo: View {
+    @State private var showShare = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            DSButton("Share trip", icon: "square.and.arrow.up") { showShare = true }
+                .dsScreenPadding()
+        }
+        .dsSheet(isPresented: $showShare) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                Text("Share trip").ds(.title2)
+                DSListCell(title: "Copy link", leading: { Image(systemName: "link") })
+                DSListCell(title: "Message", leading: { Image(systemName: "message") })
+            }
+            .padding(DSSpacing.xl)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isPresented` | `Binding<Bool>` | required | Whether the sheet is showing. |
+| `item` | `Binding<Item?>` | required | The item-driven overload: the sheet shows while non-nil. `Item` is `Identifiable`. |
+| `detents` | `Set<PresentationDetent>` | `[.medium, .large]` | Heights the sheet can rest at. |
+| `onDismiss` | `(() -> Void)?` | `nil` | Called after dismissal. |
+| `content` | `() -> Content` (or `(Item) -> Content`) | required | The sheet body. |
+
+## When to use it
+
+Use `dsSheet` instead of plain `.sheet` when you want the Velvet look without repeating the modifiers: it sets the detents and the visible grabber, picks a glass background, and passes the theme into the sheet (a sheet is a separate view tree, so your presenter's theme would otherwise reset to the default). Keep plain `.sheet` when you need a fully custom background or presentation.
+
+## Variants
+
+Small confirmation sheet with a fixed height:
+
+```swift
+.dsSheet(isPresented: $confirming, detents: [.height(220)]) {
+    VStack(spacing: DSSpacing.md) {
+        Text("Delete this trip?").ds(.title3)
+        DSButton("Delete", variant: .destructive, isFullWidth: true) { confirming = false }
+    }
+    .padding(DSSpacing.xl)
+}
+```
+
+Maps-style persistent sheet: the content behind stays interactive while the sheet is at its smaller detent.
+
+```swift
+.dsSheet(isPresented: $showPlaces, detents: [.height(160), .medium, .large]) {
+    PlacesList()
+        .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+        .interactiveDismissDisabled()
+}
+```
+
+Item-driven: the sheet shows while the item is non-nil.
+
+```swift
+.dsSheet(item: $selectedTrip) { trip in
+    Text(trip.name).ds(.title2).padding(DSSpacing.xl)
+}
+```
+
+## Behavior
+
+- It is the system sheet: interactive dismissal, scroll hand-off and keyboard handling all come from SwiftUI.
+- Applies `.presentationDetents` and a visible drag indicator.
+- On iOS 26 and macOS 26 the system background (Liquid Glass) is left alone. On earlier systems the background is `.regularMaterial`.
+- Reduce Transparency: the background is the solid elevated surface color on every system.
+- The content gets the presenter's theme and is marked as not on the gradient backdrop.
+- No haptic: presenting a sheet is not an action.
+
+## Accessibility
+
+- VoiceOver treats it as a standard sheet; the grabber supports the standard dismiss gesture.
+- Give the sheet content its own heading and labelled controls.
+- Honors Reduce Transparency.
+
+## See also
+
+- [DSCard](DSCard.md)
+- [DSListCell](DSListCell.md)
+- [DSToast](DSToast.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSBadge.md -->
+
+# DSBadge
+
+Compact pill labels for status and categories, plus a notification count badge that hides itself at zero and caps at 99+.
+
+![DSBadge](../media/DSBadge.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSBadge.swift`](../../Sources/VelvetUI/Components/DSBadge.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct BadgeDemo: View {
+    @State private var unread = 3
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                HStack(spacing: DSSpacing.xs) {
+                    DSBadge("Beta")
+                    DSBadge("Pro", variant: .filled)
+                    DSBadge("Draft", variant: .outline)
+                    DSBadge("Live", color: .green)
+                }
+
+                HStack(spacing: DSSpacing.md) {
+                    Image(systemName: "bell.fill")
+                        .font(.title)
+                        .overlay(alignment: .topTrailing) {
+                            DSCountBadge(count: unread)
+                                .offset(x: DSSpacing.xs, y: -DSSpacing.xs)
+                        }
+                    DSBadge("Mark all read", variant: .soft)
+                        .onTapGesture { unread = 0 }
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+### DSBadge
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `_ text` | `String` | required | The label (unlabeled first argument). |
+| `color` | `Color?` | `nil` | Fill for `.filled`, tint for `.soft` and `.outline`. Defaults to the theme accent. |
+| `variant` | `DSBadgeVariant` | `.soft` | `.filled`, `.soft` or `.outline`. |
+
+### DSCountBadge
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `count` | `Int` | required | Number to show. Renders nothing at 0 or below; shows `99+` above 99. |
+| `color` | `Color?` | `nil` | Fill color. Defaults to the palette's error color. |
+
+## Variants
+
+| Variant | Default look | With a custom `color` |
+|---|---|---|
+| `.soft` (default) | Accent at 12% fill, `theme.ink` text | Color at 12% fill, color text |
+| `.filled` | Accent fill, `theme.onAccent` text | Color fill, `textOnPrimary` text |
+| `.outline` | No fill, 1pt `theme.ink` outline and text | Color outline and text |
+
+`DSCountBadge` is always a filled capsule with `textOnPrimary` text, at least `DSSpacing.lg` square.
+
+## Behavior
+
+- Static components: no motion and no haptics. Pair them with `.dsPopIn()` or `.dsBreathe(.subtle)` (see [Motion](Motion.md)) if you want life.
+- `DSCountBadge` removes itself from the layout when `count` is 0, so you can bind it straight to a model value.
+
+## Accessibility
+
+- `DSBadge` and `DSCountBadge` are plain text, so VoiceOver reads the label or the number as shown (`99+` is read as written). Add context from outside, for example `.accessibilityLabel("3 unread notifications")` on the count badge or on the view it decorates.
+- Dynamic Type: both badges keep a fixed size for now (fixed-size fonts from the `.buttonSmall` / `.badge` text styles); they do not grow with the user's text size. Keep badge text short.
+
+## See also
+
+- [DSAvatar](DSAvatar.md) for identity
+- [DSListCell](DSListCell.md) for badges in trailing slots
+- [DSCard](DSCard.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSAvatar.md -->
+
+# DSAvatar
+
+A circular avatar that loads a remote photo and falls back to tinted initials, so it never shows an empty circle.
+
+![DSAvatar](../media/DSAvatar.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSBadge.swift`](../../Sources/VelvetUI/Components/DSBadge.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct AvatarDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                HStack(spacing: DSSpacing.md) {
+                    DSAvatar(name: "Ada Lovelace")
+                    DSAvatar(name: "Grace Hopper", size: 56)
+                    DSAvatar(name: "Linus", size: 32)
+                }
+
+                DSAvatar(
+                    name: "Margaret Hamilton",
+                    imageURL: URL(string: "https://example.com/margaret.jpg"),
+                    size: 72
+                )
+                .accessibilityLabel("Margaret Hamilton")
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `name` | `String` | required | Full name. Initials come from the first letter of the first and last words. |
+| `imageURL` | `URL?` | `nil` | Remote photo, loaded with `AsyncImage`. |
+| `size` | `CGFloat` | `40` | Diameter in points. |
+
+## Variants
+
+- **Initials** (no `imageURL`): accent at 15% fill with rounded semibold initials in `theme.ink`, sized at 40% of the avatar.
+- **Photo**: the image is scaled to fill and clipped to a circle.
+- **Fallback**: while the image loads or if it fails, the initials view is shown instead.
+- A one-word name gives one letter (`"Linus"` gives `L`); `"Ada Lovelace"` gives `AL`; middle names are skipped.
+
+## Behavior
+
+- No motion and no haptics. Add `.dsPopIn()` for an entrance or `.dsBreathe()` for a "waiting" avatar (see [Motion](Motion.md)).
+- Everything is derived from the theme, so the tint follows the active gradient.
+
+## Accessibility
+
+- The view carries no label of its own: VoiceOver reads the initials text (for example "AL") for the fallback, and nothing useful for a photo. Add `.accessibilityLabel("Ada Lovelace")` from outside, as in the snippet above.
+- The initials use a font derived from `size`, so they scale with the avatar, not with Dynamic Type. Choose `size` for the layout you want.
+
+## See also
+
+- [DSListCell](DSListCell.md) (avatar as the leading view)
+- [DSBadge](DSBadge.md) (count badge on an avatar)
+- [Motion](Motion.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSNumberTicker.md -->
+
+# DSNumberTicker
+
+A number whose digits roll like an odometer. Each digit slides to its new value, staggered from the units digit, while separators and currency symbols stay put.
+
+![DSNumberTicker](../media/DSNumberTicker.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSNumberTicker.swift`](../../Sources/VelvetUI/Components/DSNumberTicker.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct NumberTickerDemo: View {
+    @State private var balance = 1_284.50
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                Text("Balance").ds(.overline)
+                DSNumberTicker(balance, format: .currency(code: "USD"))
+                DSButton("Add $100") { balance += 100 }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `value` | `Double` or `Int` | required | The number to show. The `Int` form is grouped with no decimals. |
+| `format` | `FormatStyle` (`Double` to `String`) | required for `Double` | `.number`, `.currency(code:)`, `.percent`, `.number.precision(...)`. Follows the user's locale. |
+| `style` | `DSTextStyle` | `.displayMedium` | Use a style with monospaced digits (`.displayLarge`, `.displayMedium`, `.numeric`). |
+| `color` | `Color?` | `nil` | Text color. Defaults to the theme's primary text color. |
+
+Only ASCII digits (0-9) roll. Anything else the format produces, including other numeral systems, is shown as static text.
+
+## Variants
+
+```swift
+VStack(alignment: .leading, spacing: DSSpacing.md) {
+    DSNumberTicker(8_432, style: .displayLarge)
+    DSNumberTicker(0.42, format: .percent, style: .numeric)
+    DSNumberTicker(3.14159, format: .number.precision(.fractionLength(2)))
+}
+```
+
+## Behavior
+
+- Digits roll with a smooth spring, 0.03 s later for each place to the left of the units digit.
+- Digits are counted from the right, so going from 99 to 100 keeps the existing digits and fades in the new leading one.
+- Each digit's width and height come from the text style, so the number never changes height as it rolls.
+- The ticker never compresses: it always takes the width its formatted value needs. Give it room (or pick a smaller `style`) for long currency strings such as "US$ 12,906.40".
+- No haptics: it's a display.
+- Reduce Motion: digits don't roll. The new value appears with a short crossfade.
+
+## Accessibility
+
+- One element. VoiceOver reads the full formatted value (for example "$1,384.50"), not individual digits.
+- Marked as updating frequently, so VoiceOver doesn't announce every change.
+- Text scales with Dynamic Type through the DS text styles.
+
+## See also
+
+- [DSStepper](DSStepper.md)
+- [DSCard](DSCard.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/Charts.md -->
+
+# Charts
+
+Two light charts with no Swift Charts dependency: `DSSparkline`, a trend line that draws itself and morphs to new data, and `DSBarChart`, bars that grow from the baseline and can be scrubbed to select.
+
+![Charts](../media/Charts.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCharts.swift`](../../Sources/VelvetUI/Components/DSCharts.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ChartsDemo: View {
+    @State private var revenue: [Double] = [12, 18, 14, 22, 19, 27, 24, 31, 28, 36]
+    @State private var week: [Double] = [12, 18, 9, 22, 15, 6, 11]
+    @State private var selected: Int?
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSCard {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("Revenue").ds(.callout)
+                        DSSparkline(revenue, accessibilityLabel: "Revenue trend")
+                            .frame(height: 72)
+                    }
+                }
+
+                DSCard {
+                    DSBarChart(
+                        week,
+                        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                        selection: $selected,
+                        accessibilityLabel: "Orders this week"
+                    )
+                    .frame(height: 180)
+                }
+
+                DSButton("Shuffle data", isFullWidth: true) {
+                    revenue = revenue.map { _ in Double.random(in: 10...40) }
+                    week = week.map { _ in Double.random(in: 2...30) }
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+### DSSparkline
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `values` | `[Double]` | required | The samples, oldest first. Unlabeled first argument. Non-finite values count as 0. |
+| `color` | `Color?` | `nil` | Line, fill and dot color. Defaults to the theme accent. |
+| `lineWidth` | `CGFloat` | `2` | Stroke width. |
+| `showsFill` | `Bool` | `true` | Fade a gradient of the line color under the line. |
+| `showsLastPoint` | `Bool` | `true` | Show the breathing dot on the latest value. |
+| `accessibilityLabel` | `String` | `"Trend"` | What the chart shows, spoken before the summary. |
+
+### DSBarChart
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `values` | `[Double]` | required | One value per bar. Unlabeled first argument. Negative values clamp to 0. |
+| `labels` | `[String]?` | `nil` | Text under each bar, matched by index. |
+| `selection` | `Binding<Int?>?` | `nil` | Index of the selected bar. Pass a binding to make the chart interactive. |
+| `color` | `Color?` | `nil` | Bar color. Defaults to the theme accent. |
+| `accessibilityLabel` | `String` | `"Chart"` | What the chart shows. |
+
+Both charts fill the space they are given. Set a height, for example `.frame(height: 72)`.
+
+## Variants
+
+```swift
+DSSparkline(revenue, color: DSColors.success, showsFill: false, showsLastPoint: false)
+    .frame(height: 40)
+
+DSBarChart(week, color: DSColors.info)
+    .frame(height: 96)
+```
+A sparkline without fill or dot is a plain line, good for table rows. A bar chart without a `selection` binding is static: no gesture, no value label.
+
+## Behavior
+
+- **Scale.** The sparkline maps the lowest value to the bottom of its frame and the highest to the top; flat data is a centred line. The curve is monotone, so it never overshoots the data. The bar chart scales to the tallest bar and starts at zero.
+- **Draw-on.** On appear the sparkline line draws itself in one second, the fill fades in behind it, and the dot appears last and breathes.
+- **Morph.** When `values` changes and keeps its length, the sparkline line morphs to the new shape and the bars spring to their new heights. A different length redraws the sparkline.
+- **Bars.** Bars have rounded tops and grow from the baseline with staggered springs. Negative values clamp to 0.
+- **Selection.** Tap a bar, or drag horizontally across the bars, to scrub (vertical drags are left to an enclosing scroll view): each new bar fires a selection haptic and a value label rises above it. Lifting your finger keeps the selection, and tapping the selected bar again clears it. While a bar is selected the others dim.
+- Reduce Motion: no draw-on, morph or growth. Data appears at rest, and sparkline changes crossfade. The dot does not breathe.
+
+## Accessibility
+
+- The sparkline is one element: your `accessibilityLabel`, with a spoken summary such as "12 values, from 3 to 18, latest 15".
+- Both charts provide an audio graph, so VoiceOver users can play the chart as sound ("Audio Graphs" in the rotor).
+- Each bar is its own element ("Mon, 12"). With a `selection` binding each bar is a button that selects it, and the selected bar reports the selected trait.
+- Value labels use `.ds(_:)` text, which scales with Dynamic Type.
+
+## See also
+
+- [Progress](Progress.md) for determinate fractions
+- [Motion](Motion.md) for `dsBreathe`
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSToast.md -->
+
+# DSToast
+
+A transient, glass-backed message with a status icon for success, error, warning and info.
+
+![DSToast](../media/DSToast.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToast.swift`](../../Sources/VelvetUI/Components/DSToast.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+`DSToast` is just the view: you decide when it appears, fire the haptic and dismiss it. This is the usual pattern, an overlay driven by state, with the haptic on presentation and a `.task` that dismisses after a moment:
+
+```swift
+import VelvetUI
+
+struct ToastDemo: View {
+    @State private var toast: (message: String, type: DSToastType)?
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.sm) {
+                DSButton("Save", isFullWidth: true) {
+                    show("Saved to your library", type: .success)
+                }
+                DSButton("Simulate failure", variant: .secondary, isFullWidth: true) {
+                    show("Couldn't connect", type: .error)
+                }
+            }
+            .dsScreenPadding()
+        }
+        .overlay(alignment: .bottom) {
+            if let toast {
+                DSToast(toast.message, type: toast.type)
+                    .padding(.bottom, DSSpacing.md)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .task(id: toast.message) {
+                        try? await Task.sleep(for: .seconds(2.5))
+                        withAnimation(DSAnimation.springSmooth) { self.toast = nil }
+                    }
+            }
+        }
+    }
+
+    private func show(_ message: String, type: DSToastType) {
+        withAnimation(DSAnimation.springSmooth) { toast = (message, type) }
+        switch type {
+        case .success: DSHapticEngine.shared.fire(.success)
+        case .error:   DSHapticEngine.shared.fire(.error)
+        case .warning: DSHapticEngine.shared.fire(.warning)
+        case .info:    DSHapticEngine.shared.fire(.light)
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `_ message` | `String` | required | The message text. |
+| `type` | `DSToastType` | `.info` | `.success`, `.error`, `.warning` or `.info`. |
+
+## Variants
+
+| `DSToastType` | Icon | Color | Matching haptic (you fire it) |
+|---|---|---|---|
+| `.success` | `checkmark.circle.fill` | `palette.success` | `.success` |
+| `.error` | `xmark.circle.fill` | `palette.error` | `.error` |
+| `.warning` | `exclamationmark.triangle.fill` | `palette.warning` | `.warning` |
+| `.info` (default) | `info.circle.fill` | `palette.info` | `.light` |
+
+## Behavior
+
+- The toast sits on `.ultraThinMaterial` with a `.lg` shadow, rounded to `DSRadius.md`, and spans the width with the standard screen margin.
+- It has no presentation logic: no timer, no animation, no haptic. The snippet shows the caller's side (a spring from `DSAnimation`, `DSHapticEngine.shared.fire(_:)`, and a delayed dismissal). Use the `Examples/VelvetGallery` Toast screen as a reference.
+- `DSToastType` has no public haptic mapping; copy the table above (the `switch` in the snippet).
+- Under Reduce Motion, swap the slide transition for `.opacity` in your overlay.
+
+## Accessibility
+
+- One element: VoiceOver reads it as "<Type>: <message>" with the types "Success", "Error", "Warning" and "Info" (for example "Success: Saved to your library").
+- It is announced when it appears, so users hear it without moving focus. Keep it on screen long enough to be useful, and consider longer timeouts for errors.
+- The icon is decorative; the type is spoken as the prefix.
+- The text uses `.ds(.callout)`, which scales with Dynamic Type.
+
+## See also
+
+- [DSEmptyState](DSEmptyState.md)
+- [Progress](Progress.md) for long-running work
+- [DSButton](DSButton.md) as the typical trigger
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSEmptyState.md -->
+
+# DSEmptyState
+
+A centered empty-list or no-results placeholder: a light icon, a title, a short message and an optional call-to-action button.
+
+![DSEmptyState](../media/DSEmptyState.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToast.swift`](../../Sources/VelvetUI/Components/DSToast.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct EmptyStateDemo: View {
+    @State private var items: [String] = []
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            if items.isEmpty {
+                DSEmptyState(
+                    icon: "tray",
+                    title: "Nothing here yet",
+                    message: "Saved recipes show up here so you can find them later.",
+                    actionTitle: "Add a recipe"
+                ) {
+                    items.append("Shakshuka")
+                }
+            } else {
+                VStack(spacing: DSSpacing.sm) {
+                    ForEach(items, id: \.self) { item in
+                        DSCard { Text(item).ds(.body) }
+                    }
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `icon` | `String` | required | SF Symbol name, drawn at 48pt light weight in the tertiary text color. |
+| `title` | `String` | required | Headline (`.title2`). |
+| `message` | `String` | required | Supporting text (`.callout`, secondary color, centered). |
+| `actionTitle` | `String?` | `nil` | Label of the call-to-action button. |
+| `action` | `(() -> Void)?` | `nil` | Button handler. The button only appears when both `actionTitle` and `action` are set. |
+
+## Variants
+
+- **Informational**: omit `actionTitle` and `action` for a read-only state ("No results for 'xyz'").
+- **With a call to action**: pass both and a primary `DSButton` appears under the message (it brings its own `.medium` haptic and press scale).
+
+## Behavior
+
+- Static layout: no entrance animation. Add `.dsPopIn()` to the icon or the whole view if you want one (see [Motion](Motion.md)).
+- The view pads itself by `DSSpacing.xxl`; center it in its container yourself, for example inside a `DSScreen` or a `frame(maxHeight: .infinity)`.
+
+## Accessibility
+
+- The icon is an SF Symbol without a label; the title and message are read in order, followed by the button. The title is a normal text element rather than a heading, so add `.accessibilityAddTraits(.isHeader)` from outside if you want heading navigation.
+- The button is a labelled `DSButton`.
+- Text uses `.ds(_:)` styles and scales with Dynamic Type; the 48pt icon is fixed.
+
+## See also
+
+- [DSListCell](DSListCell.md) for the populated list
+- [DSTypewriterText](DSTypewriterText.md) for a livelier headline
+- [DSToast](DSToast.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/Progress.md -->
+
+# Progress
+
+Progress indicators that animate to their value instead of jumping: ring, bar, gradient bar, step dots, a counting number and a skeleton shimmer.
+
+![Progress](../media/Progress.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSProgressAnimation.swift`](../../Sources/VelvetUI/Animation/DSProgressAnimation.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ProgressDemo: View {
+    @State private var progress = 0.35
+    @State private var step = 2
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSCircularProgress(progress: progress, size: 96)
+                DSAnimatedNumber(value: progress * 100, style: .displayMedium)
+                DSLinearProgress(progress: progress)
+                DSGradientProgress(progress: progress)
+                DSStepProgress(currentStep: step, totalSteps: 4)
+
+                DSButton("Advance", isFullWidth: true) {
+                    progress = min(progress + 0.15, 1)
+                    step = min(step + 1, 4)
+                }
+
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                        .fill(Color.gray.opacity(0.25))
+                        .frame(height: 16)
+                        .dsShimmer()
+                    RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                        .fill(Color.gray.opacity(0.25))
+                        .frame(width: 160, height: 16)
+                        .dsShimmer()
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+### DSCircularProgress
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `progress` | `Double` | required | 0 to 1, clamped. |
+| `lineWidth` | `CGFloat` | `6` | Ring thickness. |
+| `size` | `CGFloat` | `80` | Diameter. |
+| `primaryColor` | `Color?` | `nil` | Ring color. Defaults to the theme accent. |
+| `trackColor` | `Color?` | `nil` | Track color. Defaults to the palette border color. |
+
+### DSLinearProgress
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `progress` | `Double` | required | 0 to 1, clamped. |
+| `height` | `CGFloat` | `6` | Bar height. |
+| `primaryColor` | `Color?` | `nil` | Fill color. Defaults to the theme accent. |
+| `trackColor` | `Color?` | `nil` | Track color. Defaults to the palette border color. |
+
+### DSGradientProgress
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `progress` | `Double` | required | 0 to 1, clamped. |
+| `height` | `CGFloat` | `8` | Bar height. |
+| `colors` | `[Color]?` | `nil` | Gradient stops, left to right. Defaults to the theme gradient's stops. |
+| `trackColor` | `Color?` | `nil` | Track color. Defaults to the palette border color. |
+
+### DSStepProgress
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `currentStep` | `Int` | required | Number of completed steps (segments filled). |
+| `totalSteps` | `Int` | required | Number of segments. |
+| `activeColor` | `Color?` | `nil` | Completed segments. Defaults to the theme accent. |
+| `inactiveColor` | `Color?` | `nil` | Remaining segments. Defaults to the palette border color. |
+
+### DSAnimatedNumber
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `value` | `Double` | required | The number to count to. |
+| `format` | `String` | `"%.0f"` | `String(format:)` format, for example `"%.1f"`. |
+| `style` | `DSTextStyle` | `.displayLarge` | Text style (monospaced digits). |
+
+### `.dsShimmer()`
+
+`func dsShimmer() -> some View`, no parameters. A soft highlight sweeps across the view in a 1.5s linear loop. It is width-independent, so it works on any skeleton shape.
+
+## Variants
+
+- **Determinate**: ring, bar and gradient bar for a known fraction. `DSStepProgress` for a wizard or onboarding (4pt segments).
+- **Counting**: `DSAnimatedNumber` with `.numericText` content transition for scores and totals.
+- **Skeleton**: `.dsShimmer()` over placeholder shapes while content loads. `DSImageCard` uses it for its image placeholder.
+- For indeterminate work with no fraction, use [DSThinkingIndicator](DSThinkingIndicator.md).
+
+## Behavior
+
+- The ring and both bars start at 0 and animate to `progress` on appear (`DSAnimation.progress`, 0.8s ease in-out), then animate again whenever `progress` changes. `DSAnimatedNumber` does the same with `DSAnimation.counting` (1s ease out).
+- `DSStepProgress` does not start at 0: it draws `currentStep` filled segments at once and staggers the color change when `currentStep` changes, with `DSAnimation.stagger(index:)`.
+- No haptics: these are status displays, not controls.
+- `.dsShimmer()` does not start under Reduce Motion: the view simply stays static. The progress and counting animations are plain value transitions.
+
+## Accessibility
+
+- The progress views do not set an accessibility value of their own. Add one from outside so VoiceOver can report it, for example `.accessibilityLabel("Upload").accessibilityValue("\(Int(progress * 100)) percent")`.
+- `DSAnimatedNumber` is text, so VoiceOver reads the number as it counts; it uses `.dsTextStyle(_:)` and scales with Dynamic Type.
+- Shimmer placeholders are decorative; hide them with `.accessibilityHidden(true)` or label the container ("Loading").
+
+## See also
+
+- [DSThinkingIndicator](DSThinkingIndicator.md) for indeterminate work
+- [Motion](Motion.md) for ambient effects
+- [DSImageCard](DSCard.md) (shimmer placeholder)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSThinkingIndicator.md -->
+
+# DSThinkingIndicator
+
+An "the assistant is working" indicator: an animated SF Symbol next to a phrase that cycles and assembles letter by letter, for states where a spinner reads as frozen and a progress bar would be a lie.
+
+![DSThinkingIndicator](../media/DSThinkingIndicator.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSThinkingIndicator.swift`](../../Sources/VelvetUI/Components/DSThinkingIndicator.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ThinkingDemo: View {
+    @State private var isWorking = true
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSCard {
+                    if isWorking {
+                        DSThinkingIndicator(
+                            phrases: ["Reading your notes", "Drafting a summary", "Almost there"]
+                        )
+                    } else {
+                        Text("Summary ready").ds(.body)
+                    }
+                }
+                .dsEdgeSweep(isActive: isWorking)
+
+                DSButton(isWorking ? "Stop" : "Run again", variant: .secondary) {
+                    isWorking.toggle()
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `phrases` | `[String]` | `["Thinking", "Weighing options", "Almost there"]` | Cycled in order, looping. A single phrase disables cycling but still assembles once on appear. |
+| `symbol` | `String` | `"sparkles"` | SF Symbol for the leading animated glyph. |
+| `interval` | `TimeInterval` | `2.6` | Seconds each phrase stays before the next one assembles. |
+| `tint` | `Color?` | `nil` | Letter color. Defaults to `theme.ink`. The symbol always uses the theme gradient. |
+
+## Variants
+
+- **Default**: sparkles plus three phrases.
+- **Custom copy**: pass your own phrases, for example `["Reading your notes", "Drafting a summary"]`.
+- **Custom symbol**: any SF Symbol with layers, such as `"wand.and.stars"`.
+- **With an edge sweep**: put it in a `DSCard` with `.dsEdgeSweep(isActive:)` as in the snippet, so the surface itself looks busy.
+
+## Behavior
+
+- The symbol uses the system's `.breathe.byLayer` and `.variableColor.iterative` effects, filled with the theme gradient.
+- The phrase follows a wall-clock schedule, so it never desyncs when the view is re-created, and assembles letter by letter using `DSAnimation.stagger(index:)`.
+- The row reserves the width of the widest phrase, so nothing around it shifts.
+- No haptics: it is a status indicator, not an interaction.
+- Reduce Motion: the symbol effects turn off and letters stop staggering, but phrases keep cycling as a plain cross-fade, because the phrase is information, not decoration.
+
+## Accessibility
+
+- The row is one element whose label is the whole current phrase, never a half-assembled fragment. The symbol is hidden from VoiceOver.
+- It carries the `.updatesFrequently` trait, so VoiceOver does not interrupt the user with every change.
+- Override from outside with `.accessibilityLabel("Generating summary")` if the phrases are too playful.
+- Text uses `.dsTextStyle(.footnote)` and scales with Dynamic Type.
+
+## See also
+
+- [Progress](Progress.md) for known fractions
+- [DSTypewriterText](DSTypewriterText.md)
+- [Motion](Motion.md) (`.dsEdgeSweep`)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSSkeleton.md -->
+
+# DSSkeleton
+
+Loading placeholders: a shimmering block you compose by hand, and a `.dsSkeleton(_:)` modifier that turns a real view into its own placeholder so the loading layout can't drift from the loaded one.
+
+![DSSkeleton](../media/DSSkeleton.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSkeleton.swift`](../../Sources/VelvetUI/Components/DSSkeleton.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct SkeletonDemo: View {
+    @State private var isLoading = true
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                // Hand-built placeholder
+                HStack(spacing: DSSpacing.sm) {
+                    DSSkeleton.circle(DSSpacing.huge)
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                        DSSkeleton(width: 140)
+                        DSSkeleton(width: 90)
+                    }
+                }
+
+                // The real view, shown as its own placeholder while loading
+                HStack(spacing: DSSpacing.sm) {
+                    DSAvatar(name: "Ada Lovelace", size: DSSpacing.huge)
+                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                        Text("Ada Lovelace").ds(.title3)
+                        Text("Analyst, mathematician").ds(.callout)
+                    }
+                }
+                .dsSkeleton(isLoading)
+
+                DSToggle("Loading", isOn: $isLoading)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+`DSSkeleton(width:height:cornerRadius:)`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `width` | `CGFloat?` | `nil` | Fixed width. `nil` fills the available width. |
+| `height` | `CGFloat` | `DSSpacing.sm` | Block height. |
+| `cornerRadius` | `CGFloat` | `DSRadius.xs` | Corner radius. |
+
+`DSSkeleton.circle(_ diameter:)` makes a round block, e.g. for an avatar.
+
+`View.dsSkeleton(_ isLoading: Bool)` takes only the loading flag.
+
+## Variants
+
+```swift
+VStack(alignment: .leading, spacing: DSSpacing.xs) {
+    DSSkeleton(height: 160, cornerRadius: DSRadius.surface)
+    DSSkeleton(height: DSSpacing.md)
+    DSSkeleton(width: 120)
+}
+```
+A feed-style block: image, title line, short subtitle.
+
+## Behavior
+
+- `DSSkeleton` is a block in the wash colour (on a backdrop) or the palette border colour (elsewhere), with a shimmer sweep.
+- `.dsSkeleton(true)` redacts the view as placeholder shapes of its own layout, pulses its opacity gently between full and half (a 3.6 s cycle sampled from a timeline, so it stops the moment loading ends), and blocks touches.
+- When `isLoading` goes false the redaction lifts with a short fade.
+- The wrapped view keeps its identity when the flag flips: its `@State`, `.task` and `.onAppear` are not reset or run twice. That is why the modifier pulses instead of sweeping: a sweep needs a second copy of the content.
+- Reduce Motion: no shimmer and no pulse. Placeholders rest at full opacity.
+
+## Accessibility
+
+- `DSSkeleton` blocks are hidden from VoiceOver.
+- While `.dsSkeleton(true)` is active the view reads as one element labelled "Loading". When it ends, the real content is announced normally.
+
+## See also
+
+- [DSEmptyState](DSEmptyState.md)
+- [DSCard](DSCard.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSSuccessCheck.md -->
+
+# DSSuccessCheck
+
+An animated success seal: the ring strokes itself, the disc fills, the checkmark draws, and the whole thing pops once with a soft halo and a success haptic on the same beat.
+
+![DSSuccessCheck](../media/DSSuccessCheck.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSuccessCheck.swift`](../../Sources/VelvetUI/Components/DSSuccessCheck.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct SuccessCheckDemo: View {
+    @State private var isPaid = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSSuccessCheck(isComplete: isPaid, size: 96, accessibilityLabel: "Payment sent")
+                    .padding(DSSpacing.md)
+                Text(isPaid ? "Payment sent" : "Ready to pay").ds(.title2)
+                DSButton(isPaid ? "Reset" : "Pay $24.00", isFullWidth: true) {
+                    isPaid.toggle()
+                }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isComplete` | `Bool` | required | Plays the animation when it becomes `true`. Fades the seal out when `false`. |
+| `size` | `CGFloat` | `64` | Diameter of the seal. |
+| `color` | `Color?` | `nil` | Ring and disc fill. Defaults to the theme's success color. The checkmark uses the palette's text-on-primary color. |
+| `haptic` | `DSHapticStyle?` | `.success` | Fired as the check completes. `nil` for none. |
+| `accessibilityLabel` | `String` | `"Done"` | What VoiceOver says, and announces when the seal completes. |
+
+## Variants
+
+```swift
+HStack(spacing: DSSpacing.lg) {
+    DSSuccessCheck(isComplete: true, size: 32)
+    DSSuccessCheck(isComplete: true, size: 48, color: DSColors.info, haptic: nil)
+}
+```
+The seal is only a fill and two strokes, so it works at any size from a list row up to a hero.
+
+## Behavior
+
+- The animation plays when `isComplete` becomes `true`, and once on first appear if it already is. A view that re-appears already complete (tab switch, navigating back) shows the finished seal at rest, with no haptic or announcement. It takes about 0.9 seconds.
+- Order: the ring strokes itself, the disc fills behind it, then the check draws. A single spring pop peaks as the check finishes, together with one soft halo that expands and fades.
+- The haptic fires at that peak, not at the start.
+- When `isComplete` goes back to `false` the seal fades out quietly. Setting it to `true` again replays the animation.
+- The halo extends past `size`; leave a little room around the seal.
+- Reduce Motion: no strokes and no pop. The finished seal crossfades in, and the haptic still fires.
+
+## Accessibility
+
+- While complete, the seal is one image element labelled with your `accessibilityLabel`. While not complete it is hidden from VoiceOver.
+- When it completes, the label is announced.
+- Give it a label that says what happened ("Payment sent") rather than the default.
+
+## See also
+
+- [Progress](Progress.md) for work that is still running
+- [Motion](Motion.md) for ambient effects
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSTypewriterText.md -->
+
+# DSTypewriterText
+
+Text that types a phrase out character by character, holds it, erases it and moves on to the next, with a blinking caret. For hero headlines and empty states that need a little life.
+
+![DSTypewriterText](../media/DSTypewriterText.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTypewriterText.swift`](../../Sources/VelvetUI/Components/DSTypewriterText.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct TypewriterDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                Text("Build something").ds(.largeTitle)
+                DSTypewriterText(
+                    ["that feels alive.", "with glass and springs.", "in an afternoon."],
+                    style: .title1
+                )
+
+                DSTypewriterText(["Ready when you are."], style: .callout, loops: false)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+Keep phrases short enough to fit on one line: the view is single line and reserves the width of the widest phrase.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `_ phrases` | `[String]` | required | Phrases to cycle through, in order. An empty array renders nothing. |
+| `style` | `DSTextStyle` | `.title1` | Text style for the phrases. |
+| `typingSpeed` | `TimeInterval` | `0.06` | Seconds per character while typing. |
+| `erasingSpeed` | `TimeInterval` | `0.03` | Seconds per character while erasing. Should be faster than typing. |
+| `holdDuration` | `TimeInterval` | `1.4` | Seconds a fully typed phrase stays before erasing. |
+| `loops` | `Bool` | `true` | When `false`, stops on the last phrase fully typed (the caret keeps blinking). |
+| `caretColor` | `Color?` | `nil` | Caret fill. Defaults to the theme accent. |
+
+## Variants
+
+- **Rotating headline**: several phrases with `loops: true`.
+- **Type once**: `loops: false` types the last phrase and stays (the snippet's second view).
+- **Speed**: raise `typingSpeed` for a calmer feel; the defaults are about 16 characters per second.
+
+## Behavior
+
+- Steps through grapheme clusters, so emoji and accented characters are never split.
+- Driven by a cancellable `Task`: cancelled on disappear and restarted when `phrases` or Reduce Motion changes.
+- The caret blinks in `caretColor`; it is a thin capsule sized to the text style.
+- No haptics.
+- Reduce Motion: no typing or erasing; the full phrase is shown, still cycling through the list, and the caret stays solid.
+
+## Accessibility
+
+- The view is one element labelled with the whole current phrase, so VoiceOver never reads a half-typed fragment. The caret is decorative.
+- Because the label changes when the phrase changes, avoid putting it where VoiceOver users need stable text, such as the only copy of an instruction.
+- The text style applied through `.ds(_:)` scales with Dynamic Type. Check that your widest phrase still fits on one line at large sizes.
+
+## See also
+
+- [DSThinkingIndicator](DSThinkingIndicator.md)
+- [DSEmptyState](DSEmptyState.md)
+- [Motion](Motion.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/Motion.md -->
+
+# Motion
+
+Five composable view modifiers for ambient motion: breathe, jiggle, pop in, edge sweep and hue drift. Springs for touch, eased curves for ambience, and every one has a real Reduce Motion state.
+
+![Motion](../media/Motion.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMotion.swift`](../../Sources/VelvetUI/Animation/DSMotion.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct MotionDemo: View {
+    @State private var shakes = 0
+    @State private var isSweeping = true
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                Circle()
+                    .fill(Color.green)
+                    .frame(width: 16, height: 16)
+                    .dsBreathe(.subtle)
+
+                Image(systemName: "bell.fill")
+                    .font(.largeTitle)
+                    .dsJiggle(trigger: shakes)
+                DSButton("Shake", variant: .secondary, size: .small) { shakes += 1 }
+
+                HStack(spacing: DSSpacing.sm) {
+                    ForEach(0..<4, id: \.self) { index in
+                        RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                            .fill(Color.blue)
+                            .frame(height: DSSpacing.huge)
+                            .dsHueDrift()
+                            .dsPopIn(delay: Double(index) * 0.08)
+                    }
+                }
+
+                Text("Processing…")
+                    .ds(.body)
+                    .padding(DSSpacing.md)
+                    .frame(maxWidth: .infinity)
+                    .dsSurface(.glass, radius: DSRadius.card)
+                    .dsEdgeSweep(radius: DSRadius.card, isActive: isSweeping)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+### `.dsBreathe(_:)`
+
+`func dsBreathe(_ intensity: DSBreatheIntensity = .medium) -> some View`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `_ intensity` | `DSBreatheIntensity` | `.medium` | How far it swells: `.subtle` (1.02), `.medium` (1.05), `.strong` (1.10). |
+
+### `.dsJiggle(trigger:)`
+
+`func dsJiggle<T: Equatable>(trigger: T) -> some View`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `trigger` | `T: Equatable` | required | One decaying wiggle fires every time this value changes. |
+
+### `.dsPopIn(delay:)`
+
+`func dsPopIn(delay: Double = 0) -> some View`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `delay` | `Double` | `0` | Seconds before the entrance starts. Stagger by index: `Double(index) * 0.08`. |
+
+### `.dsEdgeSweep(radius:isActive:)`
+
+`func dsEdgeSweep(radius: CGFloat = DSRadius.card, isActive: Bool = true) -> some View`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `radius` | `CGFloat` | `DSRadius.card` | Corner radius of the surface underneath. Match it. |
+| `isActive` | `Bool` | `true` | Fades the highlight in and out. |
+
+### `.dsHueDrift(isActive:)`
+
+`func dsHueDrift(isActive: Bool = true) -> some View`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isActive` | `Bool` | `true` | Turns the drift on or off. |
+
+### `DSMotion.loop(_:autoreverses:unless:)`
+
+For your own ambient effects: `DSMotion.loop(_ base: Animation, autoreverses: Bool = true, unless reduceMotion: Bool) -> Animation?` wraps an animation in `repeatForever`, or returns `nil` under Reduce Motion, so the change applies instantly and the effect rests instead of being skipped.
+
+## Variants
+
+| Modifier | Use it for | Timing |
+|---|---|---|
+| `.dsBreathe` | "alive and waiting": loading states, status dots, avatars | 2.4s ease-in-out loop, scale plus a slight opacity dip |
+| `.dsJiggle` | a rejected input, an item that needs noticing | 0.45s, peak 7 degrees, decaying counter-swings |
+| `.dsPopIn` | entrances and staggered rows | `springBouncy` overshoot from 0.8 scale |
+| `.dsEdgeSweep` | processing, recording, "AI is working" | 2.0s linear loop of a specular highlight on the 1pt glass edge |
+| `.dsHueDrift` | decorative life on a static gradient | 8.0s loop, at most 12 degrees of hue rotation |
+
+The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDuration`, `driftDegrees`, `jiggleDegrees`, `jiggleDuration`).
+
+`.dsPulse()` is deprecated; use `.dsBreathe(_:)` instead.
+
+## Behavior
+
+- All five settle at a resting state under Reduce Motion instead of being skipped: breathe and drift stop looping, the jiggle does not rotate, the edge sweep shows its highlight without travelling, and pop in keeps the fade but drops the scale.
+- Colors come from the theme (the edge sweep is light riding the existing glass edge, not a border).
+- The loops are ambient, so they do not fire haptics; add a `DSHapticEngine.shared.fire(.error)` next to a jiggle if the event deserves one.
+
+## Accessibility
+
+- These modifiers are purely visual and do not change what VoiceOver reads.
+- Because Reduce Motion is a real state, content stays visible and in place when the setting is on.
+- Never use motion as the only signal: pair a jiggle with an error message, and a sweep with a status text such as "Processing…".
+
+## See also
+
+- [DSThinkingIndicator](DSThinkingIndicator.md)
+- [Progress](Progress.md)
+- [DSAvatar](DSAvatar.md) (breathe while waiting)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSConfetti.md -->
+
+# dsConfetti
+
+A one-shot burst of confetti from any point of a view, fired whenever a trigger value changes. Colored from the active theme.
+
+![dsConfetti](../media/DSConfetti.gif)
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSConfetti.swift`](../../Sources/VelvetUI/Animation/DSConfetti.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(gradient: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ConfettiDemo: View {
+    @State private var celebrations = 0
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                Text("Order placed").ds(.title2)
+                DSButton("Celebrate") { celebrations += 1 }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .dsConfetti(trigger: celebrations, origin: UnitPoint(x: 0.5, y: 0.6))
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `trigger` | `Equatable` | required | One burst fires every time this value changes. It does not fire on first appearance. |
+| `origin` | `UnitPoint` | `.center` | Where the burst starts, in the unit space of the view you attach it to. |
+| `count` | `Int` | `80` | Number of pieces, limited to 150. |
+| `haptic` | `DSHapticStyle?` | `nil` | Haptic fired with the burst. |
+
+## Variants
+
+```swift
+struct ConfettiCornersDemo: View {
+    @State private var left = 0
+    @State private var right = 0
+
+    var body: some View {
+        VStack {
+            DSButton("Both corners") { left += 1; right += 1 }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .dsConfetti(trigger: left, origin: .bottomLeading, count: 50)
+        .dsConfetti(trigger: right, origin: .bottomTrailing, count: 50, haptic: .success)
+    }
+}
+```
+
+Attach it to a container that covers the area the paper should fall through, such as the screen root, and pick `origin` in that container's unit space. Pieces are drawn inside the bounds of the view the modifier is attached to.
+
+## Behavior
+
+- Pieces fan upward and outward, slow down from air drag, then drift down under gravity while spinning and tumbling.
+- Each piece lives 1.6 to 2.4 s and fades out over the last 30%.
+- Colors come from the theme: the accent, the gradient stops, lighter tints of each, and the theme ink, which keeps the burst visible against the backdrop.
+- Several triggers in a row overlap; earlier pieces finish their fall.
+- Nothing runs while idle: the animation stops once the last piece is gone.
+- `haptic` is `nil` by default because the action that triggers confetti (a button press, a confirmed slide) usually has its own haptic. Set it when the trigger is a state change with no haptic of its own.
+- Reduce Motion: no pieces are drawn. The haptic, if set, still fires.
+
+## Accessibility
+
+- Purely decorative: ignores touches and is hidden from VoiceOver.
+- Announce the outcome in your own UI (the success text or a toast), not through the confetti.
+
+## See also
+
+- [DSSlideToConfirm](DSSlideToConfirm.md)
+- [DSToast](DSToast.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/examples/Onboarding.md -->
+
+# Onboarding
+
+A four-page onboarding: welcome, theme picker, notification preferences and a celebratory finish.
+
+> Example — not a component. Copy it and adapt it.
+
+![Onboarding flow](../media/OnboardingFlow.png)
+
+**Source:** [`OnboardingFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/OnboardingFlow.swift)
+
+## What it demonstrates
+
+- [DSButton](../components/DSButton.md): one full-width button that reads "Continue", then "Get started" on the last page.
+- [DSPageControl](../components/DSPageControl.md): dots that follow the swipe and jump on tap.
+- [DSTypewriterText](../components/DSTypewriterText.md): the welcome headline cycling through short phrases.
+- [DSCard](../components/DSCard.md), [DSToggle](../components/DSToggle.md) and [DSSegmentedControl](../components/DSSegmentedControl.md): the preferences page.
+- [DSSuccessCheck](../components/DSSuccessCheck.md) and [DSConfetti](../components/DSConfetti.md): the finish.
+- Motion modifiers: `.dsBreathe(.subtle)` on the glyph and `.dsPopIn(delay:)` for staggered entrances ([Motion](../components/Motion.md)).
+
+## How it works
+
+- The flow owns a `DSTheme` in `@State` and injects it with `.dsTheme(theme)` at its root. The theme page sets `theme.gradient` inside `withAnimation(DSAnimation.normal)`, so the backdrop crossfades.
+- Pages are a paging `TabView` on iOS. On macOS the flow shows the current page only.
+- Each page builds its content only while it is the current page, so the pop-in stagger replays every visit.
+- Arriving on the last page flips `DSSuccessCheck(isComplete:)` and bumps the confetti trigger on the same beat. The confetti is attached to the full-screen container, because it draws inside the view it is attached to.
+- `onFinish` runs when you press "Get started".
+
+## Run it
+
+Gallery → Examples → Onboarding.
+
+## Copy it
+
+```bash
+swift velvet.swift add Onboarding --dest MyApp/VelvetUI
+```
+
+---
+<!-- source: docs/examples/Settings.md -->
+
+# Settings
+
+A settings screen with a profile header, preference toggles, a theme detail screen and a slide-to-confirm account deletion.
+
+> Example — not a component. Copy it and adapt it.
+
+![Settings flow](../media/SettingsFlow.png)
+
+**Source:** [`SettingsFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/SettingsFlow.swift)
+
+## What it demonstrates
+
+- [DSCard](../components/DSCard.md), [DSAvatar](../components/DSAvatar.md) and [DSBadge](../components/DSBadge.md): the profile header.
+- [DSListCell](../components/DSListCell.md) with `DSDivider` and `DSSectionHeader`: grouped rows inside `DSCard(padding: 0)`.
+- [DSToggle](../components/DSToggle.md) and [DSSegmentedControl](../components/DSSegmentedControl.md): preferences.
+- [DSSheet](../components/DSSheet.md) and [DSSlideToConfirm](../components/DSSlideToConfirm.md): the delete-account confirmation, tinted with the error color.
+- [DSToast](../components/DSToast.md): "Saved" feedback.
+
+## How it works
+
+- `SettingsFlow` has no `NavigationStack` of its own, because nested stacks are unsupported. The host provides one (the Gallery pushes it inside its list's stack); wrap it in `NavigationStack { SettingsFlow() }` to show it standalone.
+- Appearance (System, Light, Dark) really drives `.preferredColorScheme` on the flow.
+- The Theme row pushes a detail screen. Choosing a theme sets `theme.gradient` in `withAnimation`, so the backdrop crossfades behind the navigation bar.
+- Changing any toggle, the appearance or the theme shows a "Saved" toast for about 1.6 s. There is one toast at a time: a new one replaces the old and restarts the timer.
+- "Delete account" opens a sheet. The slide awaits a fake service, shows "Deleted", then the sheet closes and a toast confirms.
+- Email and Password rows are navigation rows that show an info toast, to keep the example short.
+
+## Run it
+
+Gallery → Examples → Settings.
+
+## Copy it
+
+```bash
+swift velvet.swift add Settings --dest MyApp/VelvetUI
+```
+
+---
+<!-- source: docs/examples/Checkout.md -->
+
+# Checkout
+
+A cart with quantity steppers, a promo code, a rolling total and a slide to pay that ends in a confirmation.
+
+> Example — not a component. Copy it and adapt it.
+
+![Checkout flow](../media/CheckoutFlow.png)
+
+**Source:** [`CheckoutFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/CheckoutFlow.swift)
+
+## What it demonstrates
+
+- [DSCard](../components/DSCard.md) and [DSStepper](../components/DSStepper.md): line items, each stepper labelled with the item name for VoiceOver.
+- [DSTextField](../components/DSTextField.md) and [DSButton](../components/DSButton.md): the promo code with success and error states.
+- [DSNumberTicker](../components/DSNumberTicker.md): the total rolls whenever a quantity or the promo changes.
+- [DSSlideToConfirm](../components/DSSlideToConfirm.md): pay, with `finish: .morphAndVanish` handing off to the success state.
+- [DSSuccessCheck](../components/DSSuccessCheck.md) and [DSConfetti](../components/DSConfetti.md): the confirmation.
+- [DSEmptyState](../components/DSEmptyState.md): the empty cart.
+
+## How it works
+
+- Try the code `VELVET` for 10% off. Any other code shows the error state. Editing the code clears the result.
+- The slide's `onConfirm` awaits `CheckoutService.charge` (about 1.2 s). Turn on "Simulate a declined card" to make it throw: the control re-opens and a message explains why. While the charge runs the cart steppers, promo field and decline toggle are disabled, so the charged total is the one shown.
+- On success the slide plays its `.morphAndVanish` finish; about 0.9 s later (in a cancellable `Task`) the view swaps to the confirmation with `DSAnimation.springSmooth`, and the confetti trigger is bumped on the same beat. The confirmation's `DSSuccessCheck` passes `haptic: nil`, so the payment has a single success haptic (the slide's). The confetti is attached to the root container, which covers the screen.
+- "Done" calls `onFinish()`, resets the cart, and remounts the slide with a new `.id` so it starts fresh.
+- Set every quantity to 0 to see the empty state with "Restore cart". The pay control is hidden while the cart is empty.
+
+## Run it
+
+Gallery → Examples → Checkout.
+
+## Copy it
+
+```bash
+swift velvet.swift add Checkout --dest MyApp/VelvetUI
+```

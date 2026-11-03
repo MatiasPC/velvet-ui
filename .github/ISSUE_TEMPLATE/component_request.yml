@@ -1,0 +1,54 @@
+name: Component request
+description: Propose a new component for Velvet UI.
+title: "[Component] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Velvet UI takes components that are **reusable**, **polished**, **unique** and **already proven in a real app**. See [CONTRIBUTING.md](https://github.com/MatiasPC/velvet-ui/blob/main/CONTRIBUTING.md#what-gets-in).
+  - type: input
+    id: name
+    attributes:
+      label: Component name
+      placeholder: DSBottomSheet
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does it solve?
+      description: The use case, and why the existing components don't cover it.
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: The smallest public API that would do the job.
+      render: swift
+      placeholder: |
+        DSBottomSheet(isPresented: $showSheet, detents: [.medium, .large]) {
+            content
+        }
+  - type: textarea
+    id: feel
+    attributes:
+      label: Motion, haptics and accessibility
+      description: How it should move and feel, which haptic fires when, and what VoiceOver should read.
+  - type: textarea
+    id: proof
+    attributes:
+      label: Where has it been used?
+      description: The app (or prototype) where you built it. Links, screenshots or clips are welcome.
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Apps or designs that do this well.
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I'd like to open the pull request myself.
