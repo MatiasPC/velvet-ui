@@ -4,6 +4,9 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `DSCheckbox` and `DSCheckboxSize` (`.small` 20 · `.medium` 24 · `.large` 28): selection control for lists, forms and consent rows. A wash-filled box (no outline) whose accent layer pops in with `springBouncy` while the checkmark draws on via `trim` a beat later; the whole row, label included, is a 44 pt hit target; `.rigid` haptic on toggle; VoiceOver reads "Checked"/"Unchecked" with the toggle and selected traits; Reduce Motion crossfades instead of popping.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

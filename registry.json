@@ -97,6 +97,21 @@
       "stage": "DSToggle"
     },
     {
+      "name": "DSCheckbox",
+      "category": "inputs",
+      "summary": "Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic.",
+      "symbols": [
+        "DSCheckbox",
+        "DSCheckboxSize"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCheckbox.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSCheckbox.md",
+      "stage": "DSCheckbox"
+    },
+    {
       "name": "DSStepper",
       "category": "inputs",
       "summary": "Minus/plus stepper that ticks on every step and jiggles at its bounds.",
