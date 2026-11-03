@@ -17,6 +17,13 @@ import SwiftUI
 // the Velvet spring instead of snapping. No border, no fill, no color: a layout
 // positions, it never paints, so it inherits whatever the chips themselves draw.
 
+private enum Metrics {
+    /// Slack when comparing a row against the container. The parent may hand back
+    /// bounds a fraction of a point narrower than the width we reported (pixel
+    /// rounding); without this the last item would wrap to a row we never sized for.
+    static let fitTolerance: CGFloat = 0.5
+}
+
 public struct DSFlowLayout: Layout {
 
     /// Horizontal gap between items on the same row. Defaults to `DSSpacing.xs` (8).
@@ -24,7 +31,8 @@ public struct DSFlowLayout: Layout {
     /// Vertical gap between rows. Defaults to `DSSpacing.xs` (8).
     public var lineSpacing: CGFloat
     /// How a row narrower than the container is positioned within it:
-    /// `.leading` (default), `.center` or `.trailing`.
+    /// `.leading` (default), `.center` or `.trailing`. Follows the layout
+    /// direction, so `.leading` starts on the right in a right-to-left language.
     public var alignment: HorizontalAlignment
 
     public init(
@@ -46,18 +54,19 @@ public struct DSFlowLayout: Layout {
     ) -> CGSize {
         guard !subviews.isEmpty else { return .zero }
 
-        // An unspecified width means "as wide as you like"; pack against infinity
-        // and then report the widest row as the natural content width.
-        let containerWidth = proposal.width ?? .infinity
-        let rows = computeRows(maxWidth: containerWidth, subviews: subviews)
+        // An unspecified width means "as wide as you like": pack against infinity
+        // (one row) and report the widest row as the natural content width.
+        let maxWidth = proposal.width ?? .infinity
+        let rows = Self.pack(measure(subviews, maxWidth: maxWidth), maxWidth: maxWidth, spacing: spacing)
 
         let contentWidth = rows.map(\.width).max() ?? 0
-        let height = rows.reduce(0) { $0 + $1.height }
-            + lineSpacing * CGFloat(max(0, rows.count - 1))
+        let height = Self.totalHeight(of: rows, lineSpacing: lineSpacing)
 
-        // Fill the proposed width when one was given (so alignment has room to
-        // work); otherwise shrink to the content.
-        return CGSize(width: proposal.width ?? contentWidth, height: height)
+        // Fill a finite proposed width (so alignment has room to work); otherwise
+        // shrink to the content. An infinite proposal (a horizontal ScrollView, an
+        // HStack probing its maximum) must never be echoed back as our size.
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? contentWidth
+        return CGSize(width: width, height: height)
     }
 
     public func placeSubviews(
@@ -68,24 +77,19 @@ public struct DSFlowLayout: Layout {
     ) {
         guard !subviews.isEmpty else { return }
 
-        let rows = computeRows(maxWidth: bounds.width, subviews: subviews)
+        let rows = Self.pack(measure(subviews, maxWidth: bounds.width), maxWidth: bounds.width, spacing: spacing)
+        let isRightToLeft = subviews.layoutDirection == .rightToLeft
         var y = bounds.minY
 
         for row in rows {
-            // Position the row as a whole, then walk its items left-to-right.
-            let leadingX: CGFloat
-            if alignment == .center {
-                leadingX = bounds.minX + (bounds.width - row.width) / 2
-            } else if alignment == .trailing {
-                leadingX = bounds.maxX - row.width
-            } else {
-                leadingX = bounds.minX
-            }
-
-            var x = leadingX
+            // Lay the row out left-to-right, then mirror it for right-to-left.
+            var x = bounds.minX + Self.leadingOffset(rowWidth: row.width, boundsWidth: bounds.width, alignment: alignment)
             for item in row.items {
+                let originX = isRightToLeft ? bounds.minX + bounds.maxX - (x + item.size.width) : x
+                // Shorter items sit centred in their row, like an HStack.
+                let originY = y + (row.height - item.size.height) / 2
                 subviews[item.index].place(
-                    at: CGPoint(x: x, y: y),
+                    at: CGPoint(x: originX, y: originY),
                     anchor: .topLeading,
                     proposal: ProposedViewSize(item.size)
                 )
@@ -95,51 +99,79 @@ public struct DSFlowLayout: Layout {
         }
     }
 
-    // MARK: - Row packing
+    // MARK: - Measuring
+
+    /// Each subview's size at its ideal width. One that is wider than the whole
+    /// container is measured again at the container width, so text can wrap or
+    /// truncate instead of running off the edge.
+    private func measure(_ subviews: Subviews, maxWidth: CGFloat) -> [CGSize] {
+        subviews.map { subview in
+            let ideal = subview.sizeThatFits(.unspecified)
+            guard maxWidth.isFinite, ideal.width > maxWidth else { return ideal }
+            return subview.sizeThatFits(ProposedViewSize(width: maxWidth, height: nil))
+        }
+    }
+
+    // MARK: - Row packing (pure)
+
+    /// One item on a row: which subview it is and the size it was measured at.
+    struct Item: Equatable {
+        let index: Int
+        let size: CGSize
+    }
 
     /// One line of the flow: the items on it, its used width and its tallest item.
-    private struct Row {
-        var items: [(index: Int, size: CGSize)] = []
-        var width: CGFloat = 0
-        var height: CGFloat = 0
+    struct Row: Equatable {
+        private(set) var items: [Item] = []
+        private(set) var width: CGFloat = 0
+        private(set) var height: CGFloat = 0
 
-        mutating func append(index: Int, size: CGSize, spacing: CGFloat) {
+        mutating func append(_ item: Item, spacing: CGFloat) {
             if !items.isEmpty { width += spacing }
-            items.append((index, size))
-            width += size.width
-            height = max(height, size.height)
+            items.append(item)
+            width += item.size.width
+            height = max(height, item.size.height)
         }
     }
 
     /// Greedy first-fit packing: keep adding to the current row until the next
     /// item would overflow `maxWidth`, then start a new one. An item wider than
     /// the whole container still lands on its own row rather than vanishing.
-    private func computeRows(maxWidth: CGFloat, subviews: Subviews) -> [Row] {
+    static func pack(_ sizes: [CGSize], maxWidth: CGFloat, spacing: CGFloat) -> [Row] {
         var rows: [Row] = []
         var current = Row()
 
-        for index in subviews.indices {
-            let size = subviews[index].sizeThatFits(.unspecified)
-            let projected = current.items.isEmpty
-                ? size.width
-                : current.width + spacing + size.width
-
-            if !current.items.isEmpty && projected > maxWidth {
+        for (index, size) in sizes.enumerated() {
+            if !current.items.isEmpty, current.width + spacing + size.width > maxWidth + Metrics.fitTolerance {
                 rows.append(current)
                 current = Row()
             }
-            current.append(index: index, size: size, spacing: spacing)
+            current.append(Item(index: index, size: size), spacing: spacing)
         }
 
         if !current.items.isEmpty { rows.append(current) }
         return rows
+    }
+
+    /// Combined height of `rows` plus the gaps between them.
+    static func totalHeight(of rows: [Row], lineSpacing: CGFloat) -> CGFloat {
+        rows.reduce(0) { $0 + $1.height } + lineSpacing * CGFloat(max(0, rows.count - 1))
+    }
+
+    /// How far from the container's left edge a row of `rowWidth` starts.
+    /// Never negative: a row wider than the container starts flush and overflows.
+    static func leadingOffset(rowWidth: CGFloat, boundsWidth: CGFloat, alignment: HorizontalAlignment) -> CGFloat {
+        let slack = max(0, boundsWidth - rowWidth)
+        if alignment == .center { return slack / 2 }
+        if alignment == .trailing { return slack }
+        return 0
     }
 }
 
 // MARK: - Preview
 
 #if DEBUG
-private struct DSFlowChip: View {
+private struct FlowPreviewChip: View {
     let label: String
     let isSelected: Bool
     let action: () -> Void
@@ -184,7 +216,7 @@ private struct DSFlowLayoutPreviewHost: View {
                     Text("INTERESTS").ds(.overline, color: DSColors.textSecondary)
                     DSFlowLayout {
                         ForEach(interests, id: \.self) { interest in
-                            DSFlowChip(label: interest, isSelected: selected.contains(interest)) {
+                            FlowPreviewChip(label: interest, isSelected: selected.contains(interest)) {
                                 if selected.contains(interest) {
                                     selected.remove(interest)
                                 } else {
@@ -200,7 +232,7 @@ private struct DSFlowLayoutPreviewHost: View {
                     Text("TAP TO REMOVE").ds(.overline, color: DSColors.textSecondary)
                     DSFlowLayout(spacing: DSSpacing.xs, lineSpacing: DSSpacing.xs) {
                         ForEach(tags, id: \.self) { tag in
-                            DSFlowChip(label: tag, isSelected: false) {
+                            FlowPreviewChip(label: tag, isSelected: false) {
                                 tags.removeAll { $0 == tag }
                             }
                         }
@@ -213,7 +245,7 @@ private struct DSFlowLayoutPreviewHost: View {
                     DSCard {
                         DSFlowLayout(alignment: .center) {
                             ForEach(["XS", "Small", "Medium", "Large", "XL", "XXL"], id: \.self) { size in
-                                DSFlowChip(label: size, isSelected: false) {}
+                                FlowPreviewChip(label: size, isSelected: false) {}
                             }
                         }
                         .frame(maxWidth: .infinity)
