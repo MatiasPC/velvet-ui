@@ -112,7 +112,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
 | <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
 | <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |
-| <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts that VoiceOver announces. |
+| <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts. `.dsToast` presents them: auto-dismiss, replacement, flick away. |
 | <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
 | <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, gradient and step progress, animated numbers, shimmer skeletons. |
 | <img src="docs/media/DSSkeleton.gif" width="120" alt="DSSkeleton"> | [DSSkeleton](docs/components/DSSkeleton.md) | Loading placeholders, plus `.dsSkeleton(_:)` to redact a real view in place. |
@@ -185,7 +185,7 @@ Under the components sit the tokens: glass surfaces (`DSSurface`), the wash that
 
 ## Accessibility
 
-- **VoiceOver.** Interactive controls expose a label, a value and the right traits. `DSStepper`, `DSRating` and `DSPageControl` are adjustable (swipe up and down). `DSSlideToConfirm` confirms with a double-tap, so nobody has to drag. `DSToast` announces itself. Icon-only buttons take an `accessibilityLabel:`. Each component page lists exactly what VoiceOver reads.
+- **VoiceOver.** Interactive controls expose a label, a value and the right traits. `DSStepper`, `DSRating` and `DSPageControl` are adjustable (swipe up and down). `DSSlideToConfirm` confirms with a double-tap, so nobody has to drag. `DSToast` announces itself, and `.dsToast` adds a Dismiss action. Icon-only buttons take an `accessibilityLabel:`. Each component page lists exactly what VoiceOver reads.
 - **Dynamic Type.** Text styled with `.ds(_:)`, `.dsTextStyle(_:)` or `.dsFont(_:)` scales with the user's text size, and looks identical at the default size. Buttons, text field input, the segmented control and badges keep a fixed label size for now. The stepper, code field and slide-to-confirm scale their text inside a fixed-height control.
 - **Reduce Motion** puts ambient effects in a resting state instead of cutting them mid-animation. Gesture feedback stays, and decorative particles are removed.
 - **Reduce Transparency** swaps glass for solid surfaces.

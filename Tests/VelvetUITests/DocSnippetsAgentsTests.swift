@@ -133,23 +133,14 @@ enum DocSnippetsAgents {
     }
 
     struct SaveButton: View {
-        @State private var showsToast = false
+        @State private var toast: DSToastValue?
 
         var body: some View {
             DSButton("Save") {
-                withAnimation(DSAnimation.springSmooth) { showsToast = true }
+                toast = DSToastValue("Saved to your library", type: .success)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .bottom) {
-                if showsToast {
-                    DSToast("Saved to your library", type: .success)
-                        .transition(.dsSlideUp)
-                        .task {
-                            try? await Task.sleep(for: .seconds(2))
-                            withAnimation(DSAnimation.springSmooth) { showsToast = false }
-                        }
-                }
-            }
+            .dsToast($toast, edge: .bottom)
         }
     }
 

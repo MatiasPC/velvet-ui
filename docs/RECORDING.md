@@ -108,7 +108,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSBadge` | Nothing moves; record a still moment or screenshot. |
 | `DSAvatar` | Nothing moves; record a still moment or screenshot. |
 | `DSListCell` | Click rows to show the press. Manual. |
-| `DSToast` | Autoplay: cycles success, error, warning, info. |
+| `DSToast` | Autoplay: toasts ride in from the bottom, one replaces another, the rest leave by themselves. Manual: tap a button, then flick the toast away. |
 | `DSEmptyState` | Click "Compose". Manual. |
 | `DSSegmentedControl` | Autoplay: walks Day, Week, Month. |
 | `DSToggle` | Autoplay: flips the switch. |

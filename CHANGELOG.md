@@ -4,6 +4,10 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 
 ## [Unreleased]
 
+### Added
+- `.dsToast(_:edge:)` (`DSToastPresenter.swift`) presents `DSToast`: bind a `DSToastValue?` and the banner slides in from the top (default) or bottom, fires the type's haptic, auto-dismisses after `duration`, and can be flicked away. Assigning a new value replaces the toast on screen without overlap and restarts the timer; `nil` dismisses; `duration <= 0` is sticky. Reduce Motion fades instead of sliding, VoiceOver announces every presentation and gets a "Dismiss" action. New public types `DSToastValue(_:type:duration:)` and `DSToastEdge`; part of the `DSToast` registry entry.
+- Gallery: the Toast screen and the Settings example present toasts with `.dsToast`; the DSToast stage shows the presenter.
+
 ## [0.2.0] — 2026-10-23
 
 The first tagged release, and the first you can install by version with SwiftPM. It folds together the v0.2 glass surface language (logged earlier as an untagged "0.2.0 — 2026-09-05") and everything since: the motion library, slide-to-confirm with async results, an accessibility pass, and the rename to `VelvetUI`.

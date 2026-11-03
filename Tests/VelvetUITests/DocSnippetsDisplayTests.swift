@@ -162,44 +162,76 @@ enum DocSnippetsDisplay {
 
     // BEGIN ToastDemo
     struct ToastDemo: View {
-        @State private var toast: (message: String, type: DSToastType)?
+        @State private var toast: DSToastValue?
 
         var body: some View {
             DSScreen(backdrop: true) {
                 VStack(spacing: DSSpacing.sm) {
                     DSButton("Save", isFullWidth: true) {
-                        show("Saved to your library", type: .success)
+                        toast = DSToastValue("Saved to your library", type: .success)
                     }
                     DSButton("Simulate failure", variant: .secondary, isFullWidth: true) {
-                        show("Couldn't connect", type: .error)
+                        toast = DSToastValue("Couldn't connect", type: .error)
                     }
                 }
                 .dsScreenPadding()
             }
+            .dsToast($toast)
+        }
+    }
+    // END ToastDemo
+
+    // BEGIN ToastStickyDemo
+    struct ToastStickyDemo: View {
+        @State private var toast: DSToastValue?
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(spacing: DSSpacing.sm) {
+                    DSButton("Start upload", isFullWidth: true) {
+                        // duration: 0 keeps it up until you clear the binding
+                        toast = DSToastValue("Uploading…", type: .info, duration: 0)
+                    }
+                    DSButton("Finish", variant: .secondary, isFullWidth: true) {
+                        toast = DSToastValue("Upload complete", type: .success, duration: 4)
+                    }
+                    DSButton("Cancel", variant: .ghost, isFullWidth: true) {
+                        toast = nil
+                    }
+                }
+                .dsScreenPadding()
+            }
+            .dsToast($toast, edge: .bottom)
+        }
+    }
+    // END ToastStickyDemo
+
+    // BEGIN ToastManualDemo
+    struct ToastManualDemo: View {
+        @State private var showsToast = false
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                DSButton("Save", isFullWidth: true) {
+                    withAnimation(DSAnimation.springSmooth) { showsToast = true }
+                    DSHapticEngine.shared.fire(.success)
+                }
+                .dsScreenPadding()
+            }
             .overlay(alignment: .bottom) {
-                if let toast {
-                    DSToast(toast.message, type: toast.type)
+                if showsToast {
+                    DSToast("Saved to your library", type: .success)
                         .padding(.bottom, DSSpacing.md)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
-                        .task(id: toast.message) {
+                        .task {
                             try? await Task.sleep(for: .seconds(2.5))
-                            withAnimation(DSAnimation.springSmooth) { self.toast = nil }
+                            withAnimation(DSAnimation.springSmooth) { showsToast = false }
                         }
                 }
             }
         }
-
-        private func show(_ message: String, type: DSToastType) {
-            withAnimation(DSAnimation.springSmooth) { toast = (message, type) }
-            switch type {
-            case .success: DSHapticEngine.shared.fire(.success)
-            case .error:   DSHapticEngine.shared.fire(.error)
-            case .warning: DSHapticEngine.shared.fire(.warning)
-            case .info:    DSHapticEngine.shared.fire(.light)
-            }
-        }
     }
-    // END ToastDemo
+    // END ToastManualDemo
 
     // BEGIN EmptyStateDemo
     struct EmptyStateDemo: View {
@@ -363,6 +395,8 @@ final class DocSnippetsDisplayTests: XCTestCase {
         _ = DocSnippetsDisplay.AvatarDemo()
         _ = DocSnippetsDisplay.ListDemo()
         _ = DocSnippetsDisplay.ToastDemo()
+        _ = DocSnippetsDisplay.ToastStickyDemo()
+        _ = DocSnippetsDisplay.ToastManualDemo()
         _ = DocSnippetsDisplay.EmptyStateDemo()
         _ = DocSnippetsDisplay.ProgressDemo()
         _ = DocSnippetsDisplay.ThinkingDemo()
