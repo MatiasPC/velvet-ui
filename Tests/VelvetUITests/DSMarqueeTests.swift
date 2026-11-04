@@ -88,7 +88,10 @@ final class DSMarqueeTests: XCTestCase {
         }
     }
 
-    func testTakesTheOfferedWidthAndScrollsTheOverflow() {
+    // Layout only. The drift itself is covered by the `DSMarqueeMath` tests above: an
+    // off-screen window on a headless CI runner gets no display-link ticks, so a
+    // time-based "the content moved" check here is flaky.
+    func testTakesTheOfferedWidth() {
         var frames: [String: CGRect] = [:]
         let view = Probe { frames[$0] = $1 }
             .frame(width: 300)
@@ -98,17 +101,11 @@ final class DSMarqueeTests: XCTestCase {
         let window = NSWindow(contentRect: host.frame, styleMask: [], backing: .buffered, defer: false)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        RunLoop.current.run(until: Date().addingTimeInterval(0.4))
-        let first = frames["content"]?.minX
+        RunLoop.current.run(until: Date().addingTimeInterval(0.2))
 
         XCTAssertEqual(frames["marquee"]?.width ?? -1, 300, accuracy: 0.5)
         XCTAssertEqual(frames["marquee"]?.height ?? -1, 20, accuracy: 0.5)
-
-        RunLoop.current.run(until: Date().addingTimeInterval(0.6))
-        let later = frames["content"]?.minX
-        XCTAssertNotNil(first)
-        XCTAssertNotNil(later)
-        XCTAssertLessThan(later ?? 0, first ?? 0, "the content should have drifted left")
+        XCTAssertEqual(frames["content"]?.width ?? -1, 600, accuracy: 0.5, "the content keeps its width and overflows")
     }
     #endif
 }

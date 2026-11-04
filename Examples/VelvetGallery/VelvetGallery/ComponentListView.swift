@@ -38,6 +38,8 @@ struct ComponentListView: View {
             Section("Containers") {
                 row("Cards", "Glass containers") { CardsScreen() }
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
+                row("Flip Card", "Two-sided glass, turns in 3D") { FlipCardScreen() }
+
                 row("Tilt Card", "Tips toward the finger, sliding sheen") { TiltCardScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
                 row("Flow Layout", "Wraps to new rows, reflows with a spring") { FlowLayoutScreen() }
@@ -62,6 +64,7 @@ struct ComponentListView: View {
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
                 row("Timeline", "Nodes and a connector that fills") { TimelineScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
+                row("Activity Rings", "Goals that fill, close and glow") { ActivityRingsScreen() }
             }
             Section("Feedback") {
                 row("Toast", "Transient feedback") { ToastScreen() }
@@ -71,6 +74,7 @@ struct ComponentListView: View {
                 row("Success Check", "Ring, check and a pop on the beat") { SuccessCheckScreen() }
                 row("Confetti", "A themed burst on any trigger") { ConfettiScreen() }
                 row("Thinking Indicator", "Ambient processing") { ThinkingIndicatorScreen() }
+                row("Audio Bars", "An equaliser for live audio") { AudioBarsScreen() }
                 row("Marquee", "Overflowing content scrolls in a loop") { MarqueeScreen() }
                 row("Typewriter Text", "Typed reveal") { TypewriterTextScreen() }
             }

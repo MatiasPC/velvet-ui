@@ -1757,6 +1757,122 @@ struct CardStylesDemo: View {
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
+<!-- source: docs/components/DSFlipCard.md -->
+
+# DSFlipCard
+
+A two-sided glass card that turns over in 3D to reveal its back — tap it, or drive it from a binding. The flip is a single spring about one axis with a touch of perspective, and it fires a haptic on the turn.
+
+<!-- GIF pending: ![DSFlipCard](../media/DSFlipCard.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlipCard.swift`](../../Sources/VelvetUI/Components/DSFlipCard.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct FlipDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            // Tap anywhere on the card to turn it over.
+            DSFlipCard {
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    Text("This month").ds(.footnote)
+                    Text("1 248").ds(.displayMedium)
+                    Text("Tap to see the trend").ds(.callout)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } back: {
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    Text("vs. last month").ds(.footnote)
+                    Text("+12%").ds(.displayMedium)
+                    Text("Tap to flip back").ds(.callout)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+Glass looks best over `.dsBackdrop()` or `DSScreen(backdrop: true)`. The card takes the size of the larger face and both faces fill it, so the card keeps its frame when it turns. Give the card a fixed `.frame(...)` to size it yourself.
+
+### Drive it from a binding
+
+Pass `isFlipped` to turn the card over from code (a button, a gesture, a result) as well as by tapping. The card animates the turn itself whenever `isFlipped` changes, so no `withAnimation` is needed.
+
+```swift
+struct CardFace: View {
+    @State private var revealed = false
+
+    var body: some View {
+        VStack(spacing: DSSpacing.md) {
+            DSFlipCard(isFlipped: $revealed, axis: .vertical) {
+                Text("•••• 4242").ds(.numeric)
+            } back: {
+                Text("CVC 123 · 09/28").ds(.numeric)
+            }
+
+            DSButton(revealed ? "Hide" : "Reveal", variant: .secondary, size: .small) {
+                withAnimation(DSAnimation.springSmooth) { revealed.toggle() }
+            }
+        }
+    }
+}
+```
+
+When a face holds its own controls, set `flipOnTap: false` so taps reach them and the card flips only from the binding.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isFlipped` | `Binding<Bool>` | — | Only on the bound initializer: `false` shows `front`, `true` shows `back`. Omit it for a self-managing, tap-to-flip card. |
+| `axis` | `DSFlipAxis` | `.horizontal` | Which way the card swings: `.horizontal` (left-to-right) or `.vertical` (top-to-bottom). |
+| `style` | `DSCardStyle` | `.elevated` | Glass treatment of each face, same as `DSCard`: `.flat`, `.elevated`, `.outlined`. |
+| `padding` | `CGFloat` | `DSSpacing.md` | Inner padding of each face. |
+| `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius of each face (20). |
+| `flipOnTap` | `Bool` | `true` | Turn the card over when it is tapped. Set `false` when a face has its own controls. |
+| `haptic` | `DSHapticStyle?` | `.rigid` | Haptic fired on every turn, tap or binding. `nil` for none. |
+| `front` | `@ViewBuilder () -> Front` | required | The face shown at rest. |
+| `back` | `@ViewBuilder () -> Back` | required | The face revealed after the turn. |
+
+## Behavior
+
+- The turn is one `DSAnimation.springSmooth` about `axis`, with a subtle perspective so the card reads as lifting off the glass.
+- A single animated angle drives the turn through an `Animatable` container, so the two faces swap exactly at the 90° edge — no ghosting and no mirrored text. The back face is pre-rotated a half turn so it reads the right way round once flipped.
+- Each face draws the same surfaces as `DSCard` (glass, the 1pt edge highlight, the soft shadow). While the card is turning, a solid body with its own shadow replaces the glass, which does not render while the 3D transform animates; the glass fades back in just under a second after the last flip. Under Reduce Transparency the glass becomes a solid elevated background.
+- The turn fires `haptic` (default `.rigid`) as it starts, on both tap and programmatic flips (it follows `isFlipped`). Pass `nil` when your own control already fires one.
+- A face that is not showing never takes touches, so controls on the front and back can share a position.
+- **Reduce Motion:** the card does not turn; the faces crossfade with `DSAnimation.fast`.
+
+## Accessibility
+
+- With `flipOnTap` on, the card is one VoiceOver element with the `.isButton` trait, the hint "Double tap to flip" and the value "Front side" / "Back side" (announced on every turn); the visible face's content is read as the label.
+- The hidden face is marked `.accessibilityHidden`, so VoiceOver never reads both sides at once.
+- With `flipOnTap: false`, no button semantics are added and each face keeps its own hit testing and VoiceOver — label the flip control yourself.
+- Text uses `.ds(_:)` styles, which scale with Dynamic Type; give both faces room to grow.
+
+## See also
+
+- [DSCard](DSCard.md) for the glass surface each face is built on
+- [DSSuccessCheck](DSSuccessCheck.md) and [DSConfetti](DSConfetti.md) for other reveal moments
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
 <!-- source: docs/components/DSListCell.md -->
 
 # DSListCell
@@ -2599,6 +2715,121 @@ A sparkline without fill or dot is a plain line, good for table rows. A bar char
 
 - [Progress](Progress.md) for determinate fractions
 - [Motion](Motion.md) for `dsBreathe`
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSActivityRings.md -->
+
+# DSActivityRings
+
+Concentric goal rings, the "close your rings" pattern: several goals nested as rings that fill with a spring, and a ring that lights up with a glow and one haptic the moment it closes.
+
+<!-- GIF pending: ![DSActivityRings](../media/DSActivityRings.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSActivityRings.swift`](../../Sources/VelvetUI/Components/DSActivityRings.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct TodayRings: View {
+    @DSThemed private var theme
+    @State private var move = 0.82
+    @State private var exercise = 0.60
+    @State private var stand = 0.45
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSCard {
+                    DSActivityRings([
+                        DSRing(progress: move, color: theme.palette.error, label: "Move"),
+                        DSRing(progress: exercise, color: theme.palette.success, label: "Exercise"),
+                        DSRing(progress: stand, color: theme.palette.info, label: "Stand")
+                    ]) {
+                        Text("\(Int(((move + exercise + stand) / 3 * 100).rounded()))%").ds(.title2)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+
+                DSButton("Finish a workout", isFullWidth: true) { exercise = 1 }
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+`DSActivityRings(_:size:lineWidth:spacing:spring:haptic:accessibilityLabel:center:)`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `rings` | `[DSRing]` | required | The rings, outermost first. |
+| `size` | `CGFloat` | `160` | Outer diameter of the whole set. The rings stay inside it. |
+| `lineWidth` | `CGFloat` | `14` | Stroke width of every ring. |
+| `spacing` | `CGFloat` | `DSSpacing.xxs` | Gap between adjacent rings. |
+| `spring` | `Animation` | `DSAnimation.springSmooth` | The fill animation, on appear and on change. |
+| `haptic` | `DSHapticStyle?` | `.success` | Fired when a ring closes. `nil` for none. |
+| `accessibilityLabel` | `String` | `"Activity rings"` | What VoiceOver calls the set. |
+| `center` | `() -> View` | none | Content nested inside the innermost ring. Leave it out for no centre. |
+
+`DSRing(progress:color:label:)`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `progress` | `Double` | required | Fraction of the goal reached. `1` is a closed ring. |
+| `color` | `Color?` | `nil` | Ring colour. `nil` follows the theme accent. |
+| `label` | `String?` | `nil` | The name VoiceOver speaks ("Move"). `nil` falls back to "Ring 1", "Ring 2"… |
+
+## Variants
+
+```swift
+HStack(spacing: DSSpacing.xl) {
+    // One goal, no centre, in the theme accent
+    DSActivityRings([DSRing(progress: 0.7, label: "Budget")], size: 96, lineWidth: 12)
+
+    // A quiet one: no haptic when it closes
+    DSActivityRings([DSRing(progress: 1, label: "Storage")], size: 96, lineWidth: 12, haptic: nil)
+}
+```
+Budgets, storage, quiz completion or any "how close am I" view work with one ring or several. A thinner `lineWidth` fits more rings in the same `size`.
+
+## Behavior
+
+- Rings are drawn outermost first, each one lane (`lineWidth + spacing`) inside the one before. A ring that would no longer leave a hole in the middle is not drawn.
+- Each ring fills from empty when the view appears, and animates to its new value whenever `progress` changes.
+- Closing: when a ring goes from open to closed (`progress` reaching `1` while it is on screen) it lights up with a glow in its own colour and one haptic fires, both as the spring lands. A closed ring keeps its glow until it re-opens.
+- A ring that is already closed when the view appears glows but does not buzz, and re-renders never buzz. Only a real transition does.
+- Rings that close at the same moment share one haptic.
+- Past the goal: `progress` above `1` is clamped to a full, closed ring. The arc does not wrap or overlap. VoiceOver still speaks the real number ("120 percent"). Negative and non-numeric values count as `0`.
+- The track behind each ring is the palette border colour, like the other progress components.
+- Reduce Motion: no sweep. Rings jump to their value, and the glow and haptic still mark a close.
+
+## Accessibility
+
+- The rings are one VoiceOver element. Its label is `accessibilityLabel`; its value lists every ring, outermost first: "Move 82 percent. Exercise 60 percent. Stand 100 percent, complete".
+- Give each ring a `label`. Without one it is read as "Ring 1", "Ring 2".
+- Centre content is a separate element, so a summary there stays reachable.
+- A ring closing is not announced. VoiceOver users hear the new value when they focus the rings.
+
+## See also
+
+- [Progress](Progress.md) for a single circular, linear or step indicator
+- [DSSuccessCheck](DSSuccessCheck.md) for a one-off success moment
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
@@ -3512,6 +3743,98 @@ The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDura
 - [DSThinkingIndicator](DSThinkingIndicator.md)
 - [Progress](Progress.md)
 - [DSAvatar](DSAvatar.md) (breathe while waiting)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSAudioBars.md -->
+
+# DSAudioBars
+
+An equaliser for live audio: a row of capsule bars that ripple while sound is playing or being recorded, follow an optional live level, and ease down to a flat line when idle.
+
+<!-- GIF pending: ![DSAudioBars](../media/DSAudioBars.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAudioBars.swift`](../../Sources/VelvetUI/Components/DSAudioBars.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ListeningDemo: View {
+    @State private var isListening = true
+    @State private var micLevel = 0.5   // feed this from your recorder's meter
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSCard {
+                    HStack(spacing: DSSpacing.sm) {
+                        DSAudioBars(isActive: isListening, level: micLevel, barCount: 7)
+                        Text(isListening ? "Listening…" : "Paused").ds(.callout)
+                        Spacer()
+                    }
+                }
+                DSToggle("Listening", isOn: $isListening)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+`DSAudioBars(isActive:level:barCount:barWidth:spacing:height:color:)`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isActive` | `Bool` | `true` | Ripple while true; ease down to a flat line while false. |
+| `level` | `Double?` | `nil` | Live level `0...1`, the amplitude of the ripple. `nil` ripples at full amplitude. Out-of-range values are clamped. |
+| `barCount` | `Int` | `5` | Number of bars (at least 1). |
+| `barWidth` | `CGFloat` | `DSSpacing.xxs` | Width of each bar. |
+| `spacing` | `CGFloat` | `DSSpacing.xxs` | Gap between bars. |
+| `height` | `CGFloat` | `DSSpacing.xl` | Height of the tallest bar. |
+| `color` | `Color?` | `nil` | Bar fill. Defaults to the theme accent. |
+
+## Variants
+
+```swift
+HStack(spacing: DSSpacing.xl) {
+    DSAudioBars(barCount: 3)
+    DSAudioBars(barCount: 7, height: DSSpacing.xxl)
+    DSAudioBars(barCount: 5, color: DSColors.success)
+}
+```
+Few and short for a list row, many and tall for a voice screen.
+
+## Behavior
+
+- Heights come from one clock, with a phase offset per bar, so the row ripples rather than pulses.
+- Going between active and idle, and between levels, eases with the system's eased curves (not a spring: nothing was touched). Raw meter readings are fine to pass; a level change is smoothed over about a quarter of a second.
+- With a `level`, the bars swell with it and sit at the resting line at `0`. Without one they ripple at full amplitude.
+- The clock is paused when the bars are idle, when the view is not on screen (it disappeared, for example behind a pushed screen), when the app is not active, and under Reduce Motion. A paused indicator costs no CPU. In a plain `ScrollView` a row that is only scrolled away may still count as on screen; lists and lazy stacks unload it.
+- Reduce Motion: no ripple. Idle bars are a flat line; active bars rest on a symmetric bell, and `level` is ignored.
+
+## Accessibility
+
+- The bars are decorative and hidden from VoiceOver. Put a label next to them ("Listening…") so the state is also announced.
+
+## See also
+
+- [DSThinkingIndicator](DSThinkingIndicator.md) for "the assistant is working"
+- [Motion](Motion.md) for ambient effects on any view
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---

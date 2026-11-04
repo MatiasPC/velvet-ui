@@ -67,6 +67,30 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSFlipCard  🧪
+
+`Components/DSFlipCard.swift`. A two-sided glass card that turns over in 3D.
+
+```swift
+DSFlipCard(axis: DSFlipAxis = .horizontal,       // .horizontal (y) · .vertical (x)
+           style: DSCardStyle = .elevated,
+           padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card,
+           flipOnTap: Bool = true,
+           haptic: DSHapticStyle? = .rigid) { front } back: { back }
+
+// Controlled: same params plus a leading `isFlipped: Binding<Bool>`.
+DSFlipCard(isFlipped: $revealed, axis: .vertical) { front } back: { back }
+```
+
+Each face is a `DSCard` (depends on it). The turn is one `DSAnimation.springSmooth` about `axis` with `perspective` 0.5. A single animated angle runs through an inner `Animatable` container (`DSFlipFaces`); the faces swap on the `angle >= 90` threshold, so the hand-off lands at the edge for any animation, spring included — no opacity cross-fade, no ghosting. The back face is pre-rotated 180° about the same axis so it reads correctly once flipped. The haptic (`.rigid`, `nil` for none) fires from `onChange(of: isFlipped)`, so tap and binding-driven flips both get it as the turn starts. Both faces are laid out by a small `Layout` at the larger face's size (they fill it), and the face that is not showing has hit testing off.
+
+Motion: under Reduce Motion the card never turns (the back face is not pre-rotated) and the faces crossfade with `DSAnimation.fast`. No `compositingGroup()`: it is unnecessary once the faces never overlap, and it risks changing how the glass material samples the backdrop.
+
+Accessibility: with `flipOnTap` the card is one combined element with `.isButton`, hint "Double tap to flip" and a Front/Back side value; the hidden face is `.accessibilityHidden`. With `flipOnTap: false` no button semantics are added, so faces keep their own hit testing — the documented path for a face with its own controls.
+
+Previews: light and dark on `.dsBackdrop()`, a tap-to-flip stat card and a binding-driven vertical card.
+
 ## DSTiltCard  ✅
 
 `Components/DSTiltCard.swift`. A glass card that tips in 3D toward the finger as you drag, with a specular sheen sliding across the surface, then springs back on release.
@@ -299,6 +323,23 @@ Modifiers: `.dsShimmer()` (skeletons — width-independent, respects Reduce Moti
 
 ---
 
+## DSActivityRings  ✅
+
+`Components/DSActivityRings.swift`. Concentric goal rings — the Apple Fitness "close your rings" pattern on Velvet tokens. One ring is `DSCircularProgress`; the value here is the *set*.
+
+```swift
+DSRing(progress: Double, color: Color? = nil, label: String? = nil)   // color nil → theme.accent
+
+DSActivityRings(_ rings: [DSRing],
+                size: CGFloat = 160, lineWidth: CGFloat = 14, spacing: CGFloat = DSSpacing.xxs,
+                spring: Animation = DSAnimation.springSmooth,
+                haptic: DSHapticStyle? = .success, accessibilityLabel: String = "Activity rings") { center }   // center optional
+```
+
+Rings draw outermost first, each one lane (`lineWidth + spacing`) inside the one outside it, and the whole set lives inside `size` (the arcs are inset by half the stroke). A ring that would leave no hole is not drawn. Geometry is the `DSCircularProgress` recipe (`Circle().trim(…)`, round cap, rotated −90°), so there is no arc trigonometry. Each ring fills with `spring` on appear (from empty) and on change; the track is `palette.border`, matching the progress family. **Closing:** when `progress` crosses 1 while the ring is on screen it lights up with a `.glow` of its own colour and fires `haptic`, both when the spring lands and only if the ring is still closed by then; rings closing together share one haptic (`DSRingMath.beatWindow`). A ring that appears closed glows but never buzzes. **Past the goal:** `progress` above 1 is clamped to a full ring (no wrap), VoiceOver still says the real percentage; negative and NaN count as 0. The optional trailing closure nests content inside the innermost ring; a no-centre convenience init exists (`Center == EmptyView`). Reduce Motion: rings jump to their value, the glow and haptic still mark a close. VoiceOver: one element (label + "Move 82 percent. Exercise 60 percent…" value), centre content stays separately reachable.
+
+---
+
 ## DSSlideToConfirm  ✅
 
 `Components/DSSlideToConfirm.swift`. Slide-to-confirm gate for irreversible actions, including payments.
@@ -411,6 +452,23 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSAudioBars  ✅
+
+`Components/DSAudioBars.swift`. Ambient audio-level visualiser — a row of capsule bars that ripple like a graphic equaliser while active and ease down to a flat resting line when idle. The audio sibling of `DSThinkingIndicator`: reach for it on voice/dictation, recording and call UIs, now-playing rows, "listening" states and AI voice.
+
+```swift
+DSAudioBars(isActive: Bool = true,
+            level: Double? = nil,       // live level 0...1 = ripple amplitude; nil = full amplitude
+            barCount: Int = 5,
+            barWidth: CGFloat = DSSpacing.xxs,
+            spacing: CGFloat = DSSpacing.xxs,
+            height: CGFloat = DSSpacing.xl,
+            color: Color? = nil)       // defaults to theme.accent
+```
+
+Motion: bar heights are computed analytically from one `TimelineView(.animation)` clock (the `DSParticleField` approach), not N `repeatForever` springs: two summed sines per bar with a per-bar phase offset. The row is an `Animatable` view whose `intensity` (isActive) and `amplitude` (level) are interpolated, so it eases between idle and live (`DSAnimation.normal`) and between levels (`DSAnimation.fast`) without a branch in the view tree. Eased curves, not springs: this is ambience. **CPU:** the timeline is paused unless active, visible (`onAppear`/`onDisappear`), the scene is active and Reduce Motion is off (`DSAudioBarsMath.isTicking`). Reduce Motion: a resting state — idle is a flat line, active freezes on a symmetric bell, and `level` is ignored.
+Theming: fill is `color ?? theme.accent`; sizes come from `DSSpacing` tokens.
+Accessibility: decorative, `accessibilityHidden(true)` — pair with a visible label (e.g. "Listening…"). No haptics: there is no interaction.
 ## DSSlider  ✅
 
 `Components/DSSlider.swift`. Continuous value control — the input Stepper/Rating/Toggle (all discrete) left uncovered.
