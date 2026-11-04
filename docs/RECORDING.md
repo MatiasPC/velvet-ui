@@ -109,7 +109,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSBadge` | Nothing moves; record a still moment or screenshot. |
 | `DSAvatar` | Nothing moves; record a still moment or screenshot. |
 | `DSListCell` | Click rows to show the press. Manual. |
-| `DSToast` | Autoplay: cycles success, error, warning, info. |
+| `DSToast` | Autoplay: toasts ride in from the bottom, one replaces another, the rest leave by themselves. Manual: tap a button, then flick the toast away. |
 | `DSEmptyState` | Click "Compose". Manual. |
 | `DSSegmentedControl` | Autoplay: walks Day, Week, Month. |
 | `DSToggle` | Autoplay: flips the switch. |
@@ -118,6 +118,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSStepper` | Autoplay: steps up, then down. |
 | `DSSlider` | Autoplay: the volume and price knobs glide to new values, the price one stepping through its notches. Drag either by hand. |
 | `DSSlideToConfirm` | Drag the knob to the end, release. Manual. |
+| `DSHoldToConfirm` | Press and hold until the ring closes; release early once to show the spring back. Manual; it re-arms itself after 2.5 s. |
 | `DSThinkingIndicator` | Runs on its own. |
 | `DSTypewriterText` | Runs on its own. |
 | `DSExpandableText` | Tap Show more, then Show less. Manual. |
@@ -131,6 +132,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `Charts` | Autoplay: shuffles the data every 2 s (line morph, bars regrow). Drag across the bars to scrub. |
 | `DSSkeleton` | Autoplay: loading → loaded → loading. |
 | `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
+| `DSScrollReveal` | Autoplay: the feed scrolls down and back up. Manual: scroll it yourself. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
 | `DSCheckbox` | Autoplay: checks three items one by one (tick draws on), then unchecks them. |
 | `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |

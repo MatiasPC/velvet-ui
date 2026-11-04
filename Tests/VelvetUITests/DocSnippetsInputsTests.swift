@@ -35,6 +35,26 @@ enum DocSnippetsInputs {
         }
     }
 
+    struct ChipDemo: View {
+        @State private var topics: Set<String> = ["Design"]
+        @State private var sort: String? = "Trending"
+
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                    // Multiple selection — tap to add or remove.
+                    DSChipGroup(
+                        ["Design", "Engineering", "Product", "Research", "Marketing"],
+                        selection: $topics
+                    )
+                    // Single selection — tap the selected chip again to clear it.
+                    DSChipGroup(["Trending", "Newest", "Top rated", "Nearby"], selection: $sort)
+                }
+                .dsScreenPadding()
+            }
+        }
+    }
+
     struct CodeFieldDemo: View {
         @State private var code = ""
         @State private var state = DSCodeFieldState.normal
@@ -48,6 +68,41 @@ enum DocSnippetsInputs {
                     }
                 }
                 .dsScreenPadding()
+            }
+        }
+    }
+
+    struct HoldToConfirmDemo: View {
+        var body: some View {
+            DSScreen(backdrop: true) {
+                VStack(spacing: DSSpacing.lg) {
+                    Text("Delete account").ds(.title2)
+                    DSHoldToConfirm(
+                        "Hold to delete",
+                        icon: "trash",
+                        confirmedLabel: "Deleted",
+                        accent: DSColors.error
+                    ) {
+                        try await deleteAccount()
+                    }
+                }
+                .dsScreenPadding()
+            }
+        }
+
+        // Stand-in for your call. Throwing re-opens the control for a retry.
+        private func deleteAccount() async throws {
+            try await Task.sleep(for: .seconds(1))
+        }
+    }
+
+    struct HoldToConfirmVariantsDemo: View {
+        var body: some View {
+            VStack(spacing: DSSpacing.md) {
+                // A quick, compact hold.
+                DSHoldToConfirm("Hold to send", icon: "paperplane.fill", confirmedLabel: "Sent", duration: 0.6, isFullWidth: false) { }
+                // A slow, deliberate one.
+                DSHoldToConfirm("Hold to power off", icon: "power", confirmedLabel: "Off", duration: 2.5) { }
             }
         }
     }
@@ -270,7 +325,10 @@ final class DocSnippetsInputsTests: XCTestCase {
     func testSnippetsInstantiate() {
         _ = DocSnippetsInputs.ButtonDemo()
         _ = DocSnippetsInputs.ButtonVariantsDemo()
+        _ = DocSnippetsInputs.ChipDemo()
         _ = DocSnippetsInputs.CodeFieldDemo()
+        _ = DocSnippetsInputs.HoldToConfirmDemo()
+        _ = DocSnippetsInputs.HoldToConfirmVariantsDemo()
         _ = DocSnippetsInputs.IconButtonDemo()
         _ = DocSnippetsInputs.PageControlDemo()
         _ = DocSnippetsInputs.RatingDemo()

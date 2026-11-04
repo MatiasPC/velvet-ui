@@ -129,20 +129,6 @@
       "stage": "DSStepper"
     },
     {
-      "name": "DSSlider",
-      "category": "inputs",
-      "summary": "Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.",
-      "symbols": [
-        "DSSlider"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSSlider.swift"
-      ],
-      "dependencies": [],
-      "docs": "docs/components/DSSlider.md",
-      "stage": "DSSlider"
-    },
-    {
       "name": "DSRating",
       "category": "inputs",
       "summary": "Drag-to-rate stars, with half steps and a read-only mode.",
@@ -155,20 +141,6 @@
       "dependencies": [],
       "docs": "docs/components/DSRating.md",
       "stage": "DSRating"
-    },
-    {
-      "name": "DSLikeButton",
-      "category": "inputs",
-      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
-      "symbols": [
-        "DSLikeButton"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSLikeButton.swift"
-      ],
-      "dependencies": [],
-      "docs": "docs/components/DSLikeButton.md",
-      "stage": "DSLikeButton"
     },
     {
       "name": "DSSegmentedControl",
@@ -268,20 +240,6 @@
       "stage": "DSCard"
     },
     {
-      "name": "DSTiltCard",
-      "category": "containers",
-      "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
-      "symbols": [
-        "DSTiltCard"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSTiltCard.swift"
-      ],
-      "dependencies": [],
-      "docs": "docs/components/DSTiltCard.md",
-      "stage": "DSTiltCard"
-    },
-    {
       "name": "DSListCell",
       "category": "containers",
       "summary": "List rows, section headers and dividers.",
@@ -324,20 +282,6 @@
       "dependencies": [],
       "docs": "docs/components/DSSheet.md",
       "stage": "DSSheet"
-    },
-    {
-      "name": "DSDisclosureGroup",
-      "category": "containers",
-      "summary": "Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.",
-      "symbols": [
-        "DSDisclosureGroup"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSDisclosureGroup.swift"
-      ],
-      "dependencies": [],
-      "docs": "docs/components/DSDisclosureGroup.md",
-      "stage": "DSDisclosureGroup"
     },
     {
       "name": "DSBadge",
@@ -384,23 +328,6 @@
       "stage": "DSNumberTicker"
     },
     {
-      "name": "DSTimeline",
-      "category": "display",
-      "summary": "A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.",
-      "symbols": [
-        "DSTimeline",
-        "DSTimelineItem"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSTimeline.swift"
-      ],
-      "dependencies": [
-        "Motion"
-      ],
-      "docs": "docs/components/DSTimeline.md",
-      "stage": "DSTimeline"
-    },
-    {
       "name": "Charts",
       "category": "charts",
       "summary": "Light animated charts: a sparkline that draws and morphs, and a bar chart you can scrub.",
@@ -420,13 +347,17 @@
     {
       "name": "DSToast",
       "category": "feedback",
-      "summary": "Success, error, warning and info toasts that VoiceOver announces.",
+      "summary": "Success, error, warning and info toasts: present with .dsToast for auto-dismiss, replacement and flick-to-dismiss, announced by VoiceOver.",
       "symbols": [
         "DSToast",
-        "DSToastType"
+        "DSToastType",
+        "DSToastValue",
+        "DSToastEdge",
+        "dsToast"
       ],
       "files": [
-        "Sources/VelvetUI/Components/DSToast.swift"
+        "Sources/VelvetUI/Components/DSToast.swift",
+        "Sources/VelvetUI/Components/DSToastPresenter.swift"
       ],
       "dependencies": [
         "DSButton"
@@ -532,20 +463,6 @@
       "stage": "DSTypewriterText"
     },
     {
-      "name": "DSExpandableText",
-      "category": "display",
-      "summary": "Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.",
-      "symbols": [
-        "DSExpandableText"
-      ],
-      "files": [
-        "Sources/VelvetUI/Components/DSExpandableText.swift"
-      ],
-      "dependencies": [],
-      "docs": "docs/components/DSExpandableText.md",
-      "stage": "DSExpandableText"
-    },
-    {
       "name": "Motion",
       "category": "motion",
       "summary": "dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.",
@@ -578,6 +495,170 @@
       "dependencies": [],
       "docs": "docs/components/DSConfetti.md",
       "stage": "DSConfetti"
+    },
+    {
+      "name": "DSScrollReveal",
+      "category": "motion",
+      "summary": "A scroll-coupled reveal: rows and carousel cards recede as they cross the edge of the scroll view, reversibly.",
+      "symbols": [
+        "DSScrollRevealIntensity",
+        "dsScrollReveal"
+      ],
+      "files": [
+        "Sources/VelvetUI/Animation/DSScrollEffects.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSScrollReveal.md",
+      "stage": "DSScrollReveal"
+    },
+    {
+      "name": "DSMarquee",
+      "category": "display",
+      "summary": "Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.",
+      "symbols": [
+        "DSMarquee"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSMarquee.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSMarquee.md",
+      "stage": "DSMarquee"
+    },
+    {
+      "name": "DSChipGroup",
+      "category": "inputs",
+      "summary": "Selectable pill chips for filters and tags, on a wrapping flow layout, with single or multiple selection.",
+      "symbols": [
+        "DSChip",
+        "DSChipItem",
+        "DSChipGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSChip.swift"
+      ],
+      "dependencies": [
+        "DSFlowLayout"
+      ],
+      "docs": "docs/components/DSChip.md",
+      "stage": "DSChip"
+    },
+    {
+      "name": "DSFlowLayout",
+      "category": "containers",
+      "summary": "Wrapping layout that flows items onto new rows when they overflow the width — tag clouds, filter chips, keyword lists.",
+      "symbols": [
+        "DSFlowLayout"
+      ],
+      "files": [
+        "Sources/VelvetUI/Layout/DSFlowLayout.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSFlowLayout.md",
+      "stage": "DSFlowLayout"
+    },
+    {
+      "name": "DSHoldToConfirm",
+      "category": "actions",
+      "summary": "Press-and-hold confirmation: a ring charges while you hold, with the same async result as slide-to-confirm.",
+      "symbols": [
+        "DSHoldToConfirm"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSHoldToConfirm.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSHoldToConfirm.md",
+      "stage": "DSHoldToConfirm"
+    },
+    {
+      "name": "DSSlider",
+      "category": "inputs",
+      "summary": "Continuous value slider with a glass track, optional notches, tick and end-stop haptics, and VoiceOver adjust.",
+      "symbols": [
+        "DSSlider"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSlider.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSlider.md",
+      "stage": "DSSlider"
+    },
+    {
+      "name": "DSLikeButton",
+      "category": "inputs",
+      "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",
+      "symbols": [
+        "DSLikeButton"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSLikeButton.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSLikeButton.md",
+      "stage": "DSLikeButton"
+    },
+    {
+      "name": "DSTiltCard",
+      "category": "containers",
+      "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
+      "symbols": [
+        "DSTiltCard"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTiltCard.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSTiltCard.md",
+      "stage": "DSTiltCard"
+    },
+    {
+      "name": "DSDisclosureGroup",
+      "category": "containers",
+      "summary": "Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.",
+      "symbols": [
+        "DSDisclosureGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSDisclosureGroup.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSDisclosureGroup.md",
+      "stage": "DSDisclosureGroup"
+    },
+    {
+      "name": "DSTimeline",
+      "category": "display",
+      "summary": "A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.",
+      "symbols": [
+        "DSTimeline",
+        "DSTimelineItem"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTimeline.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSTimeline.md",
+      "stage": "DSTimeline"
+    },
+    {
+      "name": "DSExpandableText",
+      "category": "display",
+      "summary": "Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.",
+      "symbols": [
+        "DSExpandableText"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSExpandableText.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSExpandableText.md",
+      "stage": "DSExpandableText"
     }
   ],
   "examples": [
