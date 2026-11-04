@@ -41,7 +41,7 @@ enum DocSnippetsAvatarGroup {
                 ])
 
                 // Small and tight
-                DSAvatarGroup(names: ["Ana Ruiz", "Ben Cole", "Cy Park"], size: DSSpacing.xxl, overlap: 0.45)
+                DSAvatarGroup(names: ["Ana Ruiz", "Ben Cole", "Cy Park"], size: DSSpacing.xxl, overlap: 0.3)
             }
         }
     }

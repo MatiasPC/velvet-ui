@@ -404,7 +404,7 @@ struct ComponentCatalog: View {
                             DSAvatarGroup(
                                 names: ["Ada Lovelace", "Grace Hopper", "Alan Turing"],
                                 size: DSSpacing.xxl,
-                                overlap: 0.45
+                                overlap: 0.3
                             )
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)

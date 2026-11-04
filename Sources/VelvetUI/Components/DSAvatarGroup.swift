@@ -66,6 +66,8 @@ enum DSAvatarGroupLogic {
 private enum Metrics {
     /// "+N" label size as a fraction of the avatar, matching `DSAvatar`'s initials.
     static let labelRatio: CGFloat = 0.34
+    /// Tint of the "+N" disc: the same accent wash as `DSAvatar`'s initials, so it reads in light and dark.
+    static let bubbleTint: Double = 0.15
     /// Gap between a cut-out and the avatar that causes it.
     static let gap: CGFloat = DSSpacing.xxxs
     /// Stagger between avatars as they pop in.
@@ -126,7 +128,7 @@ public struct DSAvatarGroup: View {
         members: [Member],
         maxVisible: Int = 4,
         size: CGFloat = DSSpacing.xxxl,
-        overlap: CGFloat = 0.32,
+        overlap: CGFloat = 0.25,
         haptic: DSHapticStyle? = .light,
         action: (() -> Void)? = nil
     ) {
@@ -143,7 +145,7 @@ public struct DSAvatarGroup: View {
         names: [String],
         maxVisible: Int = 4,
         size: CGFloat = DSSpacing.xxxl,
-        overlap: CGFloat = 0.32,
+        overlap: CGFloat = 0.25,
         haptic: DSHapticStyle? = .light,
         action: (() -> Void)? = nil
     ) {
@@ -208,10 +210,10 @@ public struct DSAvatarGroup: View {
 
     private var overflowBubble: some View {
         ZStack {
-            Circle().fill(theme.subtleFill)
+            Circle().fill(theme.accent.opacity(Metrics.bubbleTint))
             Text("+\(overflow)")
                 .font(.system(size: size * Metrics.labelRatio, weight: .semibold, design: .rounded))
-                .foregroundStyle(theme.palette.textSecondary)
+                .foregroundStyle(theme.ink)
                 .minimumScaleFactor(0.5)
                 .padding(.horizontal, DSSpacing.xxxs)
         }
@@ -284,7 +286,7 @@ private struct DSAvatarGroupPreviewHost: View {
 
                 labeled("Overflows to +N") { DSAvatarGroup(names: team) }
                 labeled("Exact fit, no overflow") { DSAvatarGroup(names: Array(team.prefix(3))) }
-                labeled("Compact, tighter overlap") { DSAvatarGroup(names: team, maxVisible: 5, size: DSSpacing.xxl, overlap: 0.45) }
+                labeled("Compact, tighter overlap") { DSAvatarGroup(names: team, maxVisible: 5, size: DSSpacing.xxl, overlap: 0.3) }
                 labeled("Tappable") { DSAvatarGroup(names: team, maxVisible: 3, size: DSSpacing.huge) {} }
 
                 DSCard {

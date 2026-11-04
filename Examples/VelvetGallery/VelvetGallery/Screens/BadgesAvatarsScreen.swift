@@ -62,7 +62,7 @@ struct BadgesAvatarsScreen: View {
                             names: Array(groupNames.prefix(people)),
                             maxVisible: maxVisible,
                             size: compact ? DSSpacing.xxl : DSSpacing.xxxl,
-                            overlap: compact ? 0.45 : 0.32
+                            overlap: compact ? 0.3 : 0.25
                         )
                         HStack {
                             Text("People").ds(.body)

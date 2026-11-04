@@ -2351,7 +2351,7 @@ struct EventRow: View {
 | `members` / `names` | `[DSAvatarGroup.Member]` / `[String]` | required | The people, first on top. `names` makes initials-only avatars. |
 | `maxVisible` | `Int` | `4` | Most circles to show, the "+N" bubble included. At least 2. |
 | `size` | `CGFloat` | `DSSpacing.xxxl` | Diameter of each avatar. |
-| `overlap` | `CGFloat` | `0.32` | How much each avatar is covered by the next, as a fraction of its width (`0...0.9`). |
+| `overlap` | `CGFloat` | `0.25` | How much each avatar is covered by the next, as a fraction of its width (`0...0.9`). |
 | `haptic` | `DSHapticStyle?` | `.light` | Fired when the group is tapped (with `action`). `nil` for none. |
 | `action` | `(() -> Void)?` | `nil` | Makes the whole group a button. |
 
@@ -2368,7 +2368,7 @@ VStack(alignment: .leading, spacing: DSSpacing.lg) {
     ])
 
     // Small and tight
-    DSAvatarGroup(names: ["Ana Ruiz", "Ben Cole", "Cy Park"], size: DSSpacing.xxl, overlap: 0.45)
+    DSAvatarGroup(names: ["Ana Ruiz", "Ben Cole", "Cy Park"], size: DSSpacing.xxl, overlap: 0.3)
 }
 ```
 

@@ -138,12 +138,12 @@ Avatar: `AsyncImage` when `imageURL` is set, initials on `accent` 15 % otherwise
 
 ```swift
 DSAvatarGroup(members: [DSAvatarGroup.Member], maxVisible: Int = 4, size: CGFloat = DSSpacing.xxxl,
-              overlap: CGFloat = 0.32, haptic: DSHapticStyle? = .light, action: (() -> Void)? = nil)
+              overlap: CGFloat = 0.25, haptic: DSHapticStyle? = .light, action: (() -> Void)? = nil)
 DSAvatarGroup(names: [String], …same…)
 DSAvatarGroup.Member(id: String? = nil, name: String, imageURL: URL? = nil)   // id defaults to name
 ```
 
-The first person is on top. When there are more people than `maxVisible` (minimum 2) the last slot becomes a "+N" bubble (`theme.subtleFill`, `textSecondary`). **Separation is a cut-out, not a ring:** each avatar has a circle of `size + 2 × DSSpacing.xxxs` erased where the previous one overlaps (`mask` + `destinationOut` in a `compositingGroup`), so the gap shows whatever is behind the group and nothing is stroked or filled in a background colour. The cut-out mirrors in right-to-left layouts. Avatars pop in with `dsPopIn` (fade only under Reduce Motion), staggered 0.06 s. VoiceOver: one element, "Ana, Ben and 3 others" (the people drawn, then a count of the rest); with `action` it is a button with a press dip and a light haptic.
+The first person is on top. When there are more people than `maxVisible` (minimum 2) the last slot becomes a "+N" bubble (the same accent wash as `DSAvatar`'s initials, text in `theme.ink`). **Separation is a cut-out, not a ring:** each avatar has a circle of `size + 2 × DSSpacing.xxxs` erased where the previous one overlaps (`mask` + `destinationOut` in a `compositingGroup`), so the gap shows whatever is behind the group and nothing is stroked or filled in a background colour. The cut-out mirrors in right-to-left layouts. Avatars pop in with `dsPopIn` (fade only under Reduce Motion), staggered 0.06 s. VoiceOver: one element, "Ana, Ben and 3 others" (the people drawn, then a count of the rest); with `action` it is a button with a press dip and a light haptic.
 
 ---
 
