@@ -83,7 +83,7 @@ Here `payment` is an `Int` state and `theme` is `@DSThemed private var theme`. A
 ## Behavior
 
 - Tapping anywhere on a row selects it. Rows are at least 44 pt tall and as wide as the group. Wrap the group in a `DSCard` for the glass container look.
-- The indicator is a 24 pt wash circle (no outline), the same size, colors and haptic as `DSCheckbox`. On select the accent layer springs up from 55 % size with `springBouncy` and fades in, and an inner dot grows a beat later. The previous row's indicator shrinks and fades.
+- The indicator is a 24 pt filled ring (two fills, no stroke; the outer disc is `palette.textSecondary`, at least 3:1 against the card in light and dark), the same size, colors and haptic as `DSCheckbox`. On select the accent layer springs up from 55 % size with `springBouncy` and fades in, and an inner dot grows a beat later. The previous row's indicator shrinks and fades.
 - A highlight (`theme.subtleFill`) slides to the chosen row with `matchedGeometryEffect` and `springSmooth`, resizing between rows with and without a subtitle. Nothing else changes size, so the list never jumps.
 - Everything follows `selection`, so changing it from outside (a "reset" button) animates like a tap.
 - The haptic fires on a change only: reselecting the current value does nothing. A disabled group dims to 50 % and ignores taps.

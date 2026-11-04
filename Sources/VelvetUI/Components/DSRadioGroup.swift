@@ -8,8 +8,8 @@ import SwiftUI
 // does, and it carries the Velvet signature: the indicator morphs rather than
 // snaps, and a frosted highlight glides from the old row to the new one.
 //
-// It is built as the sibling of `DSCheckbox`: the same 24pt indicator (a wash
-// fill with the specular `dsWashEdge`, never an outline), the same accent
+// It is built as the sibling of `DSCheckbox`: the same 24pt indicator (a filled
+// ring with the specular `dsWashEdge`, never a stroke), the same accent
 // layer that pops in with `springBouncy`, the same `onAccent` mark, the same
 // `.rigid` haptic. Where the checkbox draws a tick, the radio grows a dot.
 //
@@ -39,6 +39,8 @@ enum DSRadioGroupMetrics {
     static let restScale: CGFloat = 0.55
     /// The dot starts growing this long (seconds) after the layer starts to fill.
     static let dotDelay: Double = 0.06
+    /// Width of the empty indicator's ring, drawn as a fill: DSSpacing.xxxs (2).
+    static let offRing: CGFloat = DSSpacing.xxxs
     /// Dim while disabled; the same as `DSToggle` and `DSCheckbox`.
     static let disabledOpacity: Double = 0.5
 
@@ -217,8 +219,14 @@ public struct DSRadioGroup<Value: Hashable>: View {
         let side = DSRadioGroupMetrics.indicatorSide
 
         return ZStack {
+            // Empty indicator, always underneath: a filled ring (outer disc in
+            // `textSecondary`, inner disc in the surface tone), never a stroke.
+            // The outer tone is what reads against the card, at 3:1 or better.
             Circle()
-                .fill(theme.subtleFill)
+                .fill(theme.palette.textSecondary)
+            Circle()
+                .inset(by: DSRadioGroupMetrics.offRing)
+                .fill(theme.palette.backgroundElevated)
 
             Circle()
                 .fill(fill)

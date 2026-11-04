@@ -194,6 +194,7 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 | `.dsPopIn(delay:)` | Entrance with springBouncy overshoot and fade | Fades only, no scale |
 | `.dsEdgeSweep(radius:isActive:)` | Specular highlight travelling the surface edge | Highlight stays static |
 | `.dsHueDrift(isActive:)` | Slow, bounded hue rotation over the accent (decorative) | Stays at 0° |
+| `.dsScrollReveal(_ intensity:)` | Scale and opacity follow the scroll position (`Animation/DSScrollEffects.swift`) | Full presence, no change |
 
 `DSMotion.loop(_:autoreverses:unless:)` wraps an animation in `repeatForever`, or returns `nil` when Reduce Motion is on. Passing nil to `.animation(_:value:)` applies the change instantly, so every ambient effect settles at its resting state instead of being skipped.
 
@@ -206,6 +207,8 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 | `jiggleDegrees` | 7 | Peak rotation of the first jiggle swing; later swings shrink from here. |
 | `jiggleDuration` | 0.45s | Total length of one jiggle — a quick "no" shake. |
 | `jiggleSwings` | `[7, -4.34, 2.66, -1.26, 0]` | The decay envelope in degrees; Cubic keyframes interpolate between the points. |
+| `scrollRevealSubtleScale` / `…MediumScale` / `…StrongScale` | 0.96 / 0.90 / 0.80 | Scale of `.dsScrollReveal` once the view is fully past the scroll view edge. |
+| `scrollRevealSubtleOpacity` / `…MediumOpacity` / `…StrongOpacity` | 0.65 / 0.40 / 0.15 | Opacity of `.dsScrollReveal` at the edge. |
 
 ## Haptics
 
