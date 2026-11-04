@@ -49,6 +49,7 @@ struct ComponentListView: View {
                 row("Text Field", "Inputs & validation") { TextFieldScreen() }
                 row("Code Field", "OTP entry") { CodeFieldScreen() }
                 row("Toggle", "Switches") { ToggleScreen() }
+                row("Checkbox", "Pick any, with a drawn tick") { CheckboxScreen() }
                 row("Segmented Control", "Pick one") { SegmentedControlScreen() }
                 row("Chip", "Selectable pills that wrap") { ChipScreen() }
                 row("Stepper", "Numeric input") { StepperScreen() }

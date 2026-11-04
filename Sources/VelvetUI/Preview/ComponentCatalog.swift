@@ -32,6 +32,9 @@ struct ComponentCatalog: View {
     @State private var chipSort: String? = "Trending"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
+    @State private var acceptTerms = true
+    @State private var wantsNewsletter = false
+    @State private var wantsOffers = true
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
@@ -323,6 +326,26 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.success)
                             }
                         }
+                    }
+                }
+
+                // MARK: - Checkboxes
+                section("Checkboxes") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                            DSCheckbox("Accept terms & conditions", isOn: $acceptTerms)
+                            DSCheckbox("Subscribe to the newsletter", isOn: $wantsNewsletter)
+                            DSCheckbox("Send me offers", isOn: $wantsOffers, onColor: DSColors.success)
+                            DSCheckbox("Unavailable option", isOn: .constant(false))
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.md) {
+                                DSCheckbox(isOn: $acceptTerms, size: .small).accessibilityLabel("Small")
+                                DSCheckbox(isOn: $wantsNewsletter, size: .medium).accessibilityLabel("Medium")
+                                DSCheckbox(isOn: $wantsOffers, size: .large).accessibilityLabel("Large")
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 

@@ -271,6 +271,25 @@ Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic).
 
 ---
 
+## DSCheckbox  ✅
+
+`Components/DSCheckbox.swift`. The selection control `DSToggle` is not: a checkbox answers "is this one picked?" in lists, forms and consent rows, where the switch answers "on or off?" for a setting.
+
+**Accessibility:** One element: the label text, value "Checked"/"Unchecked", the toggle trait plus the selected trait while checked; dimmed when disabled. Label-less boxes need `.accessibilityLabel(...)`.
+
+```swift
+DSCheckbox(_ label: String? = nil, isOn: Binding<Bool>,
+           size: DSCheckboxSize = .medium,   // .small 20 · .medium 24 · .large 28
+           onColor: Color? = nil,            // defaults to theme.accent
+           haptic: DSHapticStyle = .rigid)
+```
+
+The empty box is a filled ring (outer fill `palette.textSecondary`, 3:1 or better on the card; inner fill `palette.backgroundElevated`) with the specular `dsWashEdge`, never a stroke. A bare wash was invisible on glass. The checked state is a separate accent layer on top: it springs up from 0.55 with `springBouncy` and fades in on `DSAnimation.fast`, while the checkmark (one stroke, `trim`med) draws on a beat later (`springSmooth`, 0.06 s delay). On uncheck the tick undraws at once (`micro`) as the layer shrinks (`springSnappy`) and fades. All of it is derived from `isOn`, never from `onAppear`, so a checkbox that re-enters a lazy list already checked shows a finished tick instead of replaying the draw. The tick is `theme.onAccent` on the accent and `palette.textOnPrimary` on a custom `onColor`. No glow: `.glow` is reserved for the primary CTA.
+
+The control lays out at least 44×44 pt at every size (`.small` shrinks the box, not the row), and the label is part of the hit target. The haptic fires on the tap, which is also when the box starts to pop. Press dips the row with `DSPress.scale` toward its leading edge (the lone box uses `iconScale`). Respects `.disabled` (0.5 opacity, no haptic). Under Reduce Motion the layer rests at full size and only crossfades (`micro`); the tick is not drawn, just there. `DSCheckmarkShape` is internal.
+
+---
+
 ## DSRating  ✅ 🧪 (colors)
 
 `Components/DSRating.swift`.

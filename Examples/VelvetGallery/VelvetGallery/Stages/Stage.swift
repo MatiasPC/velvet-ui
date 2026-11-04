@@ -16,6 +16,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSAvatarGroup
     case DSTimeline
     case DSSuccessCheck, DSConfetti
+    case DSCheckbox
     case DSAudioBars
     case DSScrollReveal
     case DSMarquee

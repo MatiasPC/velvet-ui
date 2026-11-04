@@ -99,6 +99,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSSlideToConfirm.gif" width="120" alt="DSSlideToConfirm"> | [DSSlideToConfirm](docs/components/DSSlideToConfirm.md) | Slide-to-confirm for payments and destructive actions, with an async result. |
 | — | [DSHoldToConfirm](docs/components/DSHoldToConfirm.md) | Press-and-hold confirmation with a charging ring and the same async result; VoiceOver confirms with a double-tap. |
 | <img src="docs/media/DSToggle.gif" width="120" alt="DSToggle"> | [DSToggle](docs/components/DSToggle.md) | Switch with a spring knob and a rigid haptic. |
+| — | [DSCheckbox](docs/components/DSCheckbox.md) | Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic. |
 | <img src="docs/media/DSStepper.gif" width="120" alt="DSStepper"> | [DSStepper](docs/components/DSStepper.md) | −/+ stepper that ticks on every step and jiggles at its bounds. |
 | — | [DSSlider](docs/components/DSSlider.md) | Continuous value slider with optional notches, a tick per notch and a firm stop at each end. |
 | <img src="docs/media/DSRating.gif" width="120" alt="DSRating"> | [DSRating](docs/components/DSRating.md) | Drag-to-rate stars, with half steps and a read-only mode. |
