@@ -28,6 +28,8 @@ struct ComponentCatalog: View {
     ]
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
+    @State private var chipFilters: Set<String> = ["Design"]
+    @State private var chipSort: String? = "Trending"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
     @State private var rating: Double = 4
@@ -37,6 +39,10 @@ struct ComponentCatalog: View {
     @State private var sweepOn = true
     @State private var quantity = 2
     @State private var bulk = 25
+    @State private var holdAttempt = 0
+    @State private var holdDeleteAttempt = 0
+    @State private var volume: Double = 0.6
+    @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
     @State private var tabbarSelection = "home"
@@ -49,6 +55,13 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var presentedToast: DSToastValue?
+    private let flowInterests = [
+        "Design", "SwiftUI", "Motion", "Accessibility", "Haptics",
+        "Typography", "Color", "Prototyping", "iOS", "Glass"
+    ]
+    @State private var flowSelected: Set<String> = ["SwiftUI", "Motion", "Haptics"]
+    @State private var timelineStep = 2
     @State private var faqOpen = true
     @State private var liked = false
     @State private var starred = false
@@ -66,6 +79,7 @@ struct ComponentCatalog: View {
             }
             .navigationTitle("Velvet UI")
         }
+        .dsToast($presentedToast, edge: .bottom)
         .dsTheme(theme)
     }
 
@@ -183,6 +197,21 @@ struct ComponentCatalog: View {
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
                 }
 
+                // MARK: - Tilt Card
+                section("Tilt Card") {
+                    DSTiltCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Image(systemName: "creditcard.fill")
+                                .font(.title2)
+                                .foregroundStyle(theme.style.accent)
+                            Text("Drag to tilt").ds(.title3)
+                            Text("3D tilt with a sheen that slides across the glass, then springs back.")
+                                .ds(.callout, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Text Fields
                 section("Text Fields") {
                     DSCard {
@@ -287,6 +316,23 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Chips
+                section("Chips") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSChipGroup(
+                                ["Design", "Engineering", "Product", "Research", "Marketing", "Finance"],
+                                selection: $chipFilters
+                            )
+                            DSChipGroup(
+                                ["Trending", "Newest", "Top rated", "Nearby"],
+                                selection: $chipSort
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Code Field
                 section("Code Field (OTP)") {
                     DSCard {
@@ -341,6 +387,32 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Flow Layout
+                section("Flow Layout") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            Text("Tap to toggle — wraps and reflows")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            DSFlowLayout {
+                                ForEach(flowInterests, id: \.self) { interest in
+                                    catalogChip(interest, isSelected: flowSelected.contains(interest)) {
+                                        DSHapticEngine.shared.fire(.selection)
+                                        withAnimation(DSAnimation.springSnappy) {
+                                            if flowSelected.contains(interest) {
+                                                flowSelected.remove(interest)
+                                            } else {
+                                                flowSelected.insert(interest)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Avatars
                 section("Avatars") {
                     DSCard {
@@ -368,6 +440,33 @@ struct ComponentCatalog: View {
                             } action: { }
                             DSDivider(inset: DSSpacing.screenHorizontal)
                             DSListCell(title: "About", subtitle: "Version 0.2.0")
+                        }
+                    }
+                }
+
+                // MARK: - Timeline
+                section("Timeline") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSTimeline(
+                                [
+                                    DSTimelineItem("Order placed", subtitle: "9:41 AM", icon: "bag"),
+                                    DSTimelineItem("Shipped", subtitle: "Picked up by courier", icon: "shippingbox"),
+                                    DSTimelineItem("Out for delivery", subtitle: "Arriving today", icon: "box.truck"),
+                                    DSTimelineItem("Delivered", icon: "house")
+                                ],
+                                currentStep: timelineStep
+                            )
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Back", variant: .ghost, size: .small) {
+                                    timelineStep = max(timelineStep - 1, 0)
+                                }
+                                DSButton("Advance", size: .small) {
+                                    timelineStep = min(timelineStep + 1, 4)
+                                }
+                            }
                         }
                     }
                 }
@@ -400,6 +499,28 @@ struct ComponentCatalog: View {
                         DSToast("Action completed!", type: .success)
                         DSToast("Something went wrong", type: .error)
                         DSToast("Check your connection", type: .warning)
+                    }
+                }
+
+                // MARK: - Toast Presenter
+                section("Toast Presenter") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            Text(".dsToast — replaces, auto-dismisses, flicks away")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Success", size: .small) {
+                                    presentedToast = DSToastValue("Saved to your library", type: .success)
+                                }
+                                DSButton("Error", variant: .secondary, size: .small) {
+                                    presentedToast = DSToastValue("Couldn't connect", type: .error)
+                                }
+                                DSButton("Sticky", variant: .ghost, size: .small) {
+                                    presentedToast = DSToastValue("Uploading…", type: .info, duration: 0)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
@@ -442,6 +563,29 @@ struct ComponentCatalog: View {
                                 style: .title2
                             )
                             DSTypewriterText(["Types once, then stops."], style: .body, loops: false)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Marquee
+                section("Marquee") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSMarquee {
+                                Text("Now playing — Midnight City · M83 · Hurry Up, We're Dreaming")
+                                    .ds(.callout)
+                            }
+                            DSMarquee(velocity: 28) {
+                                HStack(spacing: DSSpacing.xs) {
+                                    DSBadge("LIVE", color: DSColors.error, variant: .filled)
+                                    Text("Breaking: a seamless marquee with glass edge fades")
+                                        .ds(.footnote)
+                                }
+                            }
+                            DSMarquee {
+                                Text("Short label — stays put").ds(.callout)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -500,6 +644,26 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Hold to Confirm
+                section("Hold to Confirm") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSHoldToConfirm("Hold to confirm", icon: "hand.tap") { }
+                            .id(holdAttempt)
+                        DSHoldToConfirm(
+                            "Hold to delete",
+                            icon: "trash",
+                            confirmedLabel: "Deleted",
+                            accent: DSColors.error
+                        ) { }
+                        .id(holdDeleteAttempt)
+
+                        DSButton("Reset holds", variant: .ghost, size: .small) {
+                            holdAttempt += 1
+                            holdDeleteAttempt += 1
+                        }
+                    }
+                }
+
                 // MARK: - Thinking Indicator
                 section("Thinking Indicator") {
                     DSCard {
@@ -521,6 +685,36 @@ struct ComponentCatalog: View {
                         VStack(alignment: .leading, spacing: DSSpacing.md) {
                             DSStepper(value: $quantity)
                             DSStepper(value: $bulk, in: 0...100, step: 5)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Slider
+                section("Slider") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                HStack {
+                                    Text("Volume").ds(.footnote, color: DSColors.textSecondary)
+                                    Spacer()
+                                    Text("\(Int(volume * 100))%").ds(.numeric)
+                                }
+                                DSSlider(value: $volume)
+                            }
+
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                HStack {
+                                    Text("Max price — snaps in 25s")
+                                        .ds(.footnote, color: DSColors.textSecondary)
+                                    Spacer()
+                                    Text("$\(Int(priceLimit))").ds(.numeric)
+                                }
+                                DSSlider(value: $priceLimit, in: 0...500, step: 25)
+                            }
+
+                            DSSlider(value: .constant(0.5), accent: DSColors.secondary)
+                                .disabled(true)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -710,6 +904,33 @@ struct ComponentCatalog: View {
                         }
                     }
                 }
+
+                // MARK: - Scroll Reveal
+                section("Scroll Reveal") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("dsScrollReveal — neighbours recede at the edges")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ScrollView(.horizontal) {
+                            HStack(spacing: DSSpacing.md) {
+                                ForEach(0..<5, id: \.self) { index in
+                                    DSCard {
+                                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                            Text("Card \(index + 1)").ds(.title3)
+                                            Text("Swipe me").ds(.callout, color: DSColors.textSecondary)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .containerRelativeFrame(.horizontal)
+                                    .dsScrollReveal(.strong)
+                                }
+                            }
+                            .scrollTargetLayout()
+                        }
+                        .contentMargins(.horizontal, DSSpacing.xxxl, for: .scrollContent)
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollIndicators(.hidden)
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)
@@ -734,6 +955,20 @@ struct ComponentCatalog: View {
                 .dsBreathe(intensity)
             Text(label).ds(.caption1, color: DSColors.textTertiary)
         }
+    }
+
+    private func catalogChip(_ label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .ds(.buttonSmall, color: isSelected ? theme.style.onAccent : DSColors.textPrimary)
+                .padding(.horizontal, DSSpacing.sm)
+                .padding(.vertical, DSSpacing.xs)
+                .background {
+                    Capsule().fill(isSelected ? theme.style.accent : DSColors.backgroundSecondary)
+                }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
     }
 
     private func surfaceRow(_ name: String, _ level: DSSurface) -> some View {
