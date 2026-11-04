@@ -25,7 +25,9 @@ struct StageView: View {
         case .DSRating:            RatingStage(autoplay: autoplay)
         case .DSPageControl:       PageControlStage(autoplay: autoplay)
         case .DSStepper:           StepperStage(autoplay: autoplay)
+        case .DSSlider:            SliderStage(autoplay: autoplay)
         case .DSSlideToConfirm:    SlideToConfirmStage()
+        case .DSHoldToConfirm:     HoldToConfirmStage()
         case .DSThinkingIndicator: ThinkingIndicatorStage()
         case .DSTypewriterText:    TypewriterTextStage()
         case .Progress:            ProgressStage(autoplay: autoplay)
@@ -40,6 +42,11 @@ struct StageView: View {
         case .DSAvatarGroup:       AvatarGroupStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
+        case .DSScrollReveal:      ScrollRevealStage(autoplay: autoplay)
+        case .DSMarquee:           MarqueeStage(autoplay: autoplay)
+        case .DSFlowLayout:        FlowLayoutStage(autoplay: autoplay)
+        case .DSChip:              ChipStage(autoplay: autoplay)
+        case .DSTiltCard:          TiltCardStage()
         case .DSDisclosureGroup:   DisclosureGroupStage(autoplay: autoplay)
         case .DSExpandableText:    ExpandableTextStage()
         case .DSLikeButton:        LikeButtonStage()
@@ -354,44 +361,6 @@ private struct ListCellStage: View {
 }
 
 // MARK: - Feedback
-
-private struct ToastStage: View {
-    let autoplay: Bool
-    @State private var type: DSToastType = .success
-    @State private var visible = true
-
-    private let types: [DSToastType] = [.success, .error, .warning, .info]
-
-    var body: some View {
-        ZStack {
-            if visible {
-                DSToast(message(for: type), type: type)
-                    .id(type)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-        }
-        .task(id: autoplay) {
-            guard autoplay else { return }
-            var i = 0
-            await stageLoop {
-                withAnimation(DSAnimation.springSmooth) { type = types[i]; visible = true }
-                await stagePause(2.0)
-                withAnimation(DSAnimation.springSmooth) { visible = false }
-                await stagePause(0.7)
-                i = (i + 1) % types.count
-            }
-        }
-    }
-
-    private func message(for type: DSToastType) -> String {
-        switch type {
-        case .success: return "Saved to your library"
-        case .error:   return "Couldn't connect"
-        case .warning: return "Low storage"
-        case .info:    return "New version available"
-        }
-    }
-}
 
 private struct EmptyStateStage: View {
     var body: some View {
