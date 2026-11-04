@@ -4,12 +4,12 @@ import SwiftUI
 // The selection control the switch is not. `DSToggle` answers "on or off?" for a
 // setting; a checkbox answers "is this one picked?" in a list, a form, a set of
 // terms, a batch of todos. SwiftUI ships neither on iOS, so this is the
-// themeable, tactile one: an empty wash-filled square that fills with the
+// themeable, tactile one: an empty square drawn as a filled ring that fills with the
 // accent and draws its checkmark on, a single stroke trimmed from nothing to
 // whole, while the box springs up underneath it.
 //
-// No borders: the empty box is a wash fill with the specular edge every glass
-// surface wears (`dsWashEdge`), never an outline. The draw-on is a `trim`med
+// No borders: the empty box is a filled ring (two fills, never a stroke) with
+// the specular edge every glass surface wears (`dsWashEdge`). The draw-on is a `trim`med
 // `Path`, the pop is `springBouncy`. Under Reduce Motion nothing travels: the
 // box only crossfades and the tick is simply there, so the state is never in doubt.
 //
@@ -31,6 +31,8 @@ private enum Metrics {
     static let markWidthRatio: CGFloat = 0.1
     /// The tick starts drawing this long (seconds) after the box starts to fill.
     static let markDelay: Double = 0.06
+    /// Width of the unchecked box's ring, drawn as a fill: DSSpacing.xxxs (2).
+    static let offRing: CGFloat = DSSpacing.xxxs
     /// Dim while disabled; the same as `DSToggle`.
     static let disabledOpacity: Double = 0.5
 }
@@ -166,9 +168,14 @@ public struct DSCheckbox: View {
 
     private var box: some View {
         ZStack {
-            // Empty container: a wash fill, never an outline. Always underneath.
+            // Empty container, always underneath: a filled ring (an outer shape in
+            // `textSecondary`, an inner one in the surface tone), never a stroke.
+            // The outer tone is what reads against the card, at 3:1 or better.
             RoundedRectangle(cornerRadius: DSRadius.sm, style: .continuous)
-                .fill(theme.subtleFill)
+                .fill(theme.palette.textSecondary)
+            RoundedRectangle(cornerRadius: DSRadius.sm, style: .continuous)
+                .inset(by: Metrics.offRing)
+                .fill(theme.palette.backgroundElevated)
 
             checkedLayer
         }

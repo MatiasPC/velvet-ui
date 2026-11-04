@@ -1,5 +1,10 @@
 import XCTest
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @testable import VelvetUI
 
 // Every code snippet on docs/components/DSCheckbox.md lives here verbatim,
@@ -98,6 +103,34 @@ final class DSCheckboxTests: XCTestCase {
         // Reduce Motion: nothing travels, in either state.
         XCTAssertEqual(DSCheckbox.layerScale(isOn: false, reduceMotion: true), 1)
         XCTAssertEqual(DSCheckbox.layerScale(isOn: true, reduceMotion: true), 1)
+    }
+
+    func testUncheckedRingReadsAgainstTheCardInLightAndDark() {
+        for (name, palette) in [("light", DSColors.defaultPalette), ("dark", DSColors.defaultDarkPalette)] {
+            for (surfaceName, surface) in [("primary", palette.backgroundPrimary), ("secondary", palette.backgroundSecondary)] {
+                let ratio = Self.contrast(palette.textSecondary, surface)
+                XCTAssertGreaterThanOrEqual(ratio, 3, "\(name) ring on \(surfaceName): \(ratio):1 is below 3:1 (WCAG 1.4.11)")
+            }
+        }
+    }
+
+    private static func contrast(_ a: Color, _ b: Color) -> Double {
+        func luminance(_ color: Color) -> Double {
+            var r = 0.0, g = 0.0, bl = 0.0
+            #if canImport(UIKit)
+            var cr: CGFloat = 0, cg: CGFloat = 0, cb: CGFloat = 0, ca: CGFloat = 0
+            UIColor(color).getRed(&cr, green: &cg, blue: &cb, alpha: &ca)
+            (r, g, bl) = (Double(cr), Double(cg), Double(cb))
+            #elseif canImport(AppKit)
+            if let c = NSColor(color).usingColorSpace(.sRGB) {
+                (r, g, bl) = (Double(c.redComponent), Double(c.greenComponent), Double(c.blueComponent))
+            }
+            #endif
+            func lin(_ v: Double) -> Double { v <= 0.03928 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4) }
+            return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(bl)
+        }
+        let (la, lb) = (luminance(a), luminance(b))
+        return (max(la, lb) + 0.05) / (min(la, lb) + 0.05)
     }
 
     func testAccessibilityValue() {

@@ -1,6 +1,6 @@
 # DSCheckbox
 
-A themed checkbox for lists, forms and consent rows: an empty glass-washed box that pops to the accent while its checkmark draws on, with a rigid haptic.
+A themed checkbox for lists, forms and consent rows: an empty ring-shaped box that pops to the accent while its checkmark draws on, with a rigid haptic.
 
 <!-- GIF pending: ![DSCheckbox](../media/DSCheckbox.gif) -->
 
@@ -69,7 +69,7 @@ Here `theme` is `@DSThemed private var theme`. Without a label it is just the bo
 - The box always lays out at least 44×44 pt, so the hit target meets Apple's minimum at every size. `.small` shrinks the box, not the row; in a dense list, drop the stack spacing to zero.
 - Checking: the accent layer springs up from 55 % size with `DSAnimation.springBouncy` and fades in, and the checkmark draws on (`trim`) a beat later. Unchecking: the tick undraws at once while the layer shrinks and fades.
 - The animation follows `isOn`, so it also plays when the binding changes from outside (a "select all" parent). A checkbox that appears already checked, for example one scrolling into a lazy list, shows the finished tick without replaying the draw.
-- The unchecked box is a wash (`theme.subtleFill`) with the specular `dsWashEdge`. There is no outline.
+- The unchecked box is a filled ring: an outer shape in `palette.textSecondary` (at least 3:1 against the card in light and dark, WCAG 1.4.11) and an inner one in `palette.backgroundElevated`, plus the specular `dsWashEdge`. Both are fills; there is no stroke.
 - The tick is `theme.onAccent` on the accent fill, and `palette.textOnPrimary` when you pass your own `onColor`.
 - Reduce Motion: nothing pops or draws. The box crossfades, and the tick is simply there when checked.
 - Press: the row dips with `DSPress` (the lone box dips with `DSPress.iconScale`).
