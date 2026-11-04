@@ -44,10 +44,9 @@ After changing the file list or target settings, re-run `xcodegen generate` and
   the motion set: `MotionScreen` (the five `DSMotion` primitives),
   `SlideToConfirmScreen` (async slide-to-pay + "next charge fails" toggle),
   `StepperScreen`, `ThinkingIndicatorScreen`, `TypewriterTextScreen`.
-- `Screens/` also holds the newer components, each with its stage in the same
-  file: `TabBarScreen`, `CarouselScreen`, `SheetScreen`, `NumberTickerScreen`,
-  `ChartsScreen`, `SkeletonScreen`, `SuccessCheckScreen`, `ConfettiScreen`, `SliderScreen`,
-  `CheckboxScreen`, `RadioGroupScreen`.
+- Newer component screens keep their recording stage in the same file (for example
+  `TabBarScreen`, `SliderScreen`, `FlipCardScreen`, `TimelineScreen`); older ones render
+  theirs in `Stages/StageView.swift`.
 - `Flows/` — the example flows (`OnboardingFlow`, `SettingsFlow`, `CheckoutFlow`)
   and their full-screen stages. These files import only SwiftUI and VelvetUI, so
   `swift scripts/velvet.swift add Checkout` can copy them into an app.
