@@ -62,6 +62,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Confirm a payment or a destructive action | `DSSlideToConfirm(_:confirmedLabel:finish:onConfirm:)` | `onConfirm` is `async throws`. |
 | Confirm by holding (power off, send, one-handed) | `DSHoldToConfirm(_:icon:confirmedLabel:duration:accent:onConfirm:)` | Same `async throws` `onConfirm`; VoiceOver double-taps instead of holding. |
 | On/off setting | `DSToggle(_:isOn:)` | |
+| Pick any of several (terms, a todo, multi-select) | `DSCheckbox(_:isOn:size:)` | Label is tappable; box-only needs `.accessibilityLabel(…)`. |
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
 | Pick one from a list of options (plan, payment) | `DSRadioGroup(selection:options:)` | Any `Hashable` value; wrap in `DSCard`; `.accessibilityLabel("…")` on the group. |
 | Continuous value (volume, price, opacity) | `DSSlider(value:in:step:)` | `Double` binding, default `0...1`; pass `step` for notches. It draws no value: show your own read-out. Add `.accessibilityLabel(…)`. |

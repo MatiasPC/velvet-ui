@@ -54,6 +54,10 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSDisclosureGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSDisclosureGroup.md): Glass accordion / FAQ row that springs open with a rotating chevron and a haptic.
 - [DSTimeline](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTimeline.md): A vertical progress timeline: nodes joined by a connector that fills as the flow advances. Order tracking, multi-step flows, activity history.
 - [DSExpandableText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSExpandableText.md): Long copy that collapses to a few lines and springs open, with a rotating chevron and a Show more / Show less toggle.
+- [DSCheckbox](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSCheckbox.md): Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic.
+- [DSFlipCard](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSFlipCard.md): Two-sided glass card that turns over in 3D on tap or from a binding, with a haptic and a Reduce Motion fallback.
+- [DSAvatarGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSAvatarGroup.md): Overlapping facepile of DSAvatars with a +N overflow bubble, read by VoiceOver as one element.
+- [DSAudioBars](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSAudioBars.md): An equaliser for live audio: bars that ripple while active, follow an optional level and rest flat when idle.
 
 ## Examples
 

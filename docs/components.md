@@ -67,6 +67,30 @@ Previews: light, dark, and a no-backdrop fallback. Theming notes: put the screen
 
 ---
 
+## DSFlipCard  🧪
+
+`Components/DSFlipCard.swift`. A two-sided glass card that turns over in 3D.
+
+```swift
+DSFlipCard(axis: DSFlipAxis = .horizontal,       // .horizontal (y) · .vertical (x)
+           style: DSCardStyle = .elevated,
+           padding: CGFloat = DSSpacing.md,
+           cornerRadius: CGFloat = DSRadius.card,
+           flipOnTap: Bool = true,
+           haptic: DSHapticStyle? = .rigid) { front } back: { back }
+
+// Controlled: same params plus a leading `isFlipped: Binding<Bool>`.
+DSFlipCard(isFlipped: $revealed, axis: .vertical) { front } back: { back }
+```
+
+Each face is a `DSCard` (depends on it). The turn is one `DSAnimation.springSmooth` about `axis` with `perspective` 0.5. A single animated angle runs through an inner `Animatable` container (`DSFlipFaces`); the faces swap on the `angle >= 90` threshold, so the hand-off lands at the edge for any animation, spring included — no opacity cross-fade, no ghosting. The back face is pre-rotated 180° about the same axis so it reads correctly once flipped. The haptic (`.rigid`, `nil` for none) fires from `onChange(of: isFlipped)`, so tap and binding-driven flips both get it as the turn starts. Both faces are laid out by a small `Layout` at the larger face's size (they fill it), and the face that is not showing has hit testing off.
+
+Motion: under Reduce Motion the card never turns (the back face is not pre-rotated) and the faces crossfade with `DSAnimation.fast`. No `compositingGroup()`: it is unnecessary once the faces never overlap, and it risks changing how the glass material samples the backdrop.
+
+Accessibility: with `flipOnTap` the card is one combined element with `.isButton`, hint "Double tap to flip" and a Front/Back side value; the hidden face is `.accessibilityHidden`. With `flipOnTap: false` no button semantics are added, so faces keep their own hit testing — the documented path for a face with its own controls.
+
+Previews: light and dark on `.dsBackdrop()`, a tap-to-flip stat card and a binding-driven vertical card.
+
 ## DSTiltCard  ✅
 
 `Components/DSTiltCard.swift`. A glass card that tips in 3D toward the finger as you drag, with a specular sheen sliding across the surface, then springs back on release.
@@ -129,6 +153,21 @@ DSAvatar(name: String, imageURL: URL? = nil, size: CGFloat = 40)
 
 Badge with default color: `.filled` = `accent`/`onAccent`, `.soft` = accent 12 % + `ink`, `.outline` = `ink` stroke (pending: `.glassThin` + edge). With a custom color the color itself is used for text on soft/outline and `textOnPrimary` on filled.
 Avatar: `AsyncImage` when `imageURL` is set, initials on `accent` 15 % otherwise; initials in `theme.ink`.
+
+---
+
+## DSAvatarGroup  ✅
+
+`Components/DSAvatarGroup.swift`. Overlapping facepile of `DSAvatar`s with a "+N" overflow bubble.
+
+```swift
+DSAvatarGroup(members: [DSAvatarGroup.Member], maxVisible: Int = 4, size: CGFloat = DSSpacing.xxxl,
+              overlap: CGFloat = 0.25, haptic: DSHapticStyle? = .light, action: (() -> Void)? = nil)
+DSAvatarGroup(names: [String], …same…)
+DSAvatarGroup.Member(id: String? = nil, name: String, imageURL: URL? = nil)   // id defaults to name
+```
+
+The first person is on top. When there are more people than `maxVisible` (minimum 2) the last slot becomes a "+N" bubble (the same accent wash as `DSAvatar`'s initials, text in `theme.ink`). **Separation is a cut-out, not a ring:** each avatar has a circle of `size + 2 × DSSpacing.xxxs` erased where the previous one overlaps (`mask` + `destinationOut` in a `compositingGroup`), so the gap shows whatever is behind the group and nothing is stroked or filled in a background colour. The cut-out mirrors in right-to-left layouts. Avatars pop in with `dsPopIn` (fade only under Reduce Motion), staggered 0.06 s. VoiceOver: one element, "Ana, Ben and 3 others" (the people drawn, then a count of the rest); with `action` it is a button with a press dip and a light haptic.
 
 ---
 
@@ -246,6 +285,25 @@ DSToggle(_ label: String? = nil, isOn: Binding<Bool>,
 ```
 
 Knob springs with `springSnappy`; respects `.disabled` (0.5 opacity, no haptic). Accessibility value On/Off.
+
+---
+
+## DSCheckbox  ✅
+
+`Components/DSCheckbox.swift`. The selection control `DSToggle` is not: a checkbox answers "is this one picked?" in lists, forms and consent rows, where the switch answers "on or off?" for a setting.
+
+**Accessibility:** One element: the label text, value "Checked"/"Unchecked", the toggle trait plus the selected trait while checked; dimmed when disabled. Label-less boxes need `.accessibilityLabel(...)`.
+
+```swift
+DSCheckbox(_ label: String? = nil, isOn: Binding<Bool>,
+           size: DSCheckboxSize = .medium,   // .small 20 · .medium 24 · .large 28
+           onColor: Color? = nil,            // defaults to theme.accent
+           haptic: DSHapticStyle = .rigid)
+```
+
+The empty box is a filled ring (outer fill `palette.textSecondary`, 3:1 or better on the card; inner fill `palette.backgroundElevated`) with the specular `dsWashEdge`, never a stroke. A bare wash was invisible on glass. The checked state is a separate accent layer on top: it springs up from 0.55 with `springBouncy` and fades in on `DSAnimation.fast`, while the checkmark (one stroke, `trim`med) draws on a beat later (`springSmooth`, 0.06 s delay). On uncheck the tick undraws at once (`micro`) as the layer shrinks (`springSnappy`) and fades. All of it is derived from `isOn`, never from `onAppear`, so a checkbox that re-enters a lazy list already checked shows a finished tick instead of replaying the draw. The tick is `theme.onAccent` on the accent and `palette.textOnPrimary` on a custom `onColor`. No glow: `.glow` is reserved for the primary CTA.
+
+The control lays out at least 44×44 pt at every size (`.small` shrinks the box, not the row), and the label is part of the hit target. The haptic fires on the tap, which is also when the box starts to pop. Press dips the row with `DSPress.scale` toward its leading edge (the lone box uses `iconScale`). Respects `.disabled` (0.5 opacity, no haptic). Under Reduce Motion the layer rests at full size and only crossfades (`micro`); the tick is not drawn, just there. `DSCheckmarkShape` is internal.
 
 ---
 
@@ -430,6 +488,23 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSAudioBars  ✅
+
+`Components/DSAudioBars.swift`. Ambient audio-level visualiser — a row of capsule bars that ripple like a graphic equaliser while active and ease down to a flat resting line when idle. The audio sibling of `DSThinkingIndicator`: reach for it on voice/dictation, recording and call UIs, now-playing rows, "listening" states and AI voice.
+
+```swift
+DSAudioBars(isActive: Bool = true,
+            level: Double? = nil,       // live level 0...1 = ripple amplitude; nil = full amplitude
+            barCount: Int = 5,
+            barWidth: CGFloat = DSSpacing.xxs,
+            spacing: CGFloat = DSSpacing.xxs,
+            height: CGFloat = DSSpacing.xl,
+            color: Color? = nil)       // defaults to theme.accent
+```
+
+Motion: bar heights are computed analytically from one `TimelineView(.animation)` clock (the `DSParticleField` approach), not N `repeatForever` springs: two summed sines per bar with a per-bar phase offset. The row is an `Animatable` view whose `intensity` (isActive) and `amplitude` (level) are interpolated, so it eases between idle and live (`DSAnimation.normal`) and between levels (`DSAnimation.fast`) without a branch in the view tree. Eased curves, not springs: this is ambience. **CPU:** the timeline is paused unless active, visible (`onAppear`/`onDisappear`), the scene is active and Reduce Motion is off (`DSAudioBarsMath.isTicking`). Reduce Motion: a resting state — idle is a flat line, active freezes on a symmetric bell, and `level` is ignored.
+Theming: fill is `color ?? theme.accent`; sizes come from `DSSpacing` tokens.
+Accessibility: decorative, `accessibilityHidden(true)` — pair with a visible label (e.g. "Listening…"). No haptics: there is no interaction.
 ## DSSlider  ✅
 
 `Components/DSSlider.swift`. Continuous value control — the input Stepper/Rating/Toggle (all discrete) left uncovered.

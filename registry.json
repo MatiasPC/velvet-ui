@@ -674,6 +674,69 @@
       "dependencies": [],
       "docs": "docs/components/DSExpandableText.md",
       "stage": "DSExpandableText"
+    },
+    {
+      "name": "DSCheckbox",
+      "category": "inputs",
+      "summary": "Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic.",
+      "symbols": [
+        "DSCheckbox",
+        "DSCheckboxSize"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCheckbox.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSCheckbox.md",
+      "stage": "DSCheckbox"
+    },
+    {
+      "name": "DSFlipCard",
+      "category": "containers",
+      "summary": "Two-sided glass card that turns over in 3D on tap or from a binding, with a haptic and a Reduce Motion fallback.",
+      "symbols": [
+        "DSFlipCard",
+        "DSFlipAxis"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSFlipCard.swift"
+      ],
+      "dependencies": [
+        "DSCard"
+      ],
+      "docs": "docs/components/DSFlipCard.md",
+      "stage": "DSFlipCard"
+    },
+    {
+      "name": "DSAvatarGroup",
+      "category": "display",
+      "summary": "Overlapping facepile of DSAvatars with a +N overflow bubble, read by VoiceOver as one element.",
+      "symbols": [
+        "DSAvatarGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSAvatarGroup.swift"
+      ],
+      "dependencies": [
+        "DSAvatar",
+        "Motion"
+      ],
+      "docs": "docs/components/DSAvatarGroup.md",
+      "stage": "DSAvatarGroup"
+    },
+    {
+      "name": "DSAudioBars",
+      "category": "motion",
+      "summary": "An equaliser for live audio: bars that ripple while active, follow an optional level and rest flat when idle.",
+      "symbols": [
+        "DSAudioBars"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSAudioBars.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSAudioBars.md",
+      "stage": "DSAudioBars"
     }
   ],
   "examples": [

@@ -47,7 +47,7 @@ After changing the file list or target settings, re-run `xcodegen generate` and
 - `Screens/` also holds the newer components, each with its stage in the same
   file: `TabBarScreen`, `CarouselScreen`, `SheetScreen`, `NumberTickerScreen`,
   `ChartsScreen`, `SkeletonScreen`, `SuccessCheckScreen`, `ConfettiScreen`, `SliderScreen`,
-  `RadioGroupScreen`.
+  `CheckboxScreen`, `RadioGroupScreen`.
 - `Flows/` — the example flows (`OnboardingFlow`, `SettingsFlow`, `CheckoutFlow`)
   and their full-screen stages. These files import only SwiftUI and VelvetUI, so
   `swift scripts/velvet.swift add Checkout` can copy them into an app.

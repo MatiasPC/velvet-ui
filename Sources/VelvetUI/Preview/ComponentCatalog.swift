@@ -33,6 +33,9 @@ struct ComponentCatalog: View {
     @State private var chipSort: String? = "Trending"
     @State private var notificationsOn = true
     @State private var darkModeOn = false
+    @State private var acceptTerms = true
+    @State private var wantsNewsletter = false
+    @State private var wantsOffers = true
     @State private var rating: Double = 4
     @State private var page: Int = 1
     @State private var codeValue = "12"
@@ -46,6 +49,7 @@ struct ComponentCatalog: View {
     @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var listening = true
     @State private var tabbarSelection = "home"
     @State private var showsSheet = false
     @State private var carouselPage = 0
@@ -56,6 +60,8 @@ struct ComponentCatalog: View {
     @State private var isLoadingCard = true
     @State private var isPaymentDone = false
     @State private var confettiBursts = 0
+    @State private var cardFlipped = false
+
     @State private var presentedToast: DSToastValue?
     private let flowInterests = [
         "Design", "SwiftUI", "Motion", "Accessibility", "Haptics",
@@ -198,6 +204,30 @@ struct ComponentCatalog: View {
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
                 }
 
+                // MARK: - Flip Card
+                section("Flip Card") {
+                    VStack(spacing: DSSpacing.md) {
+                        DSFlipCard(isFlipped: $cardFlipped) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("This month").ds(.footnote, color: DSColors.textSecondary)
+                                Text("1 248").ds(.displayMedium)
+                                Text("Tap to see the trend").ds(.callout, color: DSColors.textSecondary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        } back: {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                Text("vs. last month").ds(.footnote, color: DSColors.textSecondary)
+                                Text("+12%").ds(.displayMedium)
+                                Text("Tap to flip back").ds(.callout, color: DSColors.textSecondary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        DSButton(cardFlipped ? "Flip to front" : "Flip to back", variant: .ghost, size: .small) {
+                            withAnimation(DSAnimation.springSmooth) { cardFlipped.toggle() }
+                        }
+                    }
+                }
+
                 // MARK: - Tilt Card
                 section("Tilt Card") {
                     DSTiltCard {
@@ -297,6 +327,26 @@ struct ComponentCatalog: View {
                                 DSToggle(isOn: $notificationsOn, onColor: DSColors.success)
                             }
                         }
+                    }
+                }
+
+                // MARK: - Checkboxes
+                section("Checkboxes") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                            DSCheckbox("Accept terms & conditions", isOn: $acceptTerms)
+                            DSCheckbox("Subscribe to the newsletter", isOn: $wantsNewsletter)
+                            DSCheckbox("Send me offers", isOn: $wantsOffers, onColor: DSColors.success)
+                            DSCheckbox("Unavailable option", isOn: .constant(false))
+                                .disabled(true)
+
+                            HStack(spacing: DSSpacing.md) {
+                                DSCheckbox(isOn: $acceptTerms, size: .small).accessibilityLabel("Small")
+                                DSCheckbox(isOn: $wantsNewsletter, size: .medium).accessibilityLabel("Medium")
+                                DSCheckbox(isOn: $wantsOffers, size: .large).accessibilityLabel("Large")
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
 
@@ -432,6 +482,24 @@ struct ComponentCatalog: View {
                             DSAvatar(name: "John Doe", size: 32)
                             DSAvatar(name: "Jane Smith", size: 40)
                             DSAvatar(name: "Bob", size: 48)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Avatar Group
+                section("Avatar Group") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                            DSAvatarGroup(names: [
+                                "Ada Lovelace", "Grace Hopper", "Alan Turing",
+                                "Katherine Johnson", "Linus Torvalds", "Margaret Hamilton"
+                            ])
+                            DSAvatarGroup(
+                                names: ["Ada Lovelace", "Grace Hopper", "Alan Turing"],
+                                size: DSSpacing.xxl,
+                                overlap: 0.3
+                            )
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -686,6 +754,27 @@ struct ComponentCatalog: View {
                                 symbol: "brain",
                                 interval: 2.0
                             )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Audio Bars
+                section("Audio Bars") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.sm) {
+                                DSAudioBars(isActive: listening)
+                                Text(listening ? "Listening…" : "Paused")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                                Spacer()
+                            }
+                            DSToggle("Active", isOn: $listening)
+                            HStack(spacing: DSSpacing.xl) {
+                                DSAudioBars(barCount: 3)
+                                DSAudioBars(barCount: 7, height: DSSpacing.xxl)
+                                DSAudioBars(barCount: 5, color: DSColors.secondary)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
