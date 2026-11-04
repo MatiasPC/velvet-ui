@@ -15,6 +15,7 @@
 		218C88C5ECDDF0D161E88C6D /* SuccessCheckScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */; };
 		2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */; };
 		24571EF6E1B3534C30DE94D3 /* NumberTickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */; };
+		2D9327B78826906603552045 /* AudioBarsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FB60AE49C9AF45CDE48886 /* AudioBarsScreen.swift */; };
 		2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7719CDE3248D798BF625C212 /* RatingScreen.swift */; };
 		37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316D05380CECE2E8681282F6 /* PageControlScreen.swift */; };
 		38DC439B8EECDDCF742F8EF4 /* MotionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC668E35B60F699D3690AA /* MotionScreen.swift */; };
@@ -113,6 +114,7 @@
 		CC70D448B6642D640F23AFC4 /* StageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageListView.swift; sourceTree = "<group>"; };
 		D5B9AFF6F6AC89A4B6B96567 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesAvatarsScreen.swift; sourceTree = "<group>"; };
+		E2FB60AE49C9AF45CDE48886 /* AudioBarsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBarsScreen.swift; sourceTree = "<group>"; };
 		E328F00376EC8C549740513E /* CardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScreen.swift; sourceTree = "<group>"; };
 		E793E54A324575CB55217928 /* DisclosureGroupScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureGroupScreen.swift; sourceTree = "<group>"; };
 		F4A58BF4F0ACB59CB636CB48 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				ACC02DA1D827E9A4EAEE39E3 /* ActivityRingsScreen.swift */,
+				E2FB60AE49C9AF45CDE48886 /* AudioBarsScreen.swift */,
 				D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */,
 				5C211B7682F0E826683528A4 /* ButtonsScreen.swift */,
 				E328F00376EC8C549740513E /* CardsScreen.swift */,
@@ -321,6 +324,7 @@
 			files = (
 				FFC9C112D362FAC044661AD7 /* ActivityRingsScreen.swift in Sources */,
 				6E55A10EACCACAB360C3A32D /* Appearance.swift in Sources */,
+				2D9327B78826906603552045 /* AudioBarsScreen.swift in Sources */,
 				5E2A0B87946889ED5E9765C8 /* BadgesAvatarsScreen.swift in Sources */,
 				9722FA983500E3DDFCFBDD7D /* ButtonsScreen.swift in Sources */,
 				B76C2E76BF9616710DE63A2E /* CardsScreen.swift in Sources */,

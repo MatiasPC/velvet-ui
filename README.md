@@ -132,6 +132,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSTypewriterText.gif" width="120" alt="DSTypewriterText"> | [DSTypewriterText](docs/components/DSTypewriterText.md) | Types phrases out character by character, with a blinking caret. |
 | — | [DSExpandableText](docs/components/DSExpandableText.md) | Long copy that collapses to a few lines and springs open, with a Show more / Show less toggle. |
 | <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
+| — | [DSAudioBars](docs/components/DSAudioBars.md) | An equaliser for live audio: bars that ripple, follow a level and rest flat when idle. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
 | — | [dsScrollReveal](docs/components/DSScrollReveal.md) | Rows and carousel cards that recede as they cross the scroll view edge, and return when you scroll back. |
 | — | [DSMarquee](docs/components/DSMarquee.md) | Scrolls overflowing content in a seamless loop, with soft edge fades; static when it fits. |

@@ -45,6 +45,7 @@ struct ComponentCatalog: View {
     @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var listening = true
     @State private var tabbarSelection = "home"
     @State private var showsSheet = false
     @State private var carouselPage = 0
@@ -674,6 +675,27 @@ struct ComponentCatalog: View {
                                 symbol: "brain",
                                 interval: 2.0
                             )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Audio Bars
+                section("Audio Bars") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.sm) {
+                                DSAudioBars(isActive: listening)
+                                Text(listening ? "Listening…" : "Paused")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                                Spacer()
+                            }
+                            DSToggle("Active", isOn: $listening)
+                            HStack(spacing: DSSpacing.xl) {
+                                DSAudioBars(barCount: 3)
+                                DSAudioBars(barCount: 7, height: DSSpacing.xxl)
+                                DSAudioBars(barCount: 5, color: DSColors.secondary)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }

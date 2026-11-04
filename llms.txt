@@ -41,6 +41,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSSuccessCheck](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSuccessCheck.md): An animated success seal: the ring draws, the check strokes in, one pop and a haptic on the beat.
 - [DSTypewriterText](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSTypewriterText.md): Types phrases out character by character, with a blinking caret.
 - [Motion](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Motion.md): dsBreathe, dsJiggle, dsPopIn, dsEdgeSweep and dsHueDrift modifiers for any view.
+- [DSAudioBars](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSAudioBars.md): An equaliser for live audio: bars that ripple while active, follow an optional level and rest flat when idle.
 - [DSConfetti](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSConfetti.md): A themed confetti burst from any point, fired whenever a trigger value changes.
 - [DSScrollReveal](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSScrollReveal.md): A scroll-coupled reveal: rows and carousel cards recede as they cross the edge of the scroll view, reversibly.
 - [DSMarquee](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSMarquee.md): Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.

@@ -483,6 +483,20 @@
       "stage": "Motion"
     },
     {
+      "name": "DSAudioBars",
+      "category": "motion",
+      "summary": "An equaliser for live audio: bars that ripple while active, follow an optional level and rest flat when idle.",
+      "symbols": [
+        "DSAudioBars"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSAudioBars.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSAudioBars.md",
+      "stage": "DSAudioBars"
+    },
+    {
       "name": "DSConfetti",
       "category": "motion",
       "summary": "A themed confetti burst from any point, fired whenever a trigger value changes.",

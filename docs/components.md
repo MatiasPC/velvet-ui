@@ -413,6 +413,23 @@ Tapping either glyph steps the bound value, clamped into `range`. The number rol
 
 ---
 
+## DSAudioBars  ✅
+
+`Components/DSAudioBars.swift`. Ambient audio-level visualiser — a row of capsule bars that ripple like a graphic equaliser while active and ease down to a flat resting line when idle. The audio sibling of `DSThinkingIndicator`: reach for it on voice/dictation, recording and call UIs, now-playing rows, "listening" states and AI voice.
+
+```swift
+DSAudioBars(isActive: Bool = true,
+            level: Double? = nil,       // live level 0...1 = ripple amplitude; nil = full amplitude
+            barCount: Int = 5,
+            barWidth: CGFloat = DSSpacing.xxs,
+            spacing: CGFloat = DSSpacing.xxs,
+            height: CGFloat = DSSpacing.xl,
+            color: Color? = nil)       // defaults to theme.accent
+```
+
+Motion: bar heights are computed analytically from one `TimelineView(.animation)` clock (the `DSParticleField` approach), not N `repeatForever` springs: two summed sines per bar with a per-bar phase offset. The row is an `Animatable` view whose `intensity` (isActive) and `amplitude` (level) are interpolated, so it eases between idle and live (`DSAnimation.normal`) and between levels (`DSAnimation.fast`) without a branch in the view tree. Eased curves, not springs: this is ambience. **CPU:** the timeline is paused unless active, visible (`onAppear`/`onDisappear`), the scene is active and Reduce Motion is off (`DSAudioBarsMath.isTicking`). Reduce Motion: a resting state — idle is a flat line, active freezes on a symmetric bell, and `level` is ignored.
+Theming: fill is `color ?? theme.accent`; sizes come from `DSSpacing` tokens.
+Accessibility: decorative, `accessibilityHidden(true)` — pair with a visible label (e.g. "Listening…"). No haptics: there is no interaction.
 ## DSSlider  ✅
 
 `Components/DSSlider.swift`. Continuous value control — the input Stepper/Rating/Toggle (all discrete) left uncovered.
