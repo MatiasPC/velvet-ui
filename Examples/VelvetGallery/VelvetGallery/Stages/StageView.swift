@@ -32,6 +32,7 @@ struct StageView: View {
         case .DSTypewriterText:    TypewriterTextStage()
         case .Progress:            ProgressStage(autoplay: autoplay)
         case .Motion:              MotionStage()
+        case .DSActivityRings:     ActivityRingsStage(autoplay: autoplay)
         case .DSTabBar:            TabBarStage(autoplay: autoplay)
         case .DSCarousel:          CarouselStage(autoplay: autoplay)
         case .DSSheet:             SheetStage(autoplay: autoplay)

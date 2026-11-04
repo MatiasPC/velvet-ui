@@ -124,6 +124,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSExpandableText` | Tap Show more, then Show less. Manual. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
+| `DSActivityRings` | Autoplay: drains the rings, refills them part way, then closes them one at a time (glow and haptic). |
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
 | `DSCarousel` | Autoplay: advances a page every 1.6 s and wraps. Swipe it by hand for the depth effect. |
 | `DSSheet` | Autoplay: presents the sheet, holds, dismisses. |

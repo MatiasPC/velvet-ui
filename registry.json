@@ -330,6 +330,21 @@
       "stage": "Charts"
     },
     {
+      "name": "DSActivityRings",
+      "category": "charts",
+      "summary": "Concentric goal rings that fill with a spring and close with a glow and a haptic.",
+      "symbols": [
+        "DSActivityRings",
+        "DSRing"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSActivityRings.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSActivityRings.md",
+      "stage": "DSActivityRings"
+    },
+    {
       "name": "DSToast",
       "category": "feedback",
       "summary": "Success, error, warning and info toasts: present with .dsToast for auto-dismiss, replacement and flick-to-dismiss, announced by VoiceOver.",

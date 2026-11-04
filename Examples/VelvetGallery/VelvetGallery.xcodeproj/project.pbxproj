@@ -61,6 +61,7 @@
 		F20212FE31979162C787E5C2 /* GalleryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36781F6D81C2396DB54B944F /* GalleryScreen.swift */; };
 		F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */; };
 		F7BF430DC1C21373B180C829 /* FlowLayoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B81A2A156CAEDB57677203 /* FlowLayoutScreen.swift */; };
+		FFC9C112D362FAC044661AD7 /* ActivityRingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC02DA1D827E9A4EAEE39E3 /* ActivityRingsScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +105,7 @@
 		9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideToConfirmScreen.swift; sourceTree = "<group>"; };
 		A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldScreen.swift; sourceTree = "<group>"; };
 		AC7BB3B924F36A84ABB20C1C /* TimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineScreen.swift; sourceTree = "<group>"; };
+		ACC02DA1D827E9A4EAEE39E3 /* ActivityRingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRingsScreen.swift; sourceTree = "<group>"; };
 		AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButtonScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
 		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		D7E2BEC39477C80B58A76451 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				ACC02DA1D827E9A4EAEE39E3 /* ActivityRingsScreen.swift */,
 				D8DA5D6B7A8018CDD3C97150 /* BadgesAvatarsScreen.swift */,
 				5C211B7682F0E826683528A4 /* ButtonsScreen.swift */,
 				E328F00376EC8C549740513E /* CardsScreen.swift */,
@@ -316,6 +319,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFC9C112D362FAC044661AD7 /* ActivityRingsScreen.swift in Sources */,
 				6E55A10EACCACAB360C3A32D /* Appearance.swift in Sources */,
 				5E2A0B87946889ED5E9765C8 /* BadgesAvatarsScreen.swift in Sources */,
 				9722FA983500E3DDFCFBDD7D /* ButtonsScreen.swift in Sources */,
