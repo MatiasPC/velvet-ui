@@ -31,6 +31,7 @@ Add it with Swift Package Manager (https://github.com/MatiasPC/velvet-ui.git, pr
 - [DSSheet](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSSheet.md): Native sheet with Velvet chrome: detents, a grabber, a glass background and the theme carried in.
 - [DSBadge](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSBadge.md): Status pills and count badges.
 - [DSAvatar](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSAvatar.md): Remote image with an initials fallback.
+- [DSAvatarGroup](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSAvatarGroup.md): Overlapping facepile of DSAvatars with a +N overflow bubble, read by VoiceOver as one element.
 - [DSNumberTicker](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSNumberTicker.md): A number whose digits roll like an odometer, for any FormatStyle (currency, percent, grouping).
 - [Charts](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/Charts.md): Light animated charts: a sparkline that draws and morphs, and a bar chart you can scrub.
 - [DSActivityRings](https://raw.githubusercontent.com/MatiasPC/velvet-ui/main/docs/components/DSActivityRings.md): Concentric goal rings that fill with a spring and close with a glow and a haptic.

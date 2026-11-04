@@ -118,6 +118,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | — | [DSDisclosureGroup](docs/components/DSDisclosureGroup.md) | Glass "show more" section that springs open with a rotating chevron and a haptic — accordion, FAQ, settings detail. |
 | <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
 | <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
+| — | [DSAvatarGroup](docs/components/DSAvatarGroup.md) | Overlapping facepile of avatars with a +N overflow bubble. |
 | <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
 | — | [DSTimeline](docs/components/DSTimeline.md) | Vertical progress timeline: nodes joined by a connector that fills as the flow advances. |
 | <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |

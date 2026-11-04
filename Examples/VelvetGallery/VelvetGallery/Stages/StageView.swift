@@ -41,6 +41,7 @@ struct StageView: View {
         case .DSTimeline:          TimelineStage(autoplay: autoplay)
         case .Charts:              ChartsStage(autoplay: autoplay)
         case .DSSkeleton:          SkeletonStage(autoplay: autoplay)
+        case .DSAvatarGroup:       AvatarGroupStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
         case .DSAudioBars:         AudioBarsStage(autoplay: autoplay)
