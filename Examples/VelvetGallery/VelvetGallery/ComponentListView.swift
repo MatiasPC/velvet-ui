@@ -25,10 +25,12 @@ struct ComponentListView: View {
                 row("Typography", "Every text style") { TypographyScreen() }
                 row("Layout", "Stacks & grids") { LayoutScreen() }
                 row("Motion", "Ambient primitives") { MotionScreen() }
+                row("Scroll Reveal", "Rows recede at the edges") { ScrollRevealScreen() }
             }
             Section("Actions") {
                 row("Buttons", "Variants, sizes, states") { ButtonsScreen() }
                 row("Slide to Confirm", "Drag to commit") { SlideToConfirmScreen() }
+                row("Hold to Confirm", "Press until the ring closes") { HoldToConfirmScreen() }
             }
             Section("Navigation") {
                 row("Tab Bar", "Floating glass bar, sliding accent") { TabBarScreen() }
@@ -37,21 +39,30 @@ struct ComponentListView: View {
                 row("Cards", "Glass containers") { CardsScreen() }
                 row("Carousel", "Snapping, peeking, with depth") { CarouselScreen() }
                 row("Flip Card", "Two-sided glass, turns in 3D") { FlipCardScreen() }
+
+                row("Tilt Card", "Tips toward the finger, sliding sheen") { TiltCardScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
+                row("Flow Layout", "Wraps to new rows, reflows with a spring") { FlowLayoutScreen() }
+                row("Disclosure Group", "Glass accordion that springs open") { DisclosureGroupScreen() }
             }
             Section("Inputs") {
                 row("Text Field", "Inputs & validation") { TextFieldScreen() }
                 row("Code Field", "OTP entry") { CodeFieldScreen() }
                 row("Toggle", "Switches") { ToggleScreen() }
                 row("Segmented Control", "Pick one") { SegmentedControlScreen() }
+                row("Chip", "Selectable pills that wrap") { ChipScreen() }
                 row("Stepper", "Numeric input") { StepperScreen() }
+                row("Slider", "Continuous value, optional notches") { SliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
+                row("Like Button", "A pop and a halo on the way in") { LikeButtonScreen() }
                 row("Page Control", "Paged content") { PageControlScreen() }
             }
             Section("Data Display") {
                 row("Badges & Avatars", "Status marks & identity") { BadgesAvatarsScreen() }
                 row("Lists", "Rows & sections") { ListsScreen() }
+                row("Expandable Text", "Long copy that springs open") { ExpandableTextScreen() }
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
+                row("Timeline", "Nodes and a connector that fills") { TimelineScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
             }
             Section("Feedback") {
@@ -62,6 +73,7 @@ struct ComponentListView: View {
                 row("Success Check", "Ring, check and a pop on the beat") { SuccessCheckScreen() }
                 row("Confetti", "A themed burst on any trigger") { ConfettiScreen() }
                 row("Thinking Indicator", "Ambient processing") { ThinkingIndicatorScreen() }
+                row("Marquee", "Overflowing content scrolls in a loop") { MarqueeScreen() }
                 row("Typewriter Text", "Typed reveal") { TypewriterTextScreen() }
             }
         }

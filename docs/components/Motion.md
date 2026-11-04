@@ -137,6 +137,7 @@ The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDura
 
 ## See also
 
+- [dsScrollReveal](DSScrollReveal.md) (scroll-coupled reveal)
 - [DSThinkingIndicator](DSThinkingIndicator.md)
 - [Progress](Progress.md)
 - [DSAvatar](DSAvatar.md) (breathe while waiting)
