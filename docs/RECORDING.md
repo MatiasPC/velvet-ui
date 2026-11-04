@@ -125,6 +125,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSExpandableText` | Tap Show more, then Show less. Manual. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
+| `DSActivityRings` | Autoplay: drains the rings, refills them part way, then closes them one at a time (glow and haptic). |
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
 | `DSCarousel` | Autoplay: advances a page every 1.6 s and wraps. Swipe it by hand for the depth effect. |
 | `DSSheet` | Autoplay: presents the sheet, holds, dismisses. |
@@ -135,6 +136,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSSuccessCheck` | Autoplay: replays the seal every 2.5 s. |
 | `DSScrollReveal` | Autoplay: the feed scrolls down and back up. Manual: scroll it yourself. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
+| `DSAudioBars` | Autoplay: a simulated voice drives the level for a few seconds, then the bars ease to rest. |
 | `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |
 | `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |

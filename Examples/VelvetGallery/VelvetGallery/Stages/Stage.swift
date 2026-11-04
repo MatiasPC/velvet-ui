@@ -10,10 +10,12 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSAvatar, DSListCell, DSToast, DSEmptyState, DSSegmentedControl, DSToggle
     case DSRating, DSPageControl, DSStepper, DSSlideToConfirm, DSThinkingIndicator
     case DSTypewriterText, Progress, Motion
+    case DSActivityRings
     case DSHoldToConfirm
     case DSTabBar, DSCarousel, DSSheet, DSNumberTicker, Charts, DSSkeleton
     case DSTimeline
     case DSSuccessCheck, DSConfetti
+    case DSAudioBars
     case DSScrollReveal
     case DSMarquee
     case DSFlowLayout

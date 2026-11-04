@@ -21,6 +21,11 @@ struct ComponentCatalog: View {
     @State private var textFieldValue = ""
     @State private var searchValue = ""
     @State private var progress: Double = 0.65
+    @State private var rings: [DSRing] = [
+        DSRing(progress: 0.82, color: DSColors.error,   label: "Move"),
+        DSRing(progress: 0.60, color: DSColors.success, label: "Exercise"),
+        DSRing(progress: 0.45, color: DSColors.info,    label: "Stand")
+    ]
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
     @State private var chipFilters: Set<String> = ["Design"]
@@ -40,6 +45,7 @@ struct ComponentCatalog: View {
     @State private var priceLimit: Double = 150
     @State private var paidAttempt = 0
     @State private var refusedAttempt = 0
+    @State private var listening = true
     @State private var tabbarSelection = "home"
     @State private var showsSheet = false
     @State private var carouselPage = 0
@@ -270,6 +276,33 @@ struct ComponentCatalog: View {
                             DSGradientProgress(progress: progress)
                             DSStepProgress(currentStep: 3, totalSteps: 5)
                             DSAnimatedNumber(value: 1248, style: .displayMedium)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+
+                // MARK: - Activity Rings
+                section("Activity Rings") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.lg) {
+                            DSActivityRings(rings) {
+                                VStack(spacing: DSSpacing.xxxs) {
+                                    Text("62%").ds(.title3)
+                                    Text("today").ds(.caption1, color: DSColors.textSecondary)
+                                }
+                            }
+                            HStack(spacing: DSSpacing.sm) {
+                                DSButton("Close rings", size: .small) {
+                                    rings = rings.map { DSRing(progress: 1, color: $0.color, label: $0.label) }
+                                }
+                                DSButton("Reset", variant: .ghost, size: .small) {
+                                    rings = [
+                                        DSRing(progress: 0.82, color: DSColors.error,   label: "Move"),
+                                        DSRing(progress: 0.60, color: DSColors.success, label: "Exercise"),
+                                        DSRing(progress: 0.45, color: DSColors.info,    label: "Stand")
+                                    ]
+                                }
+                            }
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -668,6 +701,27 @@ struct ComponentCatalog: View {
                                 symbol: "brain",
                                 interval: 2.0
                             )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Audio Bars
+                section("Audio Bars") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            HStack(spacing: DSSpacing.sm) {
+                                DSAudioBars(isActive: listening)
+                                Text(listening ? "Listening…" : "Paused")
+                                    .ds(.callout, color: DSColors.textSecondary)
+                                Spacer()
+                            }
+                            DSToggle("Active", isOn: $listening)
+                            HStack(spacing: DSSpacing.xl) {
+                                DSAudioBars(barCount: 3)
+                                DSAudioBars(barCount: 7, height: DSSpacing.xxl)
+                                DSAudioBars(barCount: 5, color: DSColors.secondary)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
