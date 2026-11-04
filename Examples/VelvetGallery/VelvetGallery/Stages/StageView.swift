@@ -13,6 +13,7 @@ struct StageView: View {
         case .DSButton:            ButtonStage()
         case .DSIconButton:        IconButtonStage()
         case .DSCard:              CardStage()
+        case .DSFlipCard:          FlipCardStage(autoplay: autoplay)
         case .DSTextField:         TextFieldStage()
         case .DSCodeField:         CodeFieldStage(autoplay: autoplay)
         case .DSBadge:             BadgeStage()

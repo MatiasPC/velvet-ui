@@ -103,6 +103,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSButton` | Click each button (press feedback). Manual. |
 | `DSIconButton` | Click the three icon buttons in turn. Manual. |
 | `DSCard` | Click the card to show its press. Manual. |
+| `DSFlipCard` | Autoplay: turns the card over every 1.8 s. Tap it by hand too. |
 | `DSTiltCard` | Click and drag across the card, then release (tilt, sheen, spring back). Manual. |
 | `DSTextField` | Click a field and type an email; type a password. Manual. |
 | `DSCodeField` | Autoplay: types a 6-digit code, then shows success. |

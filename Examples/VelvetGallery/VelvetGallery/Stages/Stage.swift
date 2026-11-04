@@ -6,6 +6,7 @@ import VelvetUI
 /// (`docs/media/<ID>.gif`).
 enum Stage: String, CaseIterable, Identifiable {
     case Hero, DSButton, DSIconButton, DSCard, DSTextField, DSCodeField, DSBadge
+    case DSFlipCard
     case DSAvatar, DSListCell, DSToast, DSEmptyState, DSSegmentedControl, DSToggle
     case DSRating, DSPageControl, DSStepper, DSSlideToConfirm, DSThinkingIndicator
     case DSTypewriterText, Progress, Motion

@@ -89,8 +89,8 @@ struct ContentView: View {
 
 ## Components
 
+
 Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes, and every one has a Gallery stage.
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes. 29 components, every one with a Gallery stage.
 
 | Preview | Component | What it does |
 |:---:|---|---|
@@ -109,6 +109,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | <img src="docs/media/DSPageControl.gif" width="120" alt="DSPageControl"> | [DSPageControl](docs/components/DSPageControl.md) | Page dots whose active dot stretches into a capsule. |
 | <img src="docs/media/DSTabBar.gif" width="120" alt="DSTabBar"> | [DSTabBar](docs/components/DSTabBar.md) | Floating glass tab bar with a sliding accent capsule, a symbol swap and count badges. |
 | <img src="docs/media/DSCard.gif" width="120" alt="DSCard"> | [DSCard](docs/components/DSCard.md) | The glass surface everything sits on: elevated, outlined, flat, tappable or with an image. |
+| — | [DSFlipCard](docs/components/DSFlipCard.md) | Two-sided glass card that turns over in 3D on tap or from a binding, with a haptic. |
 | — | [DSTiltCard](docs/components/DSTiltCard.md) | A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back. |
 | <img src="docs/media/DSListCell.gif" width="120" alt="DSListCell"> | [DSListCell](docs/components/DSListCell.md) | List rows, section headers and dividers. |
 | <img src="docs/media/DSCarousel.gif" width="120" alt="DSCarousel"> | [DSCarousel](docs/components/DSCarousel.md) | Snapping carousel with peeking neighbors and depth; pairs with `DSPageControl`. |
