@@ -1,6 +1,9 @@
 import XCTest
 import SwiftUI
 @testable import VelvetUI
+#if canImport(AppKit)
+import AppKit
+#endif
 
 // Every code snippet on docs/components/DSFlipCard.md lives here verbatim,
 // so a drifting API breaks the build instead of the docs.
@@ -89,8 +92,9 @@ final class DSFlipCardTests: XCTestCase {
         XCTAssertEqual(DSFlipAxis.vertical.vector.x, 1)
     }
 
-    // MARK: - Rendered result
+    // MARK: - Rendered result (macOS: reads pixels back through NSBitmapImageRep)
 
+    #if canImport(AppKit)
     private func rendered(flipped: Bool, axis: DSFlipAxis) -> NSBitmapImageRep? {
         // Front is all red; back is blue with a green bar on its LEADING edge.
         let card = DSFlipCard(isFlipped: .constant(flipped), axis: axis, style: .flat, padding: 0, cornerRadius: 0) {
@@ -144,4 +148,5 @@ final class DSFlipCardTests: XCTestCase {
         XCTAssertGreaterThan(red, 100)
         XCTAssertEqual(blue, 0)
     }
+    #endif
 }
