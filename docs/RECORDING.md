@@ -103,11 +103,13 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSButton` | Click each button (press feedback). Manual. |
 | `DSIconButton` | Click the three icon buttons in turn. Manual. |
 | `DSCard` | Click the card to show its press. Manual. |
+| `DSFlipCard` | Autoplay: turns the card over every 1.8 s. Tap it by hand too. |
 | `DSTiltCard` | Click and drag across the card, then release (tilt, sheen, spring back). Manual. |
 | `DSTextField` | Click a field and type an email; type a password. Manual. |
 | `DSCodeField` | Autoplay: types a 6-digit code, then shows success. |
 | `DSBadge` | Nothing moves; record a still moment or screenshot. |
 | `DSAvatar` | Nothing moves; record a still moment or screenshot. |
+| `DSAvatarGroup` | Autoplay: people join one at a time (pop-in, then the +N bubble), then leave. |
 | `DSListCell` | Click rows to show the press. Manual. |
 | `DSToast` | Autoplay: toasts ride in from the bottom, one replaces another, the rest leave by themselves. Manual: tap a button, then flick the toast away. |
 | `DSEmptyState` | Click "Compose". Manual. |
@@ -124,6 +126,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSExpandableText` | Tap Show more, then Show less. Manual. |
 | `Progress` | Autoplay: fills 0 to 100 %. |
 | `Motion` | Runs on its own (breathe, edge sweep, hue drift; jiggle and pop-in repeat). |
+| `DSActivityRings` | Autoplay: drains the rings, refills them part way, then closes them one at a time (glow and haptic). |
 | `DSTabBar` | Autoplay: walks the four tabs (capsule slide, symbol swap, bounce). |
 | `DSCarousel` | Autoplay: advances a page every 1.6 s and wraps. Swipe it by hand for the depth effect. |
 | `DSSheet` | Autoplay: presents the sheet, holds, dismisses. |
@@ -135,6 +138,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSScrollReveal` | Autoplay: the feed scrolls down and back up. Manual: scroll it yourself. |
 | `DSConfetti` | Autoplay: a burst every 2.5 s. Looks best on Aurora or Lagoon, dark. |
 | `DSCheckbox` | Autoplay: checks three items one by one (tick draws on), then unchecks them. |
+| `DSAudioBars` | Autoplay: a simulated voice drives the level for a few seconds, then the bars ease to rest. |
 | `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |
 | `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |

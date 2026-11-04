@@ -240,6 +240,23 @@
       "stage": "DSCard"
     },
     {
+      "name": "DSFlipCard",
+      "category": "containers",
+      "summary": "Two-sided glass card that turns over in 3D on tap or from a binding, with a haptic and a Reduce Motion fallback.",
+      "symbols": [
+        "DSFlipCard",
+        "DSFlipAxis"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSFlipCard.swift"
+      ],
+      "dependencies": [
+        "DSCard"
+      ],
+      "docs": "docs/components/DSFlipCard.md",
+      "stage": "DSFlipCard"
+    },
+    {
       "name": "DSListCell",
       "category": "containers",
       "summary": "List rows, section headers and dividers.",
@@ -314,6 +331,23 @@
       "stage": "DSAvatar"
     },
     {
+      "name": "DSAvatarGroup",
+      "category": "display",
+      "summary": "Overlapping facepile of DSAvatars with a +N overflow bubble, read by VoiceOver as one element.",
+      "symbols": [
+        "DSAvatarGroup"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSAvatarGroup.swift"
+      ],
+      "dependencies": [
+        "DSAvatar",
+        "Motion"
+      ],
+      "docs": "docs/components/DSAvatarGroup.md",
+      "stage": "DSAvatarGroup"
+    },
+    {
       "name": "DSNumberTicker",
       "category": "display",
       "summary": "A number whose digits roll like an odometer, for any FormatStyle (currency, percent, grouping).",
@@ -343,6 +377,21 @@
       ],
       "docs": "docs/components/Charts.md",
       "stage": "Charts"
+    },
+    {
+      "name": "DSActivityRings",
+      "category": "charts",
+      "summary": "Concentric goal rings that fill with a spring and close with a glow and a haptic.",
+      "symbols": [
+        "DSActivityRings",
+        "DSRing"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSActivityRings.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSActivityRings.md",
+      "stage": "DSActivityRings"
     },
     {
       "name": "DSToast",
@@ -481,6 +530,20 @@
       "dependencies": [],
       "docs": "docs/components/Motion.md",
       "stage": "Motion"
+    },
+    {
+      "name": "DSAudioBars",
+      "category": "motion",
+      "summary": "An equaliser for live audio: bars that ripple while active, follow an optional level and rest flat when idle.",
+      "symbols": [
+        "DSAudioBars"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSAudioBars.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSAudioBars.md",
+      "stage": "DSAudioBars"
     },
     {
       "name": "DSConfetti",
