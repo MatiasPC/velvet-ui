@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		06494224219DB9D25367D567 /* SliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EC5F26F46CC0F01AB48C05 /* SliderScreen.swift */; };
 		082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */; };
+		0994C9F56092856763C3D6B6 /* RadioGroupScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */; };
 		17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */; };
 		1A9107756FFA38B7F26FD72F /* ToastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6F0563E4BBB324996A851C /* ToastScreen.swift */; };
 		1AEC99C7B4DD64853B18865E /* TypographyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F57E4E7DE458C17AB4CFAA1 /* TypographyScreen.swift */; };
@@ -100,6 +101,7 @@
 		71A56C81679AE72BF06EA956 /* ExpandableTextScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableTextScreen.swift; sourceTree = "<group>"; };
 		757436941242689BF5B95D45 /* CheckboxScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxScreen.swift; sourceTree = "<group>"; };
 		7719CDE3248D798BF625C212 /* RatingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingScreen.swift; sourceTree = "<group>"; };
+		7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioGroupScreen.swift; sourceTree = "<group>"; };
 		7FDF39FEAACB2B7DD8D57113 /* HoldToConfirmScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldToConfirmScreen.swift; sourceTree = "<group>"; };
 		881BF062001690F173C72A36 /* CarouselScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselScreen.swift; sourceTree = "<group>"; };
 		8BC054401571EC2E09394EFF /* FlipCardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipCardScreen.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */,
 				316D05380CECE2E8681282F6 /* PageControlScreen.swift */,
 				3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */,
+				7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */,
 				7719CDE3248D798BF625C212 /* RatingScreen.swift */,
 				5182BC5065D1410B786E7BD0 /* ScrollRevealScreen.swift */,
 				F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */,
@@ -360,6 +363,7 @@
 				EFF9FCAD32DBAB9F8F0E08BA /* OnboardingFlow.swift in Sources */,
 				37059B448AE43F57E327661E /* PageControlScreen.swift in Sources */,
 				BEFFD9CE369EEB96948701A0 /* ProgressLoadingScreen.swift in Sources */,
+				0994C9F56092856763C3D6B6 /* RadioGroupScreen.swift in Sources */,
 				2E96039C713989A6276C46CE /* RatingScreen.swift in Sources */,
 				42707847F4596147ABA765D0 /* ScrollRevealScreen.swift in Sources */,
 				2426D8150D97EE2AFACCEDCC /* SegmentedControlScreen.swift in Sources */,

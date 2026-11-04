@@ -44,6 +44,7 @@ struct StageView: View {
         case .DSAvatarGroup:       AvatarGroupStage(autoplay: autoplay)
         case .DSSuccessCheck:      SuccessCheckStage(autoplay: autoplay)
         case .DSConfetti:          ConfettiStage(autoplay: autoplay)
+        case .DSRadioGroup:        RadioGroupStage(autoplay: autoplay)
         case .DSCheckbox:          CheckboxStage(autoplay: autoplay)
         case .DSAudioBars:         AudioBarsStage(autoplay: autoplay)
         case .DSScrollReveal:      ScrollRevealStage(autoplay: autoplay)

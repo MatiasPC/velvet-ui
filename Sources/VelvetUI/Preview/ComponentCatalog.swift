@@ -28,6 +28,7 @@ struct ComponentCatalog: View {
     ]
     @State private var segmentSelection = "Day"
     @State private var tabSelection = "Overview"
+    @State private var radioPlan = "Pro"
     @State private var chipFilters: Set<String> = ["Design"]
     @State private var chipSort: String? = "Trending"
     @State private var notificationsOn = true
@@ -363,6 +364,17 @@ struct ComponentCatalog: View {
                                 style: .underline
                             )
                         }
+                    }
+                }
+
+                // MARK: - Radio Group
+                section("Radio Group") {
+                    DSCard {
+                        DSRadioGroup(selection: $radioPlan, options: [
+                            DSRadioOption("Free", value: "Free", subtitle: "For trying things out"),
+                            DSRadioOption("Pro", value: "Pro", subtitle: "Everything, for one person"),
+                            DSRadioOption("Team", value: "Team", subtitle: "Shared workspaces")
+                        ])
                     }
                 }
 

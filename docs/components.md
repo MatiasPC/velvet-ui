@@ -234,6 +234,23 @@ Indicator slides with `matchedGeometryEffect` + `springSnappy`. Underline indica
 
 ---
 
+## DSRadioGroup  ✅
+
+`Components/DSRadioGroup.swift`. Single-select from a vertical list of options, generic over any `Hashable` value. Fills the gap between `DSSegmentedControl` (one of a few side-by-side modes) and `DSCheckbox` (many independent flags): "choose exactly one of several".
+
+**Accessibility:** Each row is a button labelled "Title, subtitle" with value "N of M" and the selected trait while chosen; picking a row posts an announcement ("Pro, selected"). The group is a container: label it with `.accessibilityLabel("Plan")`.
+
+```swift
+DSRadioGroup(selection: Binding<Value>, options: [DSRadioOption<Value>],
+             accent: Color? = nil, haptic: DSHapticStyle = .rigid)
+DSRadioGroup(selection: Binding<String>, options: [String], accent:, haptic:)   // value == label
+DSRadioOption(_ title: String, value: Value, subtitle: String? = nil, icon: String? = nil)
+```
+
+The indicator is `DSCheckbox`'s sibling: a 24 pt filled ring (outer disc `palette.textSecondary`, 3:1 or better on the card; inner disc `palette.backgroundElevated`) with `dsWashEdge`, an accent layer that pops in (`springBouncy`, fade on `fast`) and an inner `onAccent` dot that grows a beat later (`textOnPrimary` on a custom `accent`). A `theme.subtleFill` highlight (`DSRadius.control`, with `dsWashEdge`) slides to the chosen row with `matchedGeometryEffect` + `springSmooth`, resizing between rows with and without a subtitle. All of it follows `selection`, so a change from outside animates too. The haptic (`.rigid`, same as the checkbox) fires on a change only; reselecting does nothing. Rows are at least 44 pt tall and fully tappable; press dips the row with `DSPress.scale`. Disabled: 0.5 opacity. Reduce Motion: no pop, growth or slide; indicators and highlight crossfade in place (the rows are not matched).
+
+---
+
 ## DSChip / DSChipGroup  ✅ 🧪
 
 `Components/DSChip.swift`. `DSChipGroup` is generic over `Hashable`: selectable pill chips on [`DSFlowLayout`](#dsflowlayout), single or multiple selection. Built glass-native for v0.2. Depends on `DSFlowLayout`.

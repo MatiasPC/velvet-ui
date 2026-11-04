@@ -73,6 +73,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | On/off setting | `DSToggle(_:isOn:)` | |
 | Pick any of several (terms, a todo, multi-select) | `DSCheckbox(_:isOn:size:)` | Label is tappable; box-only needs `.accessibilityLabel(…)`. |
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
+| Pick one from a list of options (plan, payment) | `DSRadioGroup(selection:options:)` | Any `Hashable` value; wrap in `DSCard`; `.accessibilityLabel("…")` on the group. |
 | Continuous value (volume, price, opacity) | `DSSlider(value:in:step:)` | `Double` binding, default `0...1`; pass `step` for notches. It draws no value: show your own read-out. Add `.accessibilityLabel(…)`. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
@@ -982,15 +983,15 @@ DSToggle(isOn: $notifications).accessibilityLabel("Push notifications")
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
-<!-- source: docs/components/DSCheckbox.md -->
+<!-- source: docs/components/DSRadioGroup.md -->
 
-# DSCheckbox
+# DSRadioGroup
 
-A themed checkbox for lists, forms and consent rows: an empty ring-shaped box that pops to the accent while its checkmark draws on, with a rigid haptic.
+A single-select list for any `Hashable` value: the indicator pops to the accent while its dot grows, and a frosted highlight slides to the chosen row.
 
-<!-- GIF pending: ![DSCheckbox](../media/DSCheckbox.gif) -->
+<!-- GIF pending: ![DSRadioGroup](../media/DSRadioGroup.gif) -->
 
-**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCheckbox.swift`](../../Sources/VelvetUI/Components/DSCheckbox.swift)
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRadioGroup.swift`](../../Sources/VelvetUI/Components/DSRadioGroup.swift)
 
 ## Install
 
@@ -1008,18 +1009,28 @@ In Xcode: File → Add Package Dependencies… → paste `https://github.com/Mat
 ```swift
 import VelvetUI
 
-struct CheckboxDemo: View {
-    @State private var acceptsTerms = true
-    @State private var newsletter = false
+struct RadioGroupDemo: View {
+    enum Plan: Hashable { case free, pro, team }
+
+    @State private var plan = Plan.pro
+    @State private var shipping = "Standard"
 
     var body: some View {
         DSScreen(backdrop: true) {
-            DSCard {
-                VStack(alignment: .leading, spacing: DSSpacing.xxs) {
-                    DSCheckbox("I accept the terms and conditions", isOn: $acceptsTerms)
-                    DSCheckbox("Send me the newsletter", isOn: $newsletter)
+            VStack(spacing: DSSpacing.lg) {
+                DSCard {
+                    DSRadioGroup(selection: $plan, options: [
+                        DSRadioOption("Free", value: Plan.free, subtitle: "For trying things out"),
+                        DSRadioOption("Pro", value: Plan.pro, subtitle: "Everything, for one person"),
+                        DSRadioOption("Team", value: Plan.team, subtitle: "Shared workspaces"),
+                    ])
+                    .accessibilityLabel("Plan")
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+                DSCard {
+                    DSRadioGroup(selection: $shipping, options: ["Standard", "Express", "Overnight"])
+                        .accessibilityLabel("Shipping speed")
+                }
             }
             .dsScreenPadding()
         }
@@ -1029,46 +1040,52 @@ struct CheckboxDemo: View {
 
 ## Parameters
 
+`DSRadioGroup(selection:options:accent:haptic:)`
+
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `label` | `String?` | `nil` | Text beside the box (unlabeled first argument). The label is part of the tap target. |
-| `isOn` | `Binding<Bool>` | required | The checked state. |
-| `size` | `DSCheckboxSize` | `.medium` | `.small` (20 pt box), `.medium` (24 pt) or `.large` (28 pt). |
-| `onColor` | `Color?` | `nil` | Box fill while checked. Defaults to the theme accent. |
-| `haptic` | `DSHapticStyle` | `.rigid` | Haptic fired on every change. |
+| `selection` | `Binding<Value>` | required | The chosen value (`Value: Hashable`). |
+| `options` | `[DSRadioOption<Value>]` | required | The rows, top to bottom. Values must be unique. |
+| `accent` | `Color?` | `nil` | Fill of the selected indicator. Defaults to the theme accent. |
+| `haptic` | `DSHapticStyle` | `.rigid` | Haptic fired when the selection changes. |
+
+Build each option with `DSRadioOption(_ title: String, value: Value, subtitle: String? = nil, icon: String? = nil)`.
+
+**String shortcut:** `DSRadioGroup(selection: Binding<String>, options: [String], accent: Color? = nil, haptic: DSHapticStyle = .rigid)`, available when `Value` is `String`; each string is both the label and the value.
 
 ## Variants
 
 ```swift
-VStack(alignment: .leading, spacing: DSSpacing.xxs) {
-    DSCheckbox("Compact row", isOn: $compact, size: .small)
-    DSCheckbox("Order confirmed", isOn: $confirmed, onColor: theme.palette.success)
-    DSCheckbox(isOn: $selectAll, size: .large)
-        .accessibilityLabel("Select all")
-}
+DSRadioGroup(
+    selection: $payment,
+    options: [
+        DSRadioOption("Apple Pay", value: 1, icon: "apple.logo"),
+        DSRadioOption("Credit card", value: 2, subtitle: "Visa ending 4242", icon: "creditcard"),
+    ],
+    accent: theme.palette.success
+)
 ```
-Here `theme` is `@DSThemed private var theme`. Without a label it is just the box, for use in your own rows; give it a VoiceOver label yourself.
+Here `payment` is an `Int` state and `theme` is `@DSThemed private var theme`. Any `Hashable` works as the value: an enum, an id, an `Int`, a `UUID`.
 
 ## Behavior
 
-- Tapping the box **or its label** toggles `isOn`, fires the haptic and plays the animation. A disabled checkbox dims to 50 % and ignores taps.
-- The box always lays out at least 44×44 pt, so the hit target meets Apple's minimum at every size. `.small` shrinks the box, not the row; in a dense list, drop the stack spacing to zero.
-- Checking: the accent layer springs up from 55 % size with `DSAnimation.springBouncy` and fades in, and the checkmark draws on (`trim`) a beat later. Unchecking: the tick undraws at once while the layer shrinks and fades.
-- The animation follows `isOn`, so it also plays when the binding changes from outside (a "select all" parent). A checkbox that appears already checked, for example one scrolling into a lazy list, shows the finished tick without replaying the draw.
-- The unchecked box is a filled ring: an outer shape in `palette.textSecondary` (at least 3:1 against the card in light and dark, WCAG 1.4.11) and an inner one in `palette.backgroundElevated`, plus the specular `dsWashEdge`. Both are fills; there is no stroke.
-- The tick is `theme.onAccent` on the accent fill, and `palette.textOnPrimary` when you pass your own `onColor`.
-- Reduce Motion: nothing pops or draws. The box crossfades, and the tick is simply there when checked.
-- Press: the row dips with `DSPress` (the lone box dips with `DSPress.iconScale`).
+- Tapping anywhere on a row selects it. Rows are at least 44 pt tall and as wide as the group. Wrap the group in a `DSCard` for the glass container look.
+- The indicator is a 24 pt filled ring (two fills, no stroke; the outer disc is `palette.textSecondary`, at least 3:1 against the card in light and dark), the same size, colors and haptic as `DSCheckbox`. On select the accent layer springs up from 55 % size with `springBouncy` and fades in, and an inner dot grows a beat later. The previous row's indicator shrinks and fades.
+- A highlight (`theme.subtleFill`) slides to the chosen row with `matchedGeometryEffect` and `springSmooth`, resizing between rows with and without a subtitle. Nothing else changes size, so the list never jumps.
+- Everything follows `selection`, so changing it from outside (a "reset" button) animates like a tap.
+- The haptic fires on a change only: reselecting the current value does nothing. A disabled group dims to 50 % and ignores taps.
+- The dot is `theme.onAccent` on the accent fill, and `palette.textOnPrimary` when you pass your own `accent`.
+- Reduce Motion: nothing pops, grows or slides. The indicators and the highlight crossfade in place.
+- Press: the row dips with `DSPress.scale`.
 
 ## Accessibility
 
-- One element. Its label is the `label` text; add `.accessibilityLabel("…")` when you use the box without one.
-- Value is "Checked" or "Unchecked". It carries the toggle trait, plus the selected trait while checked, and reads as dimmed when `.disabled`.
-- Dynamic Type: the label text scales with the user's text size. The box and the 44 pt minimum stay fixed.
+- Each row is one button. Its label is the title followed by the subtitle, its value is its position ("2 of 3"), and it carries the selected trait while chosen. Choosing a row also announces "Title, selected".
+- The group is a container. Label it for VoiceOver with `.accessibilityLabel("Plan")`.
+- Dynamic Type: titles and subtitles scale with the user's text size and rows grow to fit.
 
 ## See also
 
-- [DSToggle](DSToggle.md)
 - [DSSegmentedControl](DSSegmentedControl.md)
 - [DSListCell](DSListCell.md)
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
@@ -1850,122 +1867,6 @@ struct CardStylesDemo: View {
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
-<!-- source: docs/components/DSFlipCard.md -->
-
-# DSFlipCard
-
-A two-sided glass card that turns over in 3D to reveal its back — tap it, or drive it from a binding. The flip is a single spring about one axis with a touch of perspective, and it fires a haptic on the turn.
-
-<!-- GIF pending: ![DSFlipCard](../media/DSFlipCard.gif) -->
-
-**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlipCard.swift`](../../Sources/VelvetUI/Components/DSFlipCard.swift)
-
-## Install
-
-```swift
-// Package.swift
-.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-// target dependencies
-.product(name: "VelvetUI", package: "velvet-ui")
-```
-
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
-
-## Usage
-
-```swift
-import VelvetUI
-
-struct FlipDemo: View {
-    var body: some View {
-        DSScreen(backdrop: true) {
-            // Tap anywhere on the card to turn it over.
-            DSFlipCard {
-                VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                    Text("This month").ds(.footnote)
-                    Text("1 248").ds(.displayMedium)
-                    Text("Tap to see the trend").ds(.callout)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            } back: {
-                VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                    Text("vs. last month").ds(.footnote)
-                    Text("+12%").ds(.displayMedium)
-                    Text("Tap to flip back").ds(.callout)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .dsScreenPadding()
-        }
-    }
-}
-```
-
-Glass looks best over `.dsBackdrop()` or `DSScreen(backdrop: true)`. The card takes the size of the larger face and both faces fill it, so the card keeps its frame when it turns. Give the card a fixed `.frame(...)` to size it yourself.
-
-### Drive it from a binding
-
-Pass `isFlipped` to turn the card over from code (a button, a gesture, a result) as well as by tapping. The card animates the turn itself whenever `isFlipped` changes, so no `withAnimation` is needed.
-
-```swift
-struct CardFace: View {
-    @State private var revealed = false
-
-    var body: some View {
-        VStack(spacing: DSSpacing.md) {
-            DSFlipCard(isFlipped: $revealed, axis: .vertical) {
-                Text("•••• 4242").ds(.numeric)
-            } back: {
-                Text("CVC 123 · 09/28").ds(.numeric)
-            }
-
-            DSButton(revealed ? "Hide" : "Reveal", variant: .secondary, size: .small) {
-                withAnimation(DSAnimation.springSmooth) { revealed.toggle() }
-            }
-        }
-    }
-}
-```
-
-When a face holds its own controls, set `flipOnTap: false` so taps reach them and the card flips only from the binding.
-
-## Parameters
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `isFlipped` | `Binding<Bool>` | — | Only on the bound initializer: `false` shows `front`, `true` shows `back`. Omit it for a self-managing, tap-to-flip card. |
-| `axis` | `DSFlipAxis` | `.horizontal` | Which way the card swings: `.horizontal` (left-to-right) or `.vertical` (top-to-bottom). |
-| `style` | `DSCardStyle` | `.elevated` | Glass treatment of each face, same as `DSCard`: `.flat`, `.elevated`, `.outlined`. |
-| `padding` | `CGFloat` | `DSSpacing.md` | Inner padding of each face. |
-| `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius of each face (20). |
-| `flipOnTap` | `Bool` | `true` | Turn the card over when it is tapped. Set `false` when a face has its own controls. |
-| `haptic` | `DSHapticStyle?` | `.rigid` | Haptic fired on every turn, tap or binding. `nil` for none. |
-| `front` | `@ViewBuilder () -> Front` | required | The face shown at rest. |
-| `back` | `@ViewBuilder () -> Back` | required | The face revealed after the turn. |
-
-## Behavior
-
-- The turn is one `DSAnimation.springSmooth` about `axis`, with a subtle perspective so the card reads as lifting off the glass.
-- A single animated angle drives the turn through an `Animatable` container, so the two faces swap exactly at the 90° edge — no ghosting and no mirrored text. The back face is pre-rotated a half turn so it reads the right way round once flipped.
-- Each face draws the same surfaces as `DSCard` (glass, the 1pt edge highlight, the soft shadow). While the card is turning, a solid body with its own shadow replaces the glass, which does not render while the 3D transform animates; the glass fades back in just under a second after the last flip. Under Reduce Transparency the glass becomes a solid elevated background.
-- The turn fires `haptic` (default `.rigid`) as it starts, on both tap and programmatic flips (it follows `isFlipped`). Pass `nil` when your own control already fires one.
-- A face that is not showing never takes touches, so controls on the front and back can share a position.
-- **Reduce Motion:** the card does not turn; the faces crossfade with `DSAnimation.fast`.
-
-## Accessibility
-
-- With `flipOnTap` on, the card is one VoiceOver element with the `.isButton` trait, the hint "Double tap to flip" and the value "Front side" / "Back side" (announced on every turn); the visible face's content is read as the label.
-- The hidden face is marked `.accessibilityHidden`, so VoiceOver never reads both sides at once.
-- With `flipOnTap: false`, no button semantics are added and each face keeps its own hit testing and VoiceOver — label the flip control yourself.
-- Text uses `.ds(_:)` styles, which scale with Dynamic Type; give both faces room to grow.
-
-## See also
-
-- [DSCard](DSCard.md) for the glass surface each face is built on
-- [DSSuccessCheck](DSSuccessCheck.md) and [DSConfetti](DSConfetti.md) for other reveal moments
-- [All components](../../README.md#components) · [Theming](../../README.md#theming)
-
----
 <!-- source: docs/components/DSListCell.md -->
 
 # DSListCell
@@ -2494,113 +2395,6 @@ struct AvatarDemo: View {
 - [DSListCell](DSListCell.md) (avatar as the leading view)
 - [DSBadge](DSBadge.md) (count badge on an avatar)
 - [Motion](Motion.md)
-- [All components](../../README.md#components) · [Theming](../../README.md#theming)
-
----
-<!-- source: docs/components/DSAvatarGroup.md -->
-
-# DSAvatarGroup
-
-A facepile: overlapping avatars that show who is on a thread, in a space or going to an event, with a "+N" bubble when there are more than fit.
-
-<!-- GIF pending: ![DSAvatarGroup](../media/DSAvatarGroup.gif) -->
-
-**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAvatarGroup.swift`](../../Sources/VelvetUI/Components/DSAvatarGroup.swift)
-
-## Install
-
-```swift
-// Package.swift
-.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-// target dependencies
-.product(name: "VelvetUI", package: "velvet-ui")
-```
-
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
-
-## Usage
-
-```swift
-import VelvetUI
-
-struct EventRow: View {
-    @State private var showsGuests = false
-
-    var body: some View {
-        DSScreen(backdrop: true) {
-            DSCard {
-                HStack(spacing: DSSpacing.md) {
-                    DSAvatarGroup(
-                        names: ["Ana Ruiz", "Ben Cole", "Cy Park", "Di Sol", "Eli Wu"],
-                        maxVisible: 3
-                    ) { showsGuests = true }
-
-                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
-                        Text("Design Review").ds(.title3)
-                        Text("5 people going").ds(.callout)
-                    }
-                    Spacer(minLength: 0)
-                }
-            }
-            .dsScreenPadding()
-        }
-        .dsSheet(isPresented: $showsGuests) {
-            Text("Guest list").ds(.title2).padding(DSSpacing.xl)
-        }
-    }
-}
-```
-
-## Parameters
-
-`DSAvatarGroup(members:maxVisible:size:overlap:haptic:action:)` and `DSAvatarGroup(names:…)`
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `members` / `names` | `[DSAvatarGroup.Member]` / `[String]` | required | The people, first on top. `names` makes initials-only avatars. |
-| `maxVisible` | `Int` | `4` | Most circles to show, the "+N" bubble included. At least 2. |
-| `size` | `CGFloat` | `DSSpacing.xxxl` | Diameter of each avatar. |
-| `overlap` | `CGFloat` | `0.25` | How much each avatar is covered by the next, as a fraction of its width (`0...0.9`). |
-| `haptic` | `DSHapticStyle?` | `.light` | Fired when the group is tapped (with `action`). `nil` for none. |
-| `action` | `(() -> Void)?` | `nil` | Makes the whole group a button. |
-
-`DSAvatarGroup.Member(id:name:imageURL:)`: `id` defaults to `name` and must be unique within the group; `imageURL` loads a photo with an initials fallback, like [DSAvatar](DSAvatar.md).
-
-## Variants
-
-```swift
-VStack(alignment: .leading, spacing: DSSpacing.lg) {
-    // Photos where you have them, initials where you don't
-    DSAvatarGroup(members: [
-        .init(name: "Ada Lovelace", imageURL: URL(string: "https://picsum.photos/seed/ada/96")),
-        .init(name: "Grace Hopper")
-    ])
-
-    // Small and tight
-    DSAvatarGroup(names: ["Ana Ruiz", "Ben Cole", "Cy Park"], size: DSSpacing.xxl, overlap: 0.3)
-}
-```
-
-## Behavior
-
-- Built from `DSAvatar`, so it themes and scales with it.
-- With more people than `maxVisible`, the last slot becomes a "+N" bubble counting everyone not shown.
-- The gap between neighbours is a cut-out of the avatar in front, not a ring: nothing is stroked and there is no background colour to match, so the group looks right on a card, a plain page or a photo.
-- Avatars pop in one after another. Adding a person pops in only the new one.
-- With `action`, the group dips on press and fires a light haptic, then calls `action`. Keep the group at 32 pt or more if it is tappable.
-- Reduce Motion: avatars fade in, nothing scales.
-- Right-to-left layouts mirror the pile.
-
-## Accessibility
-
-- The group is one VoiceOver element. It names the people shown and counts the rest: "Ana, Ben and 3 others". With no overflow it names everyone ("Ana, Ben and Cy"); with nobody it reads "No people".
-- With `action` it also has the button trait.
-- Individual avatars and the "+N" bubble are not separately focusable.
-
-## See also
-
-- [DSAvatar](DSAvatar.md) for a single avatar
-- [DSBadge](DSBadge.md) for counts and status marks
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
@@ -3836,98 +3630,6 @@ The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDura
 - [DSThinkingIndicator](DSThinkingIndicator.md)
 - [Progress](Progress.md)
 - [DSAvatar](DSAvatar.md) (breathe while waiting)
-- [All components](../../README.md#components) · [Theming](../../README.md#theming)
-
----
-<!-- source: docs/components/DSAudioBars.md -->
-
-# DSAudioBars
-
-An equaliser for live audio: a row of capsule bars that ripple while sound is playing or being recorded, follow an optional live level, and ease down to a flat line when idle.
-
-<!-- GIF pending: ![DSAudioBars](../media/DSAudioBars.gif) -->
-
-**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAudioBars.swift`](../../Sources/VelvetUI/Components/DSAudioBars.swift)
-
-## Install
-
-```swift
-// Package.swift
-.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
-// target dependencies
-.product(name: "VelvetUI", package: "velvet-ui")
-```
-
-In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
-
-## Usage
-
-```swift
-import VelvetUI
-
-struct ListeningDemo: View {
-    @State private var isListening = true
-    @State private var micLevel = 0.5   // feed this from your recorder's meter
-
-    var body: some View {
-        DSScreen(backdrop: true) {
-            VStack(spacing: DSSpacing.lg) {
-                DSCard {
-                    HStack(spacing: DSSpacing.sm) {
-                        DSAudioBars(isActive: isListening, level: micLevel, barCount: 7)
-                        Text(isListening ? "Listening…" : "Paused").ds(.callout)
-                        Spacer()
-                    }
-                }
-                DSToggle("Listening", isOn: $isListening)
-            }
-            .dsScreenPadding()
-        }
-    }
-}
-```
-
-## Parameters
-
-`DSAudioBars(isActive:level:barCount:barWidth:spacing:height:color:)`
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `isActive` | `Bool` | `true` | Ripple while true; ease down to a flat line while false. |
-| `level` | `Double?` | `nil` | Live level `0...1`, the amplitude of the ripple. `nil` ripples at full amplitude. Out-of-range values are clamped. |
-| `barCount` | `Int` | `5` | Number of bars (at least 1). |
-| `barWidth` | `CGFloat` | `DSSpacing.xxs` | Width of each bar. |
-| `spacing` | `CGFloat` | `DSSpacing.xxs` | Gap between bars. |
-| `height` | `CGFloat` | `DSSpacing.xl` | Height of the tallest bar. |
-| `color` | `Color?` | `nil` | Bar fill. Defaults to the theme accent. |
-
-## Variants
-
-```swift
-HStack(spacing: DSSpacing.xl) {
-    DSAudioBars(barCount: 3)
-    DSAudioBars(barCount: 7, height: DSSpacing.xxl)
-    DSAudioBars(barCount: 5, color: DSColors.success)
-}
-```
-Few and short for a list row, many and tall for a voice screen.
-
-## Behavior
-
-- Heights come from one clock, with a phase offset per bar, so the row ripples rather than pulses.
-- Going between active and idle, and between levels, eases with the system's eased curves (not a spring: nothing was touched). Raw meter readings are fine to pass; a level change is smoothed over about a quarter of a second.
-- With a `level`, the bars swell with it and sit at the resting line at `0`. Without one they ripple at full amplitude.
-- The clock is paused when the bars are idle, when the view is not on screen (it disappeared, for example behind a pushed screen), when the app is not active, and under Reduce Motion. A paused indicator costs no CPU. In a plain `ScrollView` a row that is only scrolled away may still count as on screen; lists and lazy stacks unload it.
-- Reduce Motion: no ripple. Idle bars are a flat line; active bars rest on a symmetric bell, and `level` is ignored.
-
-## Accessibility
-
-- The bars are decorative and hidden from VoiceOver. Put a label next to them ("Listening…") so the state is also announced.
-
-## See also
-
-- [DSThinkingIndicator](DSThinkingIndicator.md) for "the assistant is working"
-- [Motion](Motion.md) for ambient effects on any view
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---
@@ -5191,6 +4893,413 @@ struct ExpandableTextVariantsDemo: View {
 
 - [DSTypewriterText](DSTypewriterText.md)
 - [DSCard](DSCard.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSCheckbox.md -->
+
+# DSCheckbox
+
+A themed checkbox for lists, forms and consent rows: an empty ring-shaped box that pops to the accent while its checkmark draws on, with a rigid haptic.
+
+<!-- GIF pending: ![DSCheckbox](../media/DSCheckbox.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCheckbox.swift`](../../Sources/VelvetUI/Components/DSCheckbox.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct CheckboxDemo: View {
+    @State private var acceptsTerms = true
+    @State private var newsletter = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            DSCard {
+                VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                    DSCheckbox("I accept the terms and conditions", isOn: $acceptsTerms)
+                    DSCheckbox("Send me the newsletter", isOn: $newsletter)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `label` | `String?` | `nil` | Text beside the box (unlabeled first argument). The label is part of the tap target. |
+| `isOn` | `Binding<Bool>` | required | The checked state. |
+| `size` | `DSCheckboxSize` | `.medium` | `.small` (20 pt box), `.medium` (24 pt) or `.large` (28 pt). |
+| `onColor` | `Color?` | `nil` | Box fill while checked. Defaults to the theme accent. |
+| `haptic` | `DSHapticStyle` | `.rigid` | Haptic fired on every change. |
+
+## Variants
+
+```swift
+VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+    DSCheckbox("Compact row", isOn: $compact, size: .small)
+    DSCheckbox("Order confirmed", isOn: $confirmed, onColor: theme.palette.success)
+    DSCheckbox(isOn: $selectAll, size: .large)
+        .accessibilityLabel("Select all")
+}
+```
+Here `theme` is `@DSThemed private var theme`. Without a label it is just the box, for use in your own rows; give it a VoiceOver label yourself.
+
+## Behavior
+
+- Tapping the box **or its label** toggles `isOn`, fires the haptic and plays the animation. A disabled checkbox dims to 50 % and ignores taps.
+- The box always lays out at least 44×44 pt, so the hit target meets Apple's minimum at every size. `.small` shrinks the box, not the row; in a dense list, drop the stack spacing to zero.
+- Checking: the accent layer springs up from 55 % size with `DSAnimation.springBouncy` and fades in, and the checkmark draws on (`trim`) a beat later. Unchecking: the tick undraws at once while the layer shrinks and fades.
+- The animation follows `isOn`, so it also plays when the binding changes from outside (a "select all" parent). A checkbox that appears already checked, for example one scrolling into a lazy list, shows the finished tick without replaying the draw.
+- The unchecked box is a filled ring: an outer shape in `palette.textSecondary` (at least 3:1 against the card in light and dark, WCAG 1.4.11) and an inner one in `palette.backgroundElevated`, plus the specular `dsWashEdge`. Both are fills; there is no stroke.
+- The tick is `theme.onAccent` on the accent fill, and `palette.textOnPrimary` when you pass your own `onColor`.
+- Reduce Motion: nothing pops or draws. The box crossfades, and the tick is simply there when checked.
+- Press: the row dips with `DSPress` (the lone box dips with `DSPress.iconScale`).
+
+## Accessibility
+
+- One element. Its label is the `label` text; add `.accessibilityLabel("…")` when you use the box without one.
+- Value is "Checked" or "Unchecked". It carries the toggle trait, plus the selected trait while checked, and reads as dimmed when `.disabled`.
+- Dynamic Type: the label text scales with the user's text size. The box and the 44 pt minimum stay fixed.
+
+## See also
+
+- [DSToggle](DSToggle.md)
+- [DSSegmentedControl](DSSegmentedControl.md)
+- [DSListCell](DSListCell.md)
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSFlipCard.md -->
+
+# DSFlipCard
+
+A two-sided glass card that turns over in 3D to reveal its back — tap it, or drive it from a binding. The flip is a single spring about one axis with a touch of perspective, and it fires a haptic on the turn.
+
+<!-- GIF pending: ![DSFlipCard](../media/DSFlipCard.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlipCard.swift`](../../Sources/VelvetUI/Components/DSFlipCard.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct FlipDemo: View {
+    var body: some View {
+        DSScreen(backdrop: true) {
+            // Tap anywhere on the card to turn it over.
+            DSFlipCard {
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    Text("This month").ds(.footnote)
+                    Text("1 248").ds(.displayMedium)
+                    Text("Tap to see the trend").ds(.callout)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } back: {
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    Text("vs. last month").ds(.footnote)
+                    Text("+12%").ds(.displayMedium)
+                    Text("Tap to flip back").ds(.callout)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+Glass looks best over `.dsBackdrop()` or `DSScreen(backdrop: true)`. The card takes the size of the larger face and both faces fill it, so the card keeps its frame when it turns. Give the card a fixed `.frame(...)` to size it yourself.
+
+### Drive it from a binding
+
+Pass `isFlipped` to turn the card over from code (a button, a gesture, a result) as well as by tapping. The card animates the turn itself whenever `isFlipped` changes, so no `withAnimation` is needed.
+
+```swift
+struct CardFace: View {
+    @State private var revealed = false
+
+    var body: some View {
+        VStack(spacing: DSSpacing.md) {
+            DSFlipCard(isFlipped: $revealed, axis: .vertical) {
+                Text("•••• 4242").ds(.numeric)
+            } back: {
+                Text("CVC 123 · 09/28").ds(.numeric)
+            }
+
+            DSButton(revealed ? "Hide" : "Reveal", variant: .secondary, size: .small) {
+                withAnimation(DSAnimation.springSmooth) { revealed.toggle() }
+            }
+        }
+    }
+}
+```
+
+When a face holds its own controls, set `flipOnTap: false` so taps reach them and the card flips only from the binding.
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isFlipped` | `Binding<Bool>` | — | Only on the bound initializer: `false` shows `front`, `true` shows `back`. Omit it for a self-managing, tap-to-flip card. |
+| `axis` | `DSFlipAxis` | `.horizontal` | Which way the card swings: `.horizontal` (left-to-right) or `.vertical` (top-to-bottom). |
+| `style` | `DSCardStyle` | `.elevated` | Glass treatment of each face, same as `DSCard`: `.flat`, `.elevated`, `.outlined`. |
+| `padding` | `CGFloat` | `DSSpacing.md` | Inner padding of each face. |
+| `cornerRadius` | `CGFloat` | `DSRadius.card` | Corner radius of each face (20). |
+| `flipOnTap` | `Bool` | `true` | Turn the card over when it is tapped. Set `false` when a face has its own controls. |
+| `haptic` | `DSHapticStyle?` | `.rigid` | Haptic fired on every turn, tap or binding. `nil` for none. |
+| `front` | `@ViewBuilder () -> Front` | required | The face shown at rest. |
+| `back` | `@ViewBuilder () -> Back` | required | The face revealed after the turn. |
+
+## Behavior
+
+- The turn is one `DSAnimation.springSmooth` about `axis`, with a subtle perspective so the card reads as lifting off the glass.
+- A single animated angle drives the turn through an `Animatable` container, so the two faces swap exactly at the 90° edge — no ghosting and no mirrored text. The back face is pre-rotated a half turn so it reads the right way round once flipped.
+- Each face draws the same surfaces as `DSCard` (glass, the 1pt edge highlight, the soft shadow). While the card is turning, a solid body with its own shadow replaces the glass, which does not render while the 3D transform animates; the glass fades back in just under a second after the last flip. Under Reduce Transparency the glass becomes a solid elevated background.
+- The turn fires `haptic` (default `.rigid`) as it starts, on both tap and programmatic flips (it follows `isFlipped`). Pass `nil` when your own control already fires one.
+- A face that is not showing never takes touches, so controls on the front and back can share a position.
+- **Reduce Motion:** the card does not turn; the faces crossfade with `DSAnimation.fast`.
+
+## Accessibility
+
+- With `flipOnTap` on, the card is one VoiceOver element with the `.isButton` trait, the hint "Double tap to flip" and the value "Front side" / "Back side" (announced on every turn); the visible face's content is read as the label.
+- The hidden face is marked `.accessibilityHidden`, so VoiceOver never reads both sides at once.
+- With `flipOnTap: false`, no button semantics are added and each face keeps its own hit testing and VoiceOver — label the flip control yourself.
+- Text uses `.ds(_:)` styles, which scale with Dynamic Type; give both faces room to grow.
+
+## See also
+
+- [DSCard](DSCard.md) for the glass surface each face is built on
+- [DSSuccessCheck](DSSuccessCheck.md) and [DSConfetti](DSConfetti.md) for other reveal moments
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSAvatarGroup.md -->
+
+# DSAvatarGroup
+
+A facepile: overlapping avatars that show who is on a thread, in a space or going to an event, with a "+N" bubble when there are more than fit.
+
+<!-- GIF pending: ![DSAvatarGroup](../media/DSAvatarGroup.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAvatarGroup.swift`](../../Sources/VelvetUI/Components/DSAvatarGroup.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct EventRow: View {
+    @State private var showsGuests = false
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            DSCard {
+                HStack(spacing: DSSpacing.md) {
+                    DSAvatarGroup(
+                        names: ["Ana Ruiz", "Ben Cole", "Cy Park", "Di Sol", "Eli Wu"],
+                        maxVisible: 3
+                    ) { showsGuests = true }
+
+                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                        Text("Design Review").ds(.title3)
+                        Text("5 people going").ds(.callout)
+                    }
+                    Spacer(minLength: 0)
+                }
+            }
+            .dsScreenPadding()
+        }
+        .dsSheet(isPresented: $showsGuests) {
+            Text("Guest list").ds(.title2).padding(DSSpacing.xl)
+        }
+    }
+}
+```
+
+## Parameters
+
+`DSAvatarGroup(members:maxVisible:size:overlap:haptic:action:)` and `DSAvatarGroup(names:…)`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `members` / `names` | `[DSAvatarGroup.Member]` / `[String]` | required | The people, first on top. `names` makes initials-only avatars. |
+| `maxVisible` | `Int` | `4` | Most circles to show, the "+N" bubble included. At least 2. |
+| `size` | `CGFloat` | `DSSpacing.xxxl` | Diameter of each avatar. |
+| `overlap` | `CGFloat` | `0.25` | How much each avatar is covered by the next, as a fraction of its width (`0...0.9`). |
+| `haptic` | `DSHapticStyle?` | `.light` | Fired when the group is tapped (with `action`). `nil` for none. |
+| `action` | `(() -> Void)?` | `nil` | Makes the whole group a button. |
+
+`DSAvatarGroup.Member(id:name:imageURL:)`: `id` defaults to `name` and must be unique within the group; `imageURL` loads a photo with an initials fallback, like [DSAvatar](DSAvatar.md).
+
+## Variants
+
+```swift
+VStack(alignment: .leading, spacing: DSSpacing.lg) {
+    // Photos where you have them, initials where you don't
+    DSAvatarGroup(members: [
+        .init(name: "Ada Lovelace", imageURL: URL(string: "https://picsum.photos/seed/ada/96")),
+        .init(name: "Grace Hopper")
+    ])
+
+    // Small and tight
+    DSAvatarGroup(names: ["Ana Ruiz", "Ben Cole", "Cy Park"], size: DSSpacing.xxl, overlap: 0.3)
+}
+```
+
+## Behavior
+
+- Built from `DSAvatar`, so it themes and scales with it.
+- With more people than `maxVisible`, the last slot becomes a "+N" bubble counting everyone not shown.
+- The gap between neighbours is a cut-out of the avatar in front, not a ring: nothing is stroked and there is no background colour to match, so the group looks right on a card, a plain page or a photo.
+- Avatars pop in one after another. Adding a person pops in only the new one.
+- With `action`, the group dips on press and fires a light haptic, then calls `action`. Keep the group at 32 pt or more if it is tappable.
+- Reduce Motion: avatars fade in, nothing scales.
+- Right-to-left layouts mirror the pile.
+
+## Accessibility
+
+- The group is one VoiceOver element. It names the people shown and counts the rest: "Ana, Ben and 3 others". With no overflow it names everyone ("Ana, Ben and Cy"); with nobody it reads "No people".
+- With `action` it also has the button trait.
+- Individual avatars and the "+N" bubble are not separately focusable.
+
+## See also
+
+- [DSAvatar](DSAvatar.md) for a single avatar
+- [DSBadge](DSBadge.md) for counts and status marks
+- [All components](../../README.md#components) · [Theming](../../README.md#theming)
+
+---
+<!-- source: docs/components/DSAudioBars.md -->
+
+# DSAudioBars
+
+An equaliser for live audio: a row of capsule bars that ripple while sound is playing or being recorded, follow an optional live level, and ease down to a flat line when idle.
+
+<!-- GIF pending: ![DSAudioBars](../media/DSAudioBars.gif) -->
+
+**Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAudioBars.swift`](../../Sources/VelvetUI/Components/DSAudioBars.swift)
+
+## Install
+
+```swift
+// Package.swift
+.package(url: "https://github.com/MatiasPC/velvet-ui.git", from: "0.2.0")
+// target dependencies
+.product(name: "VelvetUI", package: "velvet-ui")
+```
+
+In Xcode: File → Add Package Dependencies… → paste `https://github.com/MatiasPC/velvet-ui.git`. Inject the theme once at your app root (`@State private var theme = DSTheme(style: .sunset)` + `.dsTheme(theme)`); see [the README](../../README.md#install) for the full setup.
+
+## Usage
+
+```swift
+import VelvetUI
+
+struct ListeningDemo: View {
+    @State private var isListening = true
+    @State private var micLevel = 0.5   // feed this from your recorder's meter
+
+    var body: some View {
+        DSScreen(backdrop: true) {
+            VStack(spacing: DSSpacing.lg) {
+                DSCard {
+                    HStack(spacing: DSSpacing.sm) {
+                        DSAudioBars(isActive: isListening, level: micLevel, barCount: 7)
+                        Text(isListening ? "Listening…" : "Paused").ds(.callout)
+                        Spacer()
+                    }
+                }
+                DSToggle("Listening", isOn: $isListening)
+            }
+            .dsScreenPadding()
+        }
+    }
+}
+```
+
+## Parameters
+
+`DSAudioBars(isActive:level:barCount:barWidth:spacing:height:color:)`
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `isActive` | `Bool` | `true` | Ripple while true; ease down to a flat line while false. |
+| `level` | `Double?` | `nil` | Live level `0...1`, the amplitude of the ripple. `nil` ripples at full amplitude. Out-of-range values are clamped. |
+| `barCount` | `Int` | `5` | Number of bars (at least 1). |
+| `barWidth` | `CGFloat` | `DSSpacing.xxs` | Width of each bar. |
+| `spacing` | `CGFloat` | `DSSpacing.xxs` | Gap between bars. |
+| `height` | `CGFloat` | `DSSpacing.xl` | Height of the tallest bar. |
+| `color` | `Color?` | `nil` | Bar fill. Defaults to the theme accent. |
+
+## Variants
+
+```swift
+HStack(spacing: DSSpacing.xl) {
+    DSAudioBars(barCount: 3)
+    DSAudioBars(barCount: 7, height: DSSpacing.xxl)
+    DSAudioBars(barCount: 5, color: DSColors.success)
+}
+```
+Few and short for a list row, many and tall for a voice screen.
+
+## Behavior
+
+- Heights come from one clock, with a phase offset per bar, so the row ripples rather than pulses.
+- Going between active and idle, and between levels, eases with the system's eased curves (not a spring: nothing was touched). Raw meter readings are fine to pass; a level change is smoothed over about a quarter of a second.
+- With a `level`, the bars swell with it and sit at the resting line at `0`. Without one they ripple at full amplitude.
+- The clock is paused when the bars are idle, when the view is not on screen (it disappeared, for example behind a pushed screen), when the app is not active, and under Reduce Motion. A paused indicator costs no CPU. In a plain `ScrollView` a row that is only scrolled away may still count as on screen; lists and lazy stacks unload it.
+- Reduce Motion: no ripple. Idle bars are a flat line; active bars rest on a symmetric bell, and `level` is ignored.
+
+## Accessibility
+
+- The bars are decorative and hidden from VoiceOver. Put a label next to them ("Listening…") so the state is also announced.
+
+## See also
+
+- [DSThinkingIndicator](DSThinkingIndicator.md) for "the assistant is working"
+- [Motion](Motion.md) for ambient effects on any view
 - [All components](../../README.md#components) · [Theming](../../README.md#theming)
 
 ---

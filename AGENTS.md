@@ -64,6 +64,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | On/off setting | `DSToggle(_:isOn:)` | |
 | Pick any of several (terms, a todo, multi-select) | `DSCheckbox(_:isOn:size:)` | Label is tappable; box-only needs `.accessibilityLabel(…)`. |
 | Small number (quantity, guests) | `DSStepper(value:in:step:)` | Add `.accessibilityLabel(…)`. |
+| Pick one from a list of options (plan, payment) | `DSRadioGroup(selection:options:)` | Any `Hashable` value; wrap in `DSCard`; `.accessibilityLabel("…")` on the group. |
 | Continuous value (volume, price, opacity) | `DSSlider(value:in:step:)` | `Double` binding, default `0...1`; pass `step` for notches. It draws no value: show your own read-out. Add `.accessibilityLabel(…)`. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |

@@ -104,6 +104,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | — | [DSSlider](docs/components/DSSlider.md) | Continuous value slider with optional notches, a tick per notch and a firm stop at each end. |
 | <img src="docs/media/DSRating.gif" width="120" alt="DSRating"> | [DSRating](docs/components/DSRating.md) | Drag-to-rate stars, with half steps and a read-only mode. |
 | <img src="docs/media/DSSegmentedControl.gif" width="120" alt="DSSegmentedControl"> | [DSSegmentedControl](docs/components/DSSegmentedControl.md) | Pill or underline picker with a sliding indicator. |
+| — | [DSRadioGroup](docs/components/DSRadioGroup.md) | Single-select list: the indicator pops to the accent and a highlight slides between rows. |
 | — | [DSChip](docs/components/DSChip.md) | Selectable pill chips for filters and tags that wrap onto new lines, with single or multiple selection. |
 | <img src="docs/media/DSTextField.gif" width="120" alt="DSTextField"> | [DSTextField](docs/components/DSTextField.md) | Text field with label, icon and validation states, plus `DSSearchBar`. |
 | <img src="docs/media/DSCodeField.gif" width="120" alt="DSCodeField"> | [DSCodeField](docs/components/DSCodeField.md) | One-time-code input with SMS autofill, a shake on error and success feedback. |
