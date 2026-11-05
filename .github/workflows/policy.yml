@@ -1,0 +1,43 @@
+name: Policy
+
+# The Definition-of-done checks a compiler can't see (tests, docs, registry,
+# preview, catalog, token lint), plus stricter scope rules for curator PRs.
+# Separate from CI so relabeling a PR re-runs this in seconds without
+# restarting the macOS jobs. Required on `main` alongside CI.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
+
+concurrency:
+  group: policy-${{ github.head_ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  policy:
+    name: PR policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          IS_CURATOR: ${{ contains(github.event.pull_request.labels.*.name, 'curator') }}
+          ON_HOLD: ${{ contains(github.event.pull_request.labels.*.name, 'hold') }}
+        run: |
+          if [ "$ON_HOLD" = "true" ]; then
+            echo "::error::Label 'hold' is set: this PR won't merge until a maintainer removes it."
+            exit 1
+          fi
+          flag=""
+          [ "$IS_CURATOR" = "true" ] && flag="--curator"
+          # Always run the base branch's copy, so a PR can't loosen its own gate.
+          git show "origin/$BASE_REF:scripts/pr-policy.sh" > /tmp/pr-policy.sh 2>/dev/null \
+            || cp scripts/pr-policy.sh /tmp/pr-policy.sh
+          bash /tmp/pr-policy.sh "origin/$BASE_REF" $flag

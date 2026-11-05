@@ -76,6 +76,10 @@ CI runs the same checks, plus the iOS tests on a simulator and a build of the Ga
   - `docs: …` / `test: …`
 - For visual changes, attach a before/after screenshot or a short clip to the PR.
 
+## The curator
+
+A scheduled Claude agent proposes one improvement a day, following [docs/curator/PLAYBOOK.md](docs/curator/PLAYBOOK.md). Its PRs carry the `curator` label and merge themselves only when CI and the `PR policy` check (`scripts/pr-policy.sh`) are green. Curator components skip the "proven in a real app" rule; the maintainer proves them by adopting them. Leave ideas for it as issues labeled `curator-idea`, and read what it did on the pinned **Curator ledger** issue. To stop a curator PR from merging, add the `hold` label (the policy check fails while it's there) or turn off its auto-merge.
+
 ## License
 
 By contributing, you agree that your contributions are licensed under the [MIT License](LICENSE).
