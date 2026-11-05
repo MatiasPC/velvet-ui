@@ -516,6 +516,24 @@ Shadow color is black except for `.glow`. `color(for:)` is scheme-aware; the mod
 
 `.dsCornerRadius(_:)` clips. The stroke overload is deprecated.
 
+### Corners (`DSCorner`)
+
+`DSCorner` (`Tokens/DSCorner.swift`) says how a shape rounds its corners. Apple's corner concentricity (iOS / macOS 26) sits behind it: a concentric corner shares its centre with the container's corner, so **inner radius = container radius − distance**, and the gap between the two curves stays even.
+
+| Case / token | Value | Where |
+|---|---|---|
+| `.fixed(r)` | always `r` | Anything that must not change shape |
+| `.concentric(minimum:)` | follows the container, never under `minimum` | Shapes that sit inside something |
+| `.card` | `.fixed(DSRadius.card)` | First-level cards |
+| `.nestedSurface` | `.concentric(minimum: DSRadius.surface)` | A card inside a card or a sheet |
+| `.control` | `.concentric(minimum: DSRadius.control)` | DSButton medium/large, DSTextField, DSToast, the DSRadioGroup highlight |
+| `.chip` | `.fixed(DSRadius.chip)` | Pills |
+
+- **Containers:** `dsSurface`, every `DSCard` style and `.dsContainer(radius:)` publish their shape to what's inside. The system does it for sheets, popovers and the screen corners.
+- **Fallback:** below iOS / macOS 26, without a container, or for corners far from the container's corners, a concentric corner uses `minimum`. On older systems Velvet looks exactly as it did.
+- **At Velvet's scale** (card 20, padding 16) the concentric radius inside a card is 4, so `minimum` wins and controls stay at 12. The difference shows in large containers: sheets, the screen corners, and surfaces with tight padding.
+- API: `corner.shape` (an `AnyShape` to fill, clip or stroke), `dsSurface(_:corner:edge:)`, `dsWashEdge(corner:)`, `dsFocusGlow(_:corner:isActive:)`, `DSCard(style:padding:corner:)`. The `radius:` overloads are unchanged and mean `.fixed`.
+
 ## Spacing
 
 `DSSpacing` (`Tokens/DSSpacing.swift`), 4pt grid: `xxxs` 2 · `xxs` 4 · `xs` 8 · `sm` 12 · `md` 16 · `lg` 20 · `xl` 24 · `xxl` 32 · `xxxl` 40 · `huge` 48 · `massive` 64. Screen margins: `screenHorizontal` 20, `screenHorizontalCompact` 16, `screenTop` 16, `screenBottom` 24. Helpers: `.dsScreenPadding()`, `.dsPadding(_:)`, `.dsPadding(horizontal:vertical:)`.

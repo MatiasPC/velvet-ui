@@ -129,13 +129,17 @@ final class DSCornerTests: XCTestCase {
 
     func testCardIsAContainerForItsContent() throws {
         try requireConcentricOS()
+        // Red content: on iOS, ImageRenderer draws glass materials near-black,
+        // so black content couldn't be told apart from the surface.
         let card = DSCard(style: .elevated, padding: 20, cornerRadius: 60) {
-            Color.black
+            Color.red
                 .clipShape(DSCorner.concentric(minimum: 0).shape)
                 .frame(width: 160, height: 160)
         }
-        let p = try pixel(card, at: CGPoint(x: 23, y: 23))
-        XCTAssertFalse(p.r < 40 && p.a > 200, "content corner should be rounded away")
+        let center = try pixel(card, at: CGPoint(x: 100, y: 100))
+        let corner = try pixel(card, at: CGPoint(x: 23, y: 23))
+        XCTAssertTrue(center.r > 200 && center.g < 100, "content is drawn")
+        XCTAssertFalse(corner.r > 200 && corner.g < 100, "content corner should be rounded away")
     }
 
     func testFlatCardIsAContainerForItsContent() throws {
