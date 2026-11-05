@@ -1032,6 +1032,40 @@ struct ComponentCatalog: View {
                         .scrollIndicators(.hidden)
                     }
                 }
+
+                // MARK: - Stretchy Header
+                section("Stretchy Header") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        Text("dsStretchyHeader — pull down inside the frame, then scroll up")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 0) {
+                                ZStack(alignment: .bottomLeading) {
+                                    Rectangle().fill(theme.style.accent)
+                                    Text("Weekend in Lisbon")
+                                        .ds(.title2, color: theme.style.onAccent)
+                                        .padding(DSSpacing.md)
+                                }
+                                .frame(height: DSSpacing.massive * 2)
+                                .dsStretchyHeader()
+
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                                    ForEach(["Check-in · Friday", "Check-out · Monday", "2 guests", "River view"], id: \.self) { row in
+                                        Text(row)
+                                            .ds(.callout)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(DSSpacing.sm)
+                                            .dsSurface(.glass, radius: DSRadius.control)
+                                    }
+                                }
+                                .padding(DSSpacing.md)
+                            }
+                        }
+                        .frame(height: DSSpacing.massive * 4)
+                        .clipShape(RoundedRectangle(cornerRadius: DSRadius.card, style: .continuous))
+                        .scrollIndicators(.hidden)
+                    }
+                }
             }
             .dsScreenPadding()
             .padding(.vertical, DSSpacing.lg)

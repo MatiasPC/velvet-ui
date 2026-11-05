@@ -26,6 +26,7 @@ struct ComponentListView: View {
                 row("Layout", "Stacks & grids") { LayoutScreen() }
                 row("Motion", "Ambient primitives") { MotionScreen() }
                 row("Scroll Reveal", "Rows recede at the edges") { ScrollRevealScreen() }
+                row("Stretchy Header", "Hero grows on pull, parallax on scroll") { StretchyHeaderScreen() }
             }
             Section("Actions") {
                 row("Buttons", "Variants, sizes, states") { ButtonsScreen() }

@@ -689,6 +689,16 @@ func dsScrollReveal(_ intensity: DSScrollRevealIntensity = .medium) -> some View
 ```
 
 The edge values are `DSMotion` tokens (0.96/0.65, 0.90/0.40, 0.80/0.15 for scale/opacity). The amount is `DSScrollRevealMath.effect(for:phaseValue:reduceMotion:)` (interpolated by `|phase.value|`, clamped, unit-tested). Axis is inferred from the scroll view. Only render transforms are touched, so nothing reflows. Centre emphasis needs a peeking carousel (`contentMargins` + `containerRelativeFrame`), because the effect keys off the visible-area edge. No haptics. Under Reduce Motion every item rests at scale 1 / opacity 1. Docs: [DSScrollReveal.md](components/DSScrollReveal.md).
+## dsStretchyHeader  ✅
+
+`Animation/DSStretchyHeader.swift`. Scroll-coupled, like `dsScrollReveal`: the hero at the top of a detail screen grows to fill an overscroll (pinned to the top edge) and, with `parallax`, trails the scroll at half speed inside its own frame.
+
+```swift
+func dsStretchyHeader(parallax: Bool = true) -> some View
+// parallax ratio -> DSMotion.stretchyHeaderParallax (0.5)
+```
+
+Both effects are `visualEffect` transforms computed from `frame(in: .scrollView).minY` (pure `DSStretchyHeaderMath.stretchScale` / `.parallaxOffset`, unit-tested): no state, no `GeometryReader`, nothing reflows. Stretch is a uniform scale of `(height + minY) / height` anchored at `.bottom`; parallax is an offset of `min(-minY, height) × 0.5` applied inside a `.clipped()`, so the header never slides under the content below. Must be the first, fixed-height view in a vertical `ScrollView` that ignores the top safe area. Overhanging decorations go in an `.overlay` after the modifier. No haptics. Reduce Motion: the parallax rests; the stretch, which follows the finger, stays. Docs: [DSStretchyHeader.md](components/DSStretchyHeader.md).
 ## DSMarquee  ✅
 
 `Components/DSMarquee.swift`.

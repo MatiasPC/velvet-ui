@@ -471,6 +471,54 @@ enum DocSnippetsDisplay {
     }
     // END ScrollRevealCarouselDemo
 
+    // BEGIN StretchyHeaderDemo
+    struct TripScreen: View {
+        @DSThemed private var theme
+
+        var body: some View {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    ZStack(alignment: .bottomLeading) {
+                        Rectangle().fill(theme.accent)
+                        Text("Weekend in Lisbon")
+                            .ds(.title1, color: theme.onAccent)
+                            .padding(DSSpacing.lg)
+                    }
+                    .frame(height: 320)
+                    .dsStretchyHeader()
+
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        DSCard { Text("Check-in · Friday, from 15:00").ds(.body) }
+                        DSCard { Text("Check-out · Monday, until 11:00").ds(.body) }
+                    }
+                    .dsScreenPadding()
+                    .padding(.vertical, DSSpacing.xl)
+                }
+            }
+            .ignoresSafeArea(edges: .top)
+            .dsBackdrop()
+        }
+    }
+    // END StretchyHeaderDemo
+
+    // BEGIN StretchyHeaderOverlayDemo
+    struct StretchyHeaderOverlayDemo: View {
+        @DSThemed private var theme
+
+        var body: some View {
+            Rectangle()
+                .fill(theme.accent)
+                .frame(height: 240)
+                .dsStretchyHeader(parallax: false)
+                .overlay(alignment: .bottomLeading) {
+                    DSAvatar(name: "Ada Lovelace", size: 72)
+                        .offset(y: DSSpacing.xxxl)
+                        .padding(.leading, DSSpacing.lg)
+                }
+        }
+    }
+    // END StretchyHeaderOverlayDemo
+
     // BEGIN TimelineDemo
     struct TimelineDemo: View {
         @State private var step = 2
@@ -516,6 +564,8 @@ final class DocSnippetsDisplayTests: XCTestCase {
         _ = DocSnippetsDisplay.MotionDemo()
         _ = DocSnippetsDisplay.ScrollRevealDemo()
         _ = DocSnippetsDisplay.ScrollRevealCarouselDemo()
+        _ = DocSnippetsDisplay.TripScreen()
+        _ = DocSnippetsDisplay.StretchyHeaderOverlayDemo()
         _ = DocSnippetsDisplay.TimelineDemo()
     }
 }

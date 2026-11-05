@@ -529,6 +529,22 @@
       "stage": "DSScrollReveal"
     },
     {
+      "name": "DSStretchyHeader",
+      "category": "motion",
+      "summary": "A hero header that stretches to fill the pull past the top of a scroll view and trails the scroll with parallax.",
+      "symbols": [
+        "dsStretchyHeader"
+      ],
+      "files": [
+        "Sources/VelvetUI/Animation/DSStretchyHeader.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSStretchyHeader.md",
+      "stage": "DSStretchyHeader"
+    },
+    {
       "name": "DSMarquee",
       "category": "display",
       "summary": "Content that scrolls horizontally in a seamless loop, but only when it is too wide to fit.",

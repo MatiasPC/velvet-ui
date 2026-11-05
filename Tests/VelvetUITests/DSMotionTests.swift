@@ -155,4 +155,52 @@ final class DSMotionTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - Stretchy Header
+
+    func testStretchyHeaderParallaxComesFromATokenInRange() {
+        XCTAssertGreaterThan(DSMotion.stretchyHeaderParallax, 0)
+        XCTAssertLessThan(DSMotion.stretchyHeaderParallax, 1)
+    }
+
+    /// At rest and while scrolling up the header keeps its size.
+    func testStretchyHeaderIsUnscaledAtRestAndWhileScrollingUp() {
+        for minY: CGFloat in [0, -1, -120, -10_000] {
+            XCTAssertEqual(DSStretchyHeaderMath.stretchScale(minY: minY, height: 300), 1)
+        }
+    }
+
+    /// A bottom-anchored scale of (h + pull) / h grows the header by exactly the pull,
+    /// so its top edge stays pinned to the top of the scroll view.
+    func testStretchyHeaderGrowsByExactlyThePull() {
+        let height: CGFloat = 300
+        for pull: CGFloat in [1, 40, 150, 600] {
+            let scale = DSStretchyHeaderMath.stretchScale(minY: pull, height: height)
+            XCTAssertEqual(height * scale - height, pull, accuracy: 1e-9)
+        }
+    }
+
+    func testStretchyHeaderIgnoresAZeroHeight() {
+        XCTAssertEqual(DSStretchyHeaderMath.stretchScale(minY: 50, height: 0), 1)
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: -50, height: 0, factor: 0.5, reduceMotion: false), 0)
+    }
+
+    func testStretchyHeaderParallaxTrailsTheScrollAndCapsAtTheHeight() {
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: 0, height: 300, factor: 0.5, reduceMotion: false), 0)
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: 80, height: 300, factor: 0.5, reduceMotion: false), 0)
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: -100, height: 300, factor: 0.5, reduceMotion: false), 50, accuracy: 1e-9)
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: -900, height: 300, factor: 0.5, reduceMotion: false), 150, accuracy: 1e-9)
+    }
+
+    func testStretchyHeaderParallaxClampsTheFactor() {
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: -100, height: 300, factor: 2, reduceMotion: false), 100, accuracy: 1e-9)
+        XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: -100, height: 300, factor: -1, reduceMotion: false), 0)
+    }
+
+    /// Reduce Motion rests the parallax; the stretch, which follows the finger, is unaffected.
+    func testStretchyHeaderParallaxRestsUnderReduceMotion() {
+        for minY: CGFloat in [-1, -100, -900] {
+            XCTAssertEqual(DSStretchyHeaderMath.parallaxOffset(minY: minY, height: 300, factor: 0.5, reduceMotion: true), 0)
+        }
+    }
 }
