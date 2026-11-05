@@ -36,6 +36,7 @@ targets:
       # smoke test always covers every stage.
       - path: VelvetGallery/Stages/Stage.swift
       - path: VelvetGallery/Support/Appearance.swift
+      - path: VelvetGallery/Theme/NeutralTheme.swift   # StageBackground.neutral
     dependencies:
       - target: VelvetGallery
       - package: VelvetUI

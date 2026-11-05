@@ -73,6 +73,7 @@
 		1EF7F67E7AB1A5C8EBA17F5E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5BAE8780B3FD380C2CFDE /* Stage.swift */; };
 		13E3DC73ABFD6C170A8114DD /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */; };
 		A91FE1333B4A1EFB9B224130 /* VelvetUI in Frameworks */ = {isa = PBXBuildFile; productRef = 80B13BF2150013D59D04F341 /* VelvetUI */; };
+		ECC36927B3FF592857F9D090 /* NeutralTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5782F9BF254DA5CE52B57A7F /* NeutralTheme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -481,6 +482,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECC36927B3FF592857F9D090 /* NeutralTheme.swift in Sources */,
 				8DCD4B31BFF51F428810DFDF /* StageSmokeTests.swift in Sources */,
 				6F03C22000D5D50EE2DEB6BC /* StageLauncher.swift in Sources */,
 				7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */,
