@@ -37,26 +37,24 @@ public enum DSWash {
 // MARK: - Modifiers
 
 public struct DSWashEdgeModifier: ViewModifier {
-    let radius: CGFloat
+    let corner: DSCorner
     @DSThemed private var theme
 
     public func body(content: Content) -> some View {
         content.overlay(
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
-                .strokeBorder(theme.washEdge, lineWidth: DSWash.edgeWidth)
+            DSInsideStroke(style: theme.washEdge, corner: corner, lineWidth: DSWash.edgeWidth)
         )
     }
 }
 
 public struct DSFocusGlowModifier: ViewModifier {
     let color: Color
-    let radius: CGFloat
+    let corner: DSCorner
     let isActive: Bool
 
     public func body(content: Content) -> some View {
         content.overlay(
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
-                .strokeBorder(color.opacity(isActive ? DSWash.focusOpacity : 0), lineWidth: DSWash.focusWidth)
+            DSInsideStroke(style: color.opacity(isActive ? DSWash.focusOpacity : 0), corner: corner, lineWidth: DSWash.focusWidth)
                 .blur(radius: DSWash.focusBlur)
                 .allowsHitTesting(false)
         )
@@ -67,12 +65,22 @@ public struct DSFocusGlowModifier: ViewModifier {
 public extension View {
     /// Specular edge highlight on a rounded surface (the border replacement).
     func dsWashEdge(radius: CGFloat) -> some View {
-        modifier(DSWashEdgeModifier(radius: radius))
+        modifier(DSWashEdgeModifier(corner: .fixed(radius)))
+    }
+
+    /// Specular edge highlight that follows `corner` (fixed or concentric).
+    func dsWashEdge(corner: DSCorner) -> some View {
+        modifier(DSWashEdgeModifier(corner: corner))
     }
 
     /// Diffuse focus glow in the given color (the focus-ring replacement).
     /// Pass the theme ink (`theme.ink`) or a status color (error/success).
     func dsFocusGlow(_ color: Color, radius: CGFloat, isActive: Bool) -> some View {
-        modifier(DSFocusGlowModifier(color: color, radius: radius, isActive: isActive))
+        modifier(DSFocusGlowModifier(color: color, corner: .fixed(radius), isActive: isActive))
+    }
+
+    /// Diffuse focus glow that follows `corner` (fixed or concentric).
+    func dsFocusGlow(_ color: Color, corner: DSCorner, isActive: Bool) -> some View {
+        modifier(DSFocusGlowModifier(color: color, corner: corner, isActive: isActive))
     }
 }

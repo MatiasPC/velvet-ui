@@ -10,6 +10,7 @@ private struct Trip: Identifiable {
 struct SheetScreen: View {
     @State private var showShare = false
     @State private var showConfirm = false
+    @State private var showCheckout = false
     @State private var selected: Trip?
 
     private let trips = [
@@ -24,6 +25,9 @@ struct SheetScreen: View {
             }
             LabeledExample("Confirmation — fixed height") {
                 DSButton("Delete trip", variant: .destructive, icon: "trash") { showConfirm = true }
+            }
+            LabeledExample("Bottom action — concentric with the sheet") {
+                DSButton("Checkout", icon: "bag") { showCheckout = true }
             }
             LabeledExample("Item-driven") {
                 VStack(spacing: DSSpacing.xs) {
@@ -53,6 +57,22 @@ struct SheetScreen: View {
                 DSButton("Keep it", variant: .ghost) { showConfirm = false }
             }
             .padding(DSSpacing.xl)
+        }
+        .dsSheet(isPresented: $showCheckout, detents: [.medium]) {
+            // On iOS 26+ the button's bottom corners follow the sheet's curve.
+            // Concentricity is measured from the sheet's edge, so the button
+            // has to sit near it: it ignores the bottom safe area and keeps
+            // only the inset. Behind the home indicator it would be too far
+            // from the corner and fall back to the 12 pt minimum.
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                Text("Order summary").ds(.title2)
+                Text("2 items · $48.00").ds(.callout, color: DSColors.textSecondary)
+                Spacer()
+                DSButton("Pay $48.00", size: .large, isFullWidth: true) { showCheckout = false }
+            }
+            .padding(DSSpacing.md)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .ignoresSafeArea(.container, edges: .bottom)
         }
         .dsSheet(item: $selected, detents: [.fraction(0.4), .large]) { trip in
             VStack(alignment: .leading, spacing: DSSpacing.sm) {

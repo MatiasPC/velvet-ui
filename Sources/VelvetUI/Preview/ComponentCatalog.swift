@@ -185,7 +185,7 @@ struct ComponentCatalog: View {
                     DSCard(style: .elevated) {
                         VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             Text("Nested").ds(.title3)
-                            DSCard(style: .flat, cornerRadius: DSRadius.surface) {
+                            DSCard(style: .flat, corner: .nestedSurface) {
                                 Text("Flat card inside").ds(.callout)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -202,6 +202,15 @@ struct ComponentCatalog: View {
                     }
 
                     DSImageCard(title: "Cabin in the woods", subtitle: "$120 / night", badge: "New")
+                }
+
+                // MARK: - Concentric Corners
+                // iOS / macOS 26+: the field's corners share their centre with
+                // the container's (24 − 8 = 16). Earlier systems use the minimum, 12.
+                section("Concentric Corners") {
+                    DSTextField(placeholder: "Email", text: .constant(""))
+                        .padding(DSSpacing.xs)
+                    .dsSurface(.glass, radius: DSRadius.xxl)
                 }
 
                 // MARK: - Flip Card

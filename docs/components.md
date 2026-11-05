@@ -35,7 +35,7 @@ DSButton(_ title: String,
 | `.destructive` | `palette.error` | `palette.textOnPrimary` |
 
 Motion: press → `DSPress.scale`; loading dims to 0.8 and disables. Haptic on tap (configurable).
-Radius: `.small` → `DSRadius.chip`, others → `DSRadius.control`.
+Corners: `.small` → `DSCorner.chip`; `.medium` / `.large` → `DSCorner.control` (concentric with the container on iOS / macOS 26, never under 12 — a full-width button at the foot of a sheet follows the sheet's curve).
 
 **DSIconButton**: `DSIconButton(icon:size: 44,color: Color? = nil,haptic: .light,accessibilityLabel: String? = nil,action:)`. Color defaults to `palette.textPrimary`; press uses `DSPress.iconScale`. Icon-only, so pass `accessibilityLabel` ("Share"); when nil VoiceOver falls back to the SF Symbol's own description.
 
@@ -51,7 +51,11 @@ Notes: icon font sizes (12 / 14) are still literals — candidate for a `DSIconS
 DSCard(style: DSCardStyle = .elevated,          // .flat .elevated .outlined
        padding: CGFloat = DSSpacing.md,
        cornerRadius: CGFloat = DSRadius.card) { content }
+
+DSCard(style:, padding:, corner: DSCorner) { content }   // e.g. .nestedSurface inside a card
 ```
+
+Every style publishes its shape as the container for concentric corners inside it (iOS / macOS 26+), so a `DSButton` or `DSTextField` in the card resolves against it. A nested card should use `corner: .nestedSurface` rather than a fixed 16.
 
 | Style | Surface | Edge | Shadow |
 |---|---|---|---|
@@ -121,6 +125,9 @@ DSSearchBar(placeholder: String = "Search", text: Binding<String>)
 States: real focus (not `.focused`, which looks like `.normal`) tints icon and border with `theme.ink`; `.error` shows message + red icon; `.success` shows a check; `.disabled` at 0.5 opacity. Height 48 (search 44) — literal, candidate for a control-height token. Clear button in the search bar fires `.light`.
 
 Pending restyle: background `subtleFill`, focus → `.dsFocusGlow(theme.ink)`, no stroke.
+
+
+Corners: the field is `DSCorner.control` — concentric with its card or sheet on iOS / macOS 26, never under 12.
 
 ---
 
@@ -214,6 +221,9 @@ Toast already sits on `.ultraThinMaterial` (solid under Reduce Transparency) wit
 - **Accessibility.** The `.id` re-mounts `DSToast` per presentation, so VoiceOver announces replacements too. A "Dismiss" accessibility action clears it without a drag.
 - Stack two modifiers (one per edge, each with its own binding) to run a top and a bottom toast independently.
 
+
+Corners: the toast is `DSCorner.control` — near the screen corners on iOS / macOS 26 it follows their curve; otherwise 12.
+
 ---
 
 ## DSSegmentedControl  🧪 (colors) ⏳ (glass track)
@@ -247,7 +257,7 @@ DSRadioGroup(selection: Binding<String>, options: [String], accent:, haptic:)   
 DSRadioOption(_ title: String, value: Value, subtitle: String? = nil, icon: String? = nil)
 ```
 
-The indicator is `DSCheckbox`'s sibling: a 24 pt filled ring (outer disc `palette.textSecondary`, 3:1 or better on the card; inner disc `palette.backgroundElevated`) with `dsWashEdge`, an accent layer that pops in (`springBouncy`, fade on `fast`) and an inner `onAccent` dot that grows a beat later (`textOnPrimary` on a custom `accent`). A `theme.subtleFill` highlight (`DSRadius.control`, with `dsWashEdge`) slides to the chosen row with `matchedGeometryEffect` + `springSmooth`, resizing between rows with and without a subtitle. All of it follows `selection`, so a change from outside animates too. The haptic (`.rigid`, same as the checkbox) fires on a change only; reselecting does nothing. Rows are at least 44 pt tall and fully tappable; press dips the row with `DSPress.scale`. Disabled: 0.5 opacity. Reduce Motion: no pop, growth or slide; indicators and highlight crossfade in place (the rows are not matched).
+The indicator is `DSCheckbox`'s sibling: a 24 pt filled ring (outer disc `palette.textSecondary`, 3:1 or better on the card; inner disc `palette.backgroundElevated`) with `dsWashEdge`, an accent layer that pops in (`springBouncy`, fade on `fast`) and an inner `onAccent` dot that grows a beat later (`textOnPrimary` on a custom `accent`). A `theme.subtleFill` highlight (`DSCorner.control`, concentric with the group's container, with `dsWashEdge`) slides to the chosen row with `matchedGeometryEffect` + `springSmooth`, resizing between rows with and without a subtitle. All of it follows `selection`, so a change from outside animates too. The haptic (`.rigid`, same as the checkbox) fires on a change only; reselecting does nothing. Rows are at least 44 pt tall and fully tappable; press dips the row with `DSPress.scale`. Disabled: 0.5 opacity. Reduce Motion: no pop, growth or slide; indicators and highlight crossfade in place (the rows are not matched).
 
 ---
 

@@ -23,7 +23,7 @@ public enum DSCardStyle {
 public struct DSCard<Content: View>: View {
     let style: DSCardStyle
     let padding: CGFloat
-    let cornerRadius: CGFloat
+    let corner: DSCorner
     let content: () -> Content
 
     @DSThemed private var theme
@@ -34,9 +34,20 @@ public struct DSCard<Content: View>: View {
         cornerRadius: CGFloat = DSRadius.card,
         @ViewBuilder content: @escaping () -> Content
     ) {
+        self.init(style: style, padding: padding, corner: .fixed(cornerRadius), content: content)
+    }
+
+    /// A card whose corners follow `corner`. Use `.nestedSurface` for a card
+    /// inside another card or a sheet: it becomes concentric with it.
+    public init(
+        style: DSCardStyle = .elevated,
+        padding: CGFloat = DSSpacing.md,
+        corner: DSCorner,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
         self.style = style
         self.padding = padding
-        self.cornerRadius = cornerRadius
+        self.corner = corner
         self.content = content
     }
 
@@ -45,17 +56,18 @@ public struct DSCard<Content: View>: View {
         case .elevated:
             content()
                 .padding(padding)
-                .dsSurface(.glass, radius: cornerRadius)
+                .dsSurface(.glass, corner: corner)
                 .dsShadow(.md)
         case .outlined:
             content()
                 .padding(padding)
-                .dsSurface(.glassThick, radius: cornerRadius)
+                .dsSurface(.glassThick, corner: corner)
         case .flat:
             content()
                 .padding(padding)
+                .dsContainerShape(corner)
                 .background(theme.subtleFill)
-                .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+                .clipShape(corner.shape)
         }
     }
 }

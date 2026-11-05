@@ -15,12 +15,22 @@ struct CardsScreen: View {
                 DSCard(style: .elevated) {
                     VStack(alignment: .leading, spacing: DSSpacing.sm) {
                         Text("Nested").ds(.title3)
-                        DSCard(style: .flat, cornerRadius: DSRadius.surface) {
+                        DSCard(style: .flat, corner: .nestedSurface) {
                             Text("Flat card inside").ds(.callout)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                 }
+            }
+            LabeledExample("Concentric corners — iOS 26+") {
+                // Tight padding: the field and button share their corner centre
+                // with the surface (24 − 8 = 16). Before iOS 26 they stay at 12.
+                VStack(spacing: DSSpacing.xs) {
+                    DSTextField(placeholder: "Email", text: .constant(""))
+                    DSButton("Continue", size: .large, isFullWidth: true) { }
+                }
+                .padding(DSSpacing.xs)
+                .dsSurface(.glass, radius: DSRadius.xxl)
             }
             LabeledExample("Interactive") {
                 DSInteractiveCard(action: { print("card tap") }) {

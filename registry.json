@@ -18,6 +18,7 @@
     "files": [
       "Sources/VelvetUI/Tokens/DSBackground.swift",
       "Sources/VelvetUI/Tokens/DSColors.swift",
+      "Sources/VelvetUI/Tokens/DSCorner.swift",
       "Sources/VelvetUI/Tokens/DSThemeStyle.swift",
       "Sources/VelvetUI/Tokens/DSRadius.swift",
       "Sources/VelvetUI/Tokens/DSShadow.swift",

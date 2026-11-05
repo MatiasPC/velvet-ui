@@ -47,6 +47,8 @@ public enum DSToastType {
 }
 
 public struct DSToast: View {
+    /// Concentric with the screen corners it floats near, never under 12.
+    static let corner: DSCorner = .control
     let message: String
     let type: DSToastType
 
@@ -77,7 +79,7 @@ public struct DSToast: View {
                 ? AnyShapeStyle(theme.palette.backgroundElevated)
                 : AnyShapeStyle(.ultraThinMaterial)
         )
-        .clipShape(RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous))
+        .clipShape(Self.corner.shape)
         .dsShadow(.lg)
         .padding(.horizontal, DSSpacing.screenHorizontal)
         .accessibilityElement(children: .combine)
