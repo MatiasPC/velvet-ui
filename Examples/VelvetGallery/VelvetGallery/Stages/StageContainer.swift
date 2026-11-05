@@ -26,6 +26,9 @@ struct StageContainer: View {
             StageView(stage: stage, autoplay: autoplay)
                 .padding(.horizontal, stage.isFullScreen ? 0 : DSSpacing.xxl)
         }
+        // UI tests wait for this identifier before they interact or take a screenshot.
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("stage.\(stage.rawValue)")
         .overlay(alignment: .top) {
             // Full-screen flows cover the background, so their exit gesture lives
             // on a thin strip along the (hidden) status bar instead.

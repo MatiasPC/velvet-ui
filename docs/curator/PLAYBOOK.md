@@ -16,8 +16,9 @@ curator run ─▶ PR (label: curator, auto-merge on) ─▶ CI  ─┬─ green
                                                                        3 failed attempts ─▶ closed, logged
 ```
 
-Required checks on `main`: `macOS · swift build & test`, `iOS Simulator · xcodebuild`, `PR policy`.
+Required checks on `main`: `macOS · swift build & test`, `iOS Simulator · xcodebuild`, `Gallery UI tests`, `PR policy`.
 
+- **Gallery UI tests** launch every Gallery stage on an iPhone simulator in light and dark (it must render and not crash) and run one interaction test per component, driving it through its accessibility tree like a VoiceOver user would.
 - **CI** proves it compiles on macOS and iOS, every test passes (tokens, contrast, accessibility, doc snippets, registry), every component compiles standalone in Swift 5 and 6, the Gallery builds and `llms.txt` is current.
 - **PR policy** (`scripts/pr-policy.sh`) proves the Definition of done: a test that references the new type, a docs page, a registry entry, a `#Preview` with dark mode, a `ComponentCatalog` section, a CHANGELOG line, no raw colors/fonts/numbers in added library lines. With the `curator` label it also enforces scope: one component max, no protected paths, no deleted sources, no removed public symbols.
 
@@ -95,6 +96,8 @@ For a new component, the full file set (CI and Policy enforce most of it):
 - Rules from `CONTRIBUTING.md`, non-negotiable: tokens only; colors from `@DSThemed private var theme` (never `DSColors` outside `#Preview`); overridable colors are `Color? = nil`; no borders; `DSPress` for press; `DSAnimation` springs for state changes; `DSHapticEngine` on the meaningful beat, not every frame; iOS-only API inside `#if os(iOS)`; Reduce Motion, Reduce Transparency, VoiceOver label/value/traits, Dynamic Type via `.ds(_:)`.
 - Put the logic in an internal, pure type (e.g. `DSLikeButtonTimeline`) so it's testable without rendering.
 - `Tests/VelvetUITests/DS<Name>Tests.swift`: unit tests for that logic (bounds, clamping, the haptic beat, Reduce Motion path), every code snippet from the docs page **verbatim** in a `DocSnippets<Name>` enum so the docs can't drift, and if you render anything, guard platform code with `#if canImport(UIKit)` / `#elseif canImport(AppKit)`.
+- **A UI test**, `Examples/VelvetGallery/GalleryUITests/Components/DS<Name>UITests.swift`: launch the stage with `StageLauncher.launch("DS<Name>")`, find the control by its VoiceOver label (`app.element("…")`), drive it the way a person would (tap, swipe, press-and-hold) and assert the accessibility value changes (`waitForValue`). For a purely ambient component, assert it exists and stays stable, and attach a screenshot. Use the existing `DSLikeButtonUITests` / `DSToggleUITests` as the pattern. The stage itself is covered automatically by `StageSmokeTests`, which launches every `Stage` case in light and dark and attaches screenshots (CI uploads them as the `gallery-screenshots` artifact — link it in the PR).
+- New Gallery or UI-test `.swift` files must be added to `project.pbxproj` by hand (a `PBXFileReference`, a `PBXBuildFile`, the group's children and the target's Sources phase; copy an existing entry and keep IDs unique). The policy check fails if one is missing.
 - `docs/components/DS<Name>.md`, an entry in `docs/components.md`, a row in the README component table, a row in the `AGENTS.md` component chooser.
 - `registry.json` entry (files, dependencies, docs page, stage), then regenerate `llms.txt` / `llms-full.txt`.
 - `ComponentCatalog.swift` section; a VelvetGallery screen and recording stage (see `docs/RECORDING.md`; editing `project.pbxproj` by hand: copy the exact pattern an existing screen uses and keep IDs unique).

@@ -61,7 +61,30 @@ for src in $NEW_SOURCES; do
   if ! grep -qE "(\b$name\b|\.$lower\b|\b$lower\b)" Sources/VelvetUI/Preview/ComponentCatalog.swift; then
     err "$name: no section in Sources/VelvetUI/Preview/ComponentCatalog.swift."
   else note "catalog ✓"; fi
+
+  # Gallery stage: StageSmokeTests launches every Stage case in light and dark.
+  STAGE_FILE=Examples/VelvetGallery/VelvetGallery/Stages/Stage.swift
+  if ! grep -qE "^\s*case .*\b$name\b" "$STAGE_FILE"; then
+    err "$name: no 'case $name' in $STAGE_FILE, so the UI smoke test never launches it."
+  else note "stage ✓"; fi
+
+  # UI interaction test on that stage.
+  if ! grep -rlE "\"$name\"" Examples/VelvetGallery/GalleryUITests/Components >/dev/null 2>&1; then
+    err "$name: no UI test in Examples/VelvetGallery/GalleryUITests/Components/ launches the \"$name\" stage."
+  else note "UI test ✓"; fi
 done
+
+# ── 1b. Every Gallery / UI-test source is in the Xcode project ──
+# (Xcode doesn't pick up new files on disk by itself; a missing entry only shows
+#  up as a confusing "cannot find X in scope" on the macOS runner.)
+PBXPROJ=Examples/VelvetGallery/VelvetGallery.xcodeproj/project.pbxproj
+if [[ -f "$PBXPROJ" ]]; then
+  while IFS= read -r f; do
+    [[ -z "$f" ]] && continue
+    grep -qF "/* $(basename "$f") in Sources */" "$PBXPROJ" \
+      || err "$f is not in $PBXPROJ (add a PBXFileReference, a PBXBuildFile and a Sources entry for its target)."
+  done < <(echo "$ALL" | grep -E '^Examples/VelvetGallery/(VelvetGallery|GalleryUITests)/.*\.swift$' | while read -r p; do [[ -f "$p" ]] && echo "$p"; done)
+fi
 
 if [[ -n "$NEW_SOURCES" ]] && ! echo "$ALL" | grep -qx 'CHANGELOG.md'; then
   err "New component(s) without a CHANGELOG.md line under [Unreleased]."
