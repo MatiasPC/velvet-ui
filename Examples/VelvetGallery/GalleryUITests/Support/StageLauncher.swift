@@ -27,7 +27,9 @@ enum StageLauncher {
         ]
         app.launch()
 
-        let root = app.otherElements["stage.\(stage)"]
+        // Any element type: a stage whose root is a ScrollView surfaces the
+        // identifier on a scrollView, not an otherElement.
+        let root = app.descendants(matching: .any)["stage.\(stage)"].firstMatch
         XCTAssertTrue(
             root.waitForExistence(timeout: 15),
             "Stage \(stage) (\(scheme.rawValue)) never appeared.",
