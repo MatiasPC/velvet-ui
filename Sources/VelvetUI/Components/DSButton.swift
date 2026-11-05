@@ -49,11 +49,12 @@ public enum DSButtonSize {
         }
     }
 
-    var cornerRadius: CGFloat {
+    /// Pills stay pills; medium and large buttons are concentric with their
+    /// container (a card, a sheet, the screen corners), never under 12.
+    var corner: DSCorner {
         switch self {
-        case .small: return DSRadius.chip
-        case .medium: return DSRadius.control
-        case .large: return DSRadius.control
+        case .small: return .chip
+        case .medium, .large: return .control
         }
     }
 }
@@ -128,9 +129,9 @@ public struct DSButton: View {
             .frame(height: size.height)
             .padding(.horizontal, size.horizontalPadding)
             .background(backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: size.cornerRadius, style: .continuous))
+            .clipShape(size.corner.shape)
             .overlay(
-                RoundedRectangle(cornerRadius: size.cornerRadius, style: .continuous)
+                size.corner.shape
                     .stroke(borderColor, lineWidth: variant == .outline ? 1.5 : 0)
             )
             .scaleEffect(isPressed ? DSPress.scale : 1.0)

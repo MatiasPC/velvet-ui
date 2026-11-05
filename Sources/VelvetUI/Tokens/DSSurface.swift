@@ -36,15 +36,16 @@ public enum DSSurface: Sendable {
 
 public struct DSSurfaceModifier: ViewModifier {
     let level: DSSurface
-    let radius: CGFloat
+    let corner: DSCorner
     let edge: Bool
 
     @DSThemed private var theme
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     public func body(content: Content) -> some View {
-        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        let shape = corner.shape
         content
+            .dsContainerShape(corner)
             .background {
                 if let material = level.material, !reduceTransparency {
                     shape.fill(material)
@@ -55,7 +56,7 @@ public struct DSSurfaceModifier: ViewModifier {
             .clipShape(shape)
             .overlay {
                 if edge {
-                    shape.strokeBorder(theme.washEdge, lineWidth: DSWash.edgeWidth)
+                    DSInsideStroke(style: theme.washEdge, corner: corner, lineWidth: DSWash.edgeWidth)
                 }
             }
     }
@@ -63,6 +64,7 @@ public struct DSSurfaceModifier: ViewModifier {
 
 public extension View {
     /// Frosted-glass surface with continuous corners and a specular edge highlight.
+    /// The surface is also the container for concentric corners inside it.
     /// - Parameters:
     ///   - level: How opaque the glass is. Cards use `.glass`.
     ///   - radius: Corner radius. Defaults to `DSRadius.card` (20).
@@ -72,6 +74,16 @@ public extension View {
         radius: CGFloat = DSRadius.card,
         edge: Bool = true
     ) -> some View {
-        modifier(DSSurfaceModifier(level: level, radius: radius, edge: edge))
+        modifier(DSSurfaceModifier(level: level, corner: .fixed(radius), edge: edge))
+    }
+
+    /// Frosted-glass surface whose corners follow `corner` — for example
+    /// `.nestedSurface`, concentric with the card it sits in.
+    func dsSurface(
+        _ level: DSSurface = .glass,
+        corner: DSCorner,
+        edge: Bool = true
+    ) -> some View {
+        modifier(DSSurfaceModifier(level: level, corner: corner, edge: edge))
     }
 }

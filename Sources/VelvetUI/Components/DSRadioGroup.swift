@@ -26,6 +26,8 @@ import SwiftUI
 
 /// Sizes and pure logic. Internal, so the unit tests can reach them; none of it is API.
 enum DSRadioGroupMetrics {
+    /// The selection highlight is concentric with the group's container.
+    static let highlightCorner: DSCorner = .control
     /// The indicator is this wide and tall: a `DSCheckboxSize.medium` box, so a
     /// radio row and a checkbox row line up and read as one family.
     static let indicatorSide: CGFloat = DSSpacing.xl
@@ -255,9 +257,9 @@ public struct DSRadioGroup<Value: Hashable>: View {
     @ViewBuilder
     private func highlight(isSelected: Bool) -> some View {
         if isSelected {
-            let shape = RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+            let shape = DSRadioGroupMetrics.highlightCorner.shape
                 .fill(theme.subtleFill)
-                .dsWashEdge(radius: DSRadius.control)
+                .dsWashEdge(corner: DSRadioGroupMetrics.highlightCorner)
             if reduceMotion {
                 shape
             } else {

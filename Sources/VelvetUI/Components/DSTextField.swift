@@ -12,6 +12,8 @@ public enum DSTextFieldState {
 }
 
 public struct DSTextField: View {
+    /// Concentric with the card or sheet it sits in, never under 12.
+    static let corner: DSCorner = .control
     let label: String
     let placeholder: String
     let icon: String?
@@ -70,9 +72,9 @@ public struct DSTextField: View {
             .padding(.horizontal, DSSpacing.md)
             .frame(height: 48)
             .background(theme.palette.backgroundSecondary)
-            .clipShape(RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous))
+            .clipShape(Self.corner.shape)
             .overlay(
-                RoundedRectangle(cornerRadius: DSRadius.md, style: .continuous)
+                Self.corner.shape
                     .stroke(borderColor, lineWidth: isFocused || isError ? 1.5 : 0)
             )
             .animation(DSAnimation.fast, value: isFocused)
