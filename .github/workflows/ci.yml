@@ -75,3 +75,62 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath .build/xcode-gallery \
             CODE_SIGNING_ALLOWED=NO
+
+  gallery-ui:
+    name: Gallery UI tests
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          udid=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          runtimes = [r for r in devices if ".iOS-" in r]
+          runtimes.sort(key=lambda r: [int(p) for p in r.rsplit(".iOS-", 1)[1].split("-")], reverse=True)
+          for runtime in runtimes:
+              for device in devices[runtime]:
+                  if device["name"].startswith("iPhone"):
+                      print(device["udid"])
+                      sys.exit()
+          sys.exit("No iPhone simulator available")
+          ')
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$udid" || true
+      - name: Run the Gallery UI tests
+        # Every stage launches in light and dark (StageSmokeTests), plus one
+        # interaction test per component under GalleryUITests/Components.
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Examples/VelvetGallery/VelvetGallery.xcodeproj \
+            -scheme VelvetGallery \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath .build/xcode-gallery-ui \
+            -resultBundlePath .build/GalleryUITests.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Export screenshots
+        if: always()
+        run: |
+          mkdir -p .build/gallery-screenshots
+          [ -d .build/GalleryUITests.xcresult ] && xcrun xcresulttool export attachments \
+            --path .build/GalleryUITests.xcresult \
+            --output-path .build/gallery-screenshots || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-screenshots
+          path: .build/gallery-screenshots
+          if-no-files-found: ignore
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: gallery-ui-xcresult
+          path: .build/GalleryUITests.xcresult
+          retention-days: 7

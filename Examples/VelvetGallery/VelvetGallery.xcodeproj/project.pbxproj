@@ -66,7 +66,24 @@
 		F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */; };
 		F7BF430DC1C21373B180C829 /* FlowLayoutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B81A2A156CAEDB57677203 /* FlowLayoutScreen.swift */; };
 		FFC9C112D362FAC044661AD7 /* ActivityRingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC02DA1D827E9A4EAEE39E3 /* ActivityRingsScreen.swift */; };
+		8DCD4B31BFF51F428810DFDF /* StageSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5973D58C048E9EDA0F9F336 /* StageSmokeTests.swift */; };
+		6F03C22000D5D50EE2DEB6BC /* StageLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147494E5941BC06B9A6A4645 /* StageLauncher.swift */; };
+		7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D7C15171A6834C43246986 /* DSToggleUITests.swift */; };
+		C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */; };
+		1EF7F67E7AB1A5C8EBA17F5E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5BAE8780B3FD380C2CFDE /* Stage.swift */; };
+		13E3DC73ABFD6C170A8114DD /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */; };
+		A91FE1333B4A1EFB9B224130 /* VelvetUI in Frameworks */ = {isa = PBXBuildFile; productRef = 80B13BF2150013D59D04F341 /* VelvetUI */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		05845D1C7B8DB29D75CA1A8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF0941A65C7A4A278D7D0C70 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A34DE49C52AAFE8381C73BC;
+			remoteInfo = VelvetGallery;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		01D1AFC884CFBA3FE202ADEF /* TypewriterTextScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypewriterTextScreen.swift; sourceTree = "<group>"; };
@@ -129,6 +146,11 @@
 		F89D5079C9C5EA4834D8F5BD /* MarqueeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeScreen.swift; sourceTree = "<group>"; };
 		F9E067050DDAE14077ACE598 /* SegmentedControlScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlScreen.swift; sourceTree = "<group>"; };
 		FA5CC6A230EB603F844AD9BA /* NumberTickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberTickerScreen.swift; sourceTree = "<group>"; };
+		E5973D58C048E9EDA0F9F336 /* StageSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageSmokeTests.swift; sourceTree = "<group>"; };
+		147494E5941BC06B9A6A4645 /* StageLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageLauncher.swift; sourceTree = "<group>"; };
+		77D7C15171A6834C43246986 /* DSToggleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSToggleUITests.swift; sourceTree = "<group>"; };
+		95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSLikeButtonUITests.swift; sourceTree = "<group>"; };
+		D3D6C5486BF2249E81D09FD3 /* GalleryUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GalleryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +159,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D96C9A7BAD30BB912DB8F225 /* VelvetUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA55D7205DE1B36691FD7B46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A91FE1333B4A1EFB9B224130 /* VelvetUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				337B87D9114B656E1412E8BF /* VelvetGallery.app */,
+				D3D6C5486BF2249E81D09FD3 /* GalleryUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,6 +206,7 @@
 			children = (
 				44760F471E03B91AB14E94A0 /* Packages */,
 				F02477D3742CEB797B47B253 /* VelvetGallery */,
+				9F4DD129DA77A1A411972EE1 /* GalleryUITests */,
 				4DED5CB02AEAACE25197B781 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -273,6 +305,33 @@
 			path = VelvetGallery;
 			sourceTree = "<group>";
 		};
+		9F4DD129DA77A1A411972EE1 /* GalleryUITests */ = {
+			isa = PBXGroup;
+			children = (
+				11B57FB5839C10F37E2E9B28 /* Components */,
+				A89466DA22727617F81A8C53 /* Support */,
+				E5973D58C048E9EDA0F9F336 /* StageSmokeTests.swift */,
+			);
+			path = GalleryUITests;
+			sourceTree = "<group>";
+		};
+		11B57FB5839C10F37E2E9B28 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				77D7C15171A6834C43246986 /* DSToggleUITests.swift */,
+				95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A89466DA22727617F81A8C53 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				147494E5941BC06B9A6A4645 /* StageLauncher.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -295,6 +354,26 @@
 			productReference = 337B87D9114B656E1412E8BF /* VelvetGallery.app */;
 			productType = "com.apple.product-type.application";
 		};
+		9D05F0C3EB9467379C341B92 /* GalleryUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CECB2DDBFA1F94A8902BB10E /* Build configuration list for PBXNativeTarget "GalleryUITests" */;
+			buildPhases = (
+				2B3938EA3D380B17D52E4D99 /* Sources */,
+				FA55D7205DE1B36691FD7B46 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				252F4C381366C64B140C7CE3 /* PBXTargetDependency */,
+			);
+			name = GalleryUITests;
+			packageProductDependencies = (
+				80B13BF2150013D59D04F341 /* VelvetUI */,
+			);
+			productName = GalleryUITests;
+			productReference = D3D6C5486BF2249E81D09FD3 /* GalleryUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -303,6 +382,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					9D05F0C3EB9467379C341B92 = {
+						TestTargetID = 7A34DE49C52AAFE8381C73BC;
+					};
+				};
 			};
 			buildConfigurationList = EDC4C57673F14F0511CDFCA3 /* Build configuration list for PBXProject "VelvetGallery" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -322,6 +406,7 @@
 			projectRoot = "";
 			targets = (
 				7A34DE49C52AAFE8381C73BC /* VelvetGallery */,
+				9D05F0C3EB9467379C341B92 /* GalleryUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -392,7 +477,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2B3938EA3D380B17D52E4D99 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DCD4B31BFF51F428810DFDF /* StageSmokeTests.swift in Sources */,
+				6F03C22000D5D50EE2DEB6BC /* StageLauncher.swift in Sources */,
+				7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */,
+				C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */,
+				13E3DC73ABFD6C170A8114DD /* Appearance.swift in Sources */,
+				1EF7F67E7AB1A5C8EBA17F5E /* Stage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		252F4C381366C64B140C7CE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A34DE49C52AAFE8381C73BC /* VelvetGallery */;
+			targetProxy = 05845D1C7B8DB29D75CA1A8D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1F521CDCA6621E17E5172A5E /* Release */ = {
@@ -558,6 +664,44 @@
 			};
 			name = Debug;
 		};
+		D66632BB5B8EE7F9E7F8CBE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.matiasperaltacharro.GalleryUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VelvetGallery;
+			};
+			name = Debug;
+		};
+		D1427CDECFEAAD10CBF0D16A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.matiasperaltacharro.GalleryUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VelvetGallery;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -579,6 +723,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		CECB2DDBFA1F94A8902BB10E /* Build configuration list for PBXNativeTarget "GalleryUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D66632BB5B8EE7F9E7F8CBE6 /* Debug */,
+				D1427CDECFEAAD10CBF0D16A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -590,6 +743,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		2A46D949DBAFBFE32716A4CF /* VelvetUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VelvetUI;
+		};
+		80B13BF2150013D59D04F341 /* VelvetUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = VelvetUI;
 		};

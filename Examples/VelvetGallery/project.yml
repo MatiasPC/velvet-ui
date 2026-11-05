@@ -27,6 +27,26 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+  GalleryUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: GalleryUITests
+      # The stage list and appearance enum are shared with the app, so the
+      # smoke test always covers every stage.
+      - path: VelvetGallery/Stages/Stage.swift
+      - path: VelvetGallery/Support/Appearance.swift
+    dependencies:
+      - target: VelvetGallery
+      - package: VelvetUI
+        product: VelvetUI
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.matiasperaltacharro.GalleryUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.9"
+        TEST_TARGET_NAME: VelvetGallery
 schemes:
   VelvetGallery:
     build:
@@ -34,3 +54,7 @@ schemes:
         VelvetGallery: all
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - GalleryUITests
