@@ -10,7 +10,12 @@
 // when there is one, otherwise downloaded from GitHub.
 
 import Foundation
+#if canImport(CryptoKit)
 import CryptoKit
+#endif
+#if canImport(FoundationNetworking)
+import FoundationNetworking   // URLSession on Linux
+#endif
 
 let usage = """
 Velvet UI CLI
@@ -328,7 +333,15 @@ func isSafeRegistryPath(_ p: String) -> Bool {
 }
 
 func sha16(_ text: String) -> String {
+    #if canImport(CryptoKit)
     SHA256.hash(data: Data(text.utf8)).prefix(8).map { String(format: "%02x", $0) }.joined()
+    #else
+    // Linux (CI helpers, the curator's sandbox): no CryptoKit, so hash with coreutils.
+    let tmp = FileManager.default.temporaryDirectory.appendingPathComponent("velvet-\(UUID().uuidString)")
+    defer { try? FileManager.default.removeItem(at: tmp) }
+    try? Data(text.utf8).write(to: tmp)
+    return String(runProcess("/usr/bin/sha256sum", [tmp.path]).output.prefix(16))
+    #endif
 }
 
 struct Installer {
