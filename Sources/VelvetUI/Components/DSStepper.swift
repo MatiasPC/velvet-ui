@@ -106,36 +106,68 @@ public struct DSStepper: View {
     /// The longest formatted value `range` can hold. Digit count only grows with
     /// magnitude, so the widest string is always one of the two bounds.
     private var widestValueString: String {
-        let lower = String(range.lowerBound)
-        let upper = String(range.upperBound)
-        return lower.count >= upper.count ? lower : upper
+        DSStepperLogic.widestValueString(in: range)
     }
 
     // MARK: - Stepping
 
     /// `step`, guarded against zero/negative input.
-    private var effectiveStep: Int { step > 0 ? step : 1 }
+    private var effectiveStep: Int { DSStepperLogic.effectiveStep(step) }
 
     private var isAtLowerBound: Bool { value <= range.lowerBound }
     private var isAtUpperBound: Bool { value >= range.upperBound }
 
-    /// Applies `delta`, clamped into `range` — correct even when `step` doesn't
-    /// evenly divide the range (e.g. `step: 5` over `0...12` lands on 12, not 15).
-    /// A move that actually changes the value ticks `.selection`; a move that
-    /// can't (already at the bound) fires `.warning` and the refusal wiggle.
+    /// Applies `delta` through `DSStepperLogic`. A move that actually changes the
+    /// value ticks `.selection`; a move that can't (already at the bound) fires
+    /// `.warning` and the refusal wiggle.
     private func applyStep(_ delta: Int) {
-        let proposed = value + delta
-        let clamped = min(max(proposed, range.lowerBound), range.upperBound)
-
-        if clamped != value {
+        switch DSStepperLogic.outcome(value: value, delta: delta, in: range) {
+        case .moved(to: let newValue):
             withAnimation(DSAnimation.springSnappy) {
-                value = clamped
+                value = newValue
             }
             DSHapticEngine.shared.fire(.selection)
-        } else {
+        case .refused:
             DSHapticEngine.shared.fire(.warning)
             jiggleTrigger += 1
         }
+    }
+}
+
+// MARK: - Logic
+
+/// The stepper's arithmetic, kept pure so tests can pin it without rendering.
+enum DSStepperLogic {
+    /// What one tap or VoiceOver adjustment does.
+    enum Outcome: Equatable {
+        /// The value changes to this (already clamped into range).
+        case moved(to: Int)
+        /// The value can't move further that way: refusal haptic and wiggle.
+        case refused
+    }
+
+    /// `step`, guarded against zero/negative input.
+    static func effectiveStep(_ step: Int) -> Int {
+        step > 0 ? step : 1
+    }
+
+    /// Applies `delta` to `value`, clamped into `range`. Correct even when the
+    /// step doesn't evenly divide the range (`step: 5` over `0...12` lands on 12,
+    /// not 15). A value bound from outside the range snaps to the nearest bound
+    /// on the next step. Overflow-safe at `Int.min` / `Int.max`.
+    static func outcome(value: Int, delta: Int, in range: ClosedRange<Int>) -> Outcome {
+        let (sum, overflow) = value.addingReportingOverflow(delta)
+        let proposed = overflow ? (delta > 0 ? Int.max : Int.min) : sum
+        let clamped = min(max(proposed, range.lowerBound), range.upperBound)
+        return clamped == value ? .refused : .moved(to: clamped)
+    }
+
+    /// The longest formatted value `range` can hold. Digit count only grows with
+    /// magnitude, so the widest string is always one of the two bounds.
+    static func widestValueString(in range: ClosedRange<Int>) -> String {
+        let lower = String(range.lowerBound)
+        let upper = String(range.upperBound)
+        return lower.count >= upper.count ? lower : upper
     }
 }
 
