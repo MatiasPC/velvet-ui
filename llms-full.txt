@@ -1161,7 +1161,7 @@ struct StepperDemo: View {
 | `step` | `Int` | `1` | Amount added or removed per tap. A non-positive step is treated as 1. |
 | `accent` | `Color?` | `nil` | Tint of the − and + glyphs. Defaults to theme ink (the number itself always uses the primary text color). |
 
-Stepping clamps into `range`, so a `step` that doesn't divide the range evenly lands on the bound instead of overshooting.
+Stepping clamps into `range`, so a `step` that doesn't divide the range evenly lands on the bound instead of overshooting. If the bound value starts outside `range`, the next step snaps it to the nearest bound.
 
 ## Variants
 
