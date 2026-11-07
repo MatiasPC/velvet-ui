@@ -1260,13 +1260,14 @@ Use `step: 0.5` for half stars. Use `DSRating(value:)` for displaying averages.
 
 ## Behavior
 
-- Drag across the stars or tap one; the value snaps to `step`.
-- A selection tick fires per star crossed and a light haptic on release. The active star pops with a bouncy spring.
+- Drag across the stars or tap one; the value snaps to `step` (`0.25` gives quarter stars). A rating bound outside `0...count` is drawn and read as the nearest bound.
+- A selection tick fires each time the finger enters a new star, and a light haptic on release. The active star pops with a bouncy spring.
+- Reduce Motion: no pop, and the fill eases quickly instead of springing.
 
 ## Accessibility
 
-- Editable: one adjustable element labelled "Rating" with the value "3 out of 5 stars". Swipe up or down to change it.
-- The read-only init has the same label and value format ("Rating", "3.5 out of 5 stars"). VoiceOver still announces it as adjustable, but swiping does nothing.
+- Editable: one adjustable element labelled "Rating" with the value "3 out of 5 stars". Swipe up or down to move one `step`; an off-step value (say 2.3) moves onto the step grid, and swiping down from the first star clears the rating to 0.
+- The read-only init has the same label and value format ("Rating", "3.5 out of 5 stars", up to two decimals: "4.33") and isn't adjustable.
 - Dynamic Type: stars are sized by the `size` parameter, so they don't scale with text size.
 
 ## See also
