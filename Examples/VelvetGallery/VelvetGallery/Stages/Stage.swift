@@ -20,6 +20,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSCheckbox
     case DSAudioBars
     case DSScrollReveal
+    case DSStretchyHeader
     case DSMarquee
     case DSFlowLayout
     case DSChip
@@ -51,6 +52,8 @@ enum Stage: String, CaseIterable, Identifiable {
             return false   // the gesture is the demo
         case .DSTiltCard:
             return false   // drag it by hand
+        case .DSStretchyHeader:
+            return false   // overscroll can't be driven programmatically: pull by hand
         case .DSExpandableText:
             // The expansion state is private to the component: tap Show more by hand.
             return false

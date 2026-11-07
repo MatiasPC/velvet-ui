@@ -24,6 +24,7 @@
 		3F9C6E939063C3A8F3ECA9BC /* FlowStages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9B0C04AFCD8F2D1ECC23AD /* FlowStages.swift */; };
 		424574B6BCA10E08E2F3A5F2 /* ConfettiScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6134837B127382EC53CC0104 /* ConfettiScreen.swift */; };
 		42707847F4596147ABA765D0 /* ScrollRevealScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5182BC5065D1410B786E7BD0 /* ScrollRevealScreen.swift */; };
+		45DD566E3AF80CFA1E26F386 /* StretchyHeaderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADA8168443E6957F65050E1 /* StretchyHeaderScreen.swift */; };
 		4386829CB14CD0D06D656762 /* CodeFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F832409543665FBF97B12CD /* CodeFieldScreen.swift */; };
 		4849096CCD819E56769681C3 /* ThemeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F06770FADF1115A1222AB96 /* ThemeScreen.swift */; };
 		4CF51BEF9FD582C6C0B9F6B6 /* StageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931294FB9DE3CEC60EEB2738 /* StageView.swift */; };
@@ -104,6 +105,7 @@
 		3EDFDF55C74B64863E7BB5F0 /* ProgressLoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLoadingScreen.swift; sourceTree = "<group>"; };
 		4A9B0C04AFCD8F2D1ECC23AD /* FlowStages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStages.swift; sourceTree = "<group>"; };
 		5182BC5065D1410B786E7BD0 /* ScrollRevealScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollRevealScreen.swift; sourceTree = "<group>"; };
+		6ADA8168443E6957F65050E1 /* StretchyHeaderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchyHeaderScreen.swift; sourceTree = "<group>"; };
 		54F60FD1D436135BECE7C11C /* ListsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsScreen.swift; sourceTree = "<group>"; };
 		5782F9BF254DA5CE52B57A7F /* NeutralTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeutralTheme.swift; sourceTree = "<group>"; };
 		5C211B7682F0E826683528A4 /* ButtonsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsScreen.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				35EC5F26F46CC0F01AB48C05 /* SliderScreen.swift */,
 				9AFB5C0E067A1BC0FD22D864 /* SlideToConfirmScreen.swift */,
 				60C54157D449912B0364C807 /* StepperScreen.swift */,
+				6ADA8168443E6957F65050E1 /* StretchyHeaderScreen.swift */,
 				98EA9C3B8CA8B81BA7EF23D2 /* SuccessCheckScreen.swift */,
 				BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */,
 				A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */,
@@ -462,6 +465,7 @@
 				F2D28C4E8DADC9C2B6CC8B76 /* SlideToConfirmScreen.swift in Sources */,
 				06494224219DB9D25367D567 /* SliderScreen.swift in Sources */,
 				7C8799E4A4CBFD7A15829475 /* Stage.swift in Sources */,
+				45DD566E3AF80CFA1E26F386 /* StretchyHeaderScreen.swift in Sources */,
 				9D5C53DE2C9E095754B03B0A /* StageContainer.swift in Sources */,
 				A45643A7D8CA3CDAF70DF5F5 /* StageListView.swift in Sources */,
 				4CF51BEF9FD582C6C0B9F6B6 /* StageView.swift in Sources */,

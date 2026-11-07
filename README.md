@@ -139,6 +139,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | — | [DSAudioBars](docs/components/DSAudioBars.md) | An equaliser for live audio: bars that ripple, follow a level and rest flat when idle. |
 | <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
 | — | [dsScrollReveal](docs/components/DSScrollReveal.md) | Rows and carousel cards that recede as they cross the scroll view edge, and return when you scroll back. |
+| — | [dsStretchyHeader](docs/components/DSStretchyHeader.md) | A hero header that stretches to fill the pull past the top and trails the scroll with parallax. |
 | — | [DSMarquee](docs/components/DSMarquee.md) | Scrolls overflowing content in a seamless loop, with soft edge fades; static when it fits. |
 
 Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`. The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
