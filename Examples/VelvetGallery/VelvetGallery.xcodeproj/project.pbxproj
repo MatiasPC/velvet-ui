@@ -71,6 +71,7 @@
 		7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D7C15171A6834C43246986 /* DSToggleUITests.swift */; };
 		C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */; };
 		5CF6A1115502170B3926387A /* DSStepperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */; };
+		F4E6FA87D581FE59F81EC144 /* DSRatingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE58676728F02A7A1BBA238 /* DSRatingUITests.swift */; };
 		1EF7F67E7AB1A5C8EBA17F5E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5BAE8780B3FD380C2CFDE /* Stage.swift */; };
 		13E3DC73ABFD6C170A8114DD /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B2721B0B0E185B25E8B2 /* Appearance.swift */; };
 		A91FE1333B4A1EFB9B224130 /* VelvetUI in Frameworks */ = {isa = PBXBuildFile; productRef = 80B13BF2150013D59D04F341 /* VelvetUI */; };
@@ -153,6 +154,7 @@
 		77D7C15171A6834C43246986 /* DSToggleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSToggleUITests.swift; sourceTree = "<group>"; };
 		95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSLikeButtonUITests.swift; sourceTree = "<group>"; };
 		DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStepperUITests.swift; sourceTree = "<group>"; };
+		3DE58676728F02A7A1BBA238 /* DSRatingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRatingUITests.swift; sourceTree = "<group>"; };
 		D3D6C5486BF2249E81D09FD3 /* GalleryUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GalleryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -324,6 +326,7 @@
 				77D7C15171A6834C43246986 /* DSToggleUITests.swift */,
 				95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */,
 				DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */,
+				3DE58676728F02A7A1BBA238 /* DSRatingUITests.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -491,6 +494,7 @@
 				7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */,
 				C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */,
 				5CF6A1115502170B3926387A /* DSStepperUITests.swift in Sources */,
+				F4E6FA87D581FE59F81EC144 /* DSRatingUITests.swift in Sources */,
 				13E3DC73ABFD6C170A8114DD /* Appearance.swift in Sources */,
 				1EF7F67E7AB1A5C8EBA17F5E /* Stage.swift in Sources */,
 			);
