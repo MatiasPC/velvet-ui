@@ -71,6 +71,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Like / favorite / bookmark toggle | `DSLikeButton(isLiked:count:symbol:emptySymbol:accessibilityLabel:)` | Pops and radiates a halo when a tap likes. Pass `accessibilityLabel:` that matches a swapped symbol (default "Like"); `count` is display-only, so update it in `.onChange(of: isLiked)`. |
 | Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |
 | One-time code | `DSCodeField(code:state:onComplete:)` | SMS autofill on iOS. |
+| Amount, passcode or quantity without the system keyboard | `DSKeypad(text:maxLength:decimalPlaces:)` | Edits a `String`; `decimalPlaces: 2` for money (locale separator), `0` for a PIN. It draws no value: show your own read-out with an `accessibilityLabel`. |
 | App sections at the bottom | `DSTabBar(selection:items:)` | Place with `.safeAreaInset(edge: .bottom)`. |
 | Horizontal paging content | `DSCarousel(_:currentPage:content:)` + `DSPageControl` | |
 | Page dots | `DSPageControl(currentPage:numberOfPages:)` | |

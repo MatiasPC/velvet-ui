@@ -618,6 +618,22 @@
       "stage": "DSLikeButton"
     },
     {
+      "name": "DSKeypad",
+      "category": "inputs",
+      "summary": "Numeric keypad for amounts, passcodes and quantities: keys that dip and tick, the locale's decimal separator, and a wiggle for a key the value refuses.",
+      "symbols": [
+        "DSKeypad"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSKeypad.swift"
+      ],
+      "dependencies": [
+        "Motion"
+      ],
+      "docs": "docs/components/DSKeypad.md",
+      "stage": "DSKeypad"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",

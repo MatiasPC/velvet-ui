@@ -5,6 +5,7 @@ All notable changes to Velvet UI. Format follows [Keep a Changelog](https://keep
 ## [Unreleased]
 
 ### Added
+- `DSKeypad`: an on-screen numeric keypad for amounts, passcodes and quantities (1–9, the locale's decimal separator, 0, delete). It edits a `String`: `maxLength` caps the digits, `decimalPlaces: 2` makes it an amount (no "05", one separator, two decimals), `0` keeps leading zeros for a PIN. Keys dip with `DSPress.scale` and tick with a light haptic; a key the value refuses fires `.warning` and wiggles once (`dsJiggle`, rests under Reduce Motion). VoiceOver keys carry the keyboard-key trait. The rules are an internal `DSKeypadLogic`, pinned by `DSKeypadTests`; a Gallery UI test (`DSKeypadUITests`) types an amount on the stage and checks the read-out after every key. Gallery screen and recording stage included.
 - Corner concentricity (`DSCorner`): `.fixed(r)` or `.concentric(minimum:)`, plus the tokens `.card`, `.nestedSurface`, `.control` and `.chip`. On iOS / macOS 26 a concentric corner follows Apple's `ConcentricRectangle` and shares its centre with the container's corner. Below 26, or without a container, it uses `minimum`, so nothing changes there. `dsSurface` and every `DSCard` style now publish their shape as the container, and `.dsContainer(radius:)` does it for custom containers. New overloads: `dsSurface(_:corner:edge:)`, `dsWashEdge(corner:)`, `dsFocusGlow(_:corner:isActive:)`, `DSCard(style:padding:corner:)`. Catalog: "Concentric Corners" section; the nested card uses `.nestedSurface`.
 
 ### Changed

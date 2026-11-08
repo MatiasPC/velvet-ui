@@ -55,6 +55,7 @@ struct StageView: View {
         case .DSDisclosureGroup:   DisclosureGroupStage(autoplay: autoplay)
         case .DSExpandableText:    ExpandableTextStage()
         case .DSLikeButton:        LikeButtonStage()
+        case .DSKeypad:            KeypadStage(autoplay: autoplay)
         case .OnboardingFlow:      OnboardingFlowStage()
         case .SettingsFlow:        SettingsFlowStage()
         case .CheckoutFlow:        CheckoutFlowStage()
