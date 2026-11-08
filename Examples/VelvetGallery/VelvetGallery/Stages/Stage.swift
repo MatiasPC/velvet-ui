@@ -28,6 +28,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSDisclosureGroup
     case DSExpandableText
     case DSLikeButton
+    case DSKeypad
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }

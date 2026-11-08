@@ -57,6 +57,7 @@ struct ComponentListView: View {
                 row("Slider", "Continuous value, optional notches") { SliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
                 row("Like Button", "A pop and a halo on the way in") { LikeButtonScreen() }
+                row("Keypad", "Amounts and passcodes") { KeypadScreen() }
                 row("Page Control", "Paged content") { PageControlScreen() }
             }
             Section("Data Display") {

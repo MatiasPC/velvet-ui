@@ -74,6 +74,7 @@ struct ComponentCatalog: View {
     @State private var starred = false
     @State private var postLiked = false
     @State private var postLikes = 128
+    @State private var keypadAmount = ""
 
     var body: some View {
         NavigationStack {
@@ -942,6 +943,20 @@ struct ComponentCatalog: View {
                                 .ds(.footnote, color: DSColors.textSecondary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Keypad
+                section("Keypad") {
+                    DSCard {
+                        VStack(spacing: DSSpacing.lg) {
+                            Text(keypadAmount.isEmpty ? "$0" : "$" + keypadAmount)
+                                .ds(.displayMedium)
+                            DSKeypad(text: $keypadAmount, maxLength: 7, decimalPlaces: 2)
+                            Text("Amounts and passcodes. A key that would break the value wiggles instead of typing.")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 }
 

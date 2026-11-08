@@ -141,6 +141,7 @@ MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit t
 | `DSCheckbox` | Autoplay: checks three items one by one (tick draws on), then unchecks them. |
 | `DSAudioBars` | Autoplay: a simulated voice drives the level for a few seconds, then the bars ease to rest. |
 | `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |
+| `DSKeypad` | Autoplay: types $24.50, then deletes it. Tap the keys by hand for the press dip, and a second "." for the refusal wiggle. |
 | `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
 | `OnboardingFlow` | Full screen. Swipe through the pages; pick a theme on page 2 to re-theme everything. Manual. |
 | `SettingsFlow` | Full screen. Flip a toggle (toast), open Delete account and slide. Manual. |

@@ -677,6 +677,18 @@ Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransiti
 
 ---
 
+## DSKeypad  ✅
+
+`Components/DSKeypad.swift`.
+
+```swift
+DSKeypad(text: Binding<String>, maxLength: Int? = nil, decimalPlaces: Int = 0, haptic: DSHapticStyle = .light)
+```
+
+On-screen numeric keypad (1–9, separator, 0, delete on a 3 × 4 `Grid`) for amounts, passcodes and quantities. Edits a `String`, because "12." and "0.50" are valid in-progress amounts. The rules are `DSKeypadLogic.apply` (internal, unit-tested): `maxLength` counts digits only (`nil` or < 1 is unlimited); `decimalPlaces: 0` hides the separator key and keeps leading zeros (PINs); above 0 a lone leading "0" is replaced by the next digit, "00" is refused, a separator typed first becomes "0.", one separator at most, and at most `decimalPlaces` digits after it; delete drops the last character and is refused on empty. The separator follows `\.locale`. Digit keys sit on `theme.subtleFill` at `DSRadius.control`, 64 pt tall; separator and delete are bare glyphs. Every key dips with `DSPress.scale` plus a faint ink wash. Accepted keys fire `haptic`; refused keys fire `.warning` and `dsJiggle` that key (rests under Reduce Motion). VoiceOver: a "Keypad" container of buttons with the keyboard-key trait ("7", "Decimal point", "Delete"); the app's read-out carries the value.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.
