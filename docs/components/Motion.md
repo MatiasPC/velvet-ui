@@ -2,8 +2,6 @@
 
 Five composable view modifiers for ambient motion: breathe, jiggle, pop in, edge sweep and hue drift. Springs for touch, eased curves for ambience, and every one has a real Reduce Motion state.
 
-![Motion](../media/Motion.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMotion.swift`](../../Sources/VelvetUI/Animation/DSMotion.swift)
 
 ## Install

@@ -2,8 +2,6 @@
 
 Content that scrolls horizontally in a seamless loop — but only when it is too wide to fit. A "now playing" line, a long title, a ticker of stats: text that would otherwise truncate keeps moving so all of it can be read. Content that already fits stays put.
 
-<!-- GIF pending: ![DSMarquee](../media/DSMarquee.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMarquee.swift`](../../Sources/VelvetUI/Components/DSMarquee.swift)
 
 ## Install

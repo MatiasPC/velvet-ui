@@ -2,8 +2,6 @@
 
 A one-time-code input of separate digit boxes with a blinking caret, a springy active box, and a shake on a wrong code.
 
-![DSCodeField](../media/DSCodeField.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCodeField.swift`](../../Sources/VelvetUI/Components/DSCodeField.swift)
 
 ## Install

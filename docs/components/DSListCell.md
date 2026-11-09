@@ -2,8 +2,6 @@
 
 A consistent list row with leading and trailing slots, an optional tap action, a section header and a hairline divider.
 
-![DSListCell](../media/DSListCell.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSList.swift`](../../Sources/VelvetUI/Components/DSList.swift)
 
 ## Install

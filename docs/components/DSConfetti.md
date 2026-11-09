@@ -2,8 +2,6 @@
 
 A one-shot burst of confetti from any point of a view, fired whenever a trigger value changes. Colored from the active theme.
 
-![dsConfetti](../media/DSConfetti.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSConfetti.swift`](../../Sources/VelvetUI/Animation/DSConfetti.swift)
 
 ## Install

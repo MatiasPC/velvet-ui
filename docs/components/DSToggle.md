@@ -2,8 +2,6 @@
 
 A themed on/off switch whose knob springs across a pill track and snaps with a rigid haptic.
 
-![DSToggle](../media/DSToggle.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToggle.swift`](../../Sources/VelvetUI/Components/DSToggle.swift)
 
 ## Install

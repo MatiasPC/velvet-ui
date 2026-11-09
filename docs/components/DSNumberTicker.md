@@ -2,8 +2,6 @@
 
 A number whose digits roll like an odometer. Each digit slides to its new value, staggered from the units digit, while separators and currency symbols stay put.
 
-![DSNumberTicker](../media/DSNumberTicker.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSNumberTicker.swift`](../../Sources/VelvetUI/Components/DSNumberTicker.swift)
 
 ## Install

@@ -2,8 +2,6 @@
 
 A favorite / like / bookmark toggle with a satisfying beat: the symbol swaps to its filled variant with a designed SF Symbols transition, springs up in a quick pop, and a single soft halo radiates out and fades. An optional count rolls when it changes. Turning it off is quiet.
 
-<!-- GIF pending: ![DSLikeButton](../media/DSLikeButton.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSLikeButton.swift`](../../Sources/VelvetUI/Components/DSLikeButton.swift)
 
 ## Install

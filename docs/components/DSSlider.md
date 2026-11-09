@@ -2,8 +2,6 @@
 
 A continuous value slider on a slim track. An accent fill trails a white knob that lifts and glows under your finger; give it a `step` and it snaps to notches with a tick for each.
 
-<!-- GIF pending: ![DSSlider](../media/DSSlider.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSlider.swift`](../../Sources/VelvetUI/Components/DSSlider.swift)
 
 ## Install

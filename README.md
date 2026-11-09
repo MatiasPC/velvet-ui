@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-8E8E93)](LICENSE)
 
 <p align="center">
-  <img src="docs/media/Hero.gif" alt="Velvet UI components: a glass card with a toggle, a stepper and a slide-to-pay control over a warm page tone" width="300">
+  <img src="docs/media/showcase.png" alt="A selection of Velvet UI components on a light page: a checkout card with a toggle, a stepper and slide-to-pay, a one-time-code field, a toast, a tab bar, a segmented control, revenue charts, a slider, activity rings, filter chips and a rating with avatars">
 </p>
 
 <p align="center">
@@ -89,65 +89,23 @@ struct ContentView: View {
 
 ## Components
 
+A few of what's in the box:
 
-Each component has its own page with a copyable snippet, every parameter, its variants and accessibility notes, and every one has a Gallery stage.
+| | |
+|---|---|
+| **Actions** | [DSButton](docs/components/DSButton.md) · [DSIconButton](docs/components/DSIconButton.md) · [DSSlideToConfirm](docs/components/DSSlideToConfirm.md) · [DSHoldToConfirm](docs/components/DSHoldToConfirm.md) |
+| **Inputs** | [DSToggle](docs/components/DSToggle.md) · [DSStepper](docs/components/DSStepper.md) · [DSSlider](docs/components/DSSlider.md) · [DSSegmentedControl](docs/components/DSSegmentedControl.md) · [DSTextField](docs/components/DSTextField.md) · [DSCodeField](docs/components/DSCodeField.md) · [DSChip](docs/components/DSChip.md) |
+| **Surfaces** | [DSCard](docs/components/DSCard.md) · [DSListCell](docs/components/DSListCell.md) · [DSCarousel](docs/components/DSCarousel.md) · [DSTabBar](docs/components/DSTabBar.md) · [dsSheet](docs/components/DSSheet.md) |
+| **Data** | [DSBadge](docs/components/DSBadge.md) · [DSAvatar](docs/components/DSAvatar.md) · [DSNumberTicker](docs/components/DSNumberTicker.md) · [Charts](docs/components/Charts.md) · [DSActivityRings](docs/components/DSActivityRings.md) |
+| **Feedback** | [DSToast](docs/components/DSToast.md) · [Progress](docs/components/Progress.md) · [DSSkeleton](docs/components/DSSkeleton.md) · [DSSuccessCheck](docs/components/DSSuccessCheck.md) · [Motion](docs/components/Motion.md) |
 
-| Preview | Component | What it does |
-|:---:|---|---|
-| <img src="docs/media/DSButton.gif" width="120" alt="DSButton"> | [DSButton](docs/components/DSButton.md) | Text button with five variants, three sizes, an icon and a loading state. |
-| <img src="docs/media/DSIconButton.gif" width="120" alt="DSIconButton"> | [DSIconButton](docs/components/DSIconButton.md) | Icon-only button with press scale, a haptic and a VoiceOver label. |
-| <img src="docs/media/DSSlideToConfirm.gif" width="120" alt="DSSlideToConfirm"> | [DSSlideToConfirm](docs/components/DSSlideToConfirm.md) | Slide-to-confirm for payments and destructive actions, with an async result. |
-| — | [DSHoldToConfirm](docs/components/DSHoldToConfirm.md) | Press-and-hold confirmation with a charging ring and the same async result; VoiceOver confirms with a double-tap. |
-| <img src="docs/media/DSToggle.gif" width="120" alt="DSToggle"> | [DSToggle](docs/components/DSToggle.md) | Switch with a spring knob and a rigid haptic. |
-| — | [DSCheckbox](docs/components/DSCheckbox.md) | Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic. |
-| <img src="docs/media/DSStepper.gif" width="120" alt="DSStepper"> | [DSStepper](docs/components/DSStepper.md) | −/+ stepper that ticks on every step and jiggles at its bounds. |
-| — | [DSSlider](docs/components/DSSlider.md) | Continuous value slider with optional notches, a tick per notch and a firm stop at each end. |
-| — | [DSRangeSlider](docs/components/DSRangeSlider.md) | Two-knob range slider for filters: the knobs never cross, keep an optional gap and stop with a firm detent. |
-| — | [DSKeypad](docs/components/DSKeypad.md) | Numeric keypad for amounts and passcodes, with a tick per key and a wiggle for a key the value refuses. |
-| <img src="docs/media/DSRating.gif" width="120" alt="DSRating"> | [DSRating](docs/components/DSRating.md) | Drag-to-rate stars, with half steps and a read-only mode. |
-| <img src="docs/media/DSSegmentedControl.gif" width="120" alt="DSSegmentedControl"> | [DSSegmentedControl](docs/components/DSSegmentedControl.md) | Pill or underline picker with a sliding indicator. |
-| — | [DSRadioGroup](docs/components/DSRadioGroup.md) | Single-select list: the indicator pops to the accent and a highlight slides between rows. |
-| — | [DSChip](docs/components/DSChip.md) | Selectable pill chips for filters and tags that wrap onto new lines, with single or multiple selection. |
-| <img src="docs/media/DSTextField.gif" width="120" alt="DSTextField"> | [DSTextField](docs/components/DSTextField.md) | Text field with label, icon and validation states, plus `DSSearchBar`. |
-| <img src="docs/media/DSCodeField.gif" width="120" alt="DSCodeField"> | [DSCodeField](docs/components/DSCodeField.md) | One-time-code input with SMS autofill, a shake on error and success feedback. |
-| <img src="docs/media/DSPageControl.gif" width="120" alt="DSPageControl"> | [DSPageControl](docs/components/DSPageControl.md) | Page dots whose active dot stretches into a capsule. |
-| <img src="docs/media/DSTabBar.gif" width="120" alt="DSTabBar"> | [DSTabBar](docs/components/DSTabBar.md) | Floating glass tab bar with a sliding accent capsule, a symbol swap and count badges. |
-| <img src="docs/media/DSCard.gif" width="120" alt="DSCard"> | [DSCard](docs/components/DSCard.md) | The glass surface everything sits on: elevated, outlined, flat, tappable or with an image. |
-| — | [DSFlipCard](docs/components/DSFlipCard.md) | Two-sided glass card that turns over in 3D on tap or from a binding, with a haptic. |
-| — | [DSTiltCard](docs/components/DSTiltCard.md) | A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back. |
-| <img src="docs/media/DSListCell.gif" width="120" alt="DSListCell"> | [DSListCell](docs/components/DSListCell.md) | List rows, section headers and dividers. |
-| <img src="docs/media/DSCarousel.gif" width="120" alt="DSCarousel"> | [DSCarousel](docs/components/DSCarousel.md) | Snapping carousel with peeking neighbors and depth; pairs with `DSPageControl`. |
-| <img src="docs/media/DSSheet.gif" width="120" alt="dsSheet"> | [dsSheet](docs/components/DSSheet.md) | Native sheet with Velvet chrome: detents, a grabber, a glass background, the theme carried in. |
-| — | [DSFlowLayout](docs/components/DSFlowLayout.md) | Wrapping layout that flows chips and tags onto new rows, and reflows with a spring. |
-| — | [DSDisclosureGroup](docs/components/DSDisclosureGroup.md) | Glass "show more" section that springs open with a rotating chevron and a haptic — accordion, FAQ, settings detail. |
-| <img src="docs/media/DSBadge.gif" width="120" alt="DSBadge"> | [DSBadge](docs/components/DSBadge.md) | Status pills and count badges. |
-| <img src="docs/media/DSAvatar.gif" width="120" alt="DSAvatar"> | [DSAvatar](docs/components/DSAvatar.md) | Remote image with an initials fallback. |
-| — | [DSAvatarGroup](docs/components/DSAvatarGroup.md) | Overlapping facepile of avatars with a +N overflow bubble. |
-| <img src="docs/media/DSNumberTicker.gif" width="120" alt="DSNumberTicker"> | [DSNumberTicker](docs/components/DSNumberTicker.md) | Digits that roll like an odometer, for currency, percentages or counts. |
-| — | [DSTimeline](docs/components/DSTimeline.md) | Vertical progress timeline: nodes joined by a connector that fills as the flow advances. |
-| <img src="docs/media/Charts.gif" width="120" alt="Charts"> | [Charts](docs/components/Charts.md) | A sparkline that draws and morphs, and a bar chart you can scrub. No Swift Charts needed. |
-| — | [DSActivityRings](docs/components/DSActivityRings.md) | Concentric goal rings that fill with a spring and close with a glow and a haptic. |
-| <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts that VoiceOver announces. |
-| <img src="docs/media/DSToast.gif" width="120" alt="DSToast"> | [DSToast](docs/components/DSToast.md) | Success, error, warning and info toasts. `.dsToast` presents them: auto-dismiss, replacement, flick away. |
-| <img src="docs/media/DSEmptyState.gif" width="120" alt="DSEmptyState"> | [DSEmptyState](docs/components/DSEmptyState.md) | Icon, title, message and an optional call to action. |
-| <img src="docs/media/Progress.gif" width="120" alt="Progress"> | [Progress](docs/components/Progress.md) | Circular, linear, multi-color and step progress, animated numbers, shimmer skeletons. |
-| <img src="docs/media/DSSkeleton.gif" width="120" alt="DSSkeleton"> | [DSSkeleton](docs/components/DSSkeleton.md) | Loading placeholders, plus `.dsSkeleton(_:)` to redact a real view in place. |
-| <img src="docs/media/DSSuccessCheck.gif" width="120" alt="DSSuccessCheck"> | [DSSuccessCheck](docs/components/DSSuccessCheck.md) | A success seal that draws itself and pops, with a haptic on the beat. |
-| — | [DSLikeButton](docs/components/DSLikeButton.md) | Like / favorite / bookmark toggle that pops and radiates a halo, with a rolling count. |
-| <img src="docs/media/DSThinkingIndicator.gif" width="120" alt="DSThinkingIndicator"> | [DSThinkingIndicator](docs/components/DSThinkingIndicator.md) | Ambient "thinking" state for AI and background work. |
-| <img src="docs/media/DSTypewriterText.gif" width="120" alt="DSTypewriterText"> | [DSTypewriterText](docs/components/DSTypewriterText.md) | Types phrases out character by character, with a blinking caret. |
-| — | [DSExpandableText](docs/components/DSExpandableText.md) | Long copy that collapses to a few lines and springs open, with a Show more / Show less toggle. |
-| <img src="docs/media/Motion.gif" width="120" alt="Motion"> | [Motion](docs/components/Motion.md) | `.dsBreathe`, `.dsJiggle`, `.dsPopIn`, `.dsEdgeSweep` and `.dsHueDrift` modifiers for any view. |
-| — | [DSAudioBars](docs/components/DSAudioBars.md) | An equaliser for live audio: bars that ripple, follow a level and rest flat when idle. |
-| <img src="docs/media/DSConfetti.gif" width="120" alt="dsConfetti"> | [dsConfetti](docs/components/DSConfetti.md) | A themed confetti burst from any point, fired when a trigger changes. |
-| — | [dsScrollReveal](docs/components/DSScrollReveal.md) | Rows and carousel cards that recede as they cross the scroll view edge, and return when you scroll back. |
-| — | [DSMarquee](docs/components/DSMarquee.md) | Scrolls overflowing content in a seamless loop, with soft edge fades; static when it fits. |
+The rest are in [docs/components](docs/components/), one page each with a copyable snippet, every parameter, its variants and accessibility notes. `swift velvet.swift list` prints them all by category, and the [Demo app](#demo-app) has a screen for each.
 
 Layout helpers: `DSScreen`, `DSVStack`, `DSHStack`, `DSGrid`, `DSHorizontalScroll`. The maintainers' reference for every component, with status and backlog, is in [docs/components.md](docs/components.md).
 
 ## Examples
 
-Three small flows built only from the components above. They're examples, not components: open them in the Gallery, then copy one and adapt it.
+Three small flows built only from Velvet components. They're examples, not components: open them in the Gallery, then copy one and adapt it.
 
 | Example | What it shows |
 |---|---|

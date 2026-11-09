@@ -2,8 +2,6 @@
 
 Text that types a phrase out character by character, holds it, erases it and moves on to the next, with a blinking caret. For hero headlines and empty states that need a little life.
 
-![DSTypewriterText](../media/DSTypewriterText.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTypewriterText.swift`](../../Sources/VelvetUI/Components/DSTypewriterText.swift)
 
 ## Install

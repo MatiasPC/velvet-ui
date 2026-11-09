@@ -4,8 +4,6 @@ A cart with quantity steppers, a promo code, a rolling total and a slide to pay 
 
 > Example — not a component. Copy it and adapt it.
 
-![Checkout flow](../media/CheckoutFlow.png)
-
 **Source:** [`CheckoutFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/CheckoutFlow.swift)
 
 ## What it demonstrates

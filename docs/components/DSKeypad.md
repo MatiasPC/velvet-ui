@@ -2,8 +2,6 @@
 
 An on-screen numeric keypad for the screens where the system keyboard is the wrong tool: an amount to send or tip, a passcode, a quantity at a kiosk. Twelve keys on a 3 × 4 grid: 1–9, then the decimal separator (only for amounts), 0 and delete. Keys dip and tick under your finger; a key that would make the value invalid wiggles and buzzes instead of typing.
 
-<!-- GIF pending: ![DSKeypad](../media/DSKeypad.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSKeypad.swift`](../../Sources/VelvetUI/Components/DSKeypad.swift)
 
 ## Install

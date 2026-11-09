@@ -2,8 +2,6 @@
 
 Loading placeholders: a shimmering block you compose by hand, and a `.dsSkeleton(_:)` modifier that turns a real view into its own placeholder so the loading layout can't drift from the loaded one.
 
-![DSSkeleton](../media/DSSkeleton.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSkeleton.swift`](../../Sources/VelvetUI/Components/DSSkeleton.swift)
 
 ## Install

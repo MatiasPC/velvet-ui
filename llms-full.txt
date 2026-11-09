@@ -630,8 +630,6 @@ These live in `Animation/DSMotion.swift` and are the ambient layer above `DSAnim
 
 A themed text button with optional icon and loading state. It presses down with a spring and taps out a haptic, so every action feels acknowledged.
 
-![DSButton](../media/DSButton.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSButton.swift`](../../Sources/VelvetUI/Components/DSButton.swift)
 
 ## Install
@@ -737,8 +735,6 @@ struct ButtonVariantsDemo: View {
 
 An icon-only button, with no background, that shrinks under your thumb and ticks a light haptic. Use it for toolbar-style actions like share, favorite and more.
 
-![DSIconButton](../media/DSIconButton.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSButton.swift`](../../Sources/VelvetUI/Components/DSButton.swift)
 
 ## Install
@@ -815,8 +811,6 @@ DSIconButton(icon: "trash", size: 52, color: Color.red, haptic: .warning, access
 # DSSlideToConfirm
 
 A slide-to-confirm gate for irreversible actions like payments. The label dissolves under your finger, motes trail the knob, and the result lands with a success or refusal haptic.
-
-![DSSlideToConfirm](../media/DSSlideToConfirm.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSlideToConfirm.swift`](../../Sources/VelvetUI/Components/DSSlideToConfirm.swift)
 
@@ -926,8 +920,6 @@ There is no reset API; re-mount with `.id(attempt)` to run it again.
 
 A themed on/off switch whose knob springs across a pill track and snaps with a rigid haptic.
 
-![DSToggle](../media/DSToggle.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToggle.swift`](../../Sources/VelvetUI/Components/DSToggle.swift)
 
 ## Install
@@ -1008,8 +1000,6 @@ DSToggle(isOn: $notifications).accessibilityLabel("Push notifications")
 # DSRadioGroup
 
 A single-select list for any `Hashable` value: the indicator pops to the accent while its dot grows, and a frosted highlight slides to the chosen row.
-
-<!-- GIF pending: ![DSRadioGroup](../media/DSRadioGroup.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRadioGroup.swift`](../../Sources/VelvetUI/Components/DSRadioGroup.swift)
 
@@ -1117,8 +1107,6 @@ Here `payment` is an `Int` state and `theme` is `@DSThemed private var theme`. A
 
 A minus / number / plus stepper on a glass track. The number rolls, and hitting a limit wiggles the track with a warning haptic so you feel the refusal.
 
-![DSStepper](../media/DSStepper.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSStepper.swift`](../../Sources/VelvetUI/Components/DSStepper.swift)
 
 ## Install
@@ -1199,8 +1187,6 @@ At a bound the buttons dim but stay tappable on purpose, so the refusal can be f
 # DSRating
 
 A star rating you can drag or tap, with a selection tick per star and a pop on the active one. It also has a read-only form with fractional fills.
-
-![DSRating](../media/DSRating.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRating.swift`](../../Sources/VelvetUI/Components/DSRating.swift)
 
@@ -1285,8 +1271,6 @@ Use `step: 0.5` for half stars. Use `DSRating(value:)` for displaying averages.
 # DSSegmentedControl
 
 A generic segmented control where a filled pill (or an accent underline) slides between options, with a selection tick on each change.
-
-![DSSegmentedControl](../media/DSSegmentedControl.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSegmentedControl.swift`](../../Sources/VelvetUI/Components/DSSegmentedControl.swift)
 
@@ -1376,8 +1360,6 @@ struct SegmentedControlDemo: View {
 # DSTextField
 
 A labelled text input with leading icon, secure mode and validation states, plus a matching `DSSearchBar` with a clear button.
-
-![DSTextField](../media/DSTextField.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTextField.swift`](../../Sources/VelvetUI/Components/DSTextField.swift)
 
@@ -1472,8 +1454,6 @@ struct TextFieldDemo: View {
 
 A one-time-code input of separate digit boxes with a blinking caret, a springy active box, and a shake on a wrong code.
 
-![DSCodeField](../media/DSCodeField.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCodeField.swift`](../../Sources/VelvetUI/Components/DSCodeField.swift)
 
 ## Install
@@ -1553,8 +1533,6 @@ struct CodeFieldDemo: View {
 # DSPageControl
 
 An animated page indicator where the active dot springs open into a capsule. A drop-in, nicer replacement for UIPageControl.
-
-![DSPageControl](../media/DSPageControl.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSPageControl.swift`](../../Sources/VelvetUI/Components/DSPageControl.swift)
 
@@ -1637,8 +1615,6 @@ struct PageControlDemo: View {
 # DSTabBar
 
 A floating glass tab bar. The selected tab sits on an accent capsule that slides between tabs, and its icon swaps to the filled variant with one bounce.
-
-![DSTabBar](../media/DSTabBar.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTabBar.swift`](../../Sources/VelvetUI/Components/DSTabBar.swift)
 
@@ -1739,8 +1715,6 @@ Three tabs with a custom accent and `String` values. Any `Hashable` works, inclu
 # DSCard
 
 A glass surface for grouping content: thin material, a 1pt specular edge and a soft shadow, with a press-to-scale interactive variant and an image card for media.
-
-![DSCard](../media/DSCard.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCard.swift`](../../Sources/VelvetUI/Components/DSCard.swift)
 
@@ -1894,8 +1868,6 @@ struct CardStylesDemo: View {
 
 A consistent list row with leading and trailing slots, an optional tap action, a section header and a hairline divider.
 
-![DSListCell](../media/DSListCell.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSList.swift`](../../Sources/VelvetUI/Components/DSList.swift)
 
 ## Install
@@ -2011,8 +1983,6 @@ Wrap groups of cells in a `DSCard(padding: 0)` for the glass look. Cells add the
 
 A snapping carousel where the neighbouring items peek in at the edges and lean away with a little depth. The page index is a plain `Int`, so it pairs directly with `DSPageControl`.
 
-![DSCarousel](../media/DSCarousel.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCarousel.swift`](../../Sources/VelvetUI/Components/DSCarousel.swift)
 
 ## Install
@@ -2125,8 +2095,6 @@ Smaller peek and spacing, no haptic. Without `currentPage` the carousel manages 
 # DSSheet
 
 A Velvet-styled native sheet: detents, a visible grabber, a glass background, and your theme carried into the content.
-
-![DSSheet](../media/DSSheet.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSheet.swift`](../../Sources/VelvetUI/Components/DSSheet.swift)
 
@@ -2242,8 +2210,6 @@ Item-driven: the sheet shows while the item is non-nil.
 
 Compact pill labels for status and categories, plus a notification count badge that hides itself at zero and caps at 99+.
 
-![DSBadge](../media/DSBadge.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSBadge.swift`](../../Sources/VelvetUI/Components/DSBadge.swift)
 
 ## Install
@@ -2343,8 +2309,6 @@ struct BadgeDemo: View {
 
 A circular avatar that loads a remote photo and falls back to tinted initials, so it never shows an empty circle.
 
-![DSAvatar](../media/DSAvatar.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSBadge.swift`](../../Sources/VelvetUI/Components/DSBadge.swift)
 
 ## Install
@@ -2424,8 +2388,6 @@ struct AvatarDemo: View {
 # DSNumberTicker
 
 A number whose digits roll like an odometer. Each digit slides to its new value, staggered from the units digit, while separators and currency symbols stay put.
-
-![DSNumberTicker](../media/DSNumberTicker.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSNumberTicker.swift`](../../Sources/VelvetUI/Components/DSNumberTicker.swift)
 
@@ -2509,8 +2471,6 @@ VStack(alignment: .leading, spacing: DSSpacing.md) {
 # Charts
 
 Two light charts with no Swift Charts dependency: `DSSparkline`, a trend line that draws itself and morphs to new data, and `DSBarChart`, bars that grow from the baseline and can be scrubbed to select.
-
-![Charts](../media/Charts.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCharts.swift`](../../Sources/VelvetUI/Components/DSCharts.swift)
 
@@ -2632,8 +2592,6 @@ A sparkline without fill or dot is a plain line, good for table rows. A bar char
 
 Concentric goal rings, the "close your rings" pattern: several goals nested as rings that fill with a spring, and a ring that lights up with a glow and one haptic the moment it closes.
 
-<!-- GIF pending: ![DSActivityRings](../media/DSActivityRings.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSActivityRings.swift`](../../Sources/VelvetUI/Components/DSActivityRings.swift)
 
 ## Install
@@ -2746,8 +2704,6 @@ Budgets, storage, quiz completion or any "how close am I" view work with one rin
 # DSToast
 
 A transient, glass-backed message with a status icon for success, error, warning and info, and `.dsToast(_:edge:)` to present it: it slides in, taps out a haptic, leaves by itself and can be flicked away.
-
-![DSToast](../media/DSToast.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToast.swift`](../../Sources/VelvetUI/Components/DSToast.swift) · [`DSToastPresenter.swift`](../../Sources/VelvetUI/Components/DSToastPresenter.swift)
 
@@ -2916,8 +2872,6 @@ struct ToastManualDemo: View {
 
 A centered empty-list or no-results placeholder: a light icon, a title, a short message and an optional call-to-action button.
 
-![DSEmptyState](../media/DSEmptyState.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToast.swift`](../../Sources/VelvetUI/Components/DSToast.swift)
 
 ## Install
@@ -3002,8 +2956,6 @@ struct EmptyStateDemo: View {
 # Progress
 
 Progress indicators that animate to their value instead of jumping: ring, bar, multi-color bar, step dots, a counting number and a skeleton shimmer.
-
-![Progress](../media/Progress.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSProgressAnimation.swift`](../../Sources/VelvetUI/Animation/DSProgressAnimation.swift)
 
@@ -3143,8 +3095,6 @@ struct ProgressDemo: View {
 
 An "the assistant is working" indicator: an animated SF Symbol next to a phrase that cycles and assembles letter by letter, for states where a spinner reads as frozen and a progress bar would be a lie.
 
-![DSThinkingIndicator](../media/DSThinkingIndicator.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSThinkingIndicator.swift`](../../Sources/VelvetUI/Components/DSThinkingIndicator.swift)
 
 ## Install
@@ -3234,8 +3184,6 @@ struct ThinkingDemo: View {
 # DSSkeleton
 
 Loading placeholders: a shimmering block you compose by hand, and a `.dsSkeleton(_:)` modifier that turns a real view into its own placeholder so the loading layout can't drift from the loaded one.
-
-![DSSkeleton](../media/DSSkeleton.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSkeleton.swift`](../../Sources/VelvetUI/Components/DSSkeleton.swift)
 
@@ -3339,8 +3287,6 @@ A feed-style block: image, title line, short subtitle.
 
 An animated success seal: the ring strokes itself, the disc fills, the checkmark draws, and the whole thing pops once with a soft halo and a success haptic on the same beat.
 
-![DSSuccessCheck](../media/DSSuccessCheck.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSuccessCheck.swift`](../../Sources/VelvetUI/Components/DSSuccessCheck.swift)
 
 ## Install
@@ -3426,8 +3372,6 @@ The seal is only a fill and two strokes, so it works at any size from a list row
 
 Text that types a phrase out character by character, holds it, erases it and moves on to the next, with a blinking caret. For hero headlines and empty states that need a little life.
 
-![DSTypewriterText](../media/DSTypewriterText.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTypewriterText.swift`](../../Sources/VelvetUI/Components/DSTypewriterText.swift)
 
 ## Install
@@ -3511,8 +3455,6 @@ Keep phrases short enough to fit on one line: the view is single line and reserv
 # Motion
 
 Five composable view modifiers for ambient motion: breathe, jiggle, pop in, edge sweep and hue drift. Springs for touch, eased curves for ambience, and every one has a real Reduce Motion state.
-
-![Motion](../media/Motion.gif)
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMotion.swift`](../../Sources/VelvetUI/Animation/DSMotion.swift)
 
@@ -3660,8 +3602,6 @@ The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDura
 
 A one-shot burst of confetti from any point of a view, fired whenever a trigger value changes. Colored from the active theme.
 
-![dsConfetti](../media/DSConfetti.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSConfetti.swift`](../../Sources/VelvetUI/Animation/DSConfetti.swift)
 
 ## Install
@@ -3752,8 +3692,6 @@ Attach it to a container that covers the area the paper should fall through, suc
 # dsScrollReveal
 
 A scroll-coupled reveal for any repeated view: it sits at full presence inside the scroll view, recedes (a little smaller, a little dimmer) as it crosses the leading or trailing edge, and comes back when you scroll back.
-
-<!-- GIF pending: ![dsScrollReveal](../media/DSScrollReveal.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSScrollEffects.swift`](../../Sources/VelvetUI/Animation/DSScrollEffects.swift)
 
@@ -3848,8 +3786,6 @@ ScrollView(.horizontal) {
 
 Content that scrolls horizontally in a seamless loop — but only when it is too wide to fit. A "now playing" line, a long title, a ticker of stats: text that would otherwise truncate keeps moving so all of it can be read. Content that already fits stays put.
 
-<!-- GIF pending: ![DSMarquee](../media/DSMarquee.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSMarquee.swift`](../../Sources/VelvetUI/Components/DSMarquee.swift)
 
 ## Install
@@ -3930,8 +3866,6 @@ Keep the content to a single line (text, a badge, a small row). The marquee meas
 # DSChip / DSChipGroup
 
 Selectable pill chips for filters, tags, categories and interest pickers. `DSChipGroup` lays them out with [`DSFlowLayout`](DSFlowLayout.md), which breaks onto as many lines as the width needs, and manages single or multiple selection. Selecting a chip springs its fill into the accent and ticks a selection haptic.
-
-<!-- GIF pending: ![DSChip](../media/DSChip.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSChip.swift`](../../Sources/VelvetUI/Components/DSChip.swift)
 
@@ -4071,8 +4005,6 @@ struct ChipVariantsDemo: View {
 
 A wrapping layout: it lays its subviews out left-to-right and drops to a new line the moment the next one won't fit. The missing primitive behind tag clouds, filter chips, keyword lists and any set of pill-shaped items whose count you don't control — the one case a `VStack`/`HStack` can't handle and `DSGrid` gets wrong (chips aren't a grid; they're different widths).
 
-<!-- GIF pending: ![DSFlowLayout](../media/DSFlowLayout.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlowLayout.swift`](../../Sources/VelvetUI/Layout/DSFlowLayout.swift)
 
 ## Install
@@ -4189,8 +4121,6 @@ A layout positions, it never paints — `DSFlowLayout` has no colors, fills or b
 
 A press-and-hold confirmation. A ring charges around a glass pill while you keep your finger down; when it closes the pill fills with the accent, runs your action and settles on a check. Let go early and it springs back without running anything.
 
-<!-- GIF pending: ![DSHoldToConfirm](../media/DSHoldToConfirm.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSHoldToConfirm.swift`](../../Sources/VelvetUI/Components/DSHoldToConfirm.swift)
 
 ## Install
@@ -4298,8 +4228,6 @@ Pick a hold when the risk is sustained intent (power off, hold-to-record) or whe
 # DSSlider
 
 A continuous value slider on a slim track. An accent fill trails a white knob that lifts and glows under your finger; give it a `step` and it snaps to notches with a tick for each.
-
-<!-- GIF pending: ![DSSlider](../media/DSSlider.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSlider.swift`](../../Sources/VelvetUI/Components/DSSlider.swift)
 
@@ -4409,8 +4337,6 @@ struct SliderVariantsDemo: View {
 
 Two knobs on one slim track, for picking a span: a price filter, an age range, opening hours. The accent fill runs between the knobs, the knobs never cross, and `minimumDistance` keeps a gap between them.
 
-<!-- GIF pending: ![DSRangeSlider](../media/DSRangeSlider.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRangeSlider.swift`](../../Sources/VelvetUI/Components/DSRangeSlider.swift)
 
 ## Install
@@ -4516,8 +4442,6 @@ struct RangeSliderVariantsDemo: View {
 
 A favorite / like / bookmark toggle with a satisfying beat: the symbol swaps to its filled variant with a designed SF Symbols transition, springs up in a quick pop, and a single soft halo radiates out and fades. An optional count rolls when it changes. Turning it off is quiet.
 
-<!-- GIF pending: ![DSLikeButton](../media/DSLikeButton.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSLikeButton.swift`](../../Sources/VelvetUI/Components/DSLikeButton.swift)
 
 ## Install
@@ -4611,8 +4535,6 @@ Any filled/outline SF Symbol pair works — the replace transition morphs betwee
 # DSKeypad
 
 An on-screen numeric keypad for the screens where the system keyboard is the wrong tool: an amount to send or tip, a passcode, a quantity at a kiosk. Twelve keys on a 3 × 4 grid: 1–9, then the decimal separator (only for amounts), 0 and delete. Keys dip and tick under your finger; a key that would make the value invalid wiggles and buzzes instead of typing.
-
-<!-- GIF pending: ![DSKeypad](../media/DSKeypad.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSKeypad.swift`](../../Sources/VelvetUI/Components/DSKeypad.swift)
 
@@ -4726,8 +4648,6 @@ struct PasscodeDemo: View {
 
 A glass card that tips in 3D toward your finger as you drag, with a specular highlight that slides across the surface like light on glass, then springs back to rest on release.
 
-<!-- GIF pending: ![DSTiltCard](../media/DSTiltCard.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTiltCard.swift`](../../Sources/VelvetUI/Components/DSTiltCard.swift)
 
 ## Install
@@ -4824,8 +4744,6 @@ VStack(spacing: DSSpacing.lg) {
 # DSDisclosureGroup
 
 A glass "show more" section. Tap the header and the body springs open while the chevron rotates and a light haptic fires — the Velvet reading of an accordion / FAQ row, for settings detail, filters, long descriptions, anything that should stay out of the way until asked for.
-
-<!-- GIF pending: ![DSDisclosureGroup](../media/DSDisclosureGroup.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSDisclosureGroup.swift`](../../Sources/VelvetUI/Components/DSDisclosureGroup.swift)
 
@@ -4936,8 +4854,6 @@ ForEach(0..<3, id: \.self) { index in
 
 A vertical progress timeline: a rail of nodes joined by a connector that fills as the flow advances. The classic order-status pattern — Ordered → Shipped → Out for delivery → Delivered — and equally at home in multi-step flows, activity histories and wizards. It is the vertical, content-bearing complement to [`DSStepProgress`](Progress.md) (a row of flat capsules with no labels).
 
-<!-- GIF pending: ![DSTimeline](../media/DSTimeline.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTimeline.swift`](../../Sources/VelvetUI/Components/DSTimeline.swift)
 
 ## Install
@@ -5034,8 +4950,6 @@ Each step derives its look from `currentStep`:
 # DSExpandableText
 
 A block of copy that collapses to a few lines and springs open on tap, with a rotating chevron and a crossfading **Show more** / **Show less** affordance. For product descriptions, reviews, bios and terms — anywhere a long paragraph would otherwise push everything else off the screen or get truncated with no way back.
-
-<!-- GIF pending: ![DSExpandableText](../media/DSExpandableText.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSExpandableText.swift`](../../Sources/VelvetUI/Components/DSExpandableText.swift)
 
@@ -5144,8 +5058,6 @@ struct ExpandableTextVariantsDemo: View {
 
 A themed checkbox for lists, forms and consent rows: an empty ring-shaped box that pops to the accent while its checkmark draws on, with a rigid haptic.
 
-<!-- GIF pending: ![DSCheckbox](../media/DSCheckbox.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCheckbox.swift`](../../Sources/VelvetUI/Components/DSCheckbox.swift)
 
 ## Install
@@ -5235,8 +5147,6 @@ Here `theme` is `@DSThemed private var theme`. Without a label it is just the bo
 # DSFlipCard
 
 A two-sided glass card that turns over in 3D to reveal its back — tap it, or drive it from a binding. The flip is a single spring about one axis with a touch of perspective, and it fires a haptic on the turn.
-
-<!-- GIF pending: ![DSFlipCard](../media/DSFlipCard.gif) -->
 
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlipCard.swift`](../../Sources/VelvetUI/Components/DSFlipCard.swift)
 
@@ -5352,8 +5262,6 @@ When a face holds its own controls, set `flipOnTap: false` so taps reach them an
 
 A facepile: overlapping avatars that show who is on a thread, in a space or going to an event, with a "+N" bubble when there are more than fit.
 
-<!-- GIF pending: ![DSAvatarGroup](../media/DSAvatarGroup.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAvatarGroup.swift`](../../Sources/VelvetUI/Components/DSAvatarGroup.swift)
 
 ## Install
@@ -5459,8 +5367,6 @@ VStack(alignment: .leading, spacing: DSSpacing.lg) {
 
 An equaliser for live audio: a row of capsule bars that ripple while sound is playing or being recorded, follow an optional live level, and ease down to a flat line when idle.
 
-<!-- GIF pending: ![DSAudioBars](../media/DSAudioBars.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAudioBars.swift`](../../Sources/VelvetUI/Components/DSAudioBars.swift)
 
 ## Install
@@ -5553,8 +5459,6 @@ A four-page onboarding: welcome, theme picker, notification preferences and a ce
 
 > Example — not a component. Copy it and adapt it.
 
-![Onboarding flow](../media/OnboardingFlow.png)
-
 **Source:** [`OnboardingFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/OnboardingFlow.swift)
 
 ## What it demonstrates
@@ -5593,8 +5497,6 @@ A settings screen with a profile header, preference toggles, a theme detail scre
 
 > Example — not a component. Copy it and adapt it.
 
-![Settings flow](../media/SettingsFlow.png)
-
 **Source:** [`SettingsFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/SettingsFlow.swift)
 
 ## What it demonstrates
@@ -5632,8 +5534,6 @@ swift velvet.swift add Settings --dest MyApp/VelvetUI
 A cart with quantity steppers, a promo code, a rolling total and a slide to pay that ends in a confirmation.
 
 > Example — not a component. Copy it and adapt it.
-
-![Checkout flow](../media/CheckoutFlow.png)
 
 **Source:** [`CheckoutFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/CheckoutFlow.swift)
 

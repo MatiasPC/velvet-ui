@@ -2,8 +2,6 @@
 
 A Velvet-styled native sheet: detents, a visible grabber, a glass background, and your theme carried into the content.
 
-![DSSheet](../media/DSSheet.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSheet.swift`](../../Sources/VelvetUI/Components/DSSheet.swift)
 
 ## Install

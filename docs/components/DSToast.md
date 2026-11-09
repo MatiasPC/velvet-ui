@@ -2,8 +2,6 @@
 
 A transient, glass-backed message with a status icon for success, error, warning and info, and `.dsToast(_:edge:)` to present it: it slides in, taps out a haptic, leaves by itself and can be flicked away.
 
-![DSToast](../media/DSToast.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToast.swift`](../../Sources/VelvetUI/Components/DSToast.swift) · [`DSToastPresenter.swift`](../../Sources/VelvetUI/Components/DSToastPresenter.swift)
 
 ## Install

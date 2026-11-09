@@ -2,8 +2,6 @@
 
 An animated success seal: the ring strokes itself, the disc fills, the checkmark draws, and the whole thing pops once with a soft halo and a success haptic on the same beat.
 
-![DSSuccessCheck](../media/DSSuccessCheck.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSuccessCheck.swift`](../../Sources/VelvetUI/Components/DSSuccessCheck.swift)
 
 ## Install

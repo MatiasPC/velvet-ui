@@ -2,8 +2,6 @@
 
 An "the assistant is working" indicator: an animated SF Symbol next to a phrase that cycles and assembles letter by letter, for states where a spinner reads as frozen and a progress bar would be a lie.
 
-![DSThinkingIndicator](../media/DSThinkingIndicator.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSThinkingIndicator.swift`](../../Sources/VelvetUI/Components/DSThinkingIndicator.swift)
 
 ## Install

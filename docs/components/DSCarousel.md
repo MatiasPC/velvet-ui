@@ -2,8 +2,6 @@
 
 A snapping carousel where the neighbouring items peek in at the edges and lean away with a little depth. The page index is a plain `Int`, so it pairs directly with `DSPageControl`.
 
-![DSCarousel](../media/DSCarousel.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCarousel.swift`](../../Sources/VelvetUI/Components/DSCarousel.swift)
 
 ## Install
