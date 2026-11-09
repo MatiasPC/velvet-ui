@@ -10,6 +10,7 @@
 		06494224219DB9D25367D567 /* SliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EC5F26F46CC0F01AB48C05 /* SliderScreen.swift */; };
 		082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */; };
 		465C15F26BDA5B1683EFC6EA /* KeypadScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643E1E9AF17D73AF734B4F66 /* KeypadScreen.swift */; };
+		19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */; };
 		0994C9F56092856763C3D6B6 /* RadioGroupScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */; };
 		17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */; };
 		1A9107756FFA38B7F26FD72F /* ToastScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6F0563E4BBB324996A851C /* ToastScreen.swift */; };
@@ -72,6 +73,7 @@
 		7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D7C15171A6834C43246986 /* DSToggleUITests.swift */; };
 		C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */; };
 		5F0993FAC2F09BD4227ADAD2 /* DSKeypadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320E96A50132744991C35DE0 /* DSKeypadUITests.swift */; };
+		525B09CE7D196C37335F8CFF /* DSRangeSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */; };
 		5CF6A1115502170B3926387A /* DSStepperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */; };
 		F4E6FA87D581FE59F81EC144 /* DSRatingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE58676728F02A7A1BBA238 /* DSRatingUITests.swift */; };
 		1EF7F67E7AB1A5C8EBA17F5E /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5BAE8780B3FD380C2CFDE /* Stage.swift */; };
@@ -137,6 +139,7 @@
 		ACC02DA1D827E9A4EAEE39E3 /* ActivityRingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRingsScreen.swift; sourceTree = "<group>"; };
 		AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButtonScreen.swift; sourceTree = "<group>"; };
 		643E1E9AF17D73AF734B4F66 /* KeypadScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadScreen.swift; sourceTree = "<group>"; };
+		7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSliderScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
 		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
 		C30ADFEB2EB1100E306730CF /* ChipScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipScreen.swift; sourceTree = "<group>"; };
@@ -157,6 +160,7 @@
 		77D7C15171A6834C43246986 /* DSToggleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSToggleUITests.swift; sourceTree = "<group>"; };
 		95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSLikeButtonUITests.swift; sourceTree = "<group>"; };
 		320E96A50132744991C35DE0 /* DSKeypadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSKeypadUITests.swift; sourceTree = "<group>"; };
+		92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRangeSliderUITests.swift; sourceTree = "<group>"; };
 		DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStepperUITests.swift; sourceTree = "<group>"; };
 		3DE58676728F02A7A1BBA238 /* DSRatingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRatingUITests.swift; sourceTree = "<group>"; };
 		D3D6C5486BF2249E81D09FD3 /* GalleryUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GalleryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -270,6 +274,7 @@
 				7FDF39FEAACB2B7DD8D57113 /* HoldToConfirmScreen.swift */,
 				629C745CA3297503D924937D /* LayoutScreen.swift */,
 				643E1E9AF17D73AF734B4F66 /* KeypadScreen.swift */,
+				7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */,
 				AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */,
 				54F60FD1D436135BECE7C11C /* ListsScreen.swift */,
 				F89D5079C9C5EA4834D8F5BD /* MarqueeScreen.swift */,
@@ -330,6 +335,7 @@
 			children = (
 				77D7C15171A6834C43246986 /* DSToggleUITests.swift */,
 				320E96A50132744991C35DE0 /* DSKeypadUITests.swift */,
+				92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */,
 				95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */,
 				DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */,
 				3DE58676728F02A7A1BBA238 /* DSRatingUITests.swift */,
@@ -453,6 +459,7 @@
 				DE537871B85EFAA5675A4AF4 /* HoldToConfirmScreen.swift in Sources */,
 				A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */,
 				465C15F26BDA5B1683EFC6EA /* KeypadScreen.swift in Sources */,
+				19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */,
 				082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */,
 				C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */,
 				A351225411F705BCF869E981 /* MarqueeScreen.swift in Sources */,
@@ -500,6 +507,7 @@
 				6F03C22000D5D50EE2DEB6BC /* StageLauncher.swift in Sources */,
 				7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */,
 				5F0993FAC2F09BD4227ADAD2 /* DSKeypadUITests.swift in Sources */,
+				525B09CE7D196C37335F8CFF /* DSRangeSliderUITests.swift in Sources */,
 				C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */,
 				5CF6A1115502170B3926387A /* DSStepperUITests.swift in Sources */,
 				F4E6FA87D581FE59F81EC144 /* DSRatingUITests.swift in Sources */,

@@ -604,6 +604,22 @@
       "stage": "DSSlider"
     },
     {
+      "name": "DSRangeSlider",
+      "category": "inputs",
+      "summary": "Two-knob range slider for filters (price, age, hours): knobs that never cross, an optional minimum gap, notch ticks and a firm stop at each limit.",
+      "symbols": [
+        "DSRangeSlider"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSRangeSlider.swift"
+      ],
+      "dependencies": [
+        "DSSlider"
+      ],
+      "docs": "docs/components/DSRangeSlider.md",
+      "stage": "DSRangeSlider"
+    },
+    {
       "name": "DSLikeButton",
       "category": "inputs",
       "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",

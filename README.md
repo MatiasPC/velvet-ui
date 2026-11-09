@@ -102,6 +102,7 @@ Each component has its own page with a copyable snippet, every parameter, its va
 | — | [DSCheckbox](docs/components/DSCheckbox.md) | Checkbox whose box pops to the accent while its tick draws on, with a rigid haptic. |
 | <img src="docs/media/DSStepper.gif" width="120" alt="DSStepper"> | [DSStepper](docs/components/DSStepper.md) | −/+ stepper that ticks on every step and jiggles at its bounds. |
 | — | [DSSlider](docs/components/DSSlider.md) | Continuous value slider with optional notches, a tick per notch and a firm stop at each end. |
+| — | [DSRangeSlider](docs/components/DSRangeSlider.md) | Two-knob range slider for filters: the knobs never cross, keep an optional gap and stop with a firm detent. |
 | — | [DSKeypad](docs/components/DSKeypad.md) | Numeric keypad for amounts and passcodes, with a tick per key and a wiggle for a key the value refuses. |
 | <img src="docs/media/DSRating.gif" width="120" alt="DSRating"> | [DSRating](docs/components/DSRating.md) | Drag-to-rate stars, with half steps and a read-only mode. |
 | <img src="docs/media/DSSegmentedControl.gif" width="120" alt="DSSegmentedControl"> | [DSSegmentedControl](docs/components/DSSegmentedControl.md) | Pill or underline picker with a sliding indicator. |
