@@ -55,6 +55,7 @@ struct ComponentListView: View {
                 row("Chip", "Selectable pills that wrap") { ChipScreen() }
                 row("Stepper", "Numeric input") { StepperScreen() }
                 row("Slider", "Continuous value, optional notches") { SliderScreen() }
+                row("Range Slider", "Two knobs, a span between them") { RangeSliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
                 row("Like Button", "A pop and a halo on the way in") { LikeButtonScreen() }
                 row("Keypad", "Amounts and passcodes") { KeypadScreen() }

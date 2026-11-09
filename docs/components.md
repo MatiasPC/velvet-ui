@@ -677,6 +677,18 @@ Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransiti
 
 ---
 
+## DSRangeSlider  ✅
+
+`Components/DSRangeSlider.swift`. Depends on `DSSlider.swift` (`DSSliderScale`).
+
+```swift
+DSRangeSlider(range: Binding<ClosedRange<Double>>, in bounds: ClosedRange<Double> = 0...1, step: Double? = nil, minimumDistance: Double = 0, accent: Color? = nil)
+```
+
+Two knobs on DSSlider's track, the accent fill between them. The rules are `DSRangeSliderLogic` (internal, unit-tested): `normalized` (clamp, snap, then widen to `minimumDistance`, upward if there is room, otherwise pinned to the top), `limits(for:in:)` (a knob travels from its end of the track to the notch `minimumDistance` from the other knob), `moving`, `adjusted` (VoiceOver: one notch, stopped the same way), `isAtLimit`, `value(atX:…)` (unsnapped, same knob inset as DSSlider) and `thumb(nearest:in:)` (the nearer knob; on stacked knobs the side of the touch, and the lower knob at the top of the track). `DSRangeSliderFeedback` decides the haptic per move: `.rigid` on arriving at a limit, `.selection` per new notch on a stepped slider, never both. The knob is picked on touch-down and kept until the drag ends. Knobs are placed by leading padding rather than `offset`, so their accessibility frames match the drawing. VoiceOver: a container with two adjustable elements, "Minimum" and "Maximum".
+
+---
+
 ## DSKeypad  ✅
 
 `Components/DSKeypad.swift`.

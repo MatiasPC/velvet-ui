@@ -75,6 +75,7 @@ struct ComponentCatalog: View {
     @State private var postLiked = false
     @State private var postLikes = 128
     @State private var keypadAmount = ""
+    @State private var rangePrice: ClosedRange<Double> = 100...400
 
     var body: some View {
         NavigationStack {
@@ -826,6 +827,23 @@ struct ComponentCatalog: View {
 
                             DSSlider(value: .constant(0.5), accent: DSColors.secondary)
                                 .disabled(true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Range Slider
+                section("Range Slider") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                            HStack {
+                                Text("Price — at least $50 apart")
+                                    .ds(.footnote, color: DSColors.textSecondary)
+                                Spacer()
+                                Text("$\(Int(rangePrice.lowerBound)) – $\(Int(rangePrice.upperBound))").ds(.numeric)
+                            }
+                            DSRangeSlider(range: $rangePrice, in: 0...500, step: 25, minimumDistance: 50)
+                                .accessibilityLabel("Price")
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
