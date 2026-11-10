@@ -22,9 +22,10 @@ public struct DSCodeField: View {
     let onComplete: ((String) -> Void)?
 
     @FocusState private var isFocused: Bool
-    @State private var previousCount: Int = 0
+    @State private var accepted = ""
     @State private var shakeTrigger: CGFloat = 0
     @DSThemed private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(
         length: Int = 6,
@@ -33,7 +34,7 @@ public struct DSCodeField: View {
         boxHeight: CGFloat = 56,
         onComplete: ((String) -> Void)? = nil
     ) {
-        self.length = length
+        self.length = DSCodeFieldLogic.boxCount(length)
         self._code = code
         self.state = state
         self.boxHeight = boxHeight
@@ -65,27 +66,30 @@ public struct DSCodeField: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { isFocused = true }
-        .onAppear { previousCount = code.count }
+        .onAppear {
+            // A code that arrives already filled (a restored draft) is adopted
+            // silently: no haptic and no `onComplete`.
+            accepted = DSCodeFieldLogic.sanitize(code, length: length)
+            if accepted != code { code = accepted }
+        }
         .onChange(of: code) { _, newValue in
-            // Keep only digits, clamped to `length`.
-            var filtered = newValue.filter(\.isNumber)
-            if filtered.count > length { filtered = String(filtered.prefix(length)) }
+            let filtered = DSCodeFieldLogic.sanitize(newValue, length: length)
             if filtered != newValue {
+                // Write back the cleaned code; the next onChange handles it.
                 code = filtered
                 return
             }
-            if filtered.count > previousCount {
-                DSHapticEngine.shared.fire(.light)
-            }
-            previousCount = filtered.count
-            if filtered.count == length {
-                onComplete?(filtered)
-            }
+            let change = DSCodeFieldLogic.change(from: accepted, to: filtered, length: length)
+            accepted = filtered
+            if change.haptic { DSHapticEngine.shared.fire(.light) }
+            if change.completes { onComplete?(filtered) }
         }
         .onChange(of: state) { _, newState in
             switch newState {
             case .error:
                 DSHapticEngine.shared.fire(.error)
+                // Under Reduce Motion the red tint and the haptic carry the error.
+                guard !reduceMotion else { break }
                 withAnimation(DSAnimation.normal) { shakeTrigger += 1 }
             case .success:
                 DSHapticEngine.shared.fire(.success)
@@ -136,15 +140,7 @@ public struct DSCodeField: View {
 
     /// e.g. "1 2 3, 3 of 6 digits", plus ", incorrect code" / ", verified".
     static func accessibilityValue(code: String, length: Int, state: DSCodeFieldState) -> String {
-        let digits = code.map(String.init).joined(separator: " ")
-        var value = digits.isEmpty ? "" : "\(digits), "
-        value += "\(code.count) of \(length) digits"
-        switch state {
-        case .normal:  break
-        case .error:   value += ", incorrect code"
-        case .success: value += ", verified"
-        }
-        return value
+        DSCodeFieldLogic.accessibilityValue(code: code, length: length, state: state)
     }
 
     private func character(at index: Int) -> Character? {
@@ -180,11 +176,76 @@ public struct DSCodeField: View {
     }
 }
 
+// MARK: - Logic
+
+/// The input rules of `DSCodeField`, kept pure so tests can pin them without
+/// rendering: which characters count as digits, when a keystroke ticks and when
+/// the code is complete.
+enum DSCodeFieldLogic {
+    /// What a change to the bound code should trigger.
+    struct Change: Equatable {
+        /// A digit was added: fire the light haptic.
+        var haptic: Bool
+        /// The code just became a full `length`-digit code: call `onComplete`.
+        var completes: Bool
+    }
+
+    /// At least one box, so `ForEach(0..<length)` never traps on a zero or
+    /// negative `length`.
+    static func boxCount(_ length: Int) -> Int {
+        max(1, length)
+    }
+
+    /// Keeps decimal digits only, in ASCII, clamped to `length`.
+    ///
+    /// Digits from any script count ("٤٢" from an Arabic keypad becomes "42"),
+    /// so the bound code always compares cleanly against a server's code.
+    /// Number-like characters that aren't one digit ("½", "Ⅻ") are dropped.
+    static func sanitize(_ raw: String, length: Int) -> String {
+        var digits = ""
+        for character in raw {
+            guard digits.count < boxCount(length) else { break }
+            guard let value = character.wholeNumberValue,
+                  (0...9).contains(value) else { continue }
+            digits.append(Character(String(value)))
+        }
+        return digits
+    }
+
+    /// Compares the last accepted code with a new, already sanitized one.
+    ///
+    /// A digit added ticks. The code completes only when it changes into a
+    /// full code: an extra keystroke on a full code (sanitized back to the
+    /// same digits) doesn't submit it twice; deleting a digit and typing a new
+    /// one does, and so does pasting a different full code.
+    static func change(from previous: String, to new: String, length: Int) -> Change {
+        Change(
+            haptic: new.count > previous.count,
+            completes: new.count == boxCount(length) && new != previous
+        )
+    }
+
+    /// e.g. "1 2 3, 3 of 6 digits", plus ", incorrect code" / ", verified".
+    static func accessibilityValue(code: String, length: Int, state: DSCodeFieldState) -> String {
+        let digits = code.map(String.init).joined(separator: " ")
+        var value = digits.isEmpty ? "" : "\(digits), "
+        let boxes = boxCount(length)
+        value += "\(code.count) of \(boxes) \(boxes == 1 ? "digit" : "digits")"
+        switch state {
+        case .normal:  break
+        case .error:   value += ", incorrect code"
+        case .success: value += ", verified"
+        }
+        return value
+    }
+}
+
 // MARK: - Blinking Caret
 
 private struct DSCodeFieldCaret: View {
     @State private var isOn = true
     @DSThemed private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Capsule()
@@ -192,9 +253,9 @@ private struct DSCodeFieldCaret: View {
             .frame(width: 2, height: 24)
             .opacity(isOn ? 1 : 0)
             .onAppear {
-                withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
-                    isOn = false
-                }
+                // Under Reduce Motion the caret rests, steady and visible.
+                guard let blink = DSMotion.loop(DSAnimation.slow, unless: reduceMotion) else { return }
+                withAnimation(blink) { isOn = false }
             }
     }
 }

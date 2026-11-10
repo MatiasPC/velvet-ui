@@ -163,12 +163,30 @@ private struct CodeFieldStage: View {
     let autoplay: Bool
     @State private var code = ""
     @State private var state: DSCodeFieldState = .normal
+    @State private var submissions = 0
     private let digits = Array("428519")
 
     var body: some View {
         VStack(spacing: DSSpacing.lg) {
             Text("Enter the code we sent you").ds(.callout, color: DSColors.textSecondary)
-            DSCodeField(length: 6, code: $code, state: state)
+            DSCodeField(length: 6, code: $code, state: state) { entered in
+                // Interactive only: the recording loop drives `state` itself.
+                guard !autoplay else { return }
+                submissions += 1
+                state = entered == String(digits) ? .success : .error
+            }
+            if !autoplay {
+                // What the UI test reads: how many times `onComplete` fired.
+                Text(submissions == 1 ? "Submitted once" : "Submitted \(submissions) times")
+                    .ds(.footnote, color: DSColors.textTertiary)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Submissions")
+                    .accessibilityValue("\(submissions)")
+            }
+        }
+        .onChange(of: code) { _, newCode in
+            // Editing a checked code starts over.
+            if !autoplay, newCode.count < digits.count { state = .normal }
         }
         .task(id: autoplay) {
             guard autoplay else { return }
