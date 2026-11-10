@@ -138,6 +138,7 @@ The constants live on `DSMotion` (`breatheDuration`, `sweepDuration`, `driftDura
 ## See also
 
 - [dsScrollReveal](DSScrollReveal.md) (scroll-coupled reveal)
+- [dsStretchyHeader](DSStretchyHeader.md) (hero header that stretches on pull, with parallax)
 - [DSThinkingIndicator](DSThinkingIndicator.md)
 - [Progress](Progress.md)
 - [DSAvatar](DSAvatar.md) (breathe while waiting)

@@ -62,6 +62,13 @@ public enum DSMotion {
     /// neighbour is still seen to be there.
     public static let scrollRevealStrongOpacity: Double = 0.15
 
+    // MARK: - Stretchy Header
+
+    /// Share of the scroll that `dsStretchyHeader`'s parallax gives back: at 0.5 the
+    /// header travels at half the scroll speed, the classic hero ratio. 0 would
+    /// scroll it normally; 1 would pin it in place.
+    public static let stretchyHeaderParallax: CGFloat = 0.5
+
     // MARK: - Reduce Motion
 
     /// Wrap an animation in `repeatForever`, or return `nil` when Reduce Motion is on.

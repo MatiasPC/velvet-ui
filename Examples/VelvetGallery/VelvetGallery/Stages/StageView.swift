@@ -48,6 +48,7 @@ struct StageView: View {
         case .DSCheckbox:          CheckboxStage(autoplay: autoplay)
         case .DSAudioBars:         AudioBarsStage(autoplay: autoplay)
         case .DSScrollReveal:      ScrollRevealStage(autoplay: autoplay)
+        case .DSStretchyHeader:    StretchyHeaderStage()
         case .DSMarquee:           MarqueeStage(autoplay: autoplay)
         case .DSFlowLayout:        FlowLayoutStage(autoplay: autoplay)
         case .DSChip:              ChipStage(autoplay: autoplay)

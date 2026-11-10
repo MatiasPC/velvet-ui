@@ -92,6 +92,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | AI / background work | `DSThinkingIndicator(phrases:)` | |
 | Typed headline | `DSTypewriterText(_:style:)` | |
 | Rows or cards that recede at the scroll edge | `.dsScrollReveal(_:)` | On each repeated item inside a `ScrollView`; rests under Reduce Motion. |
+| Hero image that stretches on pull (profile, trip, album) | `.dsStretchyHeader(parallax:)` | On the first, fixed-height view of a `ScrollView` with `.ignoresSafeArea(edges: .top)`. |
 | Ambient motion on any view | `.dsBreathe()`, `.dsJiggle(trigger:)`, `.dsPopIn(delay:)`, `.dsEdgeSweep()`, `.dsHueDrift()` | |
 | Menu, context menu | SwiftUI `Menu`, `.contextMenu` | Native is right; it inherits the tint. |
 | Pull to refresh | `.refreshable { await … }` | Native. |
