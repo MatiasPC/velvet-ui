@@ -253,9 +253,11 @@ private struct DSCodeFieldCaret: View {
             .frame(width: 2, height: 24)
             .opacity(isOn ? 1 : 0)
             .onAppear {
-                // Under Reduce Motion the caret rests, steady and visible.
-                guard let blink = DSMotion.loop(DSAnimation.slow, unless: reduceMotion) else { return }
-                withAnimation(blink) { isOn = false }
+                // Under Reduce Motion the caret rests, steady and visible. (Same
+                // rule as `DSMotion.loop`, inlined: DSCodeField copies standalone
+                // with only the core, which doesn't include DSMotion.)
+                guard !reduceMotion else { return }
+                withAnimation(DSAnimation.slow.repeatForever(autoreverses: true)) { isOn = false }
             }
     }
 }
