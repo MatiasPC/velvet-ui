@@ -2,8 +2,6 @@
 
 A press-and-hold confirmation. A ring charges around a glass pill while you keep your finger down; when it closes the pill fills with the accent, runs your action and settles on a check. Let go early and it springs back without running anything.
 
-<!-- GIF pending: ![DSHoldToConfirm](../media/DSHoldToConfirm.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSHoldToConfirm.swift`](../../Sources/VelvetUI/Components/DSHoldToConfirm.swift)
 
 ## Install

@@ -4,8 +4,6 @@ A settings screen with a profile header, preference toggles, a theme detail scre
 
 > Example — not a component. Copy it and adapt it.
 
-![Settings flow](../media/SettingsFlow.png)
-
 **Source:** [`SettingsFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/SettingsFlow.swift)
 
 ## What it demonstrates

@@ -59,7 +59,7 @@ After changing the file list or target settings, re-run `xcodegen generate` and
 ## Recording
 
 The **Recording → Recording stages** list opens chrome-free, centered views of
-each component for clips and GIFs, and `scripts/record-stage.sh` records one
+each component for clips, and `scripts/record-stage.sh` records one
 end-to-end. Launch arguments: `-VelvetStage <ID>`, `-VelvetStageBackground
 neutral|sunset|aurora|lagoon`, `-VelvetStageAutoplay YES|NO`,
 `-VelvetAppearance light|dark|system`. See [`docs/RECORDING.md`](../../docs/RECORDING.md).

@@ -4,8 +4,6 @@ A four-page onboarding: welcome, theme picker, notification preferences and a ce
 
 > Example — not a component. Copy it and adapt it.
 
-![Onboarding flow](../media/OnboardingFlow.png)
-
 **Source:** [`OnboardingFlow.swift`](../../Examples/VelvetGallery/VelvetGallery/Flows/OnboardingFlow.swift)
 
 ## What it demonstrates

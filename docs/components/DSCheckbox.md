@@ -2,8 +2,6 @@
 
 A themed checkbox for lists, forms and consent rows: an empty ring-shaped box that pops to the accent while its checkmark draws on, with a rigid haptic.
 
-<!-- GIF pending: ![DSCheckbox](../media/DSCheckbox.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCheckbox.swift`](../../Sources/VelvetUI/Components/DSCheckbox.swift)
 
 ## Install

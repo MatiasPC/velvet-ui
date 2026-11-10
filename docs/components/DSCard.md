@@ -2,8 +2,6 @@
 
 A glass surface for grouping content: thin material, a 1pt specular edge and a soft shadow, with a press-to-scale interactive variant and an image card for media.
 
-![DSCard](../media/DSCard.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCard.swift`](../../Sources/VelvetUI/Components/DSCard.swift)
 
 ## Install

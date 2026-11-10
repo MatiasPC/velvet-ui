@@ -2,8 +2,6 @@
 
 An equaliser for live audio: a row of capsule bars that ripple while sound is playing or being recorded, follow an optional live level, and ease down to a flat line when idle.
 
-<!-- GIF pending: ![DSAudioBars](../media/DSAudioBars.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAudioBars.swift`](../../Sources/VelvetUI/Components/DSAudioBars.swift)
 
 ## Install

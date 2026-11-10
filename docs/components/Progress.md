@@ -2,8 +2,6 @@
 
 Progress indicators that animate to their value instead of jumping: ring, bar, multi-color bar, step dots, a counting number and a skeleton shimmer.
 
-![Progress](../media/Progress.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSProgressAnimation.swift`](../../Sources/VelvetUI/Animation/DSProgressAnimation.swift)
 
 ## Install

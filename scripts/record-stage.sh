@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Record a VelvetGallery recording stage in the iOS Simulator and export an
-# X-ready MP4 to clips/<StageID>.mp4 (gitignored) and a README GIF to
-# docs/media/<StageID>.gif.
+# X-ready MP4 to clips/<StageID>.mp4 (gitignored).
 #
 # Usage: scripts/record-stage.sh <StageID> [seconds=8] [background=neutral] [appearance=light]
 #   StageID     one of the IDs in docs/RECORDING.md (Hero, DSToggle, Motion, ...)
@@ -25,7 +24,6 @@ SIM="${VELVET_SIM:-iPhone 16 Pro}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/Examples/VelvetGallery/VelvetGallery.xcodeproj"
 DERIVED="$ROOT/.build/gallery-record"
-OUT_DIR="$ROOT/docs/media"
 CLIPS_DIR="$ROOT/clips"   # gitignored: MP4s are for posting, not for the repo
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
@@ -97,7 +95,7 @@ if [ -n "$RAW_ONLY" ]; then
   exit 0
 fi
 
-mkdir -p "$OUT_DIR" "$CLIPS_DIR"
+mkdir -p "$CLIPS_DIR"
 # Center crop to 9:16 (portrait). Source is taller than 9:16, so keep full width.
 # The example flows (*Flow) fill the whole screen, so they keep the device's
 # full height instead (about 1:2.17, which X still accepts for vertical video).
@@ -114,16 +112,6 @@ ffmpeg -y -loglevel error -i "$RAW" \
   -vf "$CROP,$MP4_SIZE,fps=30" \
   -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an "$CLIPS_DIR/$STAGE.mp4"
 
-echo "==> Writing $OUT_DIR/$STAGE.gif"
-ffmpeg -y -loglevel error -i "$RAW" \
-  -vf "$CROP,fps=20,scale=480:-2:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5" \
-  -loop 0 "$OUT_DIR/$STAGE.gif"
-
-GIF_BYTES="$(wc -c < "$OUT_DIR/$STAGE.gif" | tr -d ' ')"
-if [ "$GIF_BYTES" -gt 5242880 ]; then
-  echo "warning: $STAGE.gif is $((GIF_BYTES / 1024)) KB (> 5 MB). Record fewer seconds or re-encode at lower fps." >&2
-fi
-
 xcrun simctl status_bar "$SIM" clear >/dev/null 2>&1 || true
 echo "Done:"
-ls -lh "$CLIPS_DIR/$STAGE.mp4" "$OUT_DIR/$STAGE.gif"
+ls -lh "$CLIPS_DIR/$STAGE.mp4"

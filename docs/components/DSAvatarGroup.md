@@ -2,8 +2,6 @@
 
 A facepile: overlapping avatars that show who is on a thread, in a space or going to an event, with a "+N" bubble when there are more than fit.
 
-<!-- GIF pending: ![DSAvatarGroup](../media/DSAvatarGroup.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSAvatarGroup.swift`](../../Sources/VelvetUI/Components/DSAvatarGroup.swift)
 
 ## Install

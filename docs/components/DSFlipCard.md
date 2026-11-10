@@ -2,8 +2,6 @@
 
 A two-sided glass card that turns over in 3D to reveal its back — tap it, or drive it from a binding. The flip is a single spring about one axis with a touch of perspective, and it fires a haptic on the turn.
 
-<!-- GIF pending: ![DSFlipCard](../media/DSFlipCard.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlipCard.swift`](../../Sources/VelvetUI/Components/DSFlipCard.swift)
 
 ## Install

@@ -2,8 +2,6 @@
 
 A circular avatar that loads a remote photo and falls back to tinted initials, so it never shows an empty circle.
 
-![DSAvatar](../media/DSAvatar.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSBadge.swift`](../../Sources/VelvetUI/Components/DSBadge.swift)
 
 ## Install

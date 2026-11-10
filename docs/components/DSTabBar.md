@@ -2,8 +2,6 @@
 
 A floating glass tab bar. The selected tab sits on an accent capsule that slides between tabs, and its icon swaps to the filled variant with one bounce.
 
-![DSTabBar](../media/DSTabBar.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTabBar.swift`](../../Sources/VelvetUI/Components/DSTabBar.swift)
 
 ## Install

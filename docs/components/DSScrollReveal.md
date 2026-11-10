@@ -2,8 +2,6 @@
 
 A scroll-coupled reveal for any repeated view: it sits at full presence inside the scroll view, recedes (a little smaller, a little dimmer) as it crosses the leading or trailing edge, and comes back when you scroll back.
 
-<!-- GIF pending: ![dsScrollReveal](../media/DSScrollReveal.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSScrollEffects.swift`](../../Sources/VelvetUI/Animation/DSScrollEffects.swift)
 
 ## Install

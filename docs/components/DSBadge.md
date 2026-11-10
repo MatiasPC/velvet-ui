@@ -2,8 +2,6 @@
 
 Compact pill labels for status and categories, plus a notification count badge that hides itself at zero and caps at 99+.
 
-![DSBadge](../media/DSBadge.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSBadge.swift`](../../Sources/VelvetUI/Components/DSBadge.swift)
 
 ## Install

@@ -2,8 +2,6 @@
 
 A single-select list for any `Hashable` value: the indicator pops to the accent while its dot grows, and a frosted highlight slides to the chosen row.
 
-<!-- GIF pending: ![DSRadioGroup](../media/DSRadioGroup.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRadioGroup.swift`](../../Sources/VelvetUI/Components/DSRadioGroup.swift)
 
 ## Install

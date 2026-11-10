@@ -2,8 +2,6 @@
 
 A themed text button with optional icon and loading state. It presses down with a spring and taps out a haptic, so every action feels acknowledged.
 
-![DSButton](../media/DSButton.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSButton.swift`](../../Sources/VelvetUI/Components/DSButton.swift)
 
 ## Install

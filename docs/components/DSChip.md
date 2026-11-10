@@ -2,8 +2,6 @@
 
 Selectable pill chips for filters, tags, categories and interest pickers. `DSChipGroup` lays them out with [`DSFlowLayout`](DSFlowLayout.md), which breaks onto as many lines as the width needs, and manages single or multiple selection. Selecting a chip springs its fill into the accent and ticks a selection haptic.
 
-<!-- GIF pending: ![DSChip](../media/DSChip.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSChip.swift`](../../Sources/VelvetUI/Components/DSChip.swift)
 
 ## Install

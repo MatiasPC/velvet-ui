@@ -2,8 +2,6 @@
 
 Two knobs on one slim track, for picking a span: a price filter, an age range, opening hours. The accent fill runs between the knobs, the knobs never cross, and `minimumDistance` keeps a gap between them.
 
-<!-- GIF pending: ![DSRangeSlider](../media/DSRangeSlider.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRangeSlider.swift`](../../Sources/VelvetUI/Components/DSRangeSlider.swift)
 
 ## Install

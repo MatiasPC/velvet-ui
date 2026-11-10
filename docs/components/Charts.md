@@ -2,8 +2,6 @@
 
 Two light charts with no Swift Charts dependency: `DSSparkline`, a trend line that draws itself and morphs to new data, and `DSBarChart`, bars that grow from the baseline and can be scrubbed to select.
 
-![Charts](../media/Charts.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSCharts.swift`](../../Sources/VelvetUI/Components/DSCharts.swift)
 
 ## Install

@@ -2,8 +2,6 @@
 
 An icon-only button, with no background, that shrinks under your thumb and ticks a light haptic. Use it for toolbar-style actions like share, favorite and more.
 
-![DSIconButton](../media/DSIconButton.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSButton.swift`](../../Sources/VelvetUI/Components/DSButton.swift)
 
 ## Install

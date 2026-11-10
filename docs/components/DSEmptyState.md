@@ -2,8 +2,6 @@
 
 A centered empty-list or no-results placeholder: a light icon, a title, a short message and an optional call-to-action button.
 
-![DSEmptyState](../media/DSEmptyState.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSToast.swift`](../../Sources/VelvetUI/Components/DSToast.swift)
 
 ## Install

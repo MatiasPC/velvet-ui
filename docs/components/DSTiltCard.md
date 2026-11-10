@@ -2,8 +2,6 @@
 
 A glass card that tips in 3D toward your finger as you drag, with a specular highlight that slides across the surface like light on glass, then springs back to rest on release.
 
-<!-- GIF pending: ![DSTiltCard](../media/DSTiltCard.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTiltCard.swift`](../../Sources/VelvetUI/Components/DSTiltCard.swift)
 
 ## Install
