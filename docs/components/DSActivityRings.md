@@ -2,8 +2,6 @@
 
 Concentric goal rings, the "close your rings" pattern: several goals nested as rings that fill with a spring, and a ring that lights up with a glow and one haptic the moment it closes.
 
-<!-- GIF pending: ![DSActivityRings](../media/DSActivityRings.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSActivityRings.swift`](../../Sources/VelvetUI/Components/DSActivityRings.swift)
 
 ## Install

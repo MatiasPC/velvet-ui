@@ -2,8 +2,6 @@
 
 An animated page indicator where the active dot springs open into a capsule. A drop-in, nicer replacement for UIPageControl.
 
-![DSPageControl](../media/DSPageControl.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSPageControl.swift`](../../Sources/VelvetUI/Components/DSPageControl.swift)
 
 ## Install

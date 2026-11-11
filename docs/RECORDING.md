@@ -2,7 +2,8 @@
 
 VelvetGallery has a "recording stage" for every component: a chrome-free,
 centered view on a clean background, built to be screen-recorded in the iOS
-Simulator and posted as a vertical clip (X) or a GIF (README).
+Simulator and posted as a vertical clip (X). The repo itself carries a single
+image, the [README screenshot](#the-readme-screenshot).
 
 ## Prerequisites
 
@@ -19,7 +20,7 @@ scripts/record-stage.sh DSToggle 8 sunset dark
 It boots the simulator (`$VELVET_SIM`, default `iPhone 16 Pro`), overrides the
 status bar (9:41, full battery), builds and installs the Gallery, launches the
 stage with autoplay on, records, and writes the X clip to `clips/<StageID>.mp4`
-(gitignored) and the README GIF to `docs/media/<StageID>.gif`. Stages that need a
+(gitignored). Stages that need a
 gesture (see the table) don't play themselves: when the script prints
 `==> Recording`, perform the gesture in the Simulator window with the mouse, or
 use the manual path.
@@ -78,10 +79,6 @@ CROP="crop=iw:trunc(iw*16/9/2)*2:0:(ih-trunc(iw*16/9/2)*2)/2"
 # MP4 for X
 ffmpeg -i raw.mov -vf "$CROP,scale=1080:1920:flags=lanczos,fps=30" \
   -c:v libx264 -pix_fmt yuv420p -movflags +faststart -an clips/DSToggle.mp4
-
-# GIF for the README
-ffmpeg -i raw.mov -vf "$CROP,fps=20,scale=480:-2:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5" \
-  -loop 0 docs/media/DSToggle.gif
 ```
 
 ## Specs
@@ -89,16 +86,32 @@ ffmpeg -i raw.mov -vf "$CROP,fps=20,scale=480:-2:flags=lanczos,split[a][b];[a]pa
 | Target | Format |
 | --- | --- |
 | X | vertical 9:16 MP4, 1080x1920, H.264, 30 fps, 5-10 s, no audio, at most 512 MB. The full-screen example flows keep the device height instead (1080x2348), which X also accepts. |
-| README GIF | 480 px wide, 20 fps, loops forever, at most 5 MB |
 
-Name files after the stage ID. GIFs go in `docs/media/<StageID>.gif` and are
-committed: they replace the placeholders the README and component pages show.
-MP4s go in `clips/<StageID>.mp4`, which is gitignored. Post them, don't commit them.
+Name files after the stage ID. MP4s go in `clips/<StageID>.mp4`, which is
+gitignored. Post them, don't commit them.
+
+## The README screenshot
+
+`docs/media/showcase.png` is the only component image in the repo: the
+`Showcase` stage on an iPad Pro 13-inch in portrait, cropped to the content.
+Component pages don't carry media. To regenerate it, build the Gallery for that
+simulator, install it, then:
+
+```bash
+xcrun simctl launch booted com.matiasperaltacharro.VelvetGallery \
+  -VelvetStage Showcase -VelvetStageBackground sunset \
+  -VelvetAppearance light -VelvetStageAutoplay NO \
+  -AppleLanguages "(en)" -AppleLocale en_US
+xcrun simctl io booted screenshot raw.png    # wait for the rings to fill first
+sips -c 1340 2064 raw.png --out cropped.png
+sips -Z 1600 cropped.png --out docs/media/showcase.png
+```
 
 ## Stages
 
 | Stage ID | While recording |
 | --- | --- |
+| `Showcase` | The static spread behind the README screenshot. Nothing moves. |
 | `Hero` | Toggle, step the quantity, then drag the knob to the end and release. Manual. |
 | `DSButton` | Click each button (press feedback). Manual. |
 | `DSIconButton` | Click the three icon buttons in turn. Manual. |

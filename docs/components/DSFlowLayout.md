@@ -2,8 +2,6 @@
 
 A wrapping layout: it lays its subviews out left-to-right and drops to a new line the moment the next one won't fit. The missing primitive behind tag clouds, filter chips, keyword lists and any set of pill-shaped items whose count you don't control — the one case a `VStack`/`HStack` can't handle and `DSGrid` gets wrong (chips aren't a grid; they're different widths).
 
-<!-- GIF pending: ![DSFlowLayout](../media/DSFlowLayout.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSFlowLayout.swift`](../../Sources/VelvetUI/Layout/DSFlowLayout.swift)
 
 ## Install

@@ -7,7 +7,7 @@ Velvet UI ships only through Swift Package Manager, so a release is an annotated
 - [ ] The release PR is merged and CI is green on `main`.
 - [ ] `CHANGELOG.md`: the version's section carries the release date, `[Unreleased]` above it is empty, and the link references at the bottom point at the new tag.
 - [ ] The README install snippet uses the version (`from: "0.2.0"`).
-- [ ] The clips in `docs/media/` are real recordings, not placeholders (see [RECORDING.md](RECORDING.md)).
+- [ ] `docs/media/showcase.png` still matches the components (see [RECORDING.md](RECORDING.md#the-readme-screenshot)).
 
 ## v0.2.0
 

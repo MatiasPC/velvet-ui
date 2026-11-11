@@ -2,8 +2,6 @@
 
 A labelled text input with leading icon, secure mode and validation states, plus a matching `DSSearchBar` with a clear button.
 
-![DSTextField](../media/DSTextField.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTextField.swift`](../../Sources/VelvetUI/Components/DSTextField.swift)
 
 ## Install

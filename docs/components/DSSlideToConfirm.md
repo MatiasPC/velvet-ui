@@ -2,8 +2,6 @@
 
 A slide-to-confirm gate for irreversible actions like payments. The label dissolves under your finger, motes trail the knob, and the result lands with a success or refusal haptic.
 
-![DSSlideToConfirm](../media/DSSlideToConfirm.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSlideToConfirm.swift`](../../Sources/VelvetUI/Components/DSSlideToConfirm.swift)
 
 ## Install

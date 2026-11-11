@@ -2,8 +2,6 @@
 
 A minus / number / plus stepper on a glass track. The number rolls, and hitting a limit wiggles the track with a warning haptic so you feel the refusal.
 
-![DSStepper](../media/DSStepper.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSStepper.swift`](../../Sources/VelvetUI/Components/DSStepper.swift)
 
 ## Install

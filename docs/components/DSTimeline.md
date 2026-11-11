@@ -2,8 +2,6 @@
 
 A vertical progress timeline: a rail of nodes joined by a connector that fills as the flow advances. The classic order-status pattern — Ordered → Shipped → Out for delivery → Delivered — and equally at home in multi-step flows, activity histories and wizards. It is the vertical, content-bearing complement to [`DSStepProgress`](Progress.md) (a row of flat capsules with no labels).
 
-<!-- GIF pending: ![DSTimeline](../media/DSTimeline.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSTimeline.swift`](../../Sources/VelvetUI/Components/DSTimeline.swift)
 
 ## Install

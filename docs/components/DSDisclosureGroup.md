@@ -2,8 +2,6 @@
 
 A glass "show more" section. Tap the header and the body springs open while the chevron rotates and a light haptic fires — the Velvet reading of an accordion / FAQ row, for settings detail, filters, long descriptions, anything that should stay out of the way until asked for.
 
-<!-- GIF pending: ![DSDisclosureGroup](../media/DSDisclosureGroup.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSDisclosureGroup.swift`](../../Sources/VelvetUI/Components/DSDisclosureGroup.swift)
 
 ## Install

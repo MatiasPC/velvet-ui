@@ -2,10 +2,10 @@ import SwiftUI
 import VelvetUI
 
 /// One isolated, chrome-free view per component, for screen recording.
-/// Raw values are the stage IDs and double as the GIF file names
-/// (`docs/media/<ID>.gif`).
+/// Raw values are the stage IDs and double as the clip file names
+/// (`clips/<ID>.mp4`).
 enum Stage: String, CaseIterable, Identifiable {
-    case Hero, DSButton, DSIconButton, DSCard, DSTextField, DSCodeField, DSBadge
+    case Showcase, Hero, DSButton, DSIconButton, DSCard, DSTextField, DSCodeField, DSBadge
     case DSFlipCard
     case DSAvatar, DSListCell, DSToast, DSEmptyState, DSSegmentedControl, DSToggle
     case DSRating, DSPageControl, DSStepper, DSSlideToConfirm, DSThinkingIndicator
@@ -45,7 +45,7 @@ enum Stage: String, CaseIterable, Identifiable {
     /// True when the stage can drive itself in a calm loop.
     var supportsAutoplay: Bool {
         switch self {
-        case .Hero, .DSButton, .DSIconButton, .DSCard, .DSSlideToConfirm,
+        case .Showcase, .Hero, .DSButton, .DSIconButton, .DSCard, .DSSlideToConfirm,
              .DSTextField, .DSBadge, .DSAvatar, .DSListCell, .DSEmptyState,
              .OnboardingFlow, .SettingsFlow, .CheckoutFlow:
             return false

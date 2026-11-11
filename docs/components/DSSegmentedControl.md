@@ -2,8 +2,6 @@
 
 A generic segmented control where a filled pill (or an accent underline) slides between options, with a selection tick on each change.
 
-![DSSegmentedControl](../media/DSSegmentedControl.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSSegmentedControl.swift`](../../Sources/VelvetUI/Components/DSSegmentedControl.swift)
 
 ## Install

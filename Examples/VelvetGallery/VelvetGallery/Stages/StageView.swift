@@ -9,6 +9,7 @@ struct StageView: View {
 
     var body: some View {
         switch stage {
+        case .Showcase:            ShowcaseStage()
         case .Hero:                HeroStage()
         case .DSButton:            ButtonStage()
         case .DSIconButton:        IconButtonStage()
@@ -60,6 +61,156 @@ struct StageView: View {
         case .OnboardingFlow:      OnboardingFlowStage()
         case .SettingsFlow:        SettingsFlowStage()
         case .CheckoutFlow:        CheckoutFlowStage()
+        }
+    }
+}
+
+// MARK: - Showcase
+
+/// The one screenshot the README shows: a static spread of components, three
+/// columns wide, framed for an iPad in portrait (one column on a phone).
+/// See docs/RECORDING.md.
+private struct ShowcaseStage: View {
+    @DSThemed private var theme
+    @Environment(\.horizontalSizeClass) private var sizeClass
+
+    @State private var notifications = true
+    @State private var quantity = 2
+    @State private var code = "428519"
+    @State private var period = "Week"
+    @State private var selectedBar: Int? = 3
+    @State private var volume = 0.65
+    @State private var topics: Set<String> = ["Design", "Research"]
+    @State private var rating = 4.5
+    @State private var tab = "Home"
+
+    private let tabs = [
+        DSTabItem("Home", value: "Home", icon: "house", selectedIcon: "house.fill"),
+        DSTabItem("Search", value: "Search", icon: "magnifyingglass"),
+        DSTabItem("Inbox", value: "Inbox", icon: "tray", badge: 3)
+    ]
+    private let trend: [Double] = [12, 18, 14, 22, 19, 27, 24, 31, 28, 36]
+    private let bars: [Double] = [12, 18, 9, 22, 15, 6, 11]
+    private let days = ["M", "T", "W", "T", "F", "S", "S"]
+
+    private var rings: [DSRing] {
+        [
+            DSRing(progress: 0.82, color: theme.palette.error, label: "Move"),
+            DSRing(progress: 0.60, color: theme.palette.success, label: "Exercise"),
+            DSRing(progress: 0.45, color: theme.palette.info, label: "Stand")
+        ]
+    }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: DSSpacing.lg) {
+            VStack(spacing: DSSpacing.lg) {
+                checkout
+                verification
+                DSToast("Saved to your library", type: .success)
+                DSTabBar(selection: $tab, items: tabs)
+            }
+            if sizeClass != .compact {
+                VStack(spacing: DSSpacing.lg) {
+                    DSSegmentedControl(selection: $period, options: ["Day", "Week", "Month"])
+                    revenue
+                    volumeCard
+                }
+                VStack(spacing: DSSpacing.lg) {
+                    activity
+                    interests
+                    review
+                }
+            }
+        }
+    }
+
+    private var checkout: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                Text("Checkout").ds(.title2)
+                DSToggle("Push notifications", isOn: $notifications)
+                HStack {
+                    Text("Quantity").ds(.body)
+                    Spacer()
+                    DSStepper(value: $quantity, in: 1...9)
+                }
+                DSSlideToConfirm("Slide to pay", confirmedLabel: "Paid") {}
+            }
+        }
+    }
+
+    private var verification: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                Text("Enter your code").ds(.title3)
+                DSCodeField(length: 6, code: $code, state: .success)
+                DSButton("Continue", isFullWidth: true) {}
+            }
+        }
+    }
+
+    private var revenue: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                    Text("Revenue").ds(.callout, color: DSColors.textSecondary)
+                    Text("$36k").ds(.displayMedium)
+                }
+                DSSparkline(trend, accessibilityLabel: "Revenue trend")
+                    .frame(height: 110)
+                DSBarChart(bars, labels: days, selection: $selectedBar, accessibilityLabel: "Orders this week")
+                    .frame(height: 160)
+            }
+        }
+    }
+
+    private var volumeCard: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                HStack {
+                    Text("Volume").ds(.callout, color: DSColors.textSecondary)
+                    Spacer()
+                    Text("\(Int(volume * 100))%").ds(.numeric)
+                }
+                DSSlider(value: $volume)
+            }
+        }
+    }
+
+    private var activity: some View {
+        DSCard {
+            DSActivityRings(rings, size: 168, lineWidth: 16) {
+                VStack(spacing: DSSpacing.xxxs) {
+                    Text("82%").ds(.title3)
+                    Text("today").ds(.caption1, color: DSColors.textSecondary)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    private var interests: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                Text("Topics").ds(.overline, color: DSColors.textSecondary)
+                DSChipGroup(ChipScreen.topics, selection: $topics)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var review: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
+                HStack {
+                    Text("Reviews").ds(.title3)
+                    Spacer()
+                    DSBadge("New", variant: .soft)
+                }
+                DSRating(rating: $rating, size: 28)
+                DSAvatarGroup(names: ["Ada Lovelace", "John Doe", "Jane Smith", "Bob Marley", "Grace Hopper", "Alan Turing"], maxVisible: 4)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

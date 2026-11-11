@@ -2,8 +2,6 @@
 
 A block of copy that collapses to a few lines and springs open on tap, with a rotating chevron and a crossfading **Show more** / **Show less** affordance. For product descriptions, reviews, bios and terms — anywhere a long paragraph would otherwise push everything else off the screen or get truncated with no way back.
 
-<!-- GIF pending: ![DSExpandableText](../media/DSExpandableText.gif) -->
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSExpandableText.swift`](../../Sources/VelvetUI/Components/DSExpandableText.swift)
 
 ## Install

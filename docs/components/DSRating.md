@@ -2,8 +2,6 @@
 
 A star rating you can drag or tap, with a selection tick per star and a pop on the active one. It also has a read-only form with fractional fills.
 
-![DSRating](../media/DSRating.gif)
-
 **Platforms:** iOS 18+ · macOS 15+  ·  **Source:** [`DSRating.swift`](../../Sources/VelvetUI/Components/DSRating.swift)
 
 ## Install
