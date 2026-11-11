@@ -42,11 +42,11 @@ struct CodeFieldDemo: View {
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `length` | `Int` | `6` | Number of digit boxes. |
-| `code` | `Binding<String>` | required | The digits entered so far. Digits only, clamped to `length`. |
+| `length` | `Int` | `6` | Number of digit boxes. Values below 1 are treated as 1. |
+| `code` | `Binding<String>` | required | The digits entered so far. Digits only, in ASCII (digits typed in another script, like "٤٢", are written back as "42"), clamped to `length`. |
 | `state` | `DSCodeFieldState` | `.normal` | `.normal`, `.error` or `.success`. |
 | `boxHeight` | `CGFloat` | `56` | Height of each box. |
-| `onComplete` | `((String) -> Void)?` | `nil` | Called with the full code once `length` digits are entered. |
+| `onComplete` | `((String) -> Void)?` | `nil` | Called with the full code when it becomes `length` digits long. An extra keystroke on a full code doesn't call it again; deleting a digit and typing a new one, or pasting a different code, does. A code that is already full when the field appears doesn't call it. |
 
 
 
@@ -61,6 +61,7 @@ struct CodeFieldDemo: View {
 - Tap anywhere on the field to focus a hidden text field that owns the keyboard (number pad on iOS).
 - On iOS the field supports SMS one-time-code autofill.
 - The active box scales up with a snappy spring, a caret blinks in it, and each digit fires a light haptic.
+- Reduce Motion: the caret stays lit instead of blinking, and `.error` tints the boxes and fires the haptic without the shake.
 
 ## Accessibility
 
