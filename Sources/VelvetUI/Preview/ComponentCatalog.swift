@@ -75,6 +75,7 @@ struct ComponentCatalog: View {
     @State private var postLiked = false
     @State private var postLikes = 128
     @State private var keypadAmount = ""
+    @State private var catalogTags = ["SwiftUI", "Motion"]
     @State private var rangePrice: ClosedRange<Double> = 100...400
 
     var body: some View {
@@ -844,6 +845,18 @@ struct ComponentCatalog: View {
                             }
                             DSRangeSlider(range: $rangePrice, in: 0...500, step: 25, minimumDistance: 50)
                                 .accessibilityLabel("Price")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Tag Field
+                section("Tag Field") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSTagField(tags: $catalogTags, placeholder: "Add a skill", maxTags: 6)
+                            Text("Return or a comma makes a tag; tap one to remove it. Duplicates wiggle.")
+                                .ds(.footnote, color: DSColors.textSecondary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }

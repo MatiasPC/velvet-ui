@@ -701,6 +701,18 @@ On-screen numeric keypad (1–9, separator, 0, delete on a 3 × 4 `Grid`) for am
 
 ---
 
+## DSTagField  ✅
+
+`Components/DSTagField.swift`. Depends on `DSFlowLayout.swift` and `DSMotion.swift` (`dsJiggle`).
+
+```swift
+DSTagField(tags: Binding<[String]>, placeholder: String = "Add a tag", maxTags: Int? = nil, accent: Color? = nil, haptic: DSHapticStyle = .light)
+```
+
+A text field that turns typed words into accent pills inside it (skills, invitees, labels, keywords). The rules are `DSTagFieldLogic` (internal, unit-tested): `normalized` (trim, collapse whitespace runs), `add` (blank → ignored; a case-insensitive duplicate → refused with the existing index; past `maxTags` → refused; `nil` or < 1 is unlimited), `split` / `ingest` (Return, `,`, `;` or a newline end a tag; a paste commits every piece in order; a piece that doesn't fit a full field stays in the draft), `backspace` (hardware Delete on an empty draft arms the last pill, the second Delete removes it) and `announcement`. Pills sit in a `DSFlowLayout` with the draft `TextField` (min width 128) on a `theme.subtleFill` well at `DSRadius.control` with `dsFocusGlow`. Adds fire `haptic` once per commit; refusals fire `.warning` once and `dsJiggle` the duplicate pill or the draft; removal fires `.selection`. Pills are buttons read as "Remove <tag>"; changes are announced. Leaving the field commits the draft.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.

@@ -650,6 +650,23 @@
       "stage": "DSKeypad"
     },
     {
+      "name": "DSTagField",
+      "category": "inputs",
+      "summary": "Text field that turns typed words into tags: Return or a comma makes an accent pill, tap a pill to remove it; trimmed, unique, with an optional limit.",
+      "symbols": [
+        "DSTagField"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSTagField.swift"
+      ],
+      "dependencies": [
+        "DSFlowLayout",
+        "Motion"
+      ],
+      "docs": "docs/components/DSTagField.md",
+      "stage": "DSTagField"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",

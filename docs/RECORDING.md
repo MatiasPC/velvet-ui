@@ -154,6 +154,7 @@ sips -Z 1600 cropped.png --out docs/media/showcase.png
 | `DSCheckbox` | Autoplay: checks three items one by one (tick draws on), then unchecks them. |
 | `DSAudioBars` | Autoplay: a simulated voice drives the level for a few seconds, then the bars ease to rest. |
 | `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |
+| `DSTagField` | Autoplay: skills are added and removed in a loop (pills pop in and out). Type by hand for the commit tick, a duplicate for the wiggle, and a fifth skill to hit the limit. |
 | `DSRangeSlider` | Autoplay: the price window glides through a few spans, including the narrowest one ($50). Drag a knob into the other by hand to feel it stop at the gap. |
 | `DSKeypad` | Autoplay: types $24.50, then deletes it. Tap the keys by hand for the press dip, and a second "." for the refusal wiggle. |
 | `DSLikeButton` | Tap the heart (pop, halo, count rolls), tap it again (quiet), then the star and the bookmark. Manual: the beat belongs to the tap. |
