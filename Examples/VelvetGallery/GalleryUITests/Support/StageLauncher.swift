@@ -68,7 +68,12 @@ extension XCUIElement {
     var stringValue: String? { value as? String }
 
     /// Waits until the accessibility value equals `expected`.
-    func waitForValue(_ expected: String, timeout: TimeInterval = 5) -> Bool {
+    ///
+    /// The default is generous on purpose: XCUITest waits for the app to go idle
+    /// before it reads a value, and a control that plays a pop, halo or spring
+    /// after a tap keeps the app busy for a while. On a loaded CI runner that has
+    /// taken over 5 s, which made the result depend on the runner, not the code.
+    func waitForValue(_ expected: String, timeout: TimeInterval = 15) -> Bool {
         let predicate = NSPredicate(format: "value == %@", expected)
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: self)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
