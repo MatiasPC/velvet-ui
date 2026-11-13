@@ -713,6 +713,18 @@ A text field that turns typed words into accent pills inside it (skills, invitee
 
 ---
 
+## DSDayStrip  ✅
+
+`Components/DSDayStrip.swift`. No dependencies beyond the core.
+
+```swift
+DSDayStrip(selection: Binding<Date>, in bounds: ClosedRange<Date>, accent: Color? = nil, haptic: DSHapticStyle = .selection, accessibilityLabel: String = "Date")
+```
+
+A horizontal strip of days (short weekday over the number) in a `ScrollView` + `LazyHStack` with `.viewAligned` snapping. The selected day sits in an accent `Capsule` that slides between cells with `matchedGeometryEffect` on `springSnappy`; the strip `scrollTo`s it, centred, on appear and on every change. Today carries a 4 pt dot and its number in `theme.ink`. The rules are `DSDayStripLogic` (internal, unit-tested): `days` (every day from the lower bound's day to the upper bound's, each at `startOfDay`, DST-safe, capped at 3,660), `clamp`, `contains`, `step` (one day, `nil` past either end) and `accessibilityValue` ("Friday, November 13", plus ", Today"). A tap writes the start of the tapped day and fires `haptic`. VoiceOver sees one adjustable element. Cells are at least 48 × 64 pt; no surface of its own.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.

@@ -11,6 +11,7 @@
 		082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */; };
 		465C15F26BDA5B1683EFC6EA /* KeypadScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643E1E9AF17D73AF734B4F66 /* KeypadScreen.swift */; };
 		8DE9E994939D7A39ED0DB8DA /* TagFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B77A8E6465A0DE3BD11B480 /* TagFieldScreen.swift */; };
+		33F39BA8C11A4DCD67D2B343 /* DayStripScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E48B8453B0859951E8237 /* DayStripScreen.swift */; };
 		19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */; };
 		0994C9F56092856763C3D6B6 /* RadioGroupScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27AE163EB64ABA0A2281C3 /* RadioGroupScreen.swift */; };
 		17C883A7ED53FC1B4ED8A478 /* TextFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8519A7783B3F764D70CA824 /* TextFieldScreen.swift */; };
@@ -75,6 +76,7 @@
 		C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */; };
 		5F0993FAC2F09BD4227ADAD2 /* DSKeypadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320E96A50132744991C35DE0 /* DSKeypadUITests.swift */; };
 		495C01732177BC8A98A2F705 /* DSTagFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84C20F1412BC9FFD2B3400A /* DSTagFieldUITests.swift */; };
+		266D89616E0CB2F9C85C2E40 /* DSDayStripUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */; };
 		525B09CE7D196C37335F8CFF /* DSRangeSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */; };
 		5CF6A1115502170B3926387A /* DSStepperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */; };
 		E4FAF7C43B19A1C4EBD8597D /* DSCodeFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FC10ED26261205A2266598 /* DSCodeFieldUITests.swift */; };
@@ -143,6 +145,7 @@
 		AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButtonScreen.swift; sourceTree = "<group>"; };
 		643E1E9AF17D73AF734B4F66 /* KeypadScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadScreen.swift; sourceTree = "<group>"; };
 		6B77A8E6465A0DE3BD11B480 /* TagFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFieldScreen.swift; sourceTree = "<group>"; };
+		956E48B8453B0859951E8237 /* DayStripScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStripScreen.swift; sourceTree = "<group>"; };
 		7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSliderScreen.swift; sourceTree = "<group>"; };
 		B81FF28240007F62A7A90C02 /* ThinkingIndicatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingIndicatorScreen.swift; sourceTree = "<group>"; };
 		BB994B3C1E8422B53394EBBA /* TabBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScreen.swift; sourceTree = "<group>"; };
@@ -165,6 +168,7 @@
 		95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSLikeButtonUITests.swift; sourceTree = "<group>"; };
 		320E96A50132744991C35DE0 /* DSKeypadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSKeypadUITests.swift; sourceTree = "<group>"; };
 		A84C20F1412BC9FFD2B3400A /* DSTagFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTagFieldUITests.swift; sourceTree = "<group>"; };
+		9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSDayStripUITests.swift; sourceTree = "<group>"; };
 		92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRangeSliderUITests.swift; sourceTree = "<group>"; };
 		DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStepperUITests.swift; sourceTree = "<group>"; };
 		05FC10ED26261205A2266598 /* DSCodeFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCodeFieldUITests.swift; sourceTree = "<group>"; };
@@ -281,6 +285,7 @@
 				629C745CA3297503D924937D /* LayoutScreen.swift */,
 				643E1E9AF17D73AF734B4F66 /* KeypadScreen.swift */,
 				6B77A8E6465A0DE3BD11B480 /* TagFieldScreen.swift */,
+				956E48B8453B0859951E8237 /* DayStripScreen.swift */,
 				7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */,
 				AFB4E7AD36D68A5C416CAE54 /* LikeButtonScreen.swift */,
 				54F60FD1D436135BECE7C11C /* ListsScreen.swift */,
@@ -343,6 +348,7 @@
 				77D7C15171A6834C43246986 /* DSToggleUITests.swift */,
 				320E96A50132744991C35DE0 /* DSKeypadUITests.swift */,
 				A84C20F1412BC9FFD2B3400A /* DSTagFieldUITests.swift */,
+				9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */,
 				92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */,
 				95FC271F5C25BC04BFC5A211 /* DSLikeButtonUITests.swift */,
 				DDE9AEBD5BA2B164257393A4 /* DSStepperUITests.swift */,
@@ -469,6 +475,7 @@
 				A14C81E6450DADAAF6A9969A /* LayoutScreen.swift in Sources */,
 				465C15F26BDA5B1683EFC6EA /* KeypadScreen.swift in Sources */,
 				8DE9E994939D7A39ED0DB8DA /* TagFieldScreen.swift in Sources */,
+				33F39BA8C11A4DCD67D2B343 /* DayStripScreen.swift in Sources */,
 				19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */,
 				082BEF0D46A09DA15494568B /* LikeButtonScreen.swift in Sources */,
 				C2F40AC349EC5B77AC7D262B /* ListsScreen.swift in Sources */,
@@ -518,6 +525,7 @@
 				7A8B6235209934820F1F6286 /* DSToggleUITests.swift in Sources */,
 				5F0993FAC2F09BD4227ADAD2 /* DSKeypadUITests.swift in Sources */,
 				495C01732177BC8A98A2F705 /* DSTagFieldUITests.swift in Sources */,
+				266D89616E0CB2F9C85C2E40 /* DSDayStripUITests.swift in Sources */,
 				525B09CE7D196C37335F8CFF /* DSRangeSliderUITests.swift in Sources */,
 				C1E60F379D80F2CA66564BD6 /* DSLikeButtonUITests.swift in Sources */,
 				5CF6A1115502170B3926387A /* DSStepperUITests.swift in Sources */,
