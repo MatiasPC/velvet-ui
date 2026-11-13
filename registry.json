@@ -667,6 +667,20 @@
       "stage": "DSTagField"
     },
     {
+      "name": "DSDayStrip",
+      "category": "inputs",
+      "summary": "Horizontal strip of days to pick one from (bookings, habit history, delivery slots): an accent capsule that springs to the tapped day, a dot on today, one adjustable control for VoiceOver.",
+      "symbols": [
+        "DSDayStrip"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSDayStrip.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSDayStrip.md",
+      "stage": "DSDayStrip"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",

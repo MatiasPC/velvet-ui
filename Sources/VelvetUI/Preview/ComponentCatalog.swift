@@ -76,6 +76,7 @@ struct ComponentCatalog: View {
     @State private var postLikes = 128
     @State private var keypadAmount = ""
     @State private var catalogTags = ["SwiftUI", "Motion"]
+    @State private var catalogDay = Date.now
     @State private var rangePrice: ClosedRange<Double> = 100...400
 
     var body: some View {
@@ -856,6 +857,22 @@ struct ComponentCatalog: View {
                         VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             DSTagField(tags: $catalogTags, placeholder: "Add a skill", maxTags: 6)
                             Text("Return or a comma makes a tag; tap one to remove it. Duplicates wiggle.")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Day Strip
+                section("Day Strip") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSDayStrip(
+                                selection: $catalogDay,
+                                in: Calendar.current.startOfDay(for: .now)...(Calendar.current.date(byAdding: .day, value: 21, to: .now) ?? .now),
+                                accessibilityLabel: "Booking day"
+                            )
+                            Text("Tap a day: the capsule springs over and the strip recentres. Today has a dot.")
                                 .ds(.footnote, color: DSColors.textSecondary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)

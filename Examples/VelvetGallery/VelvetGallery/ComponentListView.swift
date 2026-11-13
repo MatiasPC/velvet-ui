@@ -52,6 +52,7 @@ struct ComponentListView: View {
                 row("Toggle", "Switches") { ToggleScreen() }
                 row("Checkbox", "Pick any, with a drawn tick") { CheckboxScreen() }
                 row("Segmented Control", "Pick one") { SegmentedControlScreen() }
+                row("Day Strip", "Pick a day, nearby days one tap away") { DayStripScreen() }
                 row("Radio Group", "Pick one from a list") { RadioGroupScreen() }
                 row("Chip", "Selectable pills that wrap") { ChipScreen() }
                 row("Stepper", "Numeric input") { StepperScreen() }
