@@ -45,6 +45,7 @@ public struct DSSegmentedControl<Value: Hashable>: View {
 
     @Namespace private var namespace
     @DSThemed private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// - Parameter accent: Underline fill / selected label color (underline style). Defaults to the theme accent.
     public init(
@@ -55,7 +56,8 @@ public struct DSSegmentedControl<Value: Hashable>: View {
         haptic: DSHapticStyle = .selection
     ) {
         self._selection = selection
-        self.segments = segments
+        // Duplicate values would give ForEach duplicate IDs; the first one wins.
+        self.segments = DSSegmentedControlLogic.uniqueIndices(of: segments.map(\.value)).map { segments[$0] }
         self.style = style
         self.accent = accent
         self.haptic = haptic
@@ -63,8 +65,8 @@ public struct DSSegmentedControl<Value: Hashable>: View {
 
     public var body: some View {
         HStack(spacing: DSSpacing.xxs) {
-            ForEach(segments) { segment in
-                segmentButton(segment)
+            ForEach(Array(segments.enumerated()), id: \.element.id) { index, segment in
+                segmentButton(segment, index: index)
             }
         }
         .padding(style == .pill ? DSSpacing.xxs : 0)
@@ -74,23 +76,26 @@ public struct DSSegmentedControl<Value: Hashable>: View {
 
     // MARK: - Segments
 
-    private func segmentButton(_ segment: DSSegment<Value>) -> some View {
+    private func segmentButton(_ segment: DSSegment<Value>, index: Int) -> some View {
         let isSelected = segment.value == selection
         return Button {
-            guard !isSelected else { return }
+            guard DSSegmentedControlLogic.shouldSelect(segment.value, current: selection) else { return }
             DSHapticEngine.shared.fire(haptic)
-            withAnimation(DSAnimation.springSnappy) {
+            withAnimation(reduceMotion ? DSAnimation.fast : DSAnimation.springSnappy) {
                 selection = segment.value
             }
         } label: {
             HStack(spacing: DSSpacing.xs) {
                 if let icon = segment.icon {
                     Image(systemName: icon)
-                        .font(.system(size: 13, weight: .semibold))
+                        .dsFont(.buttonSmall)
                         .accessibilityHidden(!segment.title.isEmpty)
                 }
-                Text(segment.title)
-                    .font(DSTextStyle.buttonSmall.font)
+                if !segment.title.isEmpty {
+                    Text(segment.title)
+                        .dsFont(.buttonSmall)
+                        .lineLimit(1)
+                }
             }
             .foregroundStyle(labelColor(isSelected: isSelected))
             .frame(maxWidth: .infinity)
@@ -102,6 +107,7 @@ public struct DSSegmentedControl<Value: Hashable>: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityValue(DSSegmentedControlLogic.accessibilityValue(index: index, count: segments.count))
     }
 
     // MARK: - Selection Indicator
@@ -113,7 +119,7 @@ public struct DSSegmentedControl<Value: Hashable>: View {
             case .pill:
                 Capsule(style: .continuous)
                     .fill(theme.palette.backgroundElevated)
-                    .matchedGeometryEffect(id: "indicator", in: namespace)
+                    .modifier(slidingIndicator)
                     .dsShadow(.sm)
             case .underline:
                 VStack(spacing: 0) {
@@ -121,10 +127,19 @@ public struct DSSegmentedControl<Value: Hashable>: View {
                     Capsule(style: .continuous)
                         .fill(accent ?? theme.accent)
                         .frame(height: 2)
-                        .matchedGeometryEffect(id: "indicator", in: namespace)
+                        .modifier(slidingIndicator)
                 }
             }
         }
+    }
+
+    /// Shared geometry slides the indicator between segments. Under Reduce
+    /// Motion it doesn't travel: the old one fades out and the new one fades in.
+    private var slidingIndicator: DSSegmentIndicatorGeometry {
+        DSSegmentIndicatorGeometry(
+            namespace: namespace,
+            slides: DSSegmentedControlLogic.slidesIndicator(reduceMotion: reduceMotion)
+        )
     }
 
     // MARK: - Track
@@ -154,6 +169,50 @@ public struct DSSegmentedControl<Value: Hashable>: View {
         case .underline:
             return isSelected ? (accent ?? theme.ink) : theme.palette.textSecondary
         }
+    }
+}
+
+// MARK: - Indicator Geometry
+
+private struct DSSegmentIndicatorGeometry: ViewModifier {
+    let namespace: Namespace.ID
+    let slides: Bool
+
+    func body(content: Content) -> some View {
+        if slides {
+            content.matchedGeometryEffect(id: "indicator", in: namespace)
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - Logic
+
+/// The control's rules, kept pure so `DSSegmentedControlTests` can pin them
+/// without rendering.
+enum DSSegmentedControlLogic {
+    /// Indices of the first segment for each value, in order. Later segments
+    /// that repeat a value are dropped so every `ForEach` ID is unique.
+    static func uniqueIndices<V: Hashable>(of values: [V]) -> [Int] {
+        var seen = Set<V>()
+        return values.indices.filter { seen.insert(values[$0]).inserted }
+    }
+
+    /// A tap commits (and fires the haptic) only when it picks a different value.
+    static func shouldSelect<V: Hashable>(_ tapped: V, current: V) -> Bool {
+        tapped != current
+    }
+
+    /// The segment's position, read after its label and traits: "2 of 3",
+    /// like the system segmented control.
+    static func accessibilityValue(index: Int, count: Int) -> String {
+        "\(index + 1) of \(count)"
+    }
+
+    /// The indicator slides between segments unless Reduce Motion is on.
+    static func slidesIndicator(reduceMotion: Bool) -> Bool {
+        !reduceMotion
     }
 }
 
