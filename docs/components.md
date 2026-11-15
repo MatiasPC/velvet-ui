@@ -725,6 +725,18 @@ A horizontal strip of days (short weekday over the number) in a `ScrollView` + `
 
 ---
 
+## DSCountdown  ✅
+
+`Components/DSCountdown.swift`. No dependencies beyond the core.
+
+```swift
+DSCountdown(to target: Date, accent: Color? = nil, haptic: DSHapticStyle = .success, accessibilityLabel: String = "Time remaining", onFinish: (() -> Void)? = nil)
+```
+
+A live countdown in a row of flat `theme.subtleFill` tiles (days, hours, minutes, seconds; minutes and seconds always, hours from 1 h left, days from 1 day left) whose digits roll down with `.numericText(countsDown: true)` on `springSnappy`. A `.task(id: target)` loop sleeps to each whole-second boundary before the target (no `Timer`), so it never drifts. The last ten seconds fill the seconds tile with the accent; zero fires `haptic` once and calls `onFinish` once (quietly, with no haptic, when the target had already passed). The rules are `DSCountdownLogic` (internal, unit-tested): `remainingSeconds` (rounded up, never negative, capped), `parts`, `units`, `digits`, `delayToNextTick`, `isUrgent`, `accessibilityValue` ("1 day, 2 hours, 5 seconds") and a `Tracker` that fires the finish once. VoiceOver sees one element with the "updates frequently" trait.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.
