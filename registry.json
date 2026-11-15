@@ -681,6 +681,20 @@
       "stage": "DSDayStrip"
     },
     {
+      "name": "DSCountdown",
+      "category": "display",
+      "summary": "Live countdown to a date in rolling-digit tiles (days, hours, minutes, seconds): accent final ten seconds, a haptic and onFinish at zero.",
+      "symbols": [
+        "DSCountdown"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCountdown.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSCountdown.md",
+      "stage": "DSCountdown"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",

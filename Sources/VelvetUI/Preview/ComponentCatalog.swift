@@ -77,6 +77,7 @@ struct ComponentCatalog: View {
     @State private var keypadAmount = ""
     @State private var catalogTags = ["SwiftUI", "Motion"]
     @State private var catalogDay = Date.now
+    @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var rangePrice: ClosedRange<Double> = 100...400
 
     var body: some View {
@@ -924,6 +925,19 @@ struct ComponentCatalog: View {
                             DSNumberTicker(tickerValue, format: .currency(code: "USD"))
                             DSButton("Random jump", variant: .ghost, size: .small) {
                                 tickerValue = Double.random(in: 0...50_000).rounded()
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Countdown
+                section("Countdown") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSCountdown(to: countdownTarget, accessibilityLabel: "Offer ends in")
+                            DSButton("Restart at 15 s", variant: .ghost, size: .small) {
+                                countdownTarget = .now.addingTimeInterval(15)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
