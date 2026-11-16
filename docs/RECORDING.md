@@ -154,6 +154,7 @@ sips -Z 1600 cropped.png --out docs/media/showcase.png
 | `DSCheckbox` | Autoplay: checks three items one by one (tick draws on), then unchecks them. |
 | `DSAudioBars` | Autoplay: a simulated voice drives the level for a few seconds, then the bars ease to rest. |
 | `DSDisclosureGroup` | Autoplay: opens the three FAQ rows in turn (one open at a time), then closes them all. Tap a row by hand to see the press and the spring. |
+| `DSPasswordStrength` | A sign-up card with a visible password field. Autoplay: the password grows from empty to "sunflower7!Kite" (Weak, Fair, Good, Strong; the haptic lands at Strong), then "password1" drops it to Weak. Type by hand to watch the hint change. |
 | `DSCountdown` | A sale countdown with days to go, and a twelve-second "resend the code" countdown (the last ten seconds in accent). Autoplay: when it reaches zero it restarts after a beat; without autoplay, tap "Resend code". |
 | `DSDayStrip` | Autoplay: the selection springs to tomorrow, then two, four and three days out, and back to today (the strip recentres each time). Tap days by hand for the press dip and the tick. |
 | `DSTagField` | Autoplay: skills are added and removed in a loop (pills pop in and out). Type by hand for the commit tick, a duplicate for the wiggle, and a fifth skill to hit the limit. |

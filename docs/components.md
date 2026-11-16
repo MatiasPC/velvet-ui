@@ -737,6 +737,19 @@ A live countdown in a row of flat `theme.subtleFill` tiles (days, hours, minutes
 
 ---
 
+## DSPasswordStrength  ✅
+
+`Components/DSPasswordStrength.swift`. No dependencies beyond the core.
+
+```swift
+DSPasswordStrength(password: String, minLength: Int = 8, haptic: DSHapticStyle = .light, accessibilityLabel: String = "Password strength")
+DSPasswordStrength.level(of: String, minLength: Int = 8) -> DSPasswordStrengthLevel   // .empty .weak .fair .good .strong (Comparable)
+```
+
+A strength meter for a new password: four flat `theme.subtleFill` capsules whose filled segments grow from the leading edge on `springSnappy` in `palette.error` / `.warning` / `.success`, over the level ("Weak" … "Strong") and one hint ("Add a number", "Avoid common passwords"). The rules are `DSPasswordStrengthLogic` (internal, unit-tested): `analyze` (length, kinds of character, distinct characters, a common password with digits and symbols around it, a straight run of four), `level` (Weak below `minLength`, common, or ≤ 3 distinct; otherwise one point per kind plus length bonuses at `minLength + 4`, ×2 and ×3, minus one for a run: ≤ 2 Fair, 3–4 Good, 5+ Strong), `hint`, `filledSegments`, `accessibilityValue`, `firesHaptic` (only on becoming Strong) and `announcement`. VoiceOver sees one element ("Fair. Add a number"); level changes are announced. Reduce Motion fades segments instead of growing them.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.

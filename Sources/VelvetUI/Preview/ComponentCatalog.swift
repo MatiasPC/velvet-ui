@@ -76,6 +76,7 @@ struct ComponentCatalog: View {
     @State private var postLikes = 128
     @State private var keypadAmount = ""
     @State private var catalogTags = ["SwiftUI", "Motion"]
+    @State private var catalogPassword = "sunflower"
     @State private var catalogDay = Date.now
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var rangePrice: ClosedRange<Double> = 100...400
@@ -859,6 +860,17 @@ struct ComponentCatalog: View {
                             DSTagField(tags: $catalogTags, placeholder: "Add a skill", maxTags: 6)
                             Text("Return or a comma makes a tag; tap one to remove it. Duplicates wiggle.")
                                 .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Password Strength
+                section("Password Strength") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSTextField(label: "New password", placeholder: "At least 8 characters", text: $catalogPassword, isSecure: true)
+                            DSPasswordStrength(password: catalogPassword)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
