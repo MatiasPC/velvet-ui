@@ -695,6 +695,21 @@
       "stage": "DSCountdown"
     },
     {
+      "name": "DSPasswordStrength",
+      "category": "inputs",
+      "summary": "Strength meter for a new password: four segments that fill and change colour, the level and the one change that helps most; length-first rules, common passwords stay weak.",
+      "symbols": [
+        "DSPasswordStrength",
+        "DSPasswordStrengthLevel"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSPasswordStrength.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSPasswordStrength.md",
+      "stage": "DSPasswordStrength"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
