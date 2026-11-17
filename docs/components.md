@@ -338,7 +338,7 @@ Drag-to-rate with `.selection` tick per star and `.light` on release; active sta
 
 `Components/DSPageControl.swift`.
 
-**Accessibility:** One adjustable element: label "Page", value "N of M" (1-based); swipe up/down changes page when `allowsTap` is true, read-only otherwise. Dots hidden. Override with `.accessibilityLabel(...)`.
+**Accessibility:** One element: label "Page", value "N of M" (1-based, clamped); adjustable (swipe up/down, stops at the ends) only when `allowsTap` is true. Hidden when there are no pages. Override with `.accessibilityLabel(...)`.
 
 ```swift
 DSPageControl(currentPage: Binding<Int>, numberOfPages: Int,
@@ -347,7 +347,7 @@ DSPageControl(currentPage: Binding<Int>, numberOfPages: Int,
               allowsTap: Bool = true)
 ```
 
-Active dot expands into a capsule with `springSmooth`; tapping a dot fires `.selection`. Defaults: `accent` / `palette.border`.
+Active dot expands into a capsule with `springSmooth` (in place under Reduce Motion); tapping a dot fires `.selection`. The touch area is a 44 pt row with no gaps, mapped to the nearest dot (`DSPageControlLogic`); the layout keeps the dot height. A negative `numberOfPages` draws nothing. Defaults: `accent` / `palette.border`.
 
 ---
 
