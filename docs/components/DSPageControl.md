@@ -44,7 +44,7 @@ struct PageControlDemo: View {
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `currentPage` | `Binding<Int>` | required | Index of the selected page. |
-| `numberOfPages` | `Int` | required | Total number of pages. |
+| `numberOfPages` | `Int` | required | Total number of pages. Zero or less draws nothing. |
 | `activeColor` | `Color?` | `nil` | Selected indicator fill. Defaults to the theme accent. |
 | `inactiveColor` | `Color?` | `nil` | Unselected dot fill. Defaults to the palette border color. |
 | `dotSize` | `CGFloat` | `DSSpacing.xs` | Diameter of an unselected dot (also the control height). |
@@ -61,13 +61,17 @@ struct PageControlDemo: View {
 
 ## Behavior
 
-- The selected dot stretches into a capsule with a smooth spring as the page changes.
-- Tapping a dot fires a selection haptic.
+- The selected dot stretches into a capsule with a smooth spring as the page changes. Under Reduce Motion it changes in place.
+- Tapping a dot fires a selection haptic; tapping the current dot does nothing.
+- The dots stay small, but the touch area is a 44 pt tall row with no gaps: a tap goes to the nearest dot, and a tap past either end goes to that end. The layout size doesn't change. Mirrored in right-to-left layouts.
+- A `currentPage` outside `0..<numberOfPages` is drawn and read as the nearest page.
+- With `allowsTap: false` the control takes no touches, so they reach the view behind it.
 
 ## Accessibility
 
-- One adjustable element labelled "Page" with the value "2 of 5". Swipe up or down to change pages.
-- When `allowsTap` is false it is read-only.
+- One adjustable element labelled "Page" with the value "2 of 5". Swipe up or down to change pages; it stops at the first and last page.
+- When `allowsTap` is false it is read-only and isn't announced as adjustable.
+- With no pages it is hidden from VoiceOver.
 - Dynamic Type: dot sizes come from `dotSize`, so they don't scale with text size.
 
 ## See also
