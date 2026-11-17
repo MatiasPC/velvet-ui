@@ -25,8 +25,6 @@ final class DSLikeButtonUITests: XCTestCase {
         XCTAssertTrue(save.waitForExistence(timeout: 5))
 
         for _ in 0..<5 { save.tap() }   // odd number of taps: ends liked
-        // XCUITest waits for the app to go idle between taps, and each like plays
-        // its pop and halo, so the last value lands a few seconds after the taps.
-        XCTAssertTrue(save.waitForValue("Liked", timeout: 15), "Got \(save.stringValue ?? "nil")")
+        XCTAssertTrue(save.waitForValue("Liked"), "Got \(save.stringValue ?? "nil")")
     }
 }
