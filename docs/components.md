@@ -750,6 +750,20 @@ A strength meter for a new password: four flat `theme.subtleFill` capsules whose
 
 ---
 
+## DSSwipeDeck  ✅
+
+`Components/DSSwipeDeck.swift`. No dependencies beyond the core.
+
+```swift
+DSSwipeDeck(_ items: Binding<[Item]>, leftLabel: String = "Pass", rightLabel: String = "Like",
+            haptic: DSHapticStyle = .medium, onSwipe: (Item, DSSwipeDirection) -> Void = { _, _ in },
+            @ViewBuilder content: (Item) -> Content)   // Item: Identifiable; DSSwipeDirection: .left .right
+```
+
+A stack of cards to decide on one at a time. The top card follows the finger 1:1 (in global space), leans up to 12° around its bottom edge, and on release leaves past 40% of the width or on a flick (moved 10%, predicted to travel a full width the same way); otherwise it springs back on `springSnappy`. A leaving card flies 1.6 widths out on `springSnappy`, then the deck removes it from the binding on `springSmooth` and calls `onSwipe`. Up to three `.solid` cards are drawn; each one back is 5% smaller (anchored at the bottom) and `DSSpacing.sm` lower, and the next card's depth shrinks with the drag's progress so it is in place when the top card leaves. The rules are `DSSwipeDeckLogic` (internal, unit-tested): `progress`, `isArmed`, `decision`, `lean`, `exitOffset`, `depth`, `scale`, `offset`, `visibleCount`, `accessibilityValue` and `announcement`. Haptics: one `.selection` per crossing of the line, `haptic` on leaving. VoiceOver: the top card is one element ("4 cards left") with the two labels as actions, and every decision is announced. Reduce Motion: no lean, a commit fades the card in place.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.

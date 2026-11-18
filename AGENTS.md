@@ -71,6 +71,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Pick a day from nearby days (booking, habit history, delivery slot) | `DSDayStrip(selection:in:accessibilityLabel:)` | `Date` binding; `in:` is the first...last day. A tap writes the start of that day. Show the full date yourself if the screen needs it. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |
 | Like / favorite / bookmark toggle | `DSLikeButton(isLiked:count:symbol:emptySymbol:accessibilityLabel:)` | Pops and radiates a halo when a tap likes. Pass `accessibilityLabel:` that matches a swapped symbol (default "Like"); `count` is display-only, so update it in `.onChange(of: isLiked)`. |
+| Decide on cards one at a time (match or recipe picker, flashcards, triage) | `DSSwipeDeck(_:leftLabel:rightLabel:onSwipe:content:)` | `[Item]` binding, top card first; a swiped card is removed, then `onSwipe(item, direction)` runs. Give it a size. Keep it out of a vertical `ScrollView`. Fires its own haptic. |
 | Text input | `DSTextField(label:placeholder:icon:text:state:)` | `DSSearchBar(text:)` for search. |
 | One-time code | `DSCodeField(code:state:onComplete:)` | SMS autofill on iOS. |
 | New-password strength (sign-up, change password) | `DSPasswordStrength(password:minLength:)` | Under the field, same text. Gate submit with `DSPasswordStrength.level(of:) >= .good`. Advisory: enforce real rules on the server. Fires its own haptic at Strong. |

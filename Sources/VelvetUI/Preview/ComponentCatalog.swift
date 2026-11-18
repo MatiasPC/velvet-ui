@@ -14,6 +14,11 @@ private struct CatalogPage: Identifiable {
     let id: Int
 }
 
+/// A card for the swipe deck section.
+private struct CatalogSwipeCard: Identifiable {
+    let id: String
+}
+
 struct ComponentCatalog: View {
     @State private var theme = DSTheme()
     @State private var useBackdrop = true
@@ -77,6 +82,7 @@ struct ComponentCatalog: View {
     @State private var keypadAmount = ""
     @State private var catalogTags = ["SwiftUI", "Motion"]
     @State private var catalogPassword = "sunflower"
+    @State private var swipeCards = ["Lisbon", "Kyoto", "Oslo"].map(CatalogSwipeCard.init)
     @State private var catalogDay = Date.now
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var rangePrice: ClosedRange<Double> = 100...400
@@ -862,6 +868,21 @@ struct ComponentCatalog: View {
                                 .ds(.footnote, color: DSColors.textSecondary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Swipe Deck
+                section("Swipe Deck") {
+                    VStack(spacing: DSSpacing.sm) {
+                        DSSwipeDeck($swipeCards, leftLabel: "Skip", rightLabel: "Save") { card in
+                            Text(card.id)
+                                .ds(.title2)
+                                .padding(DSSpacing.lg)
+                        }
+                        .aspectRatio(4 / 3, contentMode: .fit)
+                        DSButton("Refill", variant: .ghost, size: .small) {
+                            swipeCards = ["Lisbon", "Kyoto", "Oslo"].map(CatalogSwipeCard.init)
+                        }
                     }
                 }
 

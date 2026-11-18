@@ -710,6 +710,21 @@
       "stage": "DSPasswordStrength"
     },
     {
+      "name": "DSSwipeDeck",
+      "category": "containers",
+      "summary": "Stack of cards to decide on one at a time: swipe the top card right or left past the line (or flick it) and it flies off, short of it it springs back; VoiceOver gets both directions as actions.",
+      "symbols": [
+        "DSSwipeDeck",
+        "DSSwipeDirection"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSwipeDeck.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSwipeDeck.md",
+      "stage": "DSSwipeDeck"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
