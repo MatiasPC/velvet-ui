@@ -177,7 +177,7 @@ struct SwipeDeckStage: View {
                     return
                 }
                 let save = trips.count % 2 == 1
-                withAnimation(DSAnimation.springSmooth) { trips.removeFirst() }
+                withAnimation(DSAnimation.springSmooth) { _ = trips.removeFirst() }
                 if save { saved += 1 } else { skipped += 1 }
             }
         }
