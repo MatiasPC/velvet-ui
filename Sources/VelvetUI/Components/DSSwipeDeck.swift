@@ -256,16 +256,19 @@ public struct DSSwipeDeck<Item: Identifiable, Content: View>: View {
             .allowsHitTesting(isTop && leaving == nil)
             .gesture(dragGesture, including: isTop ? .all : .subviews)
             .transition(.scale(scale: DSSwipeDeckLogic.scale(depth: 1), anchor: .bottom).combined(with: .opacity))
-            // Only the top card is an element. A card behind it hides its content
-            // *before* it is merged and ignores its children, so nothing of it is
-            // left to merge; hiding the merged element alone still exposed it. The
-            // modifiers stay the same for every card (no `if`), so promoting a card
-            // to the top doesn't change its identity.
-            .accessibilityHidden(!isTop)
+            // Only the top card is an element. Cards behind it ignore their children
+            // and carry no actions: an element with named actions stays in the
+            // accessibility tree even when it's marked hidden. The actions come from
+            // a builder with an `if`, so every card keeps the same modifier chain and
+            // a card promoted to the top keeps its identity.
             .accessibilityElement(children: isTop ? .combine : .ignore)
             .accessibilityValue(isTop ? DSSwipeDeckLogic.accessibilityValue(remaining: items.count) : "")
-            .accessibilityAction(named: Text(rightLabel)) { commit(.right) }
-            .accessibilityAction(named: Text(leftLabel)) { commit(.left) }
+            .accessibilityActions {
+                if isTop {
+                    Button(rightLabel) { commit(.right) }
+                    Button(leftLabel) { commit(.left) }
+                }
+            }
             .accessibilityHidden(!isTop)
     }
 
