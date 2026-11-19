@@ -219,6 +219,10 @@ public struct DSSwipeDeck<Item: Identifiable, Content: View>: View {
                 card(pair.element, index: pair.offset, progress: progress)
             }
         }
+        // Only the top card is an element. Hiding the cards behind it modifier by
+        // modifier left them findable (see docs/engineering-notes.md), so the whole
+        // stack is replaced for assistive technologies instead.
+        .accessibilityRepresentation { topCardRepresentation }
         .padding(.bottom, DSSwipeDeckLogic.stackRoom)
         .onGeometryChange(for: CGFloat.self) { proxy in
             proxy.size.width
@@ -256,20 +260,25 @@ public struct DSSwipeDeck<Item: Identifiable, Content: View>: View {
             .allowsHitTesting(isTop && leaving == nil)
             .gesture(dragGesture, including: isTop ? .all : .subviews)
             .transition(.scale(scale: DSSwipeDeckLogic.scale(depth: 1), anchor: .bottom).combined(with: .opacity))
-            // Only the top card is an element. Cards behind it ignore their children
-            // and carry no actions: an element with named actions stays in the
-            // accessibility tree even when it's marked hidden. The actions come from
-            // a builder with an `if`, so every card keeps the same modifier chain and
-            // a card promoted to the top keeps its identity.
-            .accessibilityElement(children: isTop ? .combine : .ignore)
-            .accessibilityValue(isTop ? DSSwipeDeckLogic.accessibilityValue(remaining: items.count) : "")
-            .accessibilityActions {
-                if isTop {
+    }
+
+    // MARK: Accessibility
+
+    /// What VoiceOver gets in place of the whole stack: the top card alone, merged
+    /// into one element whose value is the cards left, with both directions as
+    /// actions. The cards behind it and the chips are not in the tree at all,
+    /// because the representation replaces every element the stack would expose.
+    @ViewBuilder
+    private var topCardRepresentation: some View {
+        if let top = items.first {
+            content(top)
+                .accessibilityElement(children: .combine)
+                .accessibilityValue(DSSwipeDeckLogic.accessibilityValue(remaining: items.count))
+                .accessibilityActions {
                     Button(rightLabel) { commit(.right) }
                     Button(leftLabel) { commit(.left) }
                 }
-            }
-            .accessibilityHidden(!isTop)
+        }
     }
 
     /// The direction's label fades in on the side the card is leaving from: the right
