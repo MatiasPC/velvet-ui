@@ -41,6 +41,7 @@ struct ComponentListView: View {
                 row("Flip Card", "Two-sided glass, turns in 3D") { FlipCardScreen() }
 
                 row("Tilt Card", "Tips toward the finger, sliding sheen") { TiltCardScreen() }
+                row("Swipe Deck", "Decide on cards one at a time") { SwipeDeckScreen() }
                 row("Sheet", "Native sheet, Velvet chrome") { SheetScreen() }
                 row("Flow Layout", "Wraps to new rows, reflows with a spring") { FlowLayoutScreen() }
                 row("Disclosure Group", "Glass accordion that springs open") { DisclosureGroupScreen() }
