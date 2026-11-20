@@ -58,6 +58,7 @@ struct StageView: View {
         case .DSLikeButton:        LikeButtonStage()
         case .DSKeypad:            KeypadStage(autoplay: autoplay)
         case .DSRangeSlider:       RangeSliderStage(autoplay: autoplay)
+        case .DSCircularSlider:    CircularSliderStage(autoplay: autoplay)
         case .DSTagField:          TagFieldStage(autoplay: autoplay)
         case .DSDayStrip:          DayStripStage(autoplay: autoplay)
         case .DSCountdown:         CountdownStage(autoplay: autoplay)

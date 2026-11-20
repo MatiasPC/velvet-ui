@@ -67,6 +67,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Pick one from a list of options (plan, payment) | `DSRadioGroup(selection:options:)` | Any `Hashable` value; wrap in `DSCard`; `.accessibilityLabel("…")` on the group. |
 | Continuous value (volume, price, opacity) | `DSSlider(value:in:step:)` | `Double` binding, default `0...1`; pass `step` for notches. It draws no value: show your own read-out. Add `.accessibilityLabel(…)`. |
 | A span: min and max (price filter, age, hours) | `DSRangeSlider(range:in:step:minimumDistance:)` | `ClosedRange<Double>` binding; the knobs never cross and keep `minimumDistance` apart. Draws no values: show your own read-out. Add `.accessibilityLabel(…)`. |
+| A value on a dial (thermostat, timer, volume knob) | `DSCircularSlider(value:in:step:accessibilityLabel:content:)` | `Double` binding, default `0...1`; the closure draws your read-out in the middle. Square: give it a `frame`. It holds at an end instead of jumping across the gap. |
 | Pick one of 2–4 options | `DSSegmentedControl(selection:options:)` | `style: .underline` for a tab-like look. |
 | Pick a day from nearby days (booking, habit history, delivery slot) | `DSDayStrip(selection:in:accessibilityLabel:)` | `Date` binding; `in:` is the first...last day. A tap writes the start of that day. Show the full date yourself if the screen needs it. |
 | Star rating | `DSRating(rating:)` / `DSRating(value:)` (read-only) | |

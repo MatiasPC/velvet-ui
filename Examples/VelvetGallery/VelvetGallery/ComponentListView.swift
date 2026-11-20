@@ -60,6 +60,7 @@ struct ComponentListView: View {
                 row("Stepper", "Numeric input") { StepperScreen() }
                 row("Slider", "Continuous value, optional notches") { SliderScreen() }
                 row("Range Slider", "Two knobs, a span between them") { RangeSliderScreen() }
+                row("Circular Slider", "A value on a dial") { CircularSliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
                 row("Like Button", "A pop and a halo on the way in") { LikeButtonScreen() }
                 row("Keypad", "Amounts and passcodes") { KeypadScreen() }
