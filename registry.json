@@ -620,6 +620,22 @@
       "stage": "DSRangeSlider"
     },
     {
+      "name": "DSCircularSlider",
+      "category": "inputs",
+      "summary": "A value on a 270° dial (thermostat, timer, volume knob) with your read-out in the middle: drag around the ring, it holds at the ends instead of jumping the gap, with notch ticks and a firm stop.",
+      "symbols": [
+        "DSCircularSlider"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCircularSlider.swift"
+      ],
+      "dependencies": [
+        "DSSlider"
+      ],
+      "docs": "docs/components/DSCircularSlider.md",
+      "stage": "DSCircularSlider"
+    },
+    {
       "name": "DSLikeButton",
       "category": "inputs",
       "summary": "A like / favorite / bookmark toggle: the symbol swaps with a replace transition, pops, and radiates one filled halo; optional rolling count.",

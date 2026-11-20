@@ -86,6 +86,7 @@ struct ComponentCatalog: View {
     @State private var catalogDay = Date.now
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var rangePrice: ClosedRange<Double> = 100...400
+    @State private var dialTemperature: Double = 21
 
     var body: some View {
         NavigationStack {
@@ -856,6 +857,22 @@ struct ComponentCatalog: View {
                                 .accessibilityLabel("Price")
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Circular Slider
+                section("Circular Slider") {
+                    DSCard {
+                        DSCircularSlider(value: $dialTemperature, in: 10...30, step: 0.5,
+                                         accessibilityLabel: "Temperature") {
+                            VStack(spacing: DSSpacing.xxs) {
+                                Text(dialTemperature.formatted(.number.precision(.fractionLength(1))) + "°")
+                                    .ds(.displayMedium)
+                                Text("Heating to").ds(.footnote, color: DSColors.textSecondary)
+                            }
+                        }
+                        .frame(maxWidth: 240)
+                        .frame(maxWidth: .infinity)
                     }
                 }
 

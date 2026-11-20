@@ -677,6 +677,18 @@ Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransiti
 
 ---
 
+## DSCircularSlider  ✅
+
+`Components/DSCircularSlider.swift`. Depends on `DSSlider.swift` (`DSSliderScale`).
+
+```swift
+DSCircularSlider(value: Binding<Double>, in bounds: ClosedRange<Double> = 0...1, step: Double? = nil, accent: Color? = nil, accessibilityLabel: String = "Dial", @ViewBuilder content: () -> Content)
+```
+
+A 270° arc open at the bottom (start 135°, clockwise over the top), DSSlider's track, fill and knob bent into a ring, your content in the middle; an overload without `content` draws a bare dial. The rules are internal and unit-tested: `DSCircularSliderLogic` (`angle(ofFraction:)`, `angle(of:center:)`, and `fraction(atAngle:previous:)`, which holds at the end the drag came from in the gap and refuses a jump of more than half the arc) and `DSCircularSliderTracker` (a drag must start at least half the radius out, so the content never moves the value; once tracking, the centre fifth is ignored). `DSCircularSliderFeedback` gives DSSlider's beat: `.rigid` on arriving at an end, `.selection` per new notch. Fill and knob move by `trim` and `rotationEffect`, so a spring carries the knob along the arc, not across the chord. The ring is drawn left-to-right in every layout direction. VoiceOver: one adjustable element.
+
+---
+
 ## DSRangeSlider  ✅
 
 `Components/DSRangeSlider.swift`. Depends on `DSSlider.swift` (`DSSliderScale`).

@@ -30,6 +30,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSLikeButton
     case DSKeypad
     case DSRangeSlider
+    case DSCircularSlider
     case DSTagField
     case DSDayStrip
     case DSCountdown
