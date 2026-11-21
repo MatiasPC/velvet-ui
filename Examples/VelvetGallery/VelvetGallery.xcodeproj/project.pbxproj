@@ -85,6 +85,7 @@
 		F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */; };
 		BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */; };
 		B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */; };
+		A9D62294C101430585E0775C /* DSTextFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16485409887646582228D7D9 /* DSTextFieldUITests.swift */; };
 		F23018E4557921A914E64A29 /* DSPageControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B018E36C12C17A842D2627 /* DSPageControlUITests.swift */; };
 		525B09CE7D196C37335F8CFF /* DSRangeSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */; };
 		DD0307C012728F7A9157F011 /* DSCircularSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3374EB60B133B0EF71DDAE25 /* DSCircularSliderUITests.swift */; };
@@ -187,6 +188,7 @@
 		BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPasswordStrengthUITests.swift; sourceTree = "<group>"; };
 		5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSwipeDeckUITests.swift; sourceTree = "<group>"; };
 		5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSegmentedControlUITests.swift; sourceTree = "<group>"; };
+		16485409887646582228D7D9 /* DSTextFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTextFieldUITests.swift; sourceTree = "<group>"; };
 		E0B018E36C12C17A842D2627 /* DSPageControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPageControlUITests.swift; sourceTree = "<group>"; };
 		92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRangeSliderUITests.swift; sourceTree = "<group>"; };
 		3374EB60B133B0EF71DDAE25 /* DSCircularSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCircularSliderUITests.swift; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 				BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */,
 				5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */,
 				5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */,
+				16485409887646582228D7D9 /* DSTextFieldUITests.swift */,
 				E0B018E36C12C17A842D2627 /* DSPageControlUITests.swift */,
 				92CDA1C48C40AE23DE66A07D /* DSRangeSliderUITests.swift */,
 				3374EB60B133B0EF71DDAE25 /* DSCircularSliderUITests.swift */,
@@ -564,6 +567,7 @@
 				F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */,
 				BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */,
 				B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */,
+				A9D62294C101430585E0775C /* DSTextFieldUITests.swift in Sources */,
 				F23018E4557921A914E64A29 /* DSPageControlUITests.swift in Sources */,
 				525B09CE7D196C37335F8CFF /* DSRangeSliderUITests.swift in Sources */,
 				DD0307C012728F7A9157F011 /* DSCircularSliderUITests.swift in Sources */,

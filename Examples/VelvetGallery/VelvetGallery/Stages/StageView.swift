@@ -305,14 +305,22 @@ private struct CardStage: View {
 private struct TextFieldStage: View {
     @State private var email = ""
     @State private var password = ""
+    @State private var query = ""
 
     var body: some View {
         DSCard {
             VStack(spacing: DSSpacing.md) {
-                DSTextField(label: "Email", placeholder: "you@example.com", icon: "envelope", text: $email)
+                DSSearchBar(placeholder: "Search destinations", text: $query)
+                DSTextField(label: "Email", placeholder: "you@example.com", icon: "envelope", text: $email, state: emailState)
                 DSTextField(label: "Password", placeholder: "••••••••", icon: "lock", text: $password, isSecure: true)
             }
         }
+    }
+
+    /// Validates as you type, so the stage shows (and the UI test drives) error and success.
+    private var emailState: DSTextFieldState {
+        if email.isEmpty { return .normal }
+        return email.contains("@") && email.contains(".") ? .success : .error("Enter a valid email")
     }
 }
 
