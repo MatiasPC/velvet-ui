@@ -120,8 +120,8 @@ Four decisions are not obvious from the code. **A replacement must be a cut.** S
 Tracked here until they become issues or PRs.
 
 - **Seven legacy remote branches** (`add/ds-checkbox`, `add/ds-chip`, `add/ds-chipgroup`, `add/ds-confetti`, `add/ds-flipcard`, `add/ds-odometer`, `add/ds-slider`) predate the v0.2 merge and would revert the token layer if merged as-is. Each needs a rebase onto main before it can land. `DSConfetti` overlaps with the planned wave-2 particle work.
-- **Glass restyle pending** on DSButton (secondary/outline as glass/wash, glow on primary), DSTextField/DSSearchBar (wash + focus glow), DSCodeField (wash boxes), DSBadge `.outline`, DSToggle track, DSSegmentedControl track, DSToast (edge + radius 16), progress tracks. Colors are already theme-driven; only surfaces remain. Do it component by component after the manual walkthrough.
-- **Literals still in components**: control heights (48 text field, 44 search bar), icon sizes (12/14/16/18). Introduce `DSControlSize` / `DSIconSize` tokens when the third consumer appears, not before.
+- **Glass restyle pending** on DSButton (secondary/outline as glass/wash, glow on primary), DSTextField/DSSearchBar (wash + focus glow; the focus ring is still a `.stroke`), DSCodeField (wash boxes), DSBadge `.outline`, DSToggle track, DSSegmentedControl track, DSToast (edge + radius 16), progress tracks. Colors are already theme-driven; only surfaces remain. Do it component by component after the manual walkthrough.
+- **Literals still in components**: icon sizes (12/14/16/18). `DSTextField` / `DSSearchBar` now keep their heights and icon size in a file-private `Metrics` built from `DSSpacing`, scaled with `@ScaledMetric`. Introduce `DSControlSize` / `DSIconSize` tokens when the third consumer appears, not before.
 - **`DSAnimatedValue`** deprecated, remove in 0.3.
 - **ComponentCatalog is internal**; the showcase app (separate target, next milestone) will need its own views built on public API.
 - **No snapshot tests.** Visual regressions are caught by the manual walkthrough only. Consider swift-snapshot-testing once the showcase app exists.

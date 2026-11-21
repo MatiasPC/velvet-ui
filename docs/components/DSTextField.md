@@ -73,13 +73,17 @@ struct TextFieldDemo: View {
 ## Behavior
 
 - Focusing a field tints it with the theme ink; validation states change color and icon.
+- An error message slides in under the field and the status icon scales in, on `DSAnimation.springSnappy`. Under Reduce Motion both fade instead.
+- A `.error("")` with a blank message tints the field but shows no message.
 - The search bar's clear button fires a light haptic.
 
 ## Accessibility
 
-- The field is a standard SwiftUI `TextField` (or `SecureField`); VoiceOver uses its placeholder as the field name, and `label` is shown as visible text above it.
+- VoiceOver names the field with its visible `label` ("Email, text field"); the placeholder names it only when there is no label. The caption above the field isn't read twice.
+- An error message is announced when it appears or changes, and stays readable as the element after the field. `.success` reads "Valid"; the leading and error icons are decorative and hidden.
 - Override the spoken name with `.accessibilityLabel("Email address")`.
-- Dynamic Type: the caption above the field and the error message use `.ds(_:)` and scale. The typed text and placeholder use a fixed-size font inside a fixed-height box (48pt; `DSSearchBar` is 44pt), so they do not.
+- `DSSearchBar` is announced as a search field named by its placeholder. Its clear button reads "Clear text" and has a 44 pt touch target.
+- Dynamic Type: the caption, the typed text, the placeholder, the error message and the icons scale. The field keeps its 48 pt height (44 pt for `DSSearchBar`) at the default size and grows with larger text.
 
 ## See also
 
