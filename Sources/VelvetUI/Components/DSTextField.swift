@@ -211,13 +211,13 @@ public struct DSTextField: View {
         case .success:
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(theme.palette.success)
-                .font(.system(size: iconSize, weight: .medium))
+                .dsFont(.body)
                 .accessibilityLabel(Text(DSTextFieldLogic.statusIconLabel(for: state) ?? ""))
                 .transition(statusTransition(.dsScale))
         case .error:
             Image(systemName: "exclamationmark.circle.fill")
                 .foregroundStyle(theme.palette.error)
-                .font(.system(size: iconSize, weight: .medium))
+                .dsFont(.body)
                 .accessibilityHidden(true)
                 .transition(statusTransition(.dsScale))
         default:
