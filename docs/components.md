@@ -677,6 +677,18 @@ Favorite / like / bookmark toggle. Liking swaps the symbol with `contentTransiti
 
 ---
 
+## DSReactionBar  ✅
+
+`Components/DSReactionBar.swift`. No dependencies beyond the core.
+
+```swift
+DSReactionBar(selection: Binding<String?>, reactions: [String] = DSReactionBar.defaultReactions, accent: Color? = nil, accessibilityLabel: String = "Reaction")
+```
+
+A glass capsule of emoji (default 👍 ❤️ 😂 😮 😢 🙏) in 44 pt cells that scale with Dynamic Type. Press and slide: the emoji under the finger grows to 1.6× and rises, its neighbours less (a dock-style falloff over 1.75 cells), on `DSAnimation.interactive`; a `.selection` tick lands on each new emoji (not on the first touch). Letting go picks it (`.soft`), it jumps and falls back on a `keyframeAnimator` track, and an accent dot springs under it; picking it again clears the binding (`.light`, no jump). A finger more than 1.5 cells from the bar hovers nothing, so letting go there, or a cancelled touch, changes nothing. The rules are internal and unit-tested: `DSReactionBarLogic` (`index(at:)`, `scale(at:fingerX:)`, `lift`, `picked`, `adjusted`, `haptic`, `jumps`, `accessibilityValue`) and `DSReactionBarTracker` (hover and tick per drag). The beat belongs to the gesture: setting `selection` from code moves the dot quietly. Reduce Motion: no swell or jump, a flat wash marks the hovered emoji. VoiceOver: one adjustable element, value the emoji or "None"; down from the first reaction clears it.
+
+---
+
 ## DSCircularSlider  ✅
 
 `Components/DSCircularSlider.swift`. Depends on `DSSlider.swift` (`DSSliderScale`).
