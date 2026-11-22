@@ -83,8 +83,8 @@ final class DSReactionBarTests: XCTestCase {
     func testDegenerateInputsHoverNothing() {
         XCTAssertNil(L.index(at: CGPoint(x: 10, y: 10), cell: cell, count: 0, rowHeight: cell))
         XCTAssertNil(L.index(at: CGPoint(x: 10, y: 10), cell: 0, count: 6, rowHeight: cell))
-        XCTAssertNil(L.index(at: CGPoint(x: .nan, y: 10), cell: cell, count: 6, rowHeight: cell))
-        XCTAssertNil(L.index(at: CGPoint(x: 10, y: .infinity), cell: cell, count: 6, rowHeight: cell))
+        XCTAssertNil(L.index(at: CGPoint(x: CGFloat.nan, y: 10), cell: cell, count: 6, rowHeight: cell))
+        XCTAssertNil(L.index(at: CGPoint(x: 10, y: CGFloat.infinity), cell: cell, count: 6, rowHeight: cell))
     }
 
     // MARK: Swell
