@@ -650,6 +650,20 @@
       "stage": "DSLikeButton"
     },
     {
+      "name": "DSReactionBar",
+      "category": "inputs",
+      "summary": "A glass capsule of emoji reactions (message tapback, post reactions, feedback scale): slide across it and the emoji under the finger swells with its neighbours and ticks, let go to pick it with a jump; pick it again to take it back.",
+      "symbols": [
+        "DSReactionBar"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSReactionBar.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSReactionBar.md",
+      "stage": "DSReactionBar"
+    },
+    {
       "name": "DSKeypad",
       "category": "inputs",
       "summary": "Numeric keypad for amounts, passcodes and quantities: keys that dip and tick, the locale's decimal separator, and a wiggle for a key the value refuses.",

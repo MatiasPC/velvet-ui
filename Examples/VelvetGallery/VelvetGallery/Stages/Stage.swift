@@ -31,6 +31,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSKeypad
     case DSRangeSlider
     case DSCircularSlider
+    case DSReactionBar
     case DSTagField
     case DSDayStrip
     case DSCountdown

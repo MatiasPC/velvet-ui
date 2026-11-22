@@ -159,6 +159,7 @@ sips -Z 1600 cropped.png --out docs/media/showcase.png
 | `DSCountdown` | A sale countdown with days to go, and a twelve-second "resend the code" countdown (the last ten seconds in accent). Autoplay: when it reaches zero it restarts after a beat; without autoplay, tap "Resend code". |
 | `DSDayStrip` | Autoplay: the selection springs to tomorrow, then two, four and three days out, and back to today (the strip recentres each time). Tap days by hand for the press dip and the tick. |
 | `DSTagField` | Autoplay: skills are added and removed in a loop (pills pop in and out). Type by hand for the commit tick, a duplicate for the wiggle, and a fifth skill to hit the limit. |
+| `DSReactionBar` | Autoplay: the reaction moves from ❤️ to 😂 to 👍 and back to none (the dot springs between them, quietly). Slide across the bar by hand for the swell and the ticks, let go for the jump, and pick the same emoji again to take it back. |
 | `DSCircularSlider` | Autoplay: the thermostat springs between a few temperatures, including both ends. Drag around the ring by hand, then into the gap at the bottom, to feel it hold at the end. |
 | `DSRangeSlider` | Autoplay: the price window glides through a few spans, including the narrowest one ($50). Drag a knob into the other by hand to feel it stop at the gap. |
 | `DSKeypad` | Autoplay: types $24.50, then deletes it. Tap the keys by hand for the press dip, and a second "." for the refusal wiggle. |

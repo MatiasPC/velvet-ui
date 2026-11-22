@@ -63,6 +63,7 @@ struct ComponentListView: View {
                 row("Circular Slider", "A value on a dial") { CircularSliderScreen() }
                 row("Rating", "Star input") { RatingScreen() }
                 row("Like Button", "A pop and a halo on the way in") { LikeButtonScreen() }
+                row("Reaction Bar", "Slide across emoji, let go to react") { ReactionBarScreen() }
                 row("Keypad", "Amounts and passcodes") { KeypadScreen() }
                 row("Page Control", "Paged content") { PageControlScreen() }
             }

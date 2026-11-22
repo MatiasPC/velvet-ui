@@ -87,6 +87,7 @@ struct ComponentCatalog: View {
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var rangePrice: ClosedRange<Double> = 100...400
     @State private var dialTemperature: Double = 21
+    @State private var catalogReaction: String? = "❤️"
 
     var body: some View {
         NavigationStack {
@@ -874,6 +875,16 @@ struct ComponentCatalog: View {
                         .frame(maxWidth: 240)
                         .frame(maxWidth: .infinity)
                     }
+                }
+
+                // MARK: - Reaction Bar
+                section("Reaction Bar") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        DSReactionBar(selection: $catalogReaction)
+                        Text(catalogReaction.map { "You reacted \($0)" } ?? "No reaction")
+                            .ds(.footnote, color: DSColors.textSecondary)
+                    }
+                    .padding(.top, DSSpacing.lg)
                 }
 
                 // MARK: - Tag Field
