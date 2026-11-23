@@ -34,6 +34,7 @@ struct ComponentListView: View {
             }
             Section("Navigation") {
                 row("Tab Bar", "Floating glass bar, sliding accent") { TabBarScreen() }
+                row("Section Index", "Jump through a long list by letter") { SectionIndexScreen() }
             }
             Section("Containers") {
                 row("Cards", "Glass containers") { CardsScreen() }

@@ -32,6 +32,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSRangeSlider
     case DSCircularSlider
     case DSReactionBar
+    case DSSectionIndex
     case DSTagField
     case DSDayStrip
     case DSCountdown
@@ -58,6 +59,8 @@ enum Stage: String, CaseIterable, Identifiable {
             return false
         case .DSHoldToConfirm:
             return false   // the gesture is the demo
+        case .DSSectionIndex:
+            return false   // slide along the letters by hand
         case .DSTiltCard:
             return false   // drag it by hand
         case .DSExpandableText:

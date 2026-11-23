@@ -88,6 +88,7 @@ struct ComponentCatalog: View {
     @State private var rangePrice: ClosedRange<Double> = 100...400
     @State private var dialTemperature: Double = 21
     @State private var catalogReaction: String? = "❤️"
+    @State private var catalogIndexJump: String?
 
     var body: some View {
         NavigationStack {
@@ -949,6 +950,18 @@ struct ComponentCatalog: View {
                         DSTabItem("Inbox", value: "inbox", icon: "tray", selectedIcon: "tray.fill", badge: 3),
                         DSTabItem("Profile", value: "profile", icon: "person", selectedIcon: "person.fill")
                     ])
+                }
+
+                // MARK: - Section Index
+                section("Section Index") {
+                    HStack(alignment: .center, spacing: DSSpacing.md) {
+                        Text(catalogIndexJump.map { "Jumped to \($0)" } ?? "Slide along the letters")
+                            .ds(.callout, color: DSColors.textSecondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        DSSectionIndex(["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M"]) { letter in
+                            catalogIndexJump = letter
+                        }
+                    }
                 }
 
                 // MARK: - Carousel
