@@ -209,7 +209,7 @@ public struct DSSectionIndex: View {
     @GestureState private var isPressing = false
     @ScaledMetric(relativeTo: .caption2) private var row: CGFloat = Metrics.row
     @ScaledMetric(relativeTo: .caption2) private var width: CGFloat = Metrics.width
-    @ScaledMetric(relativeTo: .title1) private var bubble: CGFloat = Metrics.bubble
+    @ScaledMetric(relativeTo: .title) private var bubble: CGFloat = Metrics.bubble
 
     @DSThemed private var theme
     @Environment(\.isEnabled) private var isEnabled
