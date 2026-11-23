@@ -222,6 +222,20 @@
       "stage": "DSTabBar"
     },
     {
+      "name": "DSSectionIndex",
+      "category": "navigation",
+      "summary": "The column of letters along the edge of a long list (contacts, countries, a glossary): touch or slide along it to jump between sections, with a tick per letter, letters that fan out near the finger and a bubble showing the current one; collapses to title · dot · title when short.",
+      "symbols": [
+        "DSSectionIndex"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSSectionIndex.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSSectionIndex.md",
+      "stage": "DSSectionIndex"
+    },
+    {
       "name": "DSCard",
       "category": "containers",
       "summary": "The glass surface everything sits on: elevated, outlined, flat, tappable or with an image.",

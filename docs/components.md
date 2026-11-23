@@ -546,6 +546,18 @@ Glass capsule (`.glass`, `DSRadius.chip`, `.lg` shadow). The selected tab sits o
 
 ---
 
+## DSSectionIndex  ✅
+
+`Components/DSSectionIndex.swift`. No dependencies beyond the core.
+
+```swift
+DSSectionIndex(_ titles: [String], accent: Color? = nil, accessibilityLabel: String = "Section index", action: @escaping (String) -> Void)
+```
+
+A 44 pt-wide column of `caption2` titles (16 pt rows that scale with Dynamic Type) for the trailing edge of a long list. The first touch and each new title under the finger call `action` with that title and fire a `.selection` tick; the caller scrolls (`ScrollViewReader.scrollTo`, no animation). While the finger is down, a `.glassThin` track fades in, the letters within 2.5 rows of the finger fan toward the list (up to 20 pt, 1.5×, smoothstep falloff) on `DSAnimation.interactive`, the hovered title turns accent, and an accent bubble beside the finger shows it in `title1`. A finger above or below the column holds the first or last title. Too short for every title, the column collapses to an odd number of rows, title and dot alternating, first and last always shown; sliding over a dot walks through the titles it hides. The fan is trailing padding inside a fixed-width frame and the bubble is placed with alignment guides, so both follow the layout direction. The rules are internal and unit-tested: `DSSectionIndexLogic` (`entries`, `capacity`, `title(atY:)`, `row(ofTitle:)`, `fan`, `adjusted`, `accessibilityValue`) and `DSSectionIndexTracker` (a jump per new title). Reduce Motion: no fan or scale; the accent title and the bubble (a fade) remain. VoiceOver: one adjustable element, value the last title jumped to (the first before any jump); swipe up or down for the next or previous section.
+
+---
+
 ## DSCarousel  ✅
 
 `Components/DSCarousel.swift`.

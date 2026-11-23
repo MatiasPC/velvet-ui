@@ -60,6 +60,7 @@ struct StageView: View {
         case .DSRangeSlider:       RangeSliderStage(autoplay: autoplay)
         case .DSCircularSlider:    CircularSliderStage(autoplay: autoplay)
         case .DSReactionBar:       ReactionBarStage(autoplay: autoplay)
+        case .DSSectionIndex:      SectionIndexStage()
         case .DSTagField:          TagFieldStage(autoplay: autoplay)
         case .DSDayStrip:          DayStripStage(autoplay: autoplay)
         case .DSCountdown:         CountdownStage(autoplay: autoplay)

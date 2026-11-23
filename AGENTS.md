@@ -80,6 +80,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Free-form tags (skills, invitees, labels, keywords) | `DSTagField(tags:placeholder:maxTags:)` | `[String]` binding. Return or a comma makes a pill; tap a pill to remove it. Trimmed, unique ignoring case. Validate what a tag *is* yourself. |
 | Amount, passcode or quantity without the system keyboard | `DSKeypad(text:maxLength:decimalPlaces:)` | Edits a `String`; `decimalPlaces: 2` for money (locale separator), `0` for a PIN. It draws no value: show your own read-out with an `accessibilityLabel`. |
 | App sections at the bottom | `DSTabBar(selection:items:)` | Place with `.safeAreaInset(edge: .bottom)`. |
+| Jump through a long list by letter (contacts, countries, a glossary) | `DSSectionIndex(_:accessibilityLabel:action:)` | Overlay it on the trailing edge of the list's `ScrollView`; in `action`, `proxy.scrollTo(title, anchor: .top)` without animation. Pass only titles the list has. Collapses to title · dot · title when short. Fires its own haptic. |
 | Horizontal paging content | `DSCarousel(_:currentPage:content:)` + `DSPageControl` | |
 | Page dots | `DSPageControl(currentPage:numberOfPages:)` | |
 | Modal panel | `.dsSheet(isPresented:detents:content:)` | Native sheet with Velvet chrome. |
