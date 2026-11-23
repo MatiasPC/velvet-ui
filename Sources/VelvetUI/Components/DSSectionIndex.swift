@@ -337,7 +337,7 @@ public struct DSSectionIndex: View {
             // Trailing edge a gap before the column, centre on the hovered row.
             .alignmentGuide(.leading) { d in d[.trailing] + Metrics.bubbleGap }
             .alignmentGuide(.top) { d in d[VerticalAlignment.center] - centreY }
-            .transition(reduceMotion ? .opacity : .scale(scale: 0.5).combined(with: .opacity))
+            .transition(reduceMotion ? AnyTransition.opacity : AnyTransition.scale(scale: 0.5).combined(with: .opacity))
             .allowsHitTesting(false)
             .accessibilityHidden(true)
     }
