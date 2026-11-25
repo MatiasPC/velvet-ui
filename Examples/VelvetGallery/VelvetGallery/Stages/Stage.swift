@@ -36,6 +36,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSTagField
     case DSDayStrip
     case DSCountdown
+    case DSStoryProgress
     case DSPasswordStrength
     case DSSwipeDeck
     case OnboardingFlow, SettingsFlow, CheckoutFlow

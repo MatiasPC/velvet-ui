@@ -739,6 +739,20 @@
       "stage": "DSCountdown"
     },
     {
+      "name": "DSStoryProgress",
+      "category": "display",
+      "summary": "The segmented bar across the top of a story: one segment per page, the current one filling over its duration, then the binding moves on by itself; pause with isPaused, onFinish after the last page.",
+      "symbols": [
+        "DSStoryProgress"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSStoryProgress.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSStoryProgress.md",
+      "stage": "DSStoryProgress"
+    },
+    {
       "name": "DSPasswordStrength",
       "category": "inputs",
       "summary": "Strength meter for a new password: four segments that fill and change colour, the level and the one change that helps most; length-first rules, common passwords stay weak.",

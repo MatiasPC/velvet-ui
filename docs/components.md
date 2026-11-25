@@ -773,6 +773,18 @@ A live countdown in a row of flat `theme.subtleFill` tiles (days, hours, minutes
 
 ---
 
+## DSStoryProgress  ✅
+
+`Components/DSStoryProgress.swift`. No dependencies beyond the core.
+
+```swift
+DSStoryProgress(currentPage: Binding<Int>, numberOfPages: Int, duration: TimeInterval = 5, isPaused: Bool = false, accent: Color? = nil, accessibilityLabel: String = "Story", onFinish: (() -> Void)? = nil)
+```
+
+The segmented bar across the top of a story: `theme.subtleFill` capsules, one per page, full before `currentPage`, empty after it, and the current one filling with the accent over `duration` from a `TimelineView(.animation(paused:))` clock (paused while `isPaused`, finished or empty). A `.task(id:)` keyed on page, pause, duration and count sleeps until the page's time runs out, then sets `currentPage` to the next page, or calls `onFinish` once after the last one and holds it full. A new page always starts from zero; a pause banks the time run and a resume continues from it. Skipped segments spring (`springSnappy`) to full or empty; the new current one starts empty at once. The rules are `DSStoryProgressLogic` (internal, unit-tested): `displayedPage`, `duration` (bad values fall back to 5 s), `fill`, `next` (`.advance(to:)` / `.finish`), `step` and `accessibilityValue` ("2 of 5"), plus `DSStoryProgressClock` (wall-clock elapsed time with pause, resume, restart on a new page and finish). VoiceOver sees one adjustable element ("Story, 2 of 5"); a step fires `.selection`. Reduce Motion drops the skip spring.
+
+---
+
 ## DSPasswordStrength  ✅
 
 `Components/DSPasswordStrength.swift`. No dependencies beyond the core.

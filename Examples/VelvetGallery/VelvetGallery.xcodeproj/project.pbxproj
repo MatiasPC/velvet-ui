@@ -13,6 +13,7 @@
 		8DE9E994939D7A39ED0DB8DA /* TagFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B77A8E6465A0DE3BD11B480 /* TagFieldScreen.swift */; };
 		33F39BA8C11A4DCD67D2B343 /* DayStripScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E48B8453B0859951E8237 /* DayStripScreen.swift */; };
 		71FB9AA3BAC64E3BF1D2A03C /* CountdownScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43F47C3B2F0E8BCA2B90215 /* CountdownScreen.swift */; };
+		FBE74F178E269F1703CD2320 /* StoryProgressScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C582FBE25CFE52B7A591D272 /* StoryProgressScreen.swift */; };
 		475F018DA05BD33F6F114CC3 /* PasswordStrengthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59252FA76B29A82CEBC0C7F /* PasswordStrengthScreen.swift */; };
 		A6A8BD4C16FBC6BB4651958B /* SwipeDeckScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF340CCE8F6C27144AEE5CE /* SwipeDeckScreen.swift */; };
 		19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */; };
@@ -84,6 +85,7 @@
 		495C01732177BC8A98A2F705 /* DSTagFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84C20F1412BC9FFD2B3400A /* DSTagFieldUITests.swift */; };
 		266D89616E0CB2F9C85C2E40 /* DSDayStripUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */; };
 		26DC62AD3BCA457FAAD2E7E2 /* DSCountdownUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD70BA264B69039D344199F /* DSCountdownUITests.swift */; };
+		EE9F4379649B0DF88EECF3C8 /* DSStoryProgressUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */; };
 		F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */; };
 		BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */; };
 		B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */; };
@@ -162,6 +164,7 @@
 		6B77A8E6465A0DE3BD11B480 /* TagFieldScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFieldScreen.swift; sourceTree = "<group>"; };
 		956E48B8453B0859951E8237 /* DayStripScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStripScreen.swift; sourceTree = "<group>"; };
 		D43F47C3B2F0E8BCA2B90215 /* CountdownScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownScreen.swift; sourceTree = "<group>"; };
+		C582FBE25CFE52B7A591D272 /* StoryProgressScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryProgressScreen.swift; sourceTree = "<group>"; };
 		C59252FA76B29A82CEBC0C7F /* PasswordStrengthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordStrengthScreen.swift; sourceTree = "<group>"; };
 		3FF340CCE8F6C27144AEE5CE /* SwipeDeckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDeckScreen.swift; sourceTree = "<group>"; };
 		7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSliderScreen.swift; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 		A84C20F1412BC9FFD2B3400A /* DSTagFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTagFieldUITests.swift; sourceTree = "<group>"; };
 		9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSDayStripUITests.swift; sourceTree = "<group>"; };
 		3CD70BA264B69039D344199F /* DSCountdownUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCountdownUITests.swift; sourceTree = "<group>"; };
+		04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStoryProgressUITests.swift; sourceTree = "<group>"; };
 		BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPasswordStrengthUITests.swift; sourceTree = "<group>"; };
 		5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSwipeDeckUITests.swift; sourceTree = "<group>"; };
 		5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSegmentedControlUITests.swift; sourceTree = "<group>"; };
@@ -317,6 +321,7 @@
 				6B77A8E6465A0DE3BD11B480 /* TagFieldScreen.swift */,
 				956E48B8453B0859951E8237 /* DayStripScreen.swift */,
 				D43F47C3B2F0E8BCA2B90215 /* CountdownScreen.swift */,
+				C582FBE25CFE52B7A591D272 /* StoryProgressScreen.swift */,
 				C59252FA76B29A82CEBC0C7F /* PasswordStrengthScreen.swift */,
 				3FF340CCE8F6C27144AEE5CE /* SwipeDeckScreen.swift */,
 				7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */,
@@ -386,6 +391,7 @@
 				A84C20F1412BC9FFD2B3400A /* DSTagFieldUITests.swift */,
 				9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */,
 				3CD70BA264B69039D344199F /* DSCountdownUITests.swift */,
+				04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */,
 				BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */,
 				5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */,
 				5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */,
@@ -522,6 +528,7 @@
 				8DE9E994939D7A39ED0DB8DA /* TagFieldScreen.swift in Sources */,
 				33F39BA8C11A4DCD67D2B343 /* DayStripScreen.swift in Sources */,
 				71FB9AA3BAC64E3BF1D2A03C /* CountdownScreen.swift in Sources */,
+				FBE74F178E269F1703CD2320 /* StoryProgressScreen.swift in Sources */,
 				475F018DA05BD33F6F114CC3 /* PasswordStrengthScreen.swift in Sources */,
 				A6A8BD4C16FBC6BB4651958B /* SwipeDeckScreen.swift in Sources */,
 				19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */,
@@ -578,6 +585,7 @@
 				495C01732177BC8A98A2F705 /* DSTagFieldUITests.swift in Sources */,
 				266D89616E0CB2F9C85C2E40 /* DSDayStripUITests.swift in Sources */,
 				26DC62AD3BCA457FAAD2E7E2 /* DSCountdownUITests.swift in Sources */,
+				EE9F4379649B0DF88EECF3C8 /* DSStoryProgressUITests.swift in Sources */,
 				F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */,
 				BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */,
 				B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */,
