@@ -64,6 +64,7 @@ struct StageView: View {
         case .DSTagField:          TagFieldStage(autoplay: autoplay)
         case .DSDayStrip:          DayStripStage(autoplay: autoplay)
         case .DSCountdown:         CountdownStage(autoplay: autoplay)
+        case .DSStoryProgress:     StoryProgressStage(autoplay: autoplay)
         case .DSPasswordStrength:  PasswordStrengthStage(autoplay: autoplay)
         case .DSSwipeDeck:         SwipeDeckStage(autoplay: autoplay)
         case .OnboardingFlow:      OnboardingFlowStage()

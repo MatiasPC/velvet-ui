@@ -85,6 +85,7 @@ struct ComponentCatalog: View {
     @State private var swipeCards = ["Lisbon", "Kyoto", "Oslo"].map(CatalogSwipeCard.init)
     @State private var catalogDay = Date.now
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
+    @State private var catalogStoryPage = 0
     @State private var rangePrice: ClosedRange<Double> = 100...400
     @State private var dialTemperature: Double = 21
     @State private var catalogReaction: String? = "❤️"
@@ -1013,6 +1014,19 @@ struct ComponentCatalog: View {
                             DSButton("Restart at 15 s", variant: .ghost, size: .small) {
                                 countdownTarget = .now.addingTimeInterval(15)
                             }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // MARK: - Story Progress
+                section("Story Progress") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.md) {
+                            DSStoryProgress(currentPage: $catalogStoryPage, numberOfPages: 4, duration: 3) {
+                                catalogStoryPage = 0
+                            }
+                            Text("Story \(catalogStoryPage + 1) of 4").ds(.callout)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }

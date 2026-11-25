@@ -74,6 +74,7 @@ struct ComponentListView: View {
                 row("Expandable Text", "Long copy that springs open") { ExpandableTextScreen() }
                 row("Number Ticker", "Digits roll like an odometer") { NumberTickerScreen() }
                 row("Countdown", "Time left, rolling down to zero") { CountdownScreen() }
+                row("Story Progress", "Segments that fill, then move on by themselves") { StoryProgressScreen() }
                 row("Timeline", "Nodes and a connector that fills") { TimelineScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
                 row("Activity Rings", "Goals that fill, close and glow") { ActivityRingsScreen() }

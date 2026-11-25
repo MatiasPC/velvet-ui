@@ -94,6 +94,7 @@ Velvet targets iOS 18+ and macOS 15+.
 | Loading layout | `.dsSkeleton(isLoading)` or `DSSkeleton` blocks | |
 | Progress | `DSCircularProgress`, `DSLinearProgress`, `DSGradientProgress`, `DSStepProgress` | |
 | Animated number | `DSNumberTicker(_:format:)` (rolling digits), `DSAnimatedNumber` (count-up) | |
+| Stories, an auto-advancing tour or banner (one segment per page, each fills, then moves on) | `DSStoryProgress(currentPage:numberOfPages:duration:isPaused:onFinish:)` | It moves `currentPage` on by itself; you change it for taps. Pass `isPaused` while held and `scenePhase != .active`. `onFinish` runs after the last page (close, or set 0 to loop). |
 | Time left until a date (sale ends, resend code, event starts) | `DSCountdown(to:accessibilityLabel:onFinish:)` | Pass the end `Date`, not a duration; change it to restart. `onFinish` runs once at zero (enable "Resend" there). Fires its own haptic. |
 | Trend / small chart | `DSSparkline(_:)`, `DSBarChart(_:labels:selection:)` | Use Swift Charts for axes, legends, many series. |
 | Success moment | `DSSuccessCheck(isComplete:)`, `.dsConfetti(trigger:)` | Confetti is decorative; pair it with a real result. |
