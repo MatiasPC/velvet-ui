@@ -26,8 +26,10 @@ import SwiftUI
 //
 // VoiceOver: collapsed, the stack is one button ("Notifications", "3 cards,
 // collapsed") whose action expands it. Expanded, the cards are separate elements
-// in reading order. Collapse it from your own control ("Show less"). Both come
-// from one `.accessibilityRepresentation`, so nothing from a collapsed card leaks.
+// in reading order. Collapse it from your own control ("Show less"). The collapsed
+// button is the real tap target laid over the pile, so its frame is the pile's;
+// each card is hidden until the pile opens. (`.accessibilityRepresentation` was
+// tried: it lays its stand-in out at the proposed size, not the pile's.)
 //
 // Technique: the grouped-notification stack of iOS Notification Center and the
 // "stacked cards" SwiftUI tutorials (Kavsoft, Sarunw), rebuilt on one animatable
@@ -238,54 +240,25 @@ public struct DSCardStack<Item: Identifiable, Content: View>: View {
         .animation(reduceMotion ? DSAnimation.fast : DSAnimation.springSmooth, value: isExpanded)
         .overlay {
             if isCollapsed {
+                // The collapsed pile's one tap target, and its one VoiceOver element:
+                // it is laid out over the real pile, so its frame is the pile's.
                 Button(action: expand) {
                     Color.clear.contentShape(Rectangle())
                 }
                 .buttonStyle(DSCardStackPressStyle(isPressed: $isPressed))
+                .accessibilityLabel(accessibilityLabel)
+                .accessibilityValue(DSCardStackLogic.accessibilityValue(count: items.count, isExpanded: false))
             }
         }
         .scaleEffect(isPressed && isCollapsed ? DSPress.scale : 1)
         .animation(DSPress.animation, value: isPressed)
-        // Toggling `.accessibilityElement(children: .ignore)` left the collapsed cards'
-        // text findable (the Gallery UI test caught it), the same leak DSSwipeDeck hit.
-        // The whole stack is replaced for assistive technologies instead.
-        .accessibilityRepresentation { representation(isCollapsed: isCollapsed) }
-    }
-
-    // MARK: Accessibility
-
-    /// What VoiceOver gets in place of the stack. Collapsed: one button named by
-    /// `accessibilityLabel` that expands the pile, and nothing from the cards.
-    /// Expanded: the cards' content in a column laid out like the real one (same
-    /// padding and gaps), so each element sits where its card is.
-    @ViewBuilder
-    private func representation(isCollapsed: Bool) -> some View {
-        let value = DSCardStackLogic.accessibilityValue(count: items.count, isExpanded: isExpanded)
-        if isCollapsed {
-            // The label fills the pile, so the element's frame is the pile's: VoiceOver
-            // outlines the whole stack and a tap at the element's centre lands on it.
-            Button(action: expand) {
-                Text(accessibilityLabel).frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .accessibilityValue(value)
-        } else {
-            VStack(alignment: .leading, spacing: DSCardStackLogic.spacing) {
-                ForEach(items) { item in
-                    content(item)
-                        .padding(DSSpacing.md)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .accessibilityElement(children: .contain)
-            .accessibilityLabel(accessibilityLabel)
-            .accessibilityValue(value)
-        }
     }
 
     // MARK: Card
 
     private func card(_ item: Item, index: Int, progress: Double) -> some View {
-        content(item)
+        let isCollapsed = !isExpanded && DSCardStackLogic.canExpand(count: items.count)
+        return content(item)
             .padding(DSSpacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .dsSurface(.solid, radius: DSRadius.card)
@@ -294,6 +267,8 @@ public struct DSCardStack<Item: Identifiable, Content: View>: View {
             .opacity(DSCardStackLogic.opacity(index: index, progress: progress))
             .zIndex(Double(items.count - index))
             .allowsHitTesting(isExpanded)
+            // Collapsed, the overlay button speaks for the pile; the cards wait.
+            .accessibilityHidden(isCollapsed)
     }
 
     // MARK: Actions

@@ -5777,7 +5777,7 @@ Two passes: one peeks under the other. A single card is shown on its own and the
 ## Accessibility
 
 - Collapsed, the pile is one button named by `accessibilityLabel`, with the count and state as its value ("Order updates, 3 cards, collapsed"). Double-tap expands it. The cards inside are not read until then.
-- Expanded, each card's content is its own element, in order, and the stack's value reads "3 cards, expanded".
+- Expanded, each card's content is its own element, in order.
 - Give your collapse control a clear name ("Show less"); VoiceOver users need it as much as anyone.
 - A single card is read as "1 card", without a state, and isn't a button.
 
