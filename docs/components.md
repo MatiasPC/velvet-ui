@@ -812,6 +812,19 @@ A stack of cards to decide on one at a time. The top card follows the finger 1:1
 
 ---
 
+## DSCardStack  ✅
+
+`Components/DSCardStack.swift`. No dependencies beyond the core.
+
+```swift
+DSCardStack(_ items: [Item], isExpanded: Binding<Bool>, haptic: DSHapticStyle = .light,
+            accessibilityLabel: String = "Stack", @ViewBuilder content: (Item) -> Content)   // Item: Identifiable
+```
+
+A pile of related cards that fans out into a column. Collapsed, the top card is full size and the next two sit behind it, each 5% smaller (anchored at the bottom) with their bottom edge `DSSpacing.sm` lower; later cards wait invisibly behind the last peeking one and fade in as it opens. Expanded, the cards stand in a column with `DSSpacing.sm` gaps. One `progress` (0 or 1) is the `animatableData` of a private `DSCardStackLayout` that measures each card at its natural height and places it between its pile and column positions, reporting the interpolated height so the content below follows every frame; each card's scale and opacity read the same value. It animates on `springSmooth` via `.animation(_:value: isExpanded)` (`DSAnimation.fast` under Reduce Motion). Cards are padded with `DSSpacing.md` on a `.solid` surface (`DSRadius.card`, `.md` / `.sm` shadow). Collapsed, a clear overlay `Button` with a press-reporting `ButtonStyle` dips the whole pile (`DSPress`) and expands it with `haptic`; the cards don't take touches until expanded. The geometry is `DSCardStackLogic` (internal, unit-tested): `clamped`, `depth`, `canExpand`, `collapsedOrigins`, `collapsedHeight`, `expandedOrigins`, `expandedHeight`, `layout`, `scale`, `opacity` and `accessibilityValue`. VoiceOver: collapsed, one button ("3 cards, collapsed") whose default action expands; expanded, the cards are separate elements.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.

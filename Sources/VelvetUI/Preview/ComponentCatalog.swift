@@ -83,6 +83,7 @@ struct ComponentCatalog: View {
     @State private var catalogTags = ["SwiftUI", "Motion"]
     @State private var catalogPassword = "sunflower"
     @State private var swipeCards = ["Lisbon", "Kyoto", "Oslo"].map(CatalogSwipeCard.init)
+    @State private var catalogStackExpanded = false
     @State private var catalogDay = Date.now
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var catalogStoryPage = 0
@@ -912,6 +913,22 @@ struct ComponentCatalog: View {
                         .aspectRatio(4 / 3, contentMode: .fit)
                         DSButton("Refill", variant: .ghost, size: .small) {
                             swipeCards = ["Lisbon", "Kyoto", "Oslo"].map(CatalogSwipeCard.init)
+                        }
+                    }
+                }
+
+                // MARK: - Card Stack
+                section("Card Stack") {
+                    VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                        DSCardStack(
+                            ["Lisbon", "Kyoto", "Oslo", "Cusco"].map(CatalogSwipeCard.init),
+                            isExpanded: $catalogStackExpanded,
+                            accessibilityLabel: "Trips"
+                        ) { card in
+                            Text(card.id).ds(.body)
+                        }
+                        if catalogStackExpanded {
+                            DSButton("Show less", variant: .ghost, size: .small) { catalogStackExpanded = false }
                         }
                     }
                 }

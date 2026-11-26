@@ -16,6 +16,7 @@
 		FBE74F178E269F1703CD2320 /* StoryProgressScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C582FBE25CFE52B7A591D272 /* StoryProgressScreen.swift */; };
 		475F018DA05BD33F6F114CC3 /* PasswordStrengthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59252FA76B29A82CEBC0C7F /* PasswordStrengthScreen.swift */; };
 		A6A8BD4C16FBC6BB4651958B /* SwipeDeckScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF340CCE8F6C27144AEE5CE /* SwipeDeckScreen.swift */; };
+		ADC33F39A71EBA413BC1203E /* CardStackScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11B21BF1AB21609DC2E16A6 /* CardStackScreen.swift */; };
 		19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */; };
 		5ADF9D572D3A5A184E2B6F80 /* CircularSliderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59ED918ED52DE4D0EA4CC1DF /* CircularSliderScreen.swift */; };
 		906EEAD8F0B0E9D31AB6B647 /* ReactionBarScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE56311A847F0A9641AC514 /* ReactionBarScreen.swift */; };
@@ -88,6 +89,7 @@
 		EE9F4379649B0DF88EECF3C8 /* DSStoryProgressUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */; };
 		F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */; };
 		BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */; };
+		0BC5D9DE84C36110642F4788 /* DSCardStackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76AD05779A955A28F3B3145F /* DSCardStackUITests.swift */; };
 		B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */; };
 		A9D62294C101430585E0775C /* DSTextFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16485409887646582228D7D9 /* DSTextFieldUITests.swift */; };
 		F23018E4557921A914E64A29 /* DSPageControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B018E36C12C17A842D2627 /* DSPageControlUITests.swift */; };
@@ -167,6 +169,7 @@
 		C582FBE25CFE52B7A591D272 /* StoryProgressScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryProgressScreen.swift; sourceTree = "<group>"; };
 		C59252FA76B29A82CEBC0C7F /* PasswordStrengthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordStrengthScreen.swift; sourceTree = "<group>"; };
 		3FF340CCE8F6C27144AEE5CE /* SwipeDeckScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDeckScreen.swift; sourceTree = "<group>"; };
+		F11B21BF1AB21609DC2E16A6 /* CardStackScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStackScreen.swift; sourceTree = "<group>"; };
 		7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSliderScreen.swift; sourceTree = "<group>"; };
 		59ED918ED52DE4D0EA4CC1DF /* CircularSliderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularSliderScreen.swift; sourceTree = "<group>"; };
 		FCE56311A847F0A9641AC514 /* ReactionBarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionBarScreen.swift; sourceTree = "<group>"; };
@@ -197,6 +200,7 @@
 		04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStoryProgressUITests.swift; sourceTree = "<group>"; };
 		BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPasswordStrengthUITests.swift; sourceTree = "<group>"; };
 		5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSwipeDeckUITests.swift; sourceTree = "<group>"; };
+		76AD05779A955A28F3B3145F /* DSCardStackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCardStackUITests.swift; sourceTree = "<group>"; };
 		5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSegmentedControlUITests.swift; sourceTree = "<group>"; };
 		16485409887646582228D7D9 /* DSTextFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTextFieldUITests.swift; sourceTree = "<group>"; };
 		E0B018E36C12C17A842D2627 /* DSPageControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPageControlUITests.swift; sourceTree = "<group>"; };
@@ -324,6 +328,7 @@
 				C582FBE25CFE52B7A591D272 /* StoryProgressScreen.swift */,
 				C59252FA76B29A82CEBC0C7F /* PasswordStrengthScreen.swift */,
 				3FF340CCE8F6C27144AEE5CE /* SwipeDeckScreen.swift */,
+				F11B21BF1AB21609DC2E16A6 /* CardStackScreen.swift */,
 				7CAC731D8F0ADEA01DA2C2AD /* RangeSliderScreen.swift */,
 				59ED918ED52DE4D0EA4CC1DF /* CircularSliderScreen.swift */,
 				FCE56311A847F0A9641AC514 /* ReactionBarScreen.swift */,
@@ -394,6 +399,7 @@
 				04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */,
 				BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */,
 				5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */,
+				76AD05779A955A28F3B3145F /* DSCardStackUITests.swift */,
 				5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */,
 				16485409887646582228D7D9 /* DSTextFieldUITests.swift */,
 				E0B018E36C12C17A842D2627 /* DSPageControlUITests.swift */,
@@ -531,6 +537,7 @@
 				FBE74F178E269F1703CD2320 /* StoryProgressScreen.swift in Sources */,
 				475F018DA05BD33F6F114CC3 /* PasswordStrengthScreen.swift in Sources */,
 				A6A8BD4C16FBC6BB4651958B /* SwipeDeckScreen.swift in Sources */,
+				ADC33F39A71EBA413BC1203E /* CardStackScreen.swift in Sources */,
 				19E93235C02671EDF84BEE81 /* RangeSliderScreen.swift in Sources */,
 				5ADF9D572D3A5A184E2B6F80 /* CircularSliderScreen.swift in Sources */,
 				906EEAD8F0B0E9D31AB6B647 /* ReactionBarScreen.swift in Sources */,
@@ -588,6 +595,7 @@
 				EE9F4379649B0DF88EECF3C8 /* DSStoryProgressUITests.swift in Sources */,
 				F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */,
 				BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */,
+				0BC5D9DE84C36110642F4788 /* DSCardStackUITests.swift in Sources */,
 				B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */,
 				A9D62294C101430585E0775C /* DSTextFieldUITests.swift in Sources */,
 				F23018E4557921A914E64A29 /* DSPageControlUITests.swift in Sources */,

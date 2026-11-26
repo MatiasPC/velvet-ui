@@ -783,6 +783,20 @@
       "stage": "DSSwipeDeck"
     },
     {
+      "name": "DSCardStack",
+      "category": "containers",
+      "summary": "A pile of related cards (grouped notifications, passes, one sender's messages) that sits collapsed with two cards peeking under the top one and springs out into a column when tapped; collapse it by setting isExpanded.",
+      "symbols": [
+        "DSCardStack"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSCardStack.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSCardStack.md",
+      "stage": "DSCardStack"
+    },
+    {
       "name": "DSTiltCard",
       "category": "containers",
       "summary": "A glass card that tips in 3D toward the finger with a sliding specular sheen, then springs back.",
