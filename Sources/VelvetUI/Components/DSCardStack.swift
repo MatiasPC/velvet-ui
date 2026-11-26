@@ -262,8 +262,12 @@ public struct DSCardStack<Item: Identifiable, Content: View>: View {
     private func representation(isCollapsed: Bool) -> some View {
         let value = DSCardStackLogic.accessibilityValue(count: items.count, isExpanded: isExpanded)
         if isCollapsed {
-            Button(accessibilityLabel, action: expand)
-                .accessibilityValue(value)
+            // The label fills the pile, so the element's frame is the pile's: VoiceOver
+            // outlines the whole stack and a tap at the element's centre lands on it.
+            Button(action: expand) {
+                Text(accessibilityLabel).frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .accessibilityValue(value)
         } else {
             VStack(alignment: .leading, spacing: DSCardStackLogic.spacing) {
                 ForEach(items) { item in

@@ -28,7 +28,10 @@ final class DSCardStackUITests: XCTestCase {
 
         // Tap the pile: it fans out and every card is read on its own.
         stack.tap()
-        XCTAssertTrue(state.waitForValue("Expanded", timeout: 10), "Got \(state.stringValue ?? "nil")")
+        XCTAssertTrue(
+            state.waitForValue("Expanded", timeout: 10),
+            "Got \(state.stringValue ?? "nil"); the pile's element is at \(stack.frame)"
+        )
         XCTAssertTrue(lastCard.waitForExistence(timeout: 10), "The third card should be readable once expanded.")
         XCTAssertTrue(app.staticTexts["Tell us how it went"].waitForExistence(timeout: 10), "So should the fourth.")
         StageLauncher.settle()
