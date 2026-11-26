@@ -26,7 +26,8 @@ import SwiftUI
 //
 // VoiceOver: collapsed, the stack is one button ("Notifications", "3 cards,
 // collapsed") whose action expands it. Expanded, the cards are separate elements
-// in reading order. Collapse it from your own control ("Show less").
+// in reading order. Collapse it from your own control ("Show less"). Both come
+// from one `.accessibilityRepresentation`, so nothing from a collapsed card leaks.
 //
 // Technique: the grouped-notification stack of iOS Notification Center and the
 // "stacked cards" SwiftUI tutorials (Kavsoft, Sarunw), rebuilt on one animatable
@@ -245,12 +246,35 @@ public struct DSCardStack<Item: Identifiable, Content: View>: View {
         }
         .scaleEffect(isPressed && isCollapsed ? DSPress.scale : 1)
         .animation(DSPress.animation, value: isPressed)
-        .accessibilityElement(children: isCollapsed ? .ignore : .contain)
-        .accessibilityLabel(accessibilityLabel)
-        .accessibilityValue(DSCardStackLogic.accessibilityValue(count: items.count, isExpanded: isExpanded))
-        .accessibilityAddTraits(isCollapsed ? .isButton : [])
-        .accessibilityAction {
-            if isCollapsed { expand() }
+        // Toggling `.accessibilityElement(children: .ignore)` left the collapsed cards'
+        // text findable (the Gallery UI test caught it), the same leak DSSwipeDeck hit.
+        // The whole stack is replaced for assistive technologies instead.
+        .accessibilityRepresentation { representation(isCollapsed: isCollapsed) }
+    }
+
+    // MARK: Accessibility
+
+    /// What VoiceOver gets in place of the stack. Collapsed: one button named by
+    /// `accessibilityLabel` that expands the pile, and nothing from the cards.
+    /// Expanded: the cards' content in a column laid out like the real one (same
+    /// padding and gaps), so each element sits where its card is.
+    @ViewBuilder
+    private func representation(isCollapsed: Bool) -> some View {
+        let value = DSCardStackLogic.accessibilityValue(count: items.count, isExpanded: isExpanded)
+        if isCollapsed {
+            Button(accessibilityLabel, action: expand)
+                .accessibilityValue(value)
+        } else {
+            VStack(alignment: .leading, spacing: DSCardStackLogic.spacing) {
+                ForEach(items) { item in
+                    content(item)
+                        .padding(DSSpacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(accessibilityLabel)
+            .accessibilityValue(value)
         }
     }
 
