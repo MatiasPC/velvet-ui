@@ -62,6 +62,7 @@ Keep phrases short enough to fit on one line: the view is single line and reserv
 
 - Steps through grapheme clusters, so emoji and accented characters are never split.
 - Driven by a cancellable `Task`: cancelled on disappear and restarted when `phrases` or Reduce Motion changes.
+- Any duration is safe: a negative or NaN one doesn't wait, and `.infinity` stops where it is, so `holdDuration: .infinity` types the first phrase and keeps it. A list of only empty phrases doesn't animate.
 - The caret blinks in `caretColor`; it is a thin capsule sized to the text style.
 - No haptics.
 - Reduce Motion: no typing or erasing; the full phrase is shown, still cycling through the list, and the caret stays solid.
@@ -69,6 +70,7 @@ Keep phrases short enough to fit on one line: the view is single line and reserv
 ## Accessibility
 
 - The view is one element labelled with the whole current phrase, so VoiceOver never reads a half-typed fragment. The caret is decorative.
+- It carries the updates-frequently trait, so VoiceOver picks up the next phrase while the element is focused.
 - Because the label changes when the phrase changes, avoid putting it where VoiceOver users need stable text, such as the only copy of an instruction.
 - The text style applied through `.ds(_:)` scales with Dynamic Type. Check that your widest phrase still fits on one line at large sizes.
 

@@ -10,7 +10,9 @@ import SwiftUI
 // and accented characters are never split mid-glyph. A Swift Concurrency
 // `Task` drives the stepping loop (type → hold → erase → next), stored in
 // `@State` so it can be cancelled in `.onDisappear` and restarted whenever the
-// phrase list (or Reduce Motion) changes — no `Timer` anywhere.
+// phrase list (or Reduce Motion) changes — no `Timer` anywhere. The task only
+// sleeps and applies steps; what each step is lives in the pure
+// `DSTypewriterTextLogic.Script`, pinned by `DSTypewriterTextTests`.
 //
 // Technique inspired by: open-swiftui-animations/Gists_To_Try/TypingErasing.swift
 // That gist hardcodes ~26 phase enum cases to spell one fixed word with a
@@ -41,6 +43,114 @@ private struct DSTypewriterLineHeightKey: PreferenceKey {
     static let defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = max(value, nextValue())
+    }
+}
+
+// MARK: - Logic
+
+/// The typewriter's rules as plain values, so they can be tested without
+/// rendering: which characters are visible, and the script the stepping task
+/// plays (type in → hold → erase → next phrase, or the Reduce Motion cycle).
+enum DSTypewriterTextLogic {
+    /// The longest single wait, in seconds (about 31 years). A longer finite
+    /// value is clamped so converting it to nanoseconds for `Task.sleep` can't
+    /// overflow.
+    static let maximumDelay: TimeInterval = 1_000_000_000
+
+    /// The first `count` characters of `phrase`, counted in grapheme clusters
+    /// (`Character`s), never bytes, so emoji and accents are never split.
+    /// A negative count gives an empty string; a count past the end, the whole phrase.
+    static func visibleText(of phrase: String, count: Int) -> String {
+        String(phrase.prefix(max(count, 0)))
+    }
+
+    /// A duration as something `Task.sleep` can take: NaN and negative values
+    /// become 0, huge values are clamped to `maximumDelay`, and `+infinity`
+    /// returns `nil`, meaning "never" (the script stops where it is).
+    static func delay(_ seconds: TimeInterval) -> TimeInterval? {
+        if seconds.isNaN { return 0 }
+        if seconds == .infinity { return nil }
+        return min(max(seconds, 0), maximumDelay)
+    }
+
+    enum Phase: Equatable, Sendable {
+        /// Revealing characters one at a time.
+        case typing
+        /// The phrase is complete (holding) or losing characters (erasing).
+        case erasing
+        /// Reduce Motion: the whole phrase is shown at once.
+        case showing
+    }
+
+    struct State: Equatable, Sendable {
+        var phraseIndex: Int
+        var characterCount: Int
+        var phase: Phase
+    }
+
+    /// Wait `delay` seconds, then show `state`.
+    struct Step: Equatable, Sendable {
+        var delay: TimeInterval
+        var state: State
+    }
+
+    struct Script: Sendable {
+        let phrases: [String]
+        let typingSpeed: TimeInterval
+        let erasingSpeed: TimeInterval
+        let holdDuration: TimeInterval
+        let loops: Bool
+        let reduceMotion: Bool
+
+        /// Nothing to animate: no phrases, or every phrase is empty.
+        var isStatic: Bool { phrases.allSatisfy(\.isEmpty) }
+
+        /// What shows before the first step: nothing typed yet, or under
+        /// Reduce Motion the whole first phrase.
+        var start: State {
+            reduceMotion
+                ? State(phraseIndex: 0, characterCount: phrases.first?.count ?? 0, phase: .showing)
+                : State(phraseIndex: 0, characterCount: 0, phase: .typing)
+        }
+
+        /// The step after `state`, or `nil` when the script is over: the last
+        /// phrase is complete and `loops` is `false`, a wait is infinite, or
+        /// there is nothing to animate.
+        func step(after state: State) -> Step? {
+            guard !isStatic, phrases.indices.contains(state.phraseIndex) else { return nil }
+            let length = phrases[state.phraseIndex].count
+            let isLast = state.phraseIndex == phrases.count - 1
+            let nextIndex = isLast ? 0 : state.phraseIndex + 1
+
+            switch state.phase {
+            case .showing:
+                // Reduce Motion holds each phrase as long as typing it plus the
+                // hold would take, so the pacing stays readable.
+                if isLast && !loops { return nil }
+                guard let wait = DSTypewriterTextLogic.delay(typingSpeed * Double(length) + holdDuration) else { return nil }
+                let next = State(phraseIndex: nextIndex, characterCount: phrases[nextIndex].count, phase: .showing)
+                return Step(delay: wait, state: next)
+
+            case .typing:
+                let typed = min(max(state.characterCount, 0), length)
+                if typed < length {
+                    guard let wait = DSTypewriterTextLogic.delay(typingSpeed) else { return nil }
+                    return Step(delay: wait, state: State(phraseIndex: state.phraseIndex, characterCount: typed + 1, phase: .typing))
+                }
+                // Fully typed: stop on the last phrase, or hold before erasing.
+                if isLast && !loops { return nil }
+                guard let wait = DSTypewriterTextLogic.delay(holdDuration) else { return nil }
+                return Step(delay: wait, state: State(phraseIndex: state.phraseIndex, characterCount: length, phase: .erasing))
+
+            case .erasing:
+                let remaining = min(max(state.characterCount, 0), length)
+                if remaining > 0 {
+                    guard let wait = DSTypewriterTextLogic.delay(erasingSpeed) else { return nil }
+                    return Step(delay: wait, state: State(phraseIndex: state.phraseIndex, characterCount: remaining - 1, phase: .erasing))
+                }
+                return Step(delay: 0, state: State(phraseIndex: nextIndex, characterCount: 0, phase: .typing))
+            }
+        }
     }
 }
 
@@ -99,9 +209,7 @@ public struct DSTypewriterText: View {
 
     /// A grapheme-safe prefix of `currentPhrase` — built from `Character`s, never bytes.
     private var typedText: String {
-        let characters = Array(currentPhrase)
-        let count = min(typedCharacterCount, characters.count)
-        return String(characters.prefix(count))
+        DSTypewriterTextLogic.visibleText(of: currentPhrase, count: typedCharacterCount)
     }
 
     /// What the visible row actually shows: the half-typed fragment normally,
@@ -154,6 +262,7 @@ public struct DSTypewriterText: View {
             )
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(currentPhrase)
+            .accessibilityAddTraits(.updatesFrequently)
             .onAppear {
                 caretVisible = false
                 restart()
@@ -187,99 +296,37 @@ public struct DSTypewriterText: View {
     private func restart() {
         steppingTask?.cancel()
         steppingTask = nil
-        phraseIndex = 0
-        typedCharacterCount = 0
-        guard !phrases.isEmpty else { return }
+
+        let script = DSTypewriterTextLogic.Script(
+            phrases: phrases,
+            typingSpeed: typingSpeed,
+            erasingSpeed: erasingSpeed,
+            holdDuration: holdDuration,
+            loops: loops,
+            reduceMotion: reduceMotion
+        )
+        show(script.start)
+        guard !script.isStatic else { return }
 
         steppingTask = Task { @MainActor in
-            if reduceMotion {
-                await runReducedMotionCycle()
-            } else {
-                await runTypingCycle()
+            var state = script.start
+            while let step = script.step(after: state) {
+                if step.delay > 0 {
+                    // Throws only on cancellation, which the check below handles.
+                    try? await Task.sleep(nanoseconds: UInt64(step.delay * 1_000_000_000))
+                } else {
+                    await Task.yield()
+                }
+                guard !Task.isCancelled else { return }
+                state = step.state
+                show(state)
             }
         }
     }
 
-    /// Full cycle: type in → hold → erase → next phrase. Stops after typing
-    /// the last phrase when `loops` is `false`.
-    @MainActor
-    private func runTypingCycle() async {
-        while !Task.isCancelled {
-            guard phrases.indices.contains(phraseIndex) else { return }
-            let characters = Array(phrases[phraseIndex])
-            typedCharacterCount = 0
-
-            guard await typeIn(characters) else { return }
-            guard !Task.isCancelled else { return }
-
-            await pause(holdDuration)
-            guard !Task.isCancelled else { return }
-
-            let isLastPhrase = phraseIndex == phrases.count - 1
-            if isLastPhrase && !loops {
-                return
-            }
-
-            guard await eraseOut(characters) else { return }
-            guard !Task.isCancelled else { return }
-
-            phraseIndex = isLastPhrase ? 0 : phraseIndex + 1
-        }
-    }
-
-    /// Reduce Motion cycle: no typing/erasing animation, just the full phrase
-    /// held for a duration equivalent to `typingSpeed * count + holdDuration`
-    /// so the pacing stays readable and the content is always complete.
-    @MainActor
-    private func runReducedMotionCycle() async {
-        while !Task.isCancelled {
-            guard phrases.indices.contains(phraseIndex) else { return }
-            let characterCount = phrases[phraseIndex].count
-            typedCharacterCount = characterCount
-
-            let isLastPhrase = phraseIndex == phrases.count - 1
-            await pause(typingSpeed * Double(characterCount) + holdDuration)
-            guard !Task.isCancelled else { return }
-
-            if isLastPhrase && !loops {
-                return
-            }
-
-            phraseIndex = isLastPhrase ? 0 : phraseIndex + 1
-        }
-    }
-
-    /// Reveals `characters` one at a time. Returns `false` if cancelled mid-way.
-    @MainActor
-    private func typeIn(_ characters: [Character]) async -> Bool {
-        for count in 0...characters.count {
-            if Task.isCancelled { return false }
-            typedCharacterCount = count
-            if count < characters.count {
-                await pause(typingSpeed)
-                if Task.isCancelled { return false }
-            }
-        }
-        return true
-    }
-
-    /// Removes `characters` one at a time, faster than `typeIn`. Returns `false` if cancelled mid-way.
-    @MainActor
-    private func eraseOut(_ characters: [Character]) async -> Bool {
-        var count = characters.count
-        while count > 0 {
-            if Task.isCancelled { return false }
-            await pause(erasingSpeed)
-            if Task.isCancelled { return false }
-            count -= 1
-            typedCharacterCount = count
-        }
-        return true
-    }
-
-    /// `Task.sleep` wrapped so a cancellation error never has to be handled at each call site.
-    private func pause(_ seconds: TimeInterval) async {
-        try? await Task.sleep(nanoseconds: UInt64(max(seconds, 0) * 1_000_000_000))
+    private func show(_ state: DSTypewriterTextLogic.State) {
+        phraseIndex = state.phraseIndex
+        typedCharacterCount = state.characterCount
     }
 }
 
