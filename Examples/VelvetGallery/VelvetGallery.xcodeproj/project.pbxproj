@@ -86,6 +86,7 @@
 		266D89616E0CB2F9C85C2E40 /* DSDayStripUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */; };
 		26DC62AD3BCA457FAAD2E7E2 /* DSCountdownUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD70BA264B69039D344199F /* DSCountdownUITests.swift */; };
 		EE9F4379649B0DF88EECF3C8 /* DSStoryProgressUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */; };
+		DAE271DAF9A389605C626BFF /* DSTypewriterTextUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F4E0F08CA38C592ABC7FBD /* DSTypewriterTextUITests.swift */; };
 		F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */; };
 		BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */; };
 		B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */; };
@@ -195,6 +196,7 @@
 		9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSDayStripUITests.swift; sourceTree = "<group>"; };
 		3CD70BA264B69039D344199F /* DSCountdownUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCountdownUITests.swift; sourceTree = "<group>"; };
 		04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStoryProgressUITests.swift; sourceTree = "<group>"; };
+		40F4E0F08CA38C592ABC7FBD /* DSTypewriterTextUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTypewriterTextUITests.swift; sourceTree = "<group>"; };
 		BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPasswordStrengthUITests.swift; sourceTree = "<group>"; };
 		5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSwipeDeckUITests.swift; sourceTree = "<group>"; };
 		5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSegmentedControlUITests.swift; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 				9AE45DECFC972054812AC09A /* DSDayStripUITests.swift */,
 				3CD70BA264B69039D344199F /* DSCountdownUITests.swift */,
 				04A2AD62D63D4EC94FE836D5 /* DSStoryProgressUITests.swift */,
+				40F4E0F08CA38C592ABC7FBD /* DSTypewriterTextUITests.swift */,
 				BB2D82546101219B7B86197C /* DSPasswordStrengthUITests.swift */,
 				5381DF849E4AF8F106A54BAF /* DSSwipeDeckUITests.swift */,
 				5BC13966637D84DECE882B5A /* DSSegmentedControlUITests.swift */,
@@ -586,6 +589,7 @@
 				266D89616E0CB2F9C85C2E40 /* DSDayStripUITests.swift in Sources */,
 				26DC62AD3BCA457FAAD2E7E2 /* DSCountdownUITests.swift in Sources */,
 				EE9F4379649B0DF88EECF3C8 /* DSStoryProgressUITests.swift in Sources */,
+				DAE271DAF9A389605C626BFF /* DSTypewriterTextUITests.swift in Sources */,
 				F7F1C28A2497D0C054537727 /* DSPasswordStrengthUITests.swift in Sources */,
 				BDDBC41D32C893707802FFD8 /* DSSwipeDeckUITests.swift in Sources */,
 				B410076A8F3A795F8471CE84 /* DSSegmentedControlUITests.swift in Sources */,
