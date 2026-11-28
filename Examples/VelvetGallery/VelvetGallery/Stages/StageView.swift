@@ -67,6 +67,7 @@ struct StageView: View {
         case .DSStoryProgress:     StoryProgressStage(autoplay: autoplay)
         case .DSPasswordStrength:  PasswordStrengthStage(autoplay: autoplay)
         case .DSSwipeDeck:         SwipeDeckStage(autoplay: autoplay)
+        case .DSHeatmap:           HeatmapStage(autoplay: autoplay)
         case .OnboardingFlow:      OnboardingFlowStage()
         case .SettingsFlow:        SettingsFlowStage()
         case .CheckoutFlow:        CheckoutFlowStage()

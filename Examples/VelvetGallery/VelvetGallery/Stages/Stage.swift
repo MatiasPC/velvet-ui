@@ -39,6 +39,7 @@ enum Stage: String, CaseIterable, Identifiable {
     case DSStoryProgress
     case DSPasswordStrength
     case DSSwipeDeck
+    case DSHeatmap
     case OnboardingFlow, SettingsFlow, CheckoutFlow
 
     var id: String { rawValue }
