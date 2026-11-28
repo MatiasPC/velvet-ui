@@ -812,6 +812,18 @@ A stack of cards to decide on one at a time. The top card follows the finger 1:1
 
 ---
 
+## DSHeatmap  ✅
+
+`Components/DSHeatmap.swift`. No dependencies beyond the core.
+
+```swift
+DSHeatmap(_ values: [Date: Double], weeks: Int = 16, through end: Date = .now, selection: Binding<Date?>? = nil, accent: Color? = nil, accessibilityLabel: String = "Activity")
+```
+
+A calendar heatmap: a column per week (rows follow `calendar.firstWeekday`), a square `RoundedRectangle` per day with `DSRadius.xs` corners and `DSSpacing.xxs` gaps, in an `HStack` of `VStack`s that fills the offered width. Month names (`caption2`) hang off the column where a month begins. Each day's summed total gets a level: 0 is a flat wash (`washSurface` on a backdrop, `palette.border` off one), 1–4 are the accent at 30/55/80/100% by its share of the busiest day on screen. A tap (one `onTapGesture` on the grid, mapped to a cell from the measured size) toggles `selection`: the cell scales to 1.35 with `.sm` shadow and the rest dim to 45%, on `springSnappy`, with a `.selection` haptic. Cells pop in as a diagonal wave (0.012 s per diagonal, capped at 0.4 s). The rules are `DSHeatmapLogic` (internal, unit-tested): `columns` (DST-safe, `nil` after `end`), `totals`, `peak`, `level`, `cell(at:)`, `step`, `accessibilityValue`, `summary`, `monthLabels` and `revealDelay`. VoiceOver sees one element (adjustable with a binding). Reduce Motion: no wave, the selection fades.
+
+---
+
 ## dsConfetti  ✅
 
 `Animation/DSConfetti.swift`.

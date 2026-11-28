@@ -87,6 +87,7 @@ struct ComponentCatalog: View {
     @State private var countdownTarget = Date.now.addingTimeInterval(90)
     @State private var catalogStoryPage = 0
     @State private var rangePrice: ClosedRange<Double> = 100...400
+    @State private var heatmapDay: Date?
     @State private var dialTemperature: Double = 21
     @State private var catalogReaction: String? = "❤️"
     @State private var catalogIndexJump: String?
@@ -1047,6 +1048,18 @@ struct ComponentCatalog: View {
                     }
                 }
 
+                // MARK: - Heatmap
+                section("Heatmap") {
+                    DSCard {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                            DSHeatmap(catalogHeatmapValues, weeks: 12, selection: $heatmapDay, accessibilityLabel: "Workouts")
+                            Text(heatmapDay.map { $0.formatted(date: .abbreviated, time: .omitted) } ?? "Tap a day: it lifts and the rest dim.")
+                                .ds(.footnote, color: DSColors.textSecondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
                 // MARK: - Skeleton
                 section("Skeleton") {
                     DSCard {
@@ -1213,6 +1226,18 @@ struct ComponentCatalog: View {
     }
 
     // MARK: - Helpers
+
+    /// Twelve weeks of a made-up workout habit for the Heatmap section.
+    private var catalogHeatmapValues: [Date: Double] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        var values: [Date: Double] = [:]
+        for offset in 0..<84 {
+            guard let day = calendar.date(byAdding: .day, value: -offset, to: today) else { continue }
+            values[day] = Double((offset * 5 + offset / 4) % 4)
+        }
+        return values
+    }
 
     @ViewBuilder
     private func section(_ title: String, @ViewBuilder content: () -> some View) -> some View {

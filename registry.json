@@ -360,6 +360,20 @@
       "stage": "Charts"
     },
     {
+      "name": "DSHeatmap",
+      "category": "charts",
+      "summary": "Calendar heatmap (habit streaks, workout logs, reading, spending): a column per week, busier days in a deeper accent, tap a day to lift it, one adjustable control for VoiceOver.",
+      "symbols": [
+        "DSHeatmap"
+      ],
+      "files": [
+        "Sources/VelvetUI/Components/DSHeatmap.swift"
+      ],
+      "dependencies": [],
+      "docs": "docs/components/DSHeatmap.md",
+      "stage": "DSHeatmap"
+    },
+    {
       "name": "DSActivityRings",
       "category": "charts",
       "summary": "Concentric goal rings that fill with a spring and close with a glow and a haptic.",

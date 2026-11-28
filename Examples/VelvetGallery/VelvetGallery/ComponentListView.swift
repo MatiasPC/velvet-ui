@@ -77,6 +77,7 @@ struct ComponentListView: View {
                 row("Story Progress", "Segments that fill, then move on by themselves") { StoryProgressScreen() }
                 row("Timeline", "Nodes and a connector that fills") { TimelineScreen() }
                 row("Charts", "Sparkline & scrubbable bars") { ChartsScreen() }
+                row("Heatmap", "A cell per day, busier days deeper") { HeatmapScreen() }
                 row("Activity Rings", "Goals that fill, close and glow") { ActivityRingsScreen() }
             }
             Section("Feedback") {
